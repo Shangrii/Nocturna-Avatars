@@ -3,162 +3,362 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nocturna Avatars — Paquetes & Términos</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <title>Nocturna Avatars — Avatares para destacar</title>
+  <meta name="description" content="Nocturna Avatars — Edición profesional de avatares VRChat. Ropa, accesorios, bailes, texturas. No para encajar.">
+  <meta name="theme-color" content="#0a0c14">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<header>
-  <p class="brand-eyebrow">Servicios de edición de avatares · VRChat</p>
-  <h1 class="brand-title">NOCTURNA</h1>
-  <p class="brand-sub">El avatar que querías, sin el dolor de cabeza</p>
-  <div class="divider"></div>
-</header>
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav class="nav" id="nav">
+    <a href="#home" class="nav-brand">NOCTURNA</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#about" class="nav-link">Nosotros</a>
+      <a href="#services" class="nav-link">Servicios</a>
+      <a href="#gallery" class="nav-link">Galería</a>
+      <a href="#terms" class="nav-link">Términos</a>
+      <button class="nav-cta dc-trigger">Discord</button>
+    </div>
+  </nav>
 
-<nav class="tabs">
-  <button class="tab active" onclick="switchTab('packages', this)">Paquetes</button>
-  <button class="tab" onclick="switchTab('terms', this)">Términos & Condiciones</button>
-</nav>
+  <!-- ═══ HERO / HOME ═══ -->
+  <section id="home" class="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow reveal">Servicios de edición de avatares · VRChat</p>
+      <h1 class="hero-title">Nocturna</h1>
+      <div class="hero-taglines">
+        <span class="hero-tagline reveal">El avatar que querías</span>
+        <span class="hero-diamond">✦</span>
+        <span class="hero-tagline reveal">Sin el dolor de cabezar</span>
+      </div>
+      <div class="hero-services reveal">
+        <span>Ropa</span><span class="sep">✦</span>
+        <span>Accesorios</span><span class="sep">✦</span>
+        <span>Bailes</span><span class="sep">✦</span>
+        <span>Texturas</span>
+      </div>
+      <div class="hero-ctas reveal">
+        <a href="#services" class="hero-cta">Ver Paquetes</a>
+        <button class="hero-cta hero-cta--outline dc-trigger">Abrir Ticket</button>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Desliza</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
 
-<!-- PACKAGES -->
-<section id="packages" class="section active">
-  <div class="packages-intro">
-    <h2>Nuestros Servicios</h2>
-    <p>Cada avatar es una identidad. Elige el nivel que mereces.</p>
+  <!-- ═══ ABOUT US ═══ -->
+  <section id="about" class="about">
+    <div class="section-header reveal">
+      <span class="section-tag">¿Quiénes somos?</span>
+      <h2 class="section-title">No somos comisiones por mensaje.</h2>
+      <p class="section-subtitle">Somos un equipo: proceso, calidad consistente y comunidad. Queremos que cada cliente sienta que entra a un lugar serio.</p>
+    </div>
+
+    <div class="about-features">
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>Qué hacemos</h3>
+        <p>Edición en Unity de avatares existentes: ropa, accesorios, texturas, optimización, expresiones y ajustes.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h3>Trabajo en equipo</h3>
+        <p>Cada miembro tiene un rol específico para asegurar la calidad y eficiencia en cada etapa del proceso.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3>Qué nos diferencia</h3>
+        <p>Entregas ágiles, acercamiento amigable y profesional, respaldo de comunidad y reconocimiento por la calidad constante de nuestro trabajo.</p>
+      </div>
+    </div>
+
+    <!-- Workflow -->
+    <div class="workflow reveal">
+      <h3 class="workflow-title">Flujo de trabajo</h3>
+      <div class="workflow-steps">
+        <div class="workflow-step">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <span class="step-label">Ticket</span>
+        </div>
+        <div class="workflow-connector"></div>
+        <div class="workflow-step">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <span class="step-label">Cotización</span>
+        </div>
+        <div class="workflow-connector"></div>
+        <div class="workflow-step">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <span class="step-label">Anticipo</span>
+        </div>
+        <div class="workflow-connector"></div>
+        <div class="workflow-step">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <span class="step-label">Producción</span>
+        </div>
+        <div class="workflow-connector"></div>
+        <div class="workflow-step">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <span class="step-label">QA</span>
+        </div>
+        <div class="workflow-connector"></div>
+        <div class="workflow-step">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="step-label">Entrega</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nuestra historia -->
+    <div class="about-story reveal">
+      <h3 class="about-story-title">Nuestra historia</h3>
+      <p>Nocturna Avatars nace de una idea simple pero necesaria: que los editores puedan enfocarse en lo que mejor hacen — editar — sin cargar con todo lo demás. Construimos un equipo completo con roles definidos para que cada parte del proceso tenga a alguien dedicado: desde la atención al cliente y la gestión de tickets, hasta el control de calidad y la entrega final.</p>
+      <p>Esto no solo permite que los editores trabajen sin saturarse, sino que el cliente recibe un servicio más ágil, organizado y con tiempos de entrega reales. No es un editor solo haciendo todo; es un sistema diseñado para que el resultado sea consistente y profesional en cada proyecto.</p>
+    </div>
+  </section>
+
+  <!-- ═══ SERVICES / PACKAGES ═══ -->
+  <section id="services" class="services">
+    <div class="section-header reveal">
+      <span class="section-tag">Servicios</span>
+      <h2 class="section-title">Elige tu nivel</h2>
+      <p class="section-subtitle">Cada avatar es una identidad. Cada paquete, un paso hacia lo que quieres ser.</p>
+    </div>
+
+    <div class="cards">
+      <!-- PENUMBRA -->
+      <div class="card reveal">
+        <div class="card-tier">Nivel I</div>
+        <h3 class="card-name">Penumbra</h3>
+        <p class="card-subtitle">Para empezar a destacar</p>
+        <div class="card-price">$40 <span>USD</span></div>
+        <p class="card-note">50% de anticipo requerido</p>
+        <div class="card-divider"></div>
+        <ul class="card-features">
+          <li class="highlight">1–3 outfits instalados</li>
+          <li>Texturas simples (logo o imagen en ropa/accesorios)</li>
+          <li>Toggles de outfits incluidos</li>
+          <li>1 accesorio incluido</li>
+          <li>Entrega a partir de 1–2 semanas</li>
+          <li>2 revisiones incluidas</li>
+        </ul>
+        <button class="card-cta dc-trigger">Abrir Ticket</button>
+      </div>
+      <!-- UMBRA -->
+      <div class="card featured reveal">
+        <div class="card-popular">⬡ Más popular</div>
+        <div class="card-tier">Nivel II</div>
+        <h3 class="card-name">Umbra</h3>
+        <p class="card-subtitle">Más opciones, más personalidad</p>
+        <div class="card-price">$60 <span>USD</span></div>
+        <p class="card-note">50% de anticipo requerido</p>
+        <div class="card-divider"></div>
+        <ul class="card-features">
+          <li class="highlight">3–6 outfits instalados</li>
+          <li class="highlight">Ajustes de fitting básicos</li>
+          <li>Texturas personalizadas (colores, degradados, logo)</li>
+          <li>Toggles de outfits incluidos</li>
+          <li>Hasta 3 accesorios</li>
+          <li>Entrega a partir de 2–3 semanas</li>
+          <li>3 revisiones incluidas</li>
+        </ul>
+        <button class="card-cta dc-trigger">Abrir Ticket</button>
+      </div>
+      <!-- ECLIPSE -->
+      <div class="card reveal">
+        <div class="card-tier">Nivel III</div>
+        <h3 class="card-name">Eclipse</h3>
+        <p class="card-subtitle">El paquete completo</p>
+        <div class="card-price">$90 <span>USD</span></div>
+        <p class="card-note">50% de anticipo requerido</p>
+        <div class="card-divider"></div>
+        <ul class="card-features">
+          <li class="highlight">6+ outfits instalados</li>
+          <li class="highlight">Ajustes de fitting complejos</li>
+          <li>Texturas completamente personalizadas con diseño a medida</li>
+          <li>Toggles de outfits incluidos</li>
+          <li class="highlight">Posibilidad de ajustar expresiones</li>
+          <li class="highlight">Sesión fotográfica en mundos vistosos</li>
+          <li>Prioridad en cola de trabajo</li>
+          <li>Entrega a partir de 3 semanas</li>
+          <li>5 revisiones incluidas</li>
+        </ul>
+        <button class="card-cta dc-trigger">Abrir Ticket</button>
+      </div>
+    </div>
+
+    <!-- ADD-ONS -->
+    <div class="addons reveal">
+      <h3 class="addons-title">Add-ons disponibles</h3>
+      <div class="addon-grid">
+        <div class="addon-item"><div class="name">Outfit adicional</div><div class="price">+$5 USD</div></div>
+        <div class="addon-item"><div class="name">Accesorio extra</div><div class="price">+$5 USD</div></div>
+        <div class="addon-item"><div class="name">Cabello adicional</div><div class="price">+$5 USD</div></div>
+        <div class="addon-item"><div class="name">Expressions personalizadas</div><div class="price">+$15 USD</div></div>
+        <div class="addon-item"><div class="name">Sesión fotográfica</div><div class="price">+$5 USD</div></div>
+        <div class="addon-item"><div class="name">Revisión extra</div><div class="price">+$5 USD</div></div>
+        <div class="addon-item"><div class="name">Entrega urgente</div><div class="price">+$15 USD</div></div>
+        <div class="addon-item"><div class="name">NSFW</div><div class="price">+$15 USD</div></div>
+      </div>
+      <p class="addons-note">¿Tu avatar tiene más outfits o accesorios de los incluidos en el paquete? Contáctanos y cotizamos según el contenido.</p>
+    </div>
+  </section>
+
+  <!-- ═══ GALLERY ═══ -->
+  <section id="gallery" class="gallery">
+    <div class="section-header reveal">
+      <span class="section-tag">Galería</span>
+      <h2 class="section-title">Nuestro trabajo</h2>
+      <p class="section-subtitle">Avatares que hablan por sí solos.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal">
+        <img src="assets/gallery/Kipfel-03.jpg" alt="Avatar Kipfel — edición Nocturna Avatars" loading="lazy">
+      </div>
+      <div class="gallery-item tall reveal">
+        <img src="assets/gallery/Kipfel-06.jpg" alt="Avatar Kipfel en mundo urbano nocturno" loading="lazy">
+      </div>
+      <div class="gallery-item reveal">
+        <img src="assets/gallery/Manuka-01.jpg" alt="Avatar Manuka — edición Nocturna Avatars" loading="lazy">
+      </div>
+      <div class="gallery-item reveal">
+        <img src="assets/gallery/Kipfel-01.jpg" alt="Avatar Kipfel — outfit alternativo" loading="lazy">
+      </div>
+      <div class="gallery-item tall reveal">
+        <img src="assets/gallery/Kipfel-07.jpg" alt="Avatar Kipfel sentado en escaleras" loading="lazy">
+      </div>
+      <div class="gallery-item reveal">
+        <img src="assets/gallery/Kipfel-04.jpg" alt="Avatar Kipfel — vista detalle" loading="lazy">
+      </div>
+      <div class="gallery-item reveal">
+        <img src="assets/gallery/Manuka-02.jpg" alt="Avatares Manuka — sesión grupal" loading="lazy">
+      </div>
+      <div class="gallery-item reveal">
+        <img src="assets/gallery/Kipfel-02.jpg" alt="Avatar Kipfel — sakura scene" loading="lazy">
+      </div>
+      <div class="gallery-item reveal">
+        <img src="assets/gallery/Kipfel-05.jpg" alt="Avatar Kipfel — outfit completo" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TERMS ═══ -->
+  <section id="terms" class="terms">
+    <div class="section-header reveal">
+      <span class="section-tag">Legal</span>
+      <h2 class="section-title">Términos y Condiciones</h2>
+      <p class="section-subtitle">Nocturna Avatars · Vigente desde 2025</p>
+    </div>
+    <div class="terms-content">
+      <div class="terms-block reveal">
+        <h3>01 · Proceso de trabajo</h3>
+        <p>Todo servicio comienza con la apertura de un ticket oficial a través de nuestros canales designados. No se acepta ni se garantiza ningún trabajo solicitado por mensajes directos sin ticket activo. El cliente proporciona únicamente referencias visuales, preferencias estéticas o indicaciones de estilo; Nocturna Avatars se encarga del resto. Una vez confirmada la cotización, se requiere el <strong>50% del total como anticipo</strong> para iniciar el trabajo. El pago restante se cobra al momento de la entrega.</p>
+      </div>
+      <div class="terms-block reveal">
+        <h3>02 · Pagos</h3>
+        <p>Todos los precios se manejan en <strong>dólares estadounidenses (USD)</strong>. Aceptamos PayPal y otros métodos acordados al momento del ticket. El anticipo no es reembolsable una vez iniciado el trabajo. Los pagos deben realizarse dentro de las <strong>48 horas</strong> siguientes a la confirmación de cotización, de lo contrario el ticket podría ser cancelado.</p>
+      </div>
+      <div class="terms-block reveal">
+        <h3>03 · Assets y materiales</h3>
+        <p>La disponibilidad de un avatar o asset específico queda sujeta a evaluación previa; en caso de no ser viable, se ofrecerán alternativas similares. Nocturna Avatars no se hace responsable de restricciones de uso, licencias o derechos de terceros sobre los materiales utilizados. Cualquier avatar o asset que requiera de licencias de uso deberá ser proporcionado por el cliente para poder trabajar con él.</p>
+      </div>
+      <div class="terms-block reveal">
+        <h3>04 · Entregas y archivos</h3>
+        <p><strong>No se entrega el proyecto de Unity (.unitypackage) bajo ninguna circunstancia.</strong> La entrega consiste exclusivamente en el avatar subido a la cuenta del cliente, listo para su uso en VRChat. Esta política aplica para todos los clientes y paquetes, sin excepciones. El avatar entregado es para uso personal del cliente y no debe revenderse ni redistribuirse.</p>
+      </div>
+      <div class="terms-block reveal">
+        <h3>05 · Revisiones</h3>
+        <p>Cada paquete incluye un número determinado de revisiones. Una revisión cubre ajustes menores sobre el trabajo original. <strong>Los cambios fuera del brief original o que alteren el alcance del trabajo se cotizan por separado</strong> como un nuevo ticket o add-on. Las revisiones deben solicitarse dentro de los <strong>5 días hábiles</strong> siguientes a la entrega.</p>
+      </div>
+      <div class="terms-block reveal">
+        <h3>06 · Tiempos de entrega</h3>
+        <p>Los tiempos indicados en cada paquete son estimados en días hábiles a partir del pago del anticipo. Nocturna Avatars enviará actualizaciones periódicas al cliente. En caso de demora justificada, se notificará con anticipación. <strong>El cliente debe responder en un máximo de 48 horas</strong> ante cualquier solicitud de información o aprobación; de lo contrario, el trabajo continúa según el último brief confirmado.</p>
+      </div>
+      <div class="terms-block reveal">
+        <h3>07 · Cancelaciones</h3>
+        <p>Si el cliente cancela <strong>antes de iniciar el trabajo</strong>, el anticipo puede reembolsarse total o parcialmente a criterio del equipo. Si el trabajo ya fue iniciado, <strong>el anticipo no es reembolsable</strong>. Nocturna Avatars se reserva el derecho de cancelar un ticket en casos de comportamiento irrespetuoso, información falsa o incumplimiento de estos términos, sin obligación de reembolso.</p>
+      </div>
+      <div class="terms-block reveal">
+        <h3>08 · Uso del trabajo realizado</h3>
+        <p>Nocturna Avatars puede utilizar imágenes del avatar terminado como muestra de trabajo en sus canales de publicidad y redes sociales, a menos que el cliente indique explícitamente lo contrario al momento del ticket. El cliente retiene el derecho de uso personal del avatar entregado.</p>
+      </div>
+      <div class="terms-block reveal">
+        <h3>09 · Conducta</h3>
+        <p>Nos reservamos el derecho de <strong>rechazar o cancelar cualquier ticket</strong> ante conducta irrespetuosa, acoso, o solicitudes que violen nuestras políticas internas. El respeto mutuo es condición para recibir el servicio.</p>
+      </div>
+      <div class="terms-block reveal">
+        <h3>10 · Modificaciones</h3>
+        <p>Nocturna Avatars puede actualizar estos términos en cualquier momento. Los cambios aplicarán a tickets abiertos después de la fecha de actualización. Se recomienda revisar esta página periódicamente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <div class="footer-brand">NOCTURNA</div>
+    <div class="footer-links">
+      <a href="https://www.instagram.com/nocturna.avatars/" target="_blank" rel="noopener" class="footer-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        Instagram
+      </a>
+      <a href="https://discord.gg/DSMmwU35cs" target="_blank" rel="noopener" class="footer-link">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M20.317 4.37a19.8 19.8 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.74 19.74 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.227-1.994a.076.076 0 00-.041-.106 13.11 13.11 0 01-1.872-.892.077.077 0 01-.008-.127c.126-.094.252-.192.372-.291a.074.074 0 01.078-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.009c.12.099.246.198.373.292a.077.077 0 01-.006.127 12.3 12.3 0 01-1.873.891.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.029 19.84 19.84 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 00-.031-.03z"/></svg>
+        Discord
+      </a>
+    </div>
+    <p class="footer-copy">2026 Nocturna Avatars — El avatar que querías, sin el dolor de cabeza.</p>
+  </footer>
+
+  <!-- ═══ DISCORD MODAL ═══ -->
+  <div class="dc-overlay" id="dcOverlay">
+    <div class="dc-modal">
+      <div class="dc-modal-glow"></div>
+      <div class="dc-header">
+        <div class="dc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+      </div>
+      <div class="dc-body">
+        <h3 class="dc-title">¿Listo para <em>ordenar</em>?</h3>
+        <p class="dc-desc">Únete a nuestro servidor de Discord para abrir un ticket, recibir una cotización personalizada y discutir los detalles de tu proyecto.</p>
+        <a href="https://discord.gg/DSMmwU35cs" target="_blank" rel="noopener" class="dc-open-btn">Abrir Discord</a>
+        <button class="dc-dismiss" id="dcDismiss">Quizás después</button>
+      </div>
+    </div>
   </div>
-  <div class="cards">
-    <!-- BÁSICO: PENUMBRA -->
-    <div class="card">
-      <span class="card-badge">Nivel I</span>
-      <div class="card-name">Penumbra</div>
-      <div class="card-subtitle">Para empezar a destacar</div>
-      <div class="card-price">$40 <span>USD</span></div>
-      <div class="card-note">50% de anticipo requerido</div>
-      <div class="card-divider"></div>
-      <ul class="card-features">
-        <li class="highlight">1–3 outfits instalados</li>
-        <li>Texturas simples (logo o imagen en ropa/accesorios)</li>
-        <li>Toggles de outfits incluidos</li>
-        <li>1 accesorio incluido</li>
-        <li>Entrega a partir de 1–2 semanas</li>
-        <li>1 revisión incluida</li>
-      </ul>
-      <a href="https://discord.gg/DSMmwU35cs" target="_blank" class="card-cta">Abrir Ticket</a>
-    </div>
-    <!-- ESTÁNDAR: UMBRA -->
-    <div class="card featured">
-      <span class="card-badge">⬡ Más popular</span>
-      <div class="card-name">Umbra</div>
-      <div class="card-subtitle">Más opciones, más personalidad</div>
-      <div class="card-price">$60 <span>USD</span></div>
-      <div class="card-note">50% de anticipo requerido</div>
-      <div class="card-divider"></div>
-      <ul class="card-features">
-        <li class="highlight">3–6 outfits instalados</li>
-        <li class="highlight">Ajustes de fitting básicos</li>
-        <li>Texturas personalizadas (colores, degradados, logo en todos los outfits)</li>
-        <li>Toggles de outfits incluidos</li>
-        <li>Hasta 3 accesorios</li>
-        <li>Entrega a partir de 2–3 semanas</li>
-        <li>2 revisiones incluidas</li>
-      </ul>
-      <a href="https://discord.gg/DSMmwU35cs" target="_blank" class="card-cta">Abrir Ticket</a>
-    </div>
-    <!-- PREMIUM: ECLIPSE -->
-    <div class="card">
-      <span class="card-badge">Nivel III</span>
-      <div class="card-name">Eclipse</div>
-      <div class="card-subtitle">El paquete completo</div>
-      <div class="card-price">$90 <span>USD</span></div>
-      <div class="card-note">50% de anticipo requerido</div>
-      <div class="card-divider"></div>
-      <ul class="card-features">
-        <li class="highlight">6+ outfits instalados</li>
-        <li class="highlight">Ajustes de fitting complejos</li>
-        <li>Texturas completamente personalizadas con diseño a medida</li>
-        <li>Toggles de outfits incluidos</li>
-        <li>Accesorios sujetos a cotización</li>
-        <li class="highlight">Posibilidad de ajustar expresiones</li>
-        <li class="highlight">Sesión fotográfica en mundos vistosos</li>
-        <li>Prioridad en cola de trabajo</li>
-        <li>Entrega a partir de 3 semanas</li>
-        <li>3 revisiones incluidas</li>
-      </ul>
-      <a href="https://discord.gg/DSMmwU35cs" target="_blank" class="card-cta">Abrir Ticket</a>
-    </div>
-  </div>
-  <!-- ADDONS -->
-  <div class="addons">
-    <h3>Add-ons disponibles</h3>
-    <div class="addon-grid">
-      <div class="addon-item"><div class="name">Outfit adicional</div><div class="price">+$5 USD</div></div>
-      <div class="addon-item"><div class="name">Accesorio extra</div><div class="price">+$5 USD</div></div>
-      <div class="addon-item"><div class="name">Cabello adicional</div><div class="price">+$5 USD</div></div>
-      <div class="addon-item"><div class="name">Expressions personalizadas</div><div class="price">+$15 USD</div></div>
-      <div class="addon-item"><div class="name">Sesión fotográfica</div><div class="price">+$5 USD</div></div>
-      <div class="addon-item"><div class="name">Revisión extra</div><div class="price">+$5 USD</div></div>
-      <div class="addon-item"><div class="name">Entrega urgente</div><div class="price">+$15 USD</div></div>
-      <div class="addon-item"><div class="name">NSFW</div><div class="price">+$15 USD</div></div>
-    </div>
-    <p style="font-size:13px; color:var(--white-dim); margin-top:14px; font-style:italic; text-align:center;">
-      ¿Tu avatar tiene más outfits o accesorios de los incluidos en el paquete? Contáctanos y cotizamos según el contenido.
-    </p>
-  </div>
-</section>
 
-<!-- TERMS -->
-<section id="terms" class="section">
-  <div class="terms-wrap">
-    <h2>Términos y Condiciones</h2>
-    <p class="lang-note">Nocturna Avatars · Vigente desde 2025</p>
-    <div class="terms-block">
-      <h3>01 · Proceso de trabajo</h3>
-      <p>Todo servicio comienza con la apertura de un ticket oficial a través de nuestros canales designados. No se acepta ni se garantiza ningún trabajo solicitado por mensajes directos sin ticket activo. El cliente proporciona únicamente referencias visuales, preferencias estéticas o indicaciones de estilo; Nocturna Avatars se encarga del resto. Una vez confirmada la cotización, se requiere el <strong>50% del total como anticipo</strong> para iniciar el trabajo. El pago restante se cobra al momento de la entrega.</p>
-    </div>
-    <div class="terms-block">
-      <h3>02 · Pagos</h3>
-      <p>Todos los precios se manejan en <strong>dólares estadounidenses (USD)</strong>. Aceptamos PayPal y otros métodos acordados al momento del ticket. El anticipo no es reembolsable una vez iniciado el trabajo. Los pagos deben realizarse dentro de las <strong>48 horas</strong> siguientes a la confirmación de cotización, de lo contrario el ticket podría ser cancelado.</p>
-    </div>
-    <div class="terms-block">
-      <h3>03 · Assets y materiales</h3>
-      <p>La disponibilidad de un avatar o asset específico queda sujeta a evaluación previa; en caso de no ser viable, se ofrecerán alternativas similares. Nocturna Avatars no se hace responsable de restricciones de uso, licencias o derechos de terceros sobre los materiales utilizados. Cualquier avatar o asset que requiera de licencias de uso deberá ser proporcionado por el cliente para poder trabajar con él.</p>
-    </div>
-    <div class="terms-block">
-      <h3>04 · Entregas y archivos</h3>
-      <p><strong>No se entrega el proyecto de Unity (.unitypackage) bajo ninguna circunstancia.</strong> La entrega consiste exclusivamente en el avatar subido a la cuenta del cliente, listo para su uso en VRChat. Esta política aplica para todos los clientes y paquetes, sin excepciones. El avatar entregado es para uso personal del cliente y no debe revenderse ni redistribuirse.</p>
-    </div>
-    <div class="terms-block">
-      <h3>05 · Revisiones</h3>
-      <p>Cada paquete incluye un número determinado de revisiones. Una revisión cubre ajustes menores sobre el trabajo original. <strong>Los cambios fuera del brief original o que alteren el alcance del trabajo se cotizan por separado</strong> como un nuevo ticket o add-on. Las revisiones deben solicitarse dentro de los <strong>5 días hábiles</strong> siguientes a la entrega.</p>
-    </div>
-    <div class="terms-block">
-      <h3>06 · Tiempos de entrega</h3>
-      <p>Los tiempos indicados en cada paquete son estimados en días hábiles a partir del pago del anticipo. Nocturna Avatars enviará actualizaciones periódicas al cliente. En caso de demora justificada, se notificará con anticipación. <strong>El cliente debe responder en un máximo de 48 horas</strong> ante cualquier solicitud de información o aprobación; de lo contrario, el trabajo continúa según el último brief confirmado.</p>
-    </div>
-    <div class="terms-block">
-      <h3>07 · Cancelaciones</h3>
-      <p>Si el cliente cancela <strong>antes de iniciar el trabajo</strong>, el anticipo puede reembolsarse total o parcialmente a criterio del equipo. Si el trabajo ya fue iniciado, <strong>el anticipo no es reembolsable</strong>. Nocturna Avatars se reserva el derecho de cancelar un ticket en casos de comportamiento irrespetuoso, información falsa o incumplimiento de estos términos, sin obligación de reembolso.</p>
-    </div>
-    <div class="terms-block">
-      <h3>08 · Uso del trabajo realizado</h3>
-      <p>Nocturna Avatars puede utilizar imágenes del avatar terminado como muestra de trabajo en sus canales de publicidad y redes sociales, a menos que el cliente indique explícitamente lo contrario al momento del ticket. El cliente retiene el derecho de uso personal del avatar entregado.</p>
-    </div>
-    <div class="terms-block">
-      <h3>09 · Conducta</h3>
-      <p>Nos reservamos el derecho de <strong>rechazar o cancelar cualquier ticket</strong> ante conducta irrespetuosa, acoso, o solicitudes que violen nuestras políticas internas. El respeto mutuo es condición para recibir el servicio.</p>
-    </div>
-    <div class="terms-block">
-      <h3>10 · Modificaciones</h3>
-      <p>Nocturna Avatars puede actualizar estos términos en cualquier momento. Los cambios aplicarán a tickets abiertos después de la fecha de actualización. Se recomienda revisar esta página periódicamente.</p>
-    </div>
-  </div>
-</section>
-
-<footer>
-  Contacto Nocturna Avatars · <a href="https://www.instagram.com/nocturna.avatars/" target="_blank">Instagram</a> · <a href="https://discord.gg/DSMmwU35cs" target="_blank">Discord</a>
-</footer>
-
-<script src="functions.js"></script>
+  <script src="functions.js"></script>
 </body>
 </html>
