@@ -11,6 +11,8 @@
     initScrollReveal();
     initScrollSpy();
     initGalleryLightbox();
+    initGalleryToggle();
+    initTermsModal();
     initDiscordModal();
   }
 
@@ -124,6 +126,50 @@
 
     lbClose.addEventListener('click', close);
     lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  }
+
+  /* ── Gallery Toggle ── */
+  function initGalleryToggle() {
+    const galleryGrid = document.querySelector('.gallery-grid');
+    const toggleButton = document.getElementById('galleryToggle');
+    if (!galleryGrid || !toggleButton) return;
+
+    galleryGrid.classList.add('collapsed');
+    toggleButton.addEventListener('click', () => {
+      const expanded = galleryGrid.classList.toggle('collapsed') === false;
+      toggleButton.textContent = expanded ? 'Ver menos fotos ↑' : 'Mostrar más fotos ↓';
+      toggleButton.setAttribute('aria-expanded', expanded.toString());
+    });
+  }
+
+  /* ── Terms Modal ── */
+  function initTermsModal() {
+    const overlay = document.getElementById('termsOverlay');
+    const openButtons = document.querySelectorAll('#termsOpenBtn, .nav-link[href="#terms"]');
+    const closeButton = document.getElementById('termsCloseBtn');
+    if (!overlay || !openButtons.length) return;
+
+    function open() {
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    openButtons.forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        open();
+      });
+    });
+
+    if (closeButton) closeButton.addEventListener('click', close);
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   }
 

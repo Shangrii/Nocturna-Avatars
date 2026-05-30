@@ -49,7 +49,9 @@
         <span>Ropa</span><span class="sep">✦</span>
         <span>Accesorios</span><span class="sep">✦</span>
         <span>Bailes</span><span class="sep">✦</span>
+        <span>Modelado 3D</span><span class="sep">✦</span>
         <span>Texturas</span>
+        
       </div>
       <div class="hero-ctas reveal">
         <a href="#services" class="hero-cta">Ver Paquetes</a>
@@ -76,7 +78,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         </div>
         <h3>Qué hacemos</h3>
-        <p>Edición en Unity de avatares existentes: ropa, accesorios, texturas, optimización, expresiones y ajustes.</p>
+        <p>Edición en Unity y Blender de avatares existentes: ropa, accesorios, texturas, optimización, expresiones y ajustes.</p>
       </div>
       <div class="feature-card reveal">
         <div class="feature-icon">
@@ -98,42 +100,42 @@
     <div class="workflow reveal">
       <h3 class="workflow-title">Flujo de trabajo</h3>
       <div class="workflow-steps">
-        <div class="workflow-step">
+        <div class="workflow-step" data-tooltip="Crea un ticket en el servidor de Discord para empezar tu cotización y compartir tus referencias.">
           <div class="step-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </div>
           <span class="step-label">Ticket</span>
         </div>
         <div class="workflow-connector"></div>
-        <div class="workflow-step">
+        <div class="workflow-step" data-tooltip="Recibe una propuesta clara con precios, entregables y tiempos antes de confirmar el trabajo.">
           <div class="step-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
           </div>
           <span class="step-label">Cotización</span>
         </div>
         <div class="workflow-connector"></div>
-        <div class="workflow-step">
+        <div class="workflow-step" data-tooltip="Confirma tu pedido con el 50% de anticipo para que el equipo comience la producción.">
           <div class="step-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           </div>
           <span class="step-label">Anticipo</span>
         </div>
         <div class="workflow-connector"></div>
-        <div class="workflow-step">
+        <div class="workflow-step" data-tooltip="El equipo edita tu avatar, agrega outfits, accesorios y ajusta texturas hasta cumplir el brief.">
           <div class="step-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
           </div>
           <span class="step-label">Producción</span>
         </div>
         <div class="workflow-connector"></div>
-        <div class="workflow-step">
+        <div class="workflow-step" data-tooltip="Revisamos el avatar para garantizar calidad, funcionalidad y que todo esté listo para VRChat.">
           <div class="step-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
           </div>
           <span class="step-label">QA</span>
         </div>
         <div class="workflow-connector"></div>
-        <div class="workflow-step">
+        <div class="workflow-step" data-tooltip="Recibe tu avatar final en la cuenta de VRChat, listo para usar sin complicaciones.">
           <div class="step-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
@@ -239,7 +241,7 @@
         <div class="addon-item"><div class="name">Entrega urgente</div><div class="price">+$15 USD</div></div>
         <div class="addon-item"><div class="name">NSFW</div><div class="price">+$15 USD</div></div>
       </div>
-      <p class="addons-note">¿Tu avatar tiene más outfits o accesorios de los incluidos en el paquete? Contáctanos y cotizamos según el contenido.</p>
+      <p class="addons-note">¿Tu avatar necesita ajustes de malla, blendshapes nuevos o requiere algún tipo de trabajo en 3D? Contáctanos y cotizamos según el contenido.</p>
     </div>
   </section>
 
@@ -336,56 +338,25 @@
         <img src="assets/gallery/Lunita.png" alt="Avatar Lunita — edición Nocturna Avatars" loading="lazy">
       </div>
     </div>
+    <div class="gallery-actions reveal">
+      <button class="gallery-toggle" id="galleryToggle" aria-expanded="false">Mostrar más fotos ↓</button>
+    </div>
   </section>
 
-  <!-- ═══ TERMS ═══ -->
-  <section id="terms" class="terms">
+  <!-- ═══ TERMS ─ SUMMARY ═══ -->
+  <section id="terms" class="terms-summary">
     <div class="section-header reveal">
       <span class="section-tag">Legal</span>
       <h2 class="section-title">Términos y Condiciones</h2>
-      <p class="section-subtitle">Nocturna Avatars · Vigente desde 2025</p>
     </div>
-    <div class="terms-content">
-      <div class="terms-block reveal">
-        <h3>01 · Proceso de trabajo</h3>
-        <p>Todo servicio comienza con la apertura de un ticket oficial a través de nuestros canales designados. No se acepta ni se garantiza ningún trabajo solicitado por mensajes directos sin ticket activo. El cliente proporciona únicamente referencias visuales, preferencias estéticas o indicaciones de estilo; Nocturna Avatars se encarga del resto. Una vez confirmada la cotización, se requiere el <strong>50% del total como anticipo</strong> para iniciar el trabajo. El pago restante se cobra al momento de la entrega.</p>
-      </div>
-      <div class="terms-block reveal">
-        <h3>02 · Pagos</h3>
-        <p>Todos los precios se manejan en <strong>dólares estadounidenses (USD)</strong>. Aceptamos PayPal y otros métodos acordados al momento del ticket. El anticipo no es reembolsable una vez iniciado el trabajo. Los pagos deben realizarse dentro de las <strong>48 horas</strong> siguientes a la confirmación de cotización, de lo contrario el ticket podría ser cancelado.</p>
-      </div>
-      <div class="terms-block reveal">
-        <h3>03 · Assets y materiales</h3>
-        <p>La disponibilidad de un avatar o asset específico queda sujeta a evaluación previa; en caso de no ser viable, se ofrecerán alternativas similares. Nocturna Avatars no se hace responsable de restricciones de uso, licencias o derechos de terceros sobre los materiales utilizados. Cualquier avatar o asset que requiera de licencias de uso deberá ser proporcionado por el cliente para poder trabajar con él.</p>
-      </div>
-      <div class="terms-block reveal">
-        <h3>04 · Entregas y archivos</h3>
-        <p><strong>No se entrega el proyecto de Unity (.unitypackage) bajo ninguna circunstancia.</strong> La entrega consiste exclusivamente en el avatar subido a la cuenta del cliente, listo para su uso en VRChat. Esta política aplica para todos los clientes y paquetes, sin excepciones. El avatar entregado es para uso personal del cliente y no debe revenderse ni redistribuirse.</p>
-      </div>
-      <div class="terms-block reveal">
-        <h3>05 · Revisiones</h3>
-        <p>Cada paquete incluye un número determinado de revisiones. Una revisión cubre ajustes menores sobre el trabajo original. <strong>Los cambios fuera del brief original o que alteren el alcance del trabajo se cotizan por separado</strong> como un nuevo ticket o add-on. Las revisiones deben solicitarse dentro de los <strong>5 días hábiles</strong> siguientes a la entrega.</p>
-      </div>
-      <div class="terms-block reveal">
-        <h3>06 · Tiempos de entrega</h3>
-        <p>Los tiempos indicados en cada paquete son estimados en días hábiles a partir del pago del anticipo. Nocturna Avatars enviará actualizaciones periódicas al cliente. En caso de demora justificada, se notificará con anticipación. <strong>El cliente debe responder en un máximo de 48 horas</strong> ante cualquier solicitud de información o aprobación; de lo contrario, el trabajo continúa según el último brief confirmado.</p>
-      </div>
-      <div class="terms-block reveal">
-        <h3>07 · Cancelaciones</h3>
-        <p>Si el cliente cancela <strong>antes de iniciar el trabajo</strong>, el anticipo puede reembolsarse total o parcialmente a criterio del equipo. Si el trabajo ya fue iniciado, <strong>el anticipo no es reembolsable</strong>. Nocturna Avatars se reserva el derecho de cancelar un ticket en casos de comportamiento irrespetuoso, información falsa o incumplimiento de estos términos, sin obligación de reembolso.</p>
-      </div>
-      <div class="terms-block reveal">
-        <h3>08 · Uso del trabajo realizado</h3>
-        <p>Nocturna Avatars puede utilizar imágenes del avatar terminado como muestra de trabajo en sus canales de publicidad y redes sociales, a menos que el cliente indique explícitamente lo contrario al momento del ticket. El cliente retiene el derecho de uso personal del avatar entregado.</p>
-      </div>
-      <div class="terms-block reveal">
-        <h3>09 · Conducta</h3>
-        <p>Nos reservamos el derecho de <strong>rechazar o cancelar cualquier ticket</strong> ante conducta irrespetuosa, acoso, o solicitudes que violen nuestras políticas internas. El respeto mutuo es condición para recibir el servicio.</p>
-      </div>
-      <div class="terms-block reveal">
-        <h3>10 · Modificaciones</h3>
-        <p>Nocturna Avatars puede actualizar estos términos en cualquier momento. Los cambios aplicarán a tickets abiertos después de la fecha de actualización. Se recomienda revisar esta página periódicamente.</p>
-      </div>
+    <div class="terms-summary-content reveal">
+      <ul class="terms-summary-list">
+        <li><strong>50% de anticipo</strong> para iniciar el trabajo.</li>
+        <li>Pagos en <strong>USD</strong> y 48 horas para confirmar la cotización.</li>
+        <li><strong>No se entrega Unity Package</strong>; la entrega es el avatar listo para VRChat.</li>
+        <li>Revisiones incluidas, cambios extra se cotizan por separado.</li>
+      </ul>
+      <button class="button terms-open" id="termsOpenBtn">Ver términos completos</button>
     </div>
   </section>
 
@@ -419,6 +390,57 @@
         <p class="dc-desc">Únete a nuestro servidor de Discord para abrir un ticket, recibir una cotización personalizada y discutir los detalles de tu proyecto.</p>
         <a href="https://discord.gg/DSMmwU35cs" target="_blank" rel="noopener" class="dc-open-btn">Abrir Discord</a>
         <button class="dc-dismiss" id="dcDismiss">Quizás después</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="terms-overlay" id="termsOverlay" aria-hidden="true">
+    <div class="terms-modal">
+      <div class="terms-modal-header">
+        <h3 class="terms-modal-title">Términos y Condiciones</h3>
+        <button class="terms-modal-close" id="termsCloseBtn" aria-label="Cerrar términos">×</button>
+      </div>
+      <div class="terms-modal-body">
+        <div class="terms-block">
+          <h4>01 · Proceso de trabajo</h4>
+          <p>Todo servicio comienza con la apertura de un ticket oficial a través de nuestros canales designados. No se acepta ni se garantiza ningún trabajo solicitado por mensajes directos sin ticket activo. El cliente proporciona únicamente referencias visuales, preferencias estéticas o indicaciones de estilo; Nocturna Avatars se encarga del resto. Una vez confirmada la cotización, se requiere el <strong>50% del total como anticipo</strong> para iniciar el trabajo. El pago restante se cobra al momento de la entrega.</p>
+        </div>
+        <div class="terms-block">
+          <h4>02 · Pagos</h4>
+          <p>Todos los precios se manejan en <strong>dólares estadounidenses (USD)</strong>. Aceptamos PayPal y otros métodos acordados al momento del ticket. El anticipo no es reembolsable una vez iniciado el trabajo. Los pagos deben realizarse dentro de las <strong>48 horas</strong> siguientes a la confirmación de cotización, de lo contrario el ticket podría ser cancelado.</p>
+        </div>
+        <div class="terms-block">
+          <h4>03 · Assets y materiales</h4>
+          <p>La disponibilidad de un avatar o asset específico queda sujeta a evaluación previa; en caso de no ser viable, se ofrecerán alternativas similares. Nocturna Avatars no se hace responsable de restricciones de uso, licencias o derechos de terceros sobre los materiales utilizados. Cualquier avatar o asset que requiera de licencias de uso deberá ser proporcionado por el cliente para poder trabajar con él.</p>
+        </div>
+        <div class="terms-block">
+          <h4>04 · Entregas y archivos</h4>
+          <p><strong>No se entrega el proyecto de Unity (.unitypackage) bajo ninguna circunstancia.</strong> La entrega consiste exclusivamente en el avatar subido a la cuenta del cliente, listo para su uso en VRChat. Esta política aplica para todos los clientes y paquetes, sin excepciones. El avatar entregado es para uso personal del cliente y no debe revenderse ni redistribuirse.</p>
+        </div>
+        <div class="terms-block">
+          <h4>05 · Revisiones</h4>
+          <p>Cada paquete incluye un número determinado de revisiones. Una revisión cubre ajustes menores sobre el trabajo original. <strong>Los cambios fuera del brief original o que alteren el alcance del trabajo se cotizan por separado</strong> como un nuevo ticket o add-on. Las revisiones deben solicitarse dentro de los <strong>5 días hábiles</strong> siguientes a la entrega.</p>
+        </div>
+        <div class="terms-block">
+          <h4>06 · Tiempos de entrega</h4>
+          <p>Los tiempos indicados en cada paquete son estimados en días hábiles a partir del pago del anticipo. Nocturna Avatars enviará actualizaciones periódicas al cliente. En caso de demora justificada, se notificará con anticipación. <strong>El cliente debe responder en un máximo de 48 horas</strong> ante cualquier solicitud de información o aprobación; de lo contrario, el trabajo continúa según el último brief confirmado.</p>
+        </div>
+        <div class="terms-block">
+          <h4>07 · Cancelaciones</h4>
+          <p>Si el cliente cancela <strong>antes de iniciar el trabajo</strong>, el anticipo puede reembolsarse total o parcialmente a criterio del equipo. Si el trabajo ya fue iniciado, <strong>el anticipo no es reembolsable</strong>. Nocturna Avatars se reserva el derecho de cancelar un ticket en casos de comportamiento irrespetuoso, información falsa o incumplimiento de estos términos, sin obligación de reembolso.</p>
+        </div>
+        <div class="terms-block">
+          <h4>08 · Uso del trabajo realizado</h4>
+          <p>Nocturna Avatars puede utilizar imágenes del avatar terminado como muestra de trabajo en sus canales de publicidad y redes sociales, a menos que el cliente indique explícitamente lo contrario al momento del ticket. El cliente retiene el derecho de uso personal del avatar entregado.</p>
+        </div>
+        <div class="terms-block">
+          <h4>09 · Conducta</h4>
+          <p>Nos reservamos el derecho de <strong>rechazar o cancelar cualquier ticket</strong> ante conducta irrespetuosa, acoso, o solicitudes que violen nuestras políticas internas. El respeto mutuo es condición para recibir el servicio.</p>
+        </div>
+        <div class="terms-block">
+          <h4>10 · Modificaciones</h4>
+          <p>Nocturna Avatars puede actualizar estos términos en cualquier momento. Los cambios aplicarán a tickets abiertos después de la fecha de actualización. Se recomienda revisar esta página periódicamente.</p>
+        </div>
       </div>
     </div>
   </div>
