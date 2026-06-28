@@ -1,0 +1,35 @@
+---
+/**
+ * GalleryPage — body of the /galeria (es) · /gallery (en) page.
+ *
+ * Page chrome header + the branded coming-soon EmptyState (the masonry +
+ * lightbox data-driven gallery from gallery.json is Phase 4). No image grid —
+ * the empty state keeps the page from looking broken and keeps the Discord CTA
+ * reachable (NAV-03). Extracted into a component so the localized [page].astro
+ * resolver stays thin.
+ */
+import EmptyState from '../EmptyState.astro';
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const page = useTranslations(lang, 'pages').galeria;
+const empty = useTranslations(lang, 'pages').emptyState;
+---
+
+<section class="section section-page-top section--rule">
+  <div class="section-header reveal">
+    <span class="section-tag">{page.tag}</span>
+    <h2 class="section-title">{page.title}</h2>
+    <p class="section-subtitle">{page.subtitle}</p>
+  </div>
+  <div class="reveal">
+    <EmptyState
+      heading={empty.heading}
+      body={empty.galleryBody}
+      ticketLabel={empty.ticketCta}
+    />
+  </div>
+</section>

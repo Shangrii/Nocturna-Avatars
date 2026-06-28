@@ -1,0 +1,69 @@
+---
+/**
+ * ServicesPage — body of the /servicios (es) · /services (en) page.
+ *
+ * The REAL 3-package section (faithful data, D-12) via PackageCard + the
+ * add-ons block, followed by a "coming soon" shell for the full modular catalog
+ * (the data-driven services.json catalog is Phase 3). Copy from packages.json +
+ * pages.json. Extracted into a component so the localized [page].astro resolver
+ * stays thin.
+ */
+import PackageCard from '../PackageCard.astro';
+import EmptyState from '../EmptyState.astro';
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const pkg = useTranslations(lang, 'packages');
+const page = useTranslations(lang, 'pages').servicios;
+const empty = useTranslations(lang, 'pages').emptyState;
+---
+
+<section class="section section-page-top section--rule">
+  <div class="section-header reveal">
+    <span class="section-tag">{page.tag}</span>
+    <h2 class="section-title">{page.title}</h2>
+    <p class="section-subtitle">{page.subtitle}</p>
+  </div>
+
+  <div class="cards">
+    {pkg.tiers.map((tier) => (
+      <PackageCard
+        tier={tier}
+        usd={pkg.usd}
+        advanceNote={pkg.advanceNote}
+        popularBadge={pkg.popularBadge}
+        ctaLabel={pkg.ctaTicket}
+      />
+    ))}
+  </div>
+
+  <div class="addons reveal">
+    <h3 class="addons-title">{pkg.addonsTitle}</h3>
+    <div class="addon-grid">
+      {pkg.addons.map((addon) => (
+        <div class="addon-item">
+          <div class="name">{addon.name}</div>
+          <div class="price">{addon.price}</div>
+        </div>
+      ))}
+    </div>
+    <p class="addons-note">{pkg.addonsNote}</p>
+  </div>
+</section>
+
+<section class="section section--surface section--rule">
+  <div class="section-header reveal">
+    <span class="section-tag">{page.catalogTag}</span>
+    <h2 class="section-title">{page.catalogTitle}</h2>
+  </div>
+  <div class="reveal">
+    <EmptyState
+      heading={empty.heading}
+      body={empty.serviciosBody}
+      ticketLabel={empty.ticketCta}
+    />
+  </div>
+</section>

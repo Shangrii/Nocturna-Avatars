@@ -1,0 +1,43 @@
+---
+/**
+ * Localized page resolver (CHANGE 3).
+ *
+ * Emits the per-locale slug for each non-home page concept from the central
+ * route map (src/i18n/routes.ts):
+ *   services → /es/servicios · /en/services
+ *   gallery  → /es/galeria   · /en/gallery
+ * (terms is built in plan 01-04; its mapping already lives in routes.ts.)
+ *
+ * One static file emits both locales' distinct slugs via getStaticPaths, so the
+ * URL itself differs per locale instead of a shared filename. The concept is
+ * recovered from (lang, slug) and used to pick meta + body. Chrome inherited
+ * from BaseLayout — no per-page wiring.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServicesPage from '../../components/sections/ServicesPage.astro';
+import GalleryPage from '../../components/sections/GalleryPage.astro';
+import { toLang, useTranslations } from '../../i18n/ui';
+import { staticPathsForConcept, conceptForSlug } from '../../i18n/routes';
+import '../../styles/sections.css';
+
+export function getStaticPaths() {
+  return [
+    ...staticPathsForConcept('services'),
+    ...staticPathsForConcept('gallery'),
+  ];
+}
+
+const lang = toLang(Astro.params.lang);
+const slug = Astro.params.page ?? '';
+const concept = conceptForSlug(lang, slug);
+
+const pages = useTranslations(lang, 'pages');
+const meta =
+  concept === 'gallery'
+    ? { title: pages.galeria.metaTitle, description: pages.galeria.metaDescription }
+    : { title: pages.servicios.metaTitle, description: pages.servicios.metaDescription };
+---
+
+<BaseLayout lang={lang} title={meta.title} description={meta.description}>
+  {concept === 'gallery' ? <GalleryPage lang={lang} /> : <ServicesPage lang={lang} />}
+</BaseLayout>

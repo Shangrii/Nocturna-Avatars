@@ -9,6 +9,7 @@
  */
 import PackageCard from '../PackageCard.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
+import { localizedPath } from '../../i18n/routes';
 
 interface Props {
   lang: Lang;
@@ -38,6 +39,6 @@ const t = useTranslations(lang, 'packages');
   </div>
 
   <div class="cards-summary-action reveal">
-    <a href={`/${lang}/servicios`} class="link-arrow">{t.summaryCtaAll} →</a>
+    <a href={localizedPath('services', lang)} class="link-arrow">{t.summaryCtaAll} →</a>
   </div>
 </section>

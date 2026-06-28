@@ -9,6 +9,7 @@
  */
 import EmptyState from '../EmptyState.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
+import { localizedPath } from '../../i18n/routes';
 
 interface Props {
   lang: Lang;
@@ -31,7 +32,7 @@ const e = p.emptyState;
       body={e.galleryBody}
       ticketLabel={e.ticketCta}
       linkLabel={e.galleryCta}
-      linkHref={`/${lang}/galeria`}
+      linkHref={localizedPath('gallery', lang)}
     />
   </div>
 </section>

@@ -1,0 +1,25 @@
+---
+/**
+ * Legacy redirect (CHANGE 3): the old English slug /en/servicios now lives at
+ * /en/services. Emitted as a static HTML page that redirects, so existing links
+ * and bookmarks don't break on GitHub Pages (no server-side rewrites available).
+ */
+const target = '/en/services';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={target} />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <title>Redirecting…</title>
+    <script is:inline define:vars={{ target }}>
+      location.replace(target);
+    </script>
+  </head>
+  <body>
+    <a href={target}>Continue to Services</a>
+  </body>
+</html>

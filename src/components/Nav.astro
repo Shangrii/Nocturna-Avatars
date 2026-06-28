@@ -12,6 +12,7 @@
  */
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
+import { localizedPath, navConcepts } from '../i18n/routes';
 
 interface Props {
   lang: Lang;
@@ -20,12 +21,18 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang, 'nav');
 
-const links = [
-  { href: `/${lang}/`, label: t.navHome },
-  { href: `/${lang}/servicios`, label: t.navServices },
-  { href: `/${lang}/galeria`, label: t.navGallery },
-  { href: `/${lang}/terminos`, label: t.navTerms },
-];
+// Nav links emit the correct localized slug per concept from the central route
+// map (CHANGE 3): EN → /en/services, /en/gallery; ES → /es/servicios, /es/galeria.
+const conceptLabels: Record<(typeof navConcepts)[number], string> = {
+  home: t.navHome,
+  services: t.navServices,
+  gallery: t.navGallery,
+  terms: t.navTerms,
+};
+const links = navConcepts.map((concept) => ({
+  href: localizedPath(concept, lang),
+  label: conceptLabels[concept],
+}));
 
 // Normalize for comparison: treat /es and /es/ as equal.
 const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
