@@ -68,9 +68,26 @@ Plans:
   4. A visitor sees an interactive cursor effect and micro-interactions
   5. A visitor navigating between pages sees animated transitions (Astro View Transitions), and the site still loads fast with the CTA reachable
 
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+**Wave 1**
+
+- [ ] 02-01-PLAN.md — Foundation slice: ClientRouter + lifecycle motion controller + Lenis smooth scroll (FX-01) + GSAP/ScrollTrigger+SplitText reveals (FX-02) + mandatory chrome.ts swap-safe migration + global.css scroll-behavior guard
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 02-02-PLAN.md — Hero WebGL shader slice (FX-03): hand-authored full-screen-quad grain/chromatic/glitch shader + static fallback image + capability/perf degradation
+
+**Wave 3** *(blocked on Wave 2 — shares the motion controller)*
+
+- [ ] 02-03-PLAN.md — Cursor + micro-interactions (FX-04) + landing choreography: gallery marquee (D-14), card 3D tilt (D-15), featured parallax (D-16)
+
+**Wave 4** *(blocked on Wave 3 — shares the motion controller + BaseLayout)*
+
+- [ ] 02-04-PLAN.md — Page transitions (NAV-04): glitch-wipe + first-visit intro (D-18) + nav hide-on-scroll & persistent pulsing CTA (D-19)
+
 **UI hint**: yes
-**Notes**: Performance budget is a hard constraint — experimental but fast; the "Abrir Ticket" path must remain reachable in all motion states. WebGL is a single hero shader, not a 3D scene (Three.js explicitly deferred to v2).
+**Notes**: Performance budget is a hard constraint — experimental but fast; the "Abrir Ticket" path must remain reachable in all motion states. WebGL is a single hero shader, not a 3D scene (Three.js explicitly deferred to v2). MVP vertical-slice sequencing; the 4 plans serialize because each effect registers into the shared motion controller (`src/scripts/motion/index.ts`) — true wave-parallelism is blocked by that single shared file, but each wave is independently shippable with the CTA reachable throughout (D-19/D-20).
 
 ### Phase 3: Service Catalog
 
@@ -135,7 +152,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Bilingual Shell | 4/4 | Complete   | 2026-06-28 |
-| 2. Experimental Motion Layer | 0/TBD | Not started | - |
+| 2. Experimental Motion Layer | 0/4 | Planned | - |
 | 3. Service Catalog | 0/TBD | Not started | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
