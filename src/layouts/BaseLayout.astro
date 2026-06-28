@@ -1,0 +1,46 @@
+---
+/**
+ * BaseLayout — shared HTML shell for every page.
+ *
+ * Owns: <head> (meta, fonts, favicon), global styles + tokens, the lang attribute,
+ * and chrome slots that Plan 02 fills (nav / footer / floating CTA). Film-grain comes
+ * from global.css — do NOT duplicate it here.
+ */
+import type { Lang } from '../i18n/ui';
+import '../styles/global.css';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+}
+
+const { lang, title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0c14" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Chrome (nav / lang switcher) is added in Plan 02 via this slot. -->
+    <slot name="chrome-top" />
+
+    <slot />
+
+    <!-- Footer / persistent floating CTA land in Plan 02 via this slot. -->
+    <slot name="chrome-bottom" />
+  </body>
+</html>

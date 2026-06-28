@@ -1,0 +1,294 @@
+---
+/**
+ * Localized landing hero (NAV-01, I18N-02/I18N-03).
+ *
+ * Renders the migrated + polished hero from per-language dictionaries.
+ * Both /es/ and /en/ are statically generated. The WebGL shader is a Phase-2
+ * layer that will mount over the static hero-bg; `reveal` hooks stay inert here.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { langCodes, toLang, useTranslations } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return langCodes.map((lang) => ({ params: { lang } }));
+}
+
+const lang = toLang(Astro.params.lang);
+const t = useTranslations(lang, 'home');
+---
+
+<BaseLayout lang={lang} title={t.metaTitle} description={t.metaDescription}>
+  <section id="home" class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow reveal">{t.eyebrow}</p>
+      <h1 class="hero-title">{t.brandWordmark}</h1>
+      <div class="hero-taglines">
+        <span class="hero-tagline reveal">{t.taglineA}</span>
+        <span class="hero-diamond" aria-hidden="true">{t.taglineDivider}</span>
+        <span class="hero-tagline reveal">{t.taglineB}</span>
+      </div>
+      <div class="hero-services reveal">
+        {
+          t.services.map((service, i) => (
+            <>
+              {i > 0 && <span class="sep" aria-hidden="true">✦</span>}
+              <span>{service}</span>
+            </>
+          ))
+        }
+      </div>
+      <div class="hero-ctas reveal">
+        <a href={`/${lang}/servicios`} class="hero-cta">{t.ctaSecondary}</a>
+        <button class="hero-cta hero-cta--outline dc-trigger" type="button">
+          {t.ctaPrimary}
+        </button>
+      </div>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">
+      <span>{t.scrollCue}</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero — ported faithfully from styles.css (lines 180-401), tokens-driven. */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 8%;
+    right: -100px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(232, 34, 59, 0.2) 0%, transparent 58%);
+    filter: blur(28px);
+    pointer-events: none;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+  }
+  /* Diagonal split — brand banner red/navy split. */
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--red-dark) 0%, #3a0a10 34%, var(--navy) 34.5%);
+    opacity: 0.45;
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(240, 234, 228, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240, 234, 228, 0.035) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse 80% 70% at 65% 50%, black 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 65% 50%, black 20%, transparent 70%);
+  }
+  .hero-glow {
+    position: absolute;
+    top: 15%;
+    left: 10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(192, 25, 44, 0.18) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, var(--navy));
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+    padding: 0 var(--space-2xs);
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    margin-bottom: var(--space-md);
+  }
+
+  .hero-title {
+    font-family: var(--font-tag);
+    font-size: var(--type-display);
+    color: var(--white);
+    line-height: var(--lh-display);
+    letter-spacing: 12px;
+    margin-bottom: var(--space-md);
+    position: relative;
+    display: inline-block;
+    text-shadow:
+      3px 3px 0 var(--red-dark),
+      6px 6px 0 rgba(122, 15, 26, 0.3),
+      0 0 80px rgba(192, 25, 44, 0.25);
+  }
+  /* Ink splatter decorations. */
+  .hero-title::before,
+  .hero-title::after {
+    content: '';
+    position: absolute;
+    background: var(--red);
+    border-radius: 50% 42% 55% 48%;
+    opacity: 0.2;
+    pointer-events: none;
+  }
+  .hero-title::before {
+    width: 55px;
+    height: 55px;
+    left: -35px;
+    top: -18px;
+    transform: rotate(-20deg);
+    filter: blur(1px);
+  }
+  .hero-title::after {
+    width: 35px;
+    height: 30px;
+    right: -22px;
+    bottom: 8px;
+    transform: rotate(25deg);
+    filter: blur(1px);
+  }
+
+  .hero-taglines {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .hero-tagline {
+    font-size: clamp(14px, 2.2vw, 19px);
+    font-style: italic;
+    color: var(--white-dim);
+    font-weight: 300;
+  }
+  .hero-diamond {
+    color: var(--red);
+    font-size: 10px;
+  }
+
+  .hero-services {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    margin-bottom: var(--space-lg);
+  }
+  .hero-services .sep {
+    color: var(--red);
+    font-size: 8px;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-min);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--red);
+    padding: 14px 32px;
+    transition:
+      background 0.3s,
+      transform 0.2s;
+  }
+  .hero-cta:hover {
+    background: var(--red-dark);
+    transform: translateY(-2px);
+  }
+  .hero-cta--outline {
+    background: transparent;
+    border: 1px solid var(--red);
+  }
+  .hero-cta--outline:hover {
+    background: var(--red);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2xs);
+    z-index: 4;
+  }
+  .hero-scroll span {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+  }
+  .hero-scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--red), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%,
+    100% {
+      opacity: 0.3;
+      transform: scaleY(0.6);
+    }
+    50% {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scroll-line {
+      animation: none;
+    }
+  }
+</style>

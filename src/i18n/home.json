@@ -1,0 +1,28 @@
+{
+  "es": {
+    "metaTitle": "Nocturna Avatars — El avatar que querías",
+    "metaDescription": "Edición profesional de avatares VRChat: ropa, accesorios, bailes, texturas y modelado 3D. El avatar que querías, sin el dolor de cabeza. Abre un ticket en Discord para una cotización.",
+    "eyebrow": "Servicios de edición de avatares · VRChat",
+    "brandWordmark": "NOCTURNA",
+    "taglineA": "El avatar que querías",
+    "taglineDivider": "✦",
+    "taglineB": "Sin el dolor de cabeza",
+    "services": ["Ropa", "Accesorios", "Bailes", "Modelado 3D", "Texturas"],
+    "ctaPrimary": "Abrir Ticket",
+    "ctaSecondary": "Ver Paquetes",
+    "scrollCue": "Desliza"
+  },
+  "en": {
+    "metaTitle": "Nocturna Avatars — The avatar you wanted",
+    "metaDescription": "Professional VRChat avatar editing: outfits, accessories, dances, textures and 3D modeling. The avatar you wanted, without the headache. Open a ticket on Discord for a quote.",
+    "eyebrow": "Avatar editing services · VRChat",
+    "brandWordmark": "NOCTURNA",
+    "taglineA": "The avatar you wanted",
+    "taglineDivider": "✦",
+    "taglineB": "Without the headache",
+    "services": ["Outfits", "Accessories", "Dances", "3D Modeling", "Textures"],
+    "ctaPrimary": "Open a Ticket",
+    "ctaSecondary": "View Packages",
+    "scrollCue": "Scroll"
+  }
+}

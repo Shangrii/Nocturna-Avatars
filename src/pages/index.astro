@@ -1,0 +1,50 @@
+---
+/**
+ * Root language-detection redirect (D-04/D-05/D-03).
+ *
+ * GitHub Pages serves static files, so detection runs client-side:
+ *   1. A stored explicit choice (D-05) wins.
+ *   2. Otherwise browser language → /en/ for English, else /es/ (D-04).
+ *   3. <noscript> falls back to the Spanish default (D-03).
+ *
+ * Security (T-01-03): redirect targets are the two hard-coded literal paths only.
+ * navigator.language merely *selects* between them — it is never interpolated into
+ * the URL, so there is no open-redirect surface.
+ */
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0c14" />
+    <meta name="robots" content="noindex" />
+    <title>Nocturna Avatars</title>
+    <noscript>
+      <meta http-equiv="refresh" content="0; url=/es/" />
+    </noscript>
+    <script is:inline>
+      (function () {
+        var ES = '/es/';
+        var EN = '/en/';
+        var target = ES;
+        try {
+          var stored = localStorage.getItem('nocturna-lang');
+          if (stored === 'en') {
+            target = EN;
+          } else if (stored === 'es') {
+            target = ES;
+          } else {
+            var nav = (navigator.language || 'es').toLowerCase();
+            target = nav.indexOf('en') === 0 ? EN : ES;
+          }
+        } catch (e) {
+          target = ES;
+        }
+        location.replace(target);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
