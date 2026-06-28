@@ -8,7 +8,7 @@ export default defineConfig({
   site: 'https://nocturna-avatars.site',
   i18n: {
     locales: ['es', 'en'],
-    defaultLocale: 'es',
+    defaultLocale: 'en',
     routing: {
       prefixDefaultLocale: true,
     },

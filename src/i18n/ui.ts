@@ -17,7 +17,9 @@ export const languages = {
 
 export type Lang = keyof typeof languages;
 
-export const defaultLang: Lang = 'es';
+// English-first (CHANGE 1): EN is the default/fallback locale. Spanish browsers
+// are still routed to /es/ by the root redirect's navigator.language detection.
+export const defaultLang: Lang = 'en';
 
 /** All supported language codes, in routing order. */
 export const langCodes = Object.keys(languages) as Lang[];
