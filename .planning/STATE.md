@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Plan 01-01 awaiting human-verify checkpoint (hero + deploy)
-last_updated: "2026-06-28T12:07:33.000Z"
-last_activity: 2026-06-28 -- Plan 01-01 impl tasks committed; awaiting checkpoint
+stopped_at: Plan 01-01 complete (approved); Pages cutover + push pending (user)
+last_updated: "2026-06-28T12:17:33.144Z"
+last_activity: 2026-06-28 -- Plan 01-01 complete; ready for 01-02
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 4
-  completed_plans: 0
-  percent: 0
+  completed_plans: 1
+  percent: 25
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 01 (foundation-bilingual-shell) — EXECUTING
-Plan: 1 of 4
-Status: Plan 01-01 — implementation complete, AWAITING human-verify checkpoint (blocking)
-Last activity: 2026-06-28 -- Plan 01-01 impl tasks committed (52ffe16, a656c06); awaiting checkpoint
+Plan: 2 of 4
+Status: Plan 01-01 complete (human-verify approved). Ready to execute 01-02. Pages Source cutover + push of `revamp` still pending (user action).
+Last activity: 2026-06-28 -- Plan 01-01 complete; ready for 01-02
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [███░░░░░░░] 25%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01 P01-01 | 16 | 2 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -64,6 +65,7 @@ Recent decisions affecting current work:
 - [Roadmap]: Motion split into its own phase (Phase 2) — substantial enough (WebGL + Lenis + GSAP + View Transitions + cursor) to verify independently
 - [Roadmap]: Bot cog (Phase 5) is cross-repo in `nocturna-bot`; hard-depends on Phase 4's finalized `gallery.json` schema
 - [Roadmap]: i18n established in Phase 1 so all later content is bilingual from the start
+- [Phase ?]: [01-01] Pinned Astro 7.0.3 (not 5.x) — only npm-audit-clean version; satisfies supply-chain mitigation T-01-SC (0 vulns)
 
 ### Pending Todos
 
@@ -93,6 +95,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-28T11:22:06.893Z
+Last session: 2026-06-28T12:17:00.700Z
 Stopped at: Phase 1 UI-SPEC approved
-Resume file: .planning/phases/01-foundation-bilingual-shell/01-UI-SPEC.md
+Resume file: None

@@ -7,16 +7,16 @@
 
 ### Foundation & Deploy
 
-- [ ] **PLAT-01**: Site is built with Astro and produces static output
-- [ ] **PLAT-02**: Site deploys to GitHub Pages preserving the existing custom domain (CNAME)
-- [ ] **PLAT-03**: Brand design system (colors, fonts, grain, shared components) is centralized and reused across all pages
+- [x] **PLAT-01**: Site is built with Astro and produces static output
+- [x] **PLAT-02**: Site deploys to GitHub Pages preserving the existing custom domain (CNAME)
+- [x] **PLAT-03**: Brand design system (colors, fonts, grain, shared components) is centralized and reused across all pages
 - [ ] **PLAT-04**: A visitor on mobile sees a fully responsive layout
 
 ### Internationalization
 
-- [ ] **I18N-01**: A visitor can switch between Spanish and English from any page
-- [ ] **I18N-02**: All UI and marketing copy renders from per-language content dictionaries
-- [ ] **I18N-03**: Spanish is the default language and URLs are language-scoped (`/es`, `/en`)
+- [x] **I18N-01**: A visitor can switch between Spanish and English from any page
+- [x] **I18N-02**: All UI and marketing copy renders from per-language content dictionaries
+- [x] **I18N-03**: Spanish is the default language and URLs are language-scoped (`/es`, `/en`)
 - [ ] **I18N-04**: Terms & Conditions render in both Spanish and English
 
 ### Structure & Conversion
@@ -83,13 +83,13 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PLAT-01 | Phase 1 | Pending |
-| PLAT-02 | Phase 1 | Pending |
-| PLAT-03 | Phase 1 | Pending |
+| PLAT-01 | Phase 1 | Complete |
+| PLAT-02 | Phase 1 | Complete |
+| PLAT-03 | Phase 1 | Complete |
 | PLAT-04 | Phase 1 | Pending |
-| I18N-01 | Phase 1 | Pending |
-| I18N-02 | Phase 1 | Pending |
-| I18N-03 | Phase 1 | Pending |
+| I18N-01 | Phase 1 | Complete |
+| I18N-02 | Phase 1 | Complete |
+| I18N-03 | Phase 1 | Complete |
 | I18N-04 | Phase 1 | Pending |
 | NAV-01 | Phase 1 | Pending |
 | NAV-02 | Phase 1 | Pending |
