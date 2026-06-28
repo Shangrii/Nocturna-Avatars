@@ -1,0 +1,44 @@
+---
+/**
+ * DiscordModal (shared) — re-implements the legacy .dc-overlay/.dc-modal pattern
+ * as one component opened by ANY `.dc-trigger` (nav CTA, floating CTA, hero CTA…).
+ *
+ * Lives once per page (rendered by BaseLayout). chrome.ts wires open/close:
+ * trigger click opens, [data-dc-dismiss] / backdrop / Escape close.
+ *
+ * Copy comes from nav.json (I18N-02). modalTitle carries author-controlled <em>
+ * emphasis markup and is rendered with set:html — the value is a static dictionary
+ * string, never untrusted input (T-01-07). The invite link is target=_blank with
+ * rel="noopener noreferrer" to block reverse-tabnabbing (T-01-06).
+ */
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang, 'nav');
+const DISCORD_INVITE = 'https://discord.gg/DSMmwU35cs';
+---
+
+<div class="dc-overlay" id="dcOverlay" data-dc-overlay aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="dc-modal">
+    <div class="dc-modal-glow" aria-hidden="true"></div>
+    <div class="dc-header">
+      <div class="dc-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path>
+        </svg>
+      </div>
+    </div>
+    <div class="dc-body">
+      <h3 class="dc-title" set:html={t.modalTitle}></h3>
+      <p class="dc-desc">{t.modalBody}</p>
+      <a href={DISCORD_INVITE} target="_blank" rel="noopener noreferrer" class="dc-open-btn">
+        {t.modalConfirm}
+      </a>
+      <button class="dc-dismiss" type="button" data-dc-dismiss>{t.modalDismiss}</button>
+    </div>
+  </div>
+</div>
