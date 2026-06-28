@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 
 Phase: 01 (foundation-bilingual-shell) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: In progress — awaiting human-verify checkpoint (Terms + cutover parity); push + Pages cutover are the user's actions
 Last activity: 2026-06-28
 
 Progress: [████████░░] 75%
@@ -100,4 +100,4 @@ Items acknowledged and carried forward from previous milestone close:
 
 Last session: 2026-06-28T18:19:46.958Z
 Stopped at: Plan 01-03 COMPLETE — landing composition + dedicated shells (servicios/galeria/404), then a post-checkpoint cross-cutting revision round (English-first default, per-locale localized slugs via routes.ts + [lang]/[page].astro resolver + legacy redirects, globe-icon switcher, "Nocturna" wordmark). Human-verify approved both rounds; SUMMARY written. Ready for 01-04 (Terms + cutover). Nothing pushed.
-Resume file: None
+Resume file: .planning/phases/01-foundation-bilingual-shell/01-04-PLAN.md (resume at the human-verify checkpoint; tasks 1-2 done, commits 19c8712 + 23c65ad)
