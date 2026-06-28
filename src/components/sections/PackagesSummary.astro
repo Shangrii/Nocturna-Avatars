@@ -1,0 +1,43 @@
+---
+/**
+ * PackagesSummary — condensed 3-tier packages block on the landing (NAV-01).
+ *
+ * Renders the three tiers via PackageCard (condensed) from packages.json, plus
+ * a "Ver todos los servicios" / "View all services" link to /<lang>/servicios.
+ * Hard data is faithful (D-12): Penumbra $40 / Umbra $60 / Eclipse $90, Umbra
+ * featured. The full feature lists + add-ons live on /servicios.
+ */
+import PackageCard from '../PackageCard.astro';
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang, 'packages');
+---
+
+<section id="services" class="section section--surface section--rule">
+  <div class="section-header reveal">
+    <span class="section-tag">{t.sectionTag}</span>
+    <h2 class="section-title">{t.sectionTitle}</h2>
+    <p class="section-subtitle">{t.sectionSubtitle}</p>
+  </div>
+
+  <div class="cards cards--summary">
+    {t.tiers.map((tier) => (
+      <PackageCard
+        tier={tier}
+        usd={t.usd}
+        advanceNote={t.advanceNote}
+        popularBadge={t.popularBadge}
+        ctaLabel={t.ctaTicket}
+        condensed
+      />
+    ))}
+  </div>
+
+  <div class="cards-summary-action reveal">
+    <a href={`/${lang}/servicios`} class="link-arrow">{t.summaryCtaAll} →</a>
+  </div>
+</section>

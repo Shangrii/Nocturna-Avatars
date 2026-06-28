@@ -8,6 +8,11 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { langCodes, toLang, useTranslations } from '../../i18n/ui';
+import About from '../../components/sections/About.astro';
+import Teaser from '../../components/sections/Teaser.astro';
+import PackagesSummary from '../../components/sections/PackagesSummary.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import '../../styles/sections.css';
 
 export function getStaticPaths() {
   return langCodes.map((lang) => ({ params: { lang } }));
@@ -15,6 +20,8 @@ export function getStaticPaths() {
 
 const lang = toLang(Astro.params.lang);
 const t = useTranslations(lang, 'home');
+const story = useTranslations(lang, 'pages').about;
+const empty = useTranslations(lang, 'pages').emptyState;
 ---
 
 <BaseLayout lang={lang} title={t.metaTitle} description={t.metaDescription}>
@@ -51,6 +58,26 @@ const t = useTranslations(lang, 'home');
     <div class="hero-scroll" aria-hidden="true">
       <span>{t.scrollCue}</span>
       <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Curated landing summary below the hero (D-10): about/process →
+       featured teaser → packages summary → gallery teaser → closing. -->
+  <About lang={lang} />
+  <Teaser lang={lang} variant="featured" />
+  <PackagesSummary lang={lang} />
+  <Teaser lang={lang} variant="gallery" />
+
+  <section class="section section--rule">
+    <div class="closing reveal">
+      <div class="section-header" style="margin-bottom: 0;">
+        <span class="section-tag">{story.storyTitle}</span>
+        <h2 class="section-title">{t.taglineA}</h2>
+        <p class="section-subtitle">{empty.serviciosBody}</p>
+      </div>
+      <div class="closing-cta">
+        <button type="button" class="btn-primary dc-trigger">{t.ctaPrimary}</button>
+      </div>
     </div>
   </section>
 </BaseLayout>

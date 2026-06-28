@@ -1,0 +1,86 @@
+---
+/**
+ * About / "¿Quiénes somos?" landing section (NAV-01).
+ *
+ * Migrated + polished from index.html (about features, workflow steps with
+ * tooltips, "Nuestra historia"). All copy from pages.json → about. Icons are
+ * inline SVG keyed by a stable name in the dictionary, so copy stays
+ * data-driven while the markup carries the brand glyphs.
+ *
+ * `reveal` hooks are present but inert (Phase 2 animates them).
+ */
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang, 'pages').about;
+---
+
+<section id="about" class="section section--rule">
+  <div class="section-header reveal">
+    <span class="section-tag">{t.tag}</span>
+    <h2 class="section-title">{t.title}</h2>
+    <p class="section-subtitle">{t.subtitle}</p>
+  </div>
+
+  <div class="about-features">
+    {t.features.map((feat) => (
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          {feat.icon === 'layers' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          )}
+          {feat.icon === 'team' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          )}
+          {feat.icon === 'check' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          )}
+        </div>
+        <h3>{feat.title}</h3>
+        <p>{feat.body}</p>
+      </div>
+    ))}
+  </div>
+
+  <div class="workflow reveal">
+    <h3 class="workflow-title">{t.workflowTitle}</h3>
+    <div class="workflow-steps">
+      {t.workflowSteps.map((step, i) => (
+        <>
+          {i > 0 && <div class="workflow-connector"></div>}
+          <div class="workflow-step" data-tooltip={step.tooltip}>
+            <div class="step-icon">
+              {step.icon === 'ticket' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              )}
+              {step.icon === 'quote' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              )}
+              {step.icon === 'card' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              )}
+              {step.icon === 'tool' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+              )}
+              {step.icon === 'shield' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+              )}
+              {step.icon === 'deliver' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+              )}
+            </div>
+            <span class="step-label">{step.label}</span>
+          </div>
+        </>
+      ))}
+    </div>
+  </div>
+
+  <div class="about-story reveal">
+    <h3 class="about-story-title">{t.storyTitle}</h3>
+    {t.story.map((para) => <p>{para}</p>)}
+  </div>
+</section>

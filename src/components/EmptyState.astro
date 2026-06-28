@@ -1,0 +1,37 @@
+---
+/**
+ * EmptyState — branded "coming soon" block for shell pages and teasers.
+ *
+ * Keeps the conversion path reachable on pages that have no real data yet
+ * (NAV-03): a heading + body + a primary CTA. When `ctaHref` is omitted the
+ * primary action is a `.dc-trigger` button that opens the shared Discord modal;
+ * when present it renders an outline link (e.g. "Ver galería" → /es/galeria)
+ * alongside the Discord CTA.
+ *
+ * All copy is author-controlled and rendered through Astro auto-escaping
+ * (no set:html) — T-01-08.
+ */
+interface Props {
+  heading: string;
+  body: string;
+  /** Label for the primary Discord (.dc-trigger) action. */
+  ticketLabel: string;
+  /** Optional secondary link (label + href), e.g. a "View gallery" link. */
+  linkLabel?: string;
+  linkHref?: string;
+}
+
+const { heading, body, ticketLabel, linkLabel, linkHref } = Astro.props;
+const hasLink = Boolean(linkLabel && linkHref);
+---
+
+<div class="empty-state">
+  <h3 class="empty-state-heading">{heading}</h3>
+  <p class="empty-state-body">{body}</p>
+  <div class="empty-state-actions">
+    {hasLink && (
+      <a href={linkHref} class="btn-outline">{linkLabel}</a>
+    )}
+    <button type="button" class="btn-primary dc-trigger">{ticketLabel}</button>
+  </div>
+</div>

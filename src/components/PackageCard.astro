@@ -1,0 +1,66 @@
+---
+/**
+ * PackageCard — a single package tier (Penumbra / Umbra / Eclipse).
+ *
+ * `condensed` mode (landing summary): name + price + one-liner + CTA only.
+ * Full mode (/servicios): tier badge, subtitle, deposit note, full feature
+ * list, CTA. Featured tiers get the single highlight border + "Más popular"
+ * badge (the only red-accented tier, per UI-SPEC color contract).
+ *
+ * All data comes from packages.json via the parent; copy renders through
+ * Astro auto-escaping (no set:html) — T-01-08.
+ */
+interface Feature {
+  text: string;
+  highlight: boolean;
+}
+interface Tier {
+  id: string;
+  tier: string;
+  name: string;
+  subtitle: string;
+  price: string;
+  oneLiner: string;
+  featured: boolean;
+  features: Feature[];
+}
+interface Props {
+  tier: Tier;
+  usd: string;
+  advanceNote: string;
+  popularBadge: string;
+  ctaLabel: string;
+  condensed?: boolean;
+}
+
+const { tier, usd, advanceNote, popularBadge, ctaLabel, condensed = false } =
+  Astro.props;
+---
+
+<div class={`card${tier.featured ? ' featured' : ''}${condensed ? ' card--condensed' : ''} reveal`}>
+  {tier.featured && <div class="card-popular">{popularBadge}</div>}
+
+  {!condensed && <div class="card-tier">{tier.tier}</div>}
+
+  <h3 class="card-name">{tier.name}</h3>
+
+  {!condensed && <p class="card-subtitle">{tier.subtitle}</p>}
+
+  <div class="card-price">{tier.price} <span>{usd}</span></div>
+
+  {condensed ? (
+    <p class="card-oneliner">{tier.oneLiner}</p>
+  ) : (
+    <>
+      <p class="card-note">{advanceNote}</p>
+      <div class="card-divider"></div>
+      <ul class="card-features">
+        {tier.features.map((f) => (
+          <li class={f.highlight ? 'highlight' : undefined}>{f.text}</li>
+        ))}
+      </ul>
+    </>
+  )}
+
+  <button type="button" class="card-cta dc-trigger">{ctaLabel}</button>
+</div>

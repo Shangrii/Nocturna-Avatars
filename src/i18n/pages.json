@@ -1,0 +1,164 @@
+{
+  "es": {
+    "about": {
+      "tag": "¿Quiénes somos?",
+      "title": "No somos \"comisiones por mensaje\".",
+      "subtitle": "Somos un equipo: proceso, calidad consistente y comunidad. Queremos que cada cliente sienta que entra a un lugar serio.",
+      "features": [
+        {
+          "icon": "layers",
+          "title": "Qué hacemos",
+          "body": "Edición en Unity y Blender de avatares existentes: ropa, accesorios, texturas, optimización, expresiones y ajustes."
+        },
+        {
+          "icon": "team",
+          "title": "Trabajo en equipo",
+          "body": "Cada miembro tiene un rol específico para asegurar la calidad y eficiencia en cada etapa del proceso."
+        },
+        {
+          "icon": "check",
+          "title": "Qué nos diferencia",
+          "body": "Entregas ágiles, acercamiento amigable y profesional, respaldo de comunidad y reconocimiento por la calidad constante de nuestro trabajo."
+        }
+      ],
+      "workflowTitle": "Flujo de trabajo",
+      "workflowSteps": [
+        { "icon": "ticket", "label": "Ticket", "tooltip": "Crea un ticket en el servidor de Discord para empezar tu cotización y compartir tus referencias." },
+        { "icon": "quote", "label": "Cotización", "tooltip": "Recibe una propuesta clara con precios, entregables y tiempos antes de confirmar el trabajo." },
+        { "icon": "card", "label": "Anticipo", "tooltip": "Confirma tu pedido con el 50% de anticipo para que el equipo comience la producción." },
+        { "icon": "tool", "label": "Producción", "tooltip": "El equipo edita tu avatar, agrega outfits, accesorios y ajusta texturas hasta cumplir el brief." },
+        { "icon": "shield", "label": "QA", "tooltip": "Revisamos el avatar para garantizar calidad, funcionalidad y que todo esté listo para VRChat." },
+        { "icon": "deliver", "label": "Entrega", "tooltip": "Recibe tu avatar final en la cuenta de VRChat, listo para usar sin complicaciones." }
+      ],
+      "storyTitle": "Nuestra historia",
+      "story": [
+        "Nocturna Avatars nace de una idea simple pero necesaria: que los editores puedan enfocarse en lo que mejor hacen — editar — sin cargar con todo lo demás. Construimos un equipo completo con roles definidos para que cada parte del proceso tenga a alguien dedicado: desde la atención al cliente y la gestión de tickets, hasta el control de calidad y la entrega final.",
+        "Esto no solo permite que los editores trabajen sin saturarse, sino que el cliente recibe un servicio más ágil, organizado y con tiempos de entrega reales. No es un editor solo haciendo todo; es un sistema diseñado para que el resultado sea consistente y profesional en cada proyecto."
+      ]
+    },
+    "teaser": {
+      "featured": {
+        "tag": "Trabajo destacado",
+        "title": "Nuestro trabajo"
+      },
+      "gallery": {
+        "tag": "Galería",
+        "title": "Avatares que hablan por sí solos"
+      }
+    },
+    "emptyState": {
+      "heading": "Muy pronto",
+      "galleryBody": "Nuestra galería se actualiza sola desde Discord. Mientras tanto, abre un ticket y cuéntanos qué quieres crear.",
+      "serviciosBody": "El catálogo completo llega pronto. ¿Tienes algo en mente? Abre un ticket para una cotización.",
+      "galleryCta": "Ver galería",
+      "ticketCta": "Abrir Ticket"
+    },
+    "galeria": {
+      "metaTitle": "Galería — Nocturna Avatars",
+      "metaDescription": "Galería de avatares editados por Nocturna Avatars. Se actualiza sola desde Discord. Pronto disponible.",
+      "tag": "Galería",
+      "title": "Nuestro trabajo",
+      "subtitle": "Avatares que hablan por sí solos."
+    },
+    "servicios": {
+      "metaTitle": "Servicios — Nocturna Avatars",
+      "metaDescription": "Paquetes de edición de avatares VRChat: Penumbra, Umbra y Eclipse. Precios claros, add-ons disponibles. Abre un ticket para tu cotización.",
+      "tag": "Servicios",
+      "title": "Nuestros paquetes",
+      "subtitle": "Precios claros, entregables definidos. Elige tu nivel y abre un ticket.",
+      "catalogTag": "Catálogo",
+      "catalogTitle": "Catálogo modular"
+    },
+    "notFound": {
+      "metaTitle": "Página no encontrada — Nocturna Avatars",
+      "metaDescription": "La página que buscas no existe.",
+      "code": "404",
+      "heading": "Esta página se perdió en la noche",
+      "body": "La ruta que buscas no existe. Vuelve al inicio o abre un ticket si necesitas ayuda.",
+      "bodyEn": "The page you're looking for doesn't exist. Head back home or open a ticket if you need help.",
+      "homeCta": "Volver al inicio",
+      "ticketCta": "Abrir Ticket"
+    }
+  },
+  "en": {
+    "about": {
+      "tag": "Who are we?",
+      "title": "We're not \"commissions by DM\".",
+      "subtitle": "We're a team: process, consistent quality, and community. We want every client to feel they're walking into a serious place.",
+      "features": [
+        {
+          "icon": "layers",
+          "title": "What we do",
+          "body": "Unity and Blender editing of existing avatars: outfits, accessories, textures, optimization, expressions, and adjustments."
+        },
+        {
+          "icon": "team",
+          "title": "Teamwork",
+          "body": "Every member has a specific role to ensure quality and efficiency at each stage of the process."
+        },
+        {
+          "icon": "check",
+          "title": "What sets us apart",
+          "body": "Fast deliveries, a friendly and professional approach, community backing, and a reputation for consistent quality."
+        }
+      ],
+      "workflowTitle": "Workflow",
+      "workflowSteps": [
+        { "icon": "ticket", "label": "Ticket", "tooltip": "Open a ticket on the Discord server to start your quote and share your references." },
+        { "icon": "quote", "label": "Quote", "tooltip": "Get a clear proposal with prices, deliverables, and timelines before confirming the work." },
+        { "icon": "card", "label": "Deposit", "tooltip": "Confirm your order with a 50% deposit so the team can begin production." },
+        { "icon": "tool", "label": "Production", "tooltip": "The team edits your avatar, adds outfits and accessories, and adjusts textures until the brief is met." },
+        { "icon": "shield", "label": "QA", "tooltip": "We review the avatar to guarantee quality, functionality, and that everything is ready for VRChat." },
+        { "icon": "deliver", "label": "Delivery", "tooltip": "Receive your finished avatar on your VRChat account, ready to use with no hassle." }
+      ],
+      "storyTitle": "Our story",
+      "story": [
+        "Nocturna Avatars was born from a simple but necessary idea: that editors should be able to focus on what they do best — editing — without carrying everything else. We built a complete team with defined roles so that every part of the process has someone dedicated to it: from client support and ticket management to quality control and final delivery.",
+        "This doesn't just let editors work without burning out; the client gets a faster, more organized service with real delivery times. It isn't one editor doing everything; it's a system designed to make the result consistent and professional on every project."
+      ]
+    },
+    "teaser": {
+      "featured": {
+        "tag": "Featured work",
+        "title": "Our work"
+      },
+      "gallery": {
+        "tag": "Gallery",
+        "title": "Avatars that speak for themselves"
+      }
+    },
+    "emptyState": {
+      "heading": "Coming soon",
+      "galleryBody": "Our gallery updates itself from Discord. In the meantime, open a ticket and tell us what you want to build.",
+      "serviciosBody": "The full catalog is coming soon. Have something in mind? Open a ticket for a quote.",
+      "galleryCta": "View gallery",
+      "ticketCta": "Open a Ticket"
+    },
+    "galeria": {
+      "metaTitle": "Gallery — Nocturna Avatars",
+      "metaDescription": "Gallery of avatars edited by Nocturna Avatars. It updates itself from Discord. Coming soon.",
+      "tag": "Gallery",
+      "title": "Our work",
+      "subtitle": "Avatars that speak for themselves."
+    },
+    "servicios": {
+      "metaTitle": "Services — Nocturna Avatars",
+      "metaDescription": "VRChat avatar editing packages: Penumbra, Umbra, and Eclipse. Clear pricing, add-ons available. Open a ticket for your quote.",
+      "tag": "Services",
+      "title": "Our packages",
+      "subtitle": "Clear pricing, defined deliverables. Choose your level and open a ticket.",
+      "catalogTag": "Catalog",
+      "catalogTitle": "Modular catalog"
+    },
+    "notFound": {
+      "metaTitle": "Page not found — Nocturna Avatars",
+      "metaDescription": "The page you're looking for doesn't exist.",
+      "code": "404",
+      "heading": "Esta página se perdió en la noche",
+      "body": "La ruta que buscas no existe. Vuelve al inicio o abre un ticket si necesitas ayuda.",
+      "bodyEn": "The page you're looking for doesn't exist. Head back home or open a ticket if you need help.",
+      "homeCta": "Volver al inicio",
+      "ticketCta": "Abrir Ticket"
+    }
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "es": {
+    "sectionTag": "Servicios",
+    "sectionTitle": "Elige tu nivel",
+    "sectionSubtitle": "Cada avatar es una identidad. Cada paquete, un paso hacia lo que quieres ser.",
+    "advanceNote": "50% de anticipo requerido",
+    "usd": "USD",
+    "popularBadge": "⬡ Más popular",
+    "ctaTicket": "Abrir Ticket",
+    "summaryCtaAll": "Ver todos los servicios",
+    "tiers": [
+      {
+        "id": "penumbra",
+        "tier": "Nivel I",
+        "name": "Penumbra",
+        "subtitle": "Para empezar a destacar",
+        "price": "$40",
+        "oneLiner": "2 outfits, 1 cabello y lo esencial para empezar a destacar.",
+        "featured": false,
+        "features": [
+          { "text": "2 outfits", "highlight": true },
+          { "text": "1 cabello", "highlight": true },
+          { "text": "1 accesorio (Objetos, juguetes, efectos)", "highlight": false },
+          { "text": "Texturas simples (logo o imagen en ropa/accesorios)", "highlight": false },
+          { "text": "Toggles de outfits incluidos", "highlight": false },
+          { "text": "Ajustes de fitting básicos (blender)", "highlight": false },
+          { "text": "Entrega a partir de 1–2 semanas", "highlight": false },
+          { "text": "1 Ajuste de ropa post-entrega", "highlight": false }
+        ]
+      },
+      {
+        "id": "umbra",
+        "tier": "Nivel II",
+        "name": "Umbra",
+        "subtitle": "Más opciones, más personalidad",
+        "price": "$60",
+        "oneLiner": "3 outfits, rostro personalizado y más personalidad.",
+        "featured": true,
+        "features": [
+          { "text": "3 outfits", "highlight": true },
+          { "text": "1 cabello", "highlight": true },
+          { "text": "2 accesorios (Objetos, juguetes, efectos)", "highlight": true },
+          { "text": "Rostro personalizado (blendshapes)", "highlight": true },
+          { "text": "Texturas personalizadas (Colores, degradados, logos)", "highlight": false },
+          { "text": "Toggles de outfits incluidos", "highlight": false },
+          { "text": "Ajustes de fitting intermedios (blender)", "highlight": false },
+          { "text": "Entrega a partir de 2–3 semanas", "highlight": false },
+          { "text": "2 Ajustes de ropa post-entrega", "highlight": false }
+        ]
+      },
+      {
+        "id": "eclipse",
+        "tier": "Nivel III",
+        "name": "Eclipse",
+        "subtitle": "El paquete completo",
+        "price": "$90",
+        "oneLiner": "4 outfits, sesión fotográfica y prioridad en cola.",
+        "featured": false,
+        "features": [
+          { "text": "4 outfits", "highlight": true },
+          { "text": "1 cabello", "highlight": true },
+          { "text": "3 accesorios (Objetos, juguetes, efectos)", "highlight": true },
+          { "text": "Rostro personalizado (blendshapes)", "highlight": true },
+          { "text": "Texturas completamente personalizadas", "highlight": false },
+          { "text": "Toggles de outfits incluidos", "highlight": false },
+          { "text": "Ajustes de fitting avanzados (blender)", "highlight": false },
+          { "text": "Sesión fotográfica", "highlight": true },
+          { "text": "Prioridad en cola de trabajo", "highlight": true },
+          { "text": "Entrega a partir de 3 semanas", "highlight": false },
+          { "text": "3 Ajustes de ropa post-entrega", "highlight": false }
+        ]
+      }
+    ],
+    "addonsTitle": "Add-ons disponibles",
+    "addons": [
+      { "name": "Outfit adicional", "price": "+$5 USD" },
+      { "name": "Accesorio extra", "price": "+$5 USD" },
+      { "name": "Cabello adicional", "price": "+$5 USD" },
+      { "name": "Expressions personalizadas", "price": "+$15 USD" },
+      { "name": "Sesión fotográfica", "price": "+$5 USD" },
+      { "name": "Revisión extra", "price": "+$5 USD" },
+      { "name": "Entrega urgente", "price": "+$15 USD" },
+      { "name": "NSFW", "price": "+$15 USD" }
+    ],
+    "addonsNote": "¿Tu avatar necesita ajustes de malla (quimeras, mezcla de cabellos, etc), blendshapes nuevos o requiere algún tipo de trabajo en 3D? Contáctanos y cotizamos según el contenido."
+  },
+  "en": {
+    "sectionTag": "Services",
+    "sectionTitle": "Choose your level",
+    "sectionSubtitle": "Every avatar is an identity. Every package, a step toward who you want to be.",
+    "advanceNote": "50% deposit required",
+    "usd": "USD",
+    "popularBadge": "⬡ Most popular",
+    "ctaTicket": "Open a Ticket",
+    "summaryCtaAll": "View all services",
+    "tiers": [
+      {
+        "id": "penumbra",
+        "tier": "Level I",
+        "name": "Penumbra",
+        "subtitle": "To start standing out",
+        "price": "$40",
+        "oneLiner": "2 outfits, 1 hair, and the essentials to start standing out.",
+        "featured": false,
+        "features": [
+          { "text": "2 outfits", "highlight": true },
+          { "text": "1 hair", "highlight": true },
+          { "text": "1 accessory (props, toys, effects)", "highlight": false },
+          { "text": "Simple textures (logo or image on clothing/accessories)", "highlight": false },
+          { "text": "Outfit toggles included", "highlight": false },
+          { "text": "Basic fitting adjustments (Blender)", "highlight": false },
+          { "text": "Delivery from 1–2 weeks", "highlight": false },
+          { "text": "1 post-delivery clothing adjustment", "highlight": false }
+        ]
+      },
+      {
+        "id": "umbra",
+        "tier": "Level II",
+        "name": "Umbra",
+        "subtitle": "More options, more personality",
+        "price": "$60",
+        "oneLiner": "3 outfits, a custom face, and more personality.",
+        "featured": true,
+        "features": [
+          { "text": "3 outfits", "highlight": true },
+          { "text": "1 hair", "highlight": true },
+          { "text": "2 accessories (props, toys, effects)", "highlight": true },
+          { "text": "Custom face (blendshapes)", "highlight": true },
+          { "text": "Custom textures (colors, gradients, logos)", "highlight": false },
+          { "text": "Outfit toggles included", "highlight": false },
+          { "text": "Intermediate fitting adjustments (Blender)", "highlight": false },
+          { "text": "Delivery from 2–3 weeks", "highlight": false },
+          { "text": "2 post-delivery clothing adjustments", "highlight": false }
+        ]
+      },
+      {
+        "id": "eclipse",
+        "tier": "Level III",
+        "name": "Eclipse",
+        "subtitle": "The complete package",
+        "price": "$90",
+        "oneLiner": "4 outfits, a photo session, and priority in the queue.",
+        "featured": false,
+        "features": [
+          { "text": "4 outfits", "highlight": true },
+          { "text": "1 hair", "highlight": true },
+          { "text": "3 accessories (props, toys, effects)", "highlight": true },
+          { "text": "Custom face (blendshapes)", "highlight": true },
+          { "text": "Fully custom textures", "highlight": false },
+          { "text": "Outfit toggles included", "highlight": false },
+          { "text": "Advanced fitting adjustments (Blender)", "highlight": false },
+          { "text": "Photo session", "highlight": true },
+          { "text": "Priority in the work queue", "highlight": true },
+          { "text": "Delivery from 3 weeks", "highlight": false },
+          { "text": "3 post-delivery clothing adjustments", "highlight": false }
+        ]
+      }
+    ],
+    "addonsTitle": "Available add-ons",
+    "addons": [
+      { "name": "Additional outfit", "price": "+$5 USD" },
+      { "name": "Extra accessory", "price": "+$5 USD" },
+      { "name": "Additional hair", "price": "+$5 USD" },
+      { "name": "Custom expressions", "price": "+$15 USD" },
+      { "name": "Photo session", "price": "+$5 USD" },
+      { "name": "Extra revision", "price": "+$5 USD" },
+      { "name": "Rush delivery", "price": "+$15 USD" },
+      { "name": "NSFW", "price": "+$15 USD" }
+    ],
+    "addonsNote": "Does your avatar need mesh adjustments (chimeras, hair blending, etc.), new blendshapes, or some kind of 3D work? Reach out and we'll quote based on the content."
+  }
+}

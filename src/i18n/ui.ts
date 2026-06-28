@@ -7,6 +7,8 @@
 import commonDict from './common.json';
 import homeDict from './home.json';
 import navDict from './nav.json';
+import packagesDict from './packages.json';
+import pagesDict from './pages.json';
 
 export const languages = {
   es: 'Español',
@@ -32,6 +34,8 @@ const dictionaries = {
   common: commonDict as Dict<(typeof commonDict)['es']>,
   home: homeDict as Dict<(typeof homeDict)['es']>,
   nav: navDict as Dict<(typeof navDict)['es']>,
+  packages: packagesDict as Dict<(typeof packagesDict)['es']>,
+  pages: pagesDict as Dict<(typeof pagesDict)['es']>,
 };
 
 export type DictName = keyof typeof dictionaries;
