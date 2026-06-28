@@ -1,0 +1,39 @@
+name: deploy
+
+# Build the Astro revamp and deploy to GitHub Pages.
+# Triggers only on the revamp branch (production stays untouched until cutover, D-07/D-09).
+on:
+  push:
+    branches: [revamp]
+  workflow_dispatch:
+
+# Least-privilege: only what deploy-pages needs (T-01-01).
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deploy; let in-progress runs finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Astro site
+        uses: withastro/action@v6
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
