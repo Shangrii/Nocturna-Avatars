@@ -30,7 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Success Criteria** (what must be TRUE):
 
   1. A visitor reaches the production domain (CNAME preserved) and the site is served from Astro static output on GitHub Pages
-  2. A visitor can switch between Spanish and English from any page; ES is default and URLs are language-scoped (`/es`, `/en`)
+  2. A visitor can switch between Spanish and English from any page; **English is default** (updated in 01-03; was ES) and URLs are language-scoped with per-locale slugs (`/en/services` · `/es/servicios`, `/en/gallery` · `/es/galeria`)
   3. A visitor sees a landing with hero, featured work placeholder, packages summary, gallery teaser, and about/process — plus dedicated `/servicios`, `/galeria`, `/terminos` pages
   4. A visitor can reach an "Abrir Ticket" / Discord CTA from every page
   5. A visitor on mobile sees a fully responsive layout using the centralized brand design system (colors, fonts, grain, shared components)
@@ -45,7 +45,7 @@ Plans:
 **Wave 2** *(blocked on Wave 1 completion)*
 
 - [x] 01-02-PLAN.md — Global chrome: nav, path-preserving language switcher, persistent floating CTA, Discord modal, footer
-- [ ] 01-03-PLAN.md — Landing composition + dedicated shells (/servicios real packages, /galeria shell, branded 404)
+- [x] 01-03-PLAN.md — Landing composition + dedicated shells (/servicios real packages, /galeria shell, branded 404)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -134,7 +134,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Bilingual Shell | 2/4 | In Progress|  |
+| 1. Foundation & Bilingual Shell | 3/4 | In Progress|  |
 | 2. Experimental Motion Layer | 0/TBD | Not started | - |
 | 3. Service Catalog | 0/TBD | Not started | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |

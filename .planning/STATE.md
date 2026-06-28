@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Plan 01-02 complete (human-verify approved); ready for 01-03. Push + Pages cutover pending (user).
-last_updated: "2026-06-28T16:54:10.914Z"
+stopped_at: Plan 01-03 COMPLETE (human-verify approved incl. the English-first + localized-slug revision round; SUMMARY written). Ready for 01-04 (Terms + cutover). Nothing pushed.
+last_updated: "2026-06-28T18:19:57.026Z"
 last_activity: 2026-06-28
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
-  percent: 50
+  completed_plans: 3
+  percent: 75
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 01 (foundation-bilingual-shell) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-06-28
 
-Progress: [█████░░░░░] 50%
+Progress: [████████░░] 75%
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Progress: [█████░░░░░] 50%
 *Updated after each plan completion*
 | Phase 01 P01-01 | 16 | 2 tasks | 16 files |
 | Phase 01 P01-02 | 21min | 2 tasks | 10 files |
+| Phase 01 P01-03 | 78min | 2 tasks | 24 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,7 @@ Recent decisions affecting current work:
 - [Roadmap]: Bot cog (Phase 5) is cross-repo in `nocturna-bot`; hard-depends on Phase 4's finalized `gallery.json` schema
 - [Roadmap]: i18n established in Phase 1 so all later content is bilingual from the start
 - [Phase ?]: [01-01] Pinned Astro 7.0.3 (not 5.x) — only npm-audit-clean version; satisfies supply-chain mitigation T-01-SC (0 vulns)
+- [Phase ?]: [01-03] English is the primary/default language (defaultLocale en) with per-locale English URL slugs (/en/services, /en/gallery) via central route map (src/i18n/routes.ts) + [lang]/[page].astro resolver; legacy old-EN-slug redirects. Supersedes the earlier ES-default assumption (I18N-03). Spanish browsers still routed to /es/.
 
 ### Pending Todos
 
@@ -96,6 +98,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-28T18:00:00.000Z
-Stopped at: Plan 01-03 — impl tasks (c36e066, 70e1478) + post-verify revision round committed (006e633 English-default, 1b14f94 wordmark, f1c37d2 localized slugs, 48c1483 globe switcher). AWAITING RE-VERIFICATION of the cross-cutting changes; plan NOT yet complete, SUMMARY not written.
+Last session: 2026-06-28T18:19:46.958Z
+Stopped at: Plan 01-03 COMPLETE — landing composition + dedicated shells (servicios/galeria/404), then a post-checkpoint cross-cutting revision round (English-first default, per-locale localized slugs via routes.ts + [lang]/[page].astro resolver + legacy redirects, globe-icon switcher, "Nocturna" wordmark). Human-verify approved both rounds; SUMMARY written. Ready for 01-04 (Terms + cutover). Nothing pushed.
 Resume file: None

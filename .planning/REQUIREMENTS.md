@@ -16,13 +16,13 @@
 
 - [x] **I18N-01**: A visitor can switch between Spanish and English from any page
 - [x] **I18N-02**: All UI and marketing copy renders from per-language content dictionaries
-- [x] **I18N-03**: Spanish is the default language and URLs are language-scoped (`/es`, `/en`)
+- [x] **I18N-03**: A default language is set and URLs are language-scoped (`/es`, `/en`). _(Superseded in 01-03: **English** is now the primary/default language — defaultLocale `en` — with per-locale English URL slugs (`/en/services`, `/en/gallery`); Spanish browsers are still routed to `/es/`. Original wording said Spanish was default.)_
 - [ ] **I18N-04**: Terms & Conditions render in both Spanish and English
 
 ### Structure & Conversion
 
-- [ ] **NAV-01**: A visitor sees a landing with hero, featured work, packages summary, gallery teaser, and about/process
-- [ ] **NAV-02**: Dedicated pages exist for Servicios, Galería, and Términos
+- [x] **NAV-01**: A visitor sees a landing with hero, featured work, packages summary, gallery teaser, and about/process
+- [x] **NAV-02**: Dedicated pages exist for Servicios, Galería, and Términos
 - [x] **NAV-03**: An "Abrir Ticket" / Discord CTA is reachable from every page
 - [ ] **NAV-04**: Navigating between pages uses animated transitions
 
@@ -91,8 +91,8 @@ Which phases cover which requirements. Populated during roadmap creation.
 | I18N-02 | Phase 1 | Complete |
 | I18N-03 | Phase 1 | Complete |
 | I18N-04 | Phase 1 | Pending |
-| NAV-01 | Phase 1 | Pending |
-| NAV-02 | Phase 1 | Pending |
+| NAV-01 | Phase 1 | Complete |
+| NAV-02 | Phase 1 | Complete |
 | NAV-03 | Phase 1 | Complete |
 | NAV-04 | Phase 2 | Pending |
 | FX-01 | Phase 2 | Pending |
