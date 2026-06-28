@@ -1,10 +1,11 @@
 ---
 phase: 2
 slug: experimental-motion-layer
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-06-28
+reviewed_at: 2026-06-28
 ---
 
 # Phase 2 — UI Design Contract
