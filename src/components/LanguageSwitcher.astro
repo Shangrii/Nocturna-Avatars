@@ -1,59 +1,87 @@
 ---
 /**
- * LanguageSwitcher (I18N-01, D-05, D-06).
+ * LanguageSwitcher (I18N-01, D-05/D-06; CHANGE 3 + CHANGE 4).
  *
- * Renders an `ES | EN` toggle. Each option is an <a> whose href is the CURRENT
- * path with only its leading locale segment swapped to the other language
- * (e.g. /es/servicios → /en/servicios). At a bare locale root (/es or /es/),
- * the target is /<other>/. The active locale renders in --red, the inactive in
- * --white-dim. Each option pads to a ≥44px hit area (PLAT-04).
+ * A globe/translate-icon button showing the CURRENT locale code (EN / ES) that
+ * opens a small dropdown to choose "English" / "Español" (each name written in
+ * its own language). Picking a locale navigates to the COUNTERPART of the
+ * current page in that locale, looked up by concept in the central route map
+ * (NOT a naive prefix swap): on /en/services → Español yields /es/servicios.
  *
- * The `data-lang-switch="<target>"` attribute lets chrome.ts persist the manual
- * choice to localStorage('nocturna-lang') BEFORE navigation, so plan 01's root
- * redirect honors the same pick. Only the literals 'es'/'en' are ever written
- * (T-01-05): the switcher emits a fixed allow-listed value, never a raw input.
+ * Accessibility: a real <button> with aria-haspopup/aria-expanded and an
+ * aria-label; the menu is a list of <a> options each ≥44px; keyboard-operable;
+ * closes on Escape / outside-click (wired in chrome.ts). Styles are tokenized
+ * (no hard-coded brand hex).
+ *
+ * Each option carries data-lang-switch="<target>" so chrome.ts persists the
+ * manual pick to localStorage('nocturna-lang') BEFORE navigation. Only the
+ * literals 'es'/'en' are ever written (T-01-05).
  */
-import { langCodes, type Lang } from '../i18n/ui';
+import { langCodes, languages, type Lang } from '../i18n/ui';
+import { translatePath } from '../i18n/routes';
 
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
-
-/**
- * Swap only the leading locale segment of the current path to `target`.
- * Falls back to `/<target>/` at a bare locale root.
- */
-function pathForLocale(pathname: string, target: Lang): string {
-  const segments = pathname.split('/').filter(Boolean); // drop leading/trailing ''
-  if (segments.length === 0) return `/${target}/`;
-  // Replace the first segment (the locale) regardless of its current value.
-  segments[0] = target;
-  const rest = segments.slice(1);
-  // Preserve trailing-slash style for the bare root.
-  return rest.length === 0 ? `/${target}/` : `/${segments.join('/')}`;
-}
-
 const pathname = Astro.url.pathname;
+const currentCode = lang.toUpperCase();
 ---
 
-<div class="lang-switch" role="group" aria-label="Language">
-  {
-    langCodes.map((code, i) => (
-      <>
-        {i > 0 && <span class="lang-sep" aria-hidden="true">|</span>}
-        <a
-          class="lang-opt"
-          href={pathForLocale(pathname, code)}
-          data-lang-switch={code}
-          data-active={code === lang ? '' : undefined}
-          aria-current={code === lang ? 'true' : undefined}
-          hreflang={code}
-        >
-          {code.toUpperCase()}
-        </a>
-      </>
-    ))
-  }
+<div class="lang-switch" data-lang-menu>
+  <button
+    type="button"
+    class="lang-trigger"
+    aria-haspopup="true"
+    aria-expanded="false"
+    aria-label={`Language: ${languages[lang]}`}
+    data-lang-trigger
+  >
+    <svg
+      class="lang-globe"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3c2.5 2.5 3.8 5.7 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.7-3.8-9S9.5 5.5 12 3z" />
+    </svg>
+    <span class="lang-code">{currentCode}</span>
+    <svg
+      class="lang-caret"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      aria-hidden="true"
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  </button>
+
+  <ul class="lang-menu" role="menu" data-lang-list hidden>
+    {
+      langCodes.map((code) => (
+        <li role="none">
+          <a
+            class="lang-menu-opt"
+            role="menuitem"
+            href={translatePath(pathname, code)}
+            data-lang-switch={code}
+            data-active={code === lang ? '' : undefined}
+            aria-current={code === lang ? 'true' : undefined}
+            hreflang={code}
+            lang={code}
+          >
+            <span class="lang-menu-code">{code.toUpperCase()}</span>
+            <span class="lang-menu-name">{languages[code]}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
 </div>

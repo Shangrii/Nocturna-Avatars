@@ -58,6 +58,34 @@ function initLangSwitch(): void {
       // Allow the default <a> navigation to continue.
     });
   });
+
+  // (c2) Globe-icon dropdown (CHANGE 4): toggle the menu, and close it on
+  // Escape, outside-click, or option selection. Accessible: keeps aria-expanded
+  // in sync and the menu hidden via the [hidden] attribute when closed.
+  const menu = document.querySelector<HTMLElement>('[data-lang-menu]');
+  const trigger = menu?.querySelector<HTMLButtonElement>('[data-lang-trigger]');
+  const list = menu?.querySelector<HTMLElement>('[data-lang-list]');
+  if (menu && trigger && list) {
+    const setOpen = (open: boolean) => {
+      trigger.setAttribute('aria-expanded', String(open));
+      list.toggleAttribute('hidden', !open);
+      menu.classList.toggle('open', open);
+    };
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setOpen(list.hasAttribute('hidden'));
+    });
+    // Option click: persistence is handled above; just let navigation proceed.
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target as Node)) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !list.hasAttribute('hidden')) {
+        setOpen(false);
+        trigger.focus();
+      }
+    });
+  }
 }
 
 function initDiscordModal(): void {
