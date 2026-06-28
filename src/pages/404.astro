@@ -1,0 +1,29 @@
+---
+/**
+ * Branded 404 (NAV-02). Astro emits this as dist/404.html, which GitHub Pages
+ * serves for unknown paths. Because GH Pages serves a single 404 regardless of
+ * locale, this page defaults to ES copy with a short EN equivalent inline.
+ * Chrome (nav/footer/floating CTA/modal) is inherited from BaseLayout; the
+ * back-home link targets /es/ (the default locale).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { defaultLang, useTranslations } from '../i18n/ui';
+import '../styles/sections.css';
+
+const nf = useTranslations(defaultLang, 'pages').notFound;
+---
+
+<BaseLayout lang={defaultLang} title={nf.metaTitle} description={nf.metaDescription}>
+  <section class="notfound">
+    <div class="reveal">
+      <div class="notfound-code" aria-hidden="true">{nf.code}</div>
+      <h1 class="notfound-heading">{nf.heading}</h1>
+      <p class="notfound-body">{nf.body}</p>
+      <p class="notfound-body--alt">{nf.bodyEn}</p>
+      <div class="notfound-actions">
+        <a href={`/${defaultLang}/`} class="btn-outline">{nf.homeCta}</a>
+        <button type="button" class="btn-primary dc-trigger">{nf.ticketCta}</button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

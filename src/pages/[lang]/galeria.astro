@@ -1,0 +1,39 @@
+---
+/**
+ * /galeria — Gallery shell page (NAV-02).
+ *
+ * Page chrome + the branded coming-soon EmptyState (the masonry + lightbox
+ * data-driven gallery from gallery.json is Phase 4). No image grid here — the
+ * empty state keeps the page from looking broken and keeps the Discord CTA
+ * reachable (NAV-03). Chrome inherited from BaseLayout.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import { langCodes, toLang, useTranslations } from '../../i18n/ui';
+import '../../styles/sections.css';
+
+export function getStaticPaths() {
+  return langCodes.map((lang) => ({ params: { lang } }));
+}
+
+const lang = toLang(Astro.params.lang);
+const page = useTranslations(lang, 'pages').galeria;
+const empty = useTranslations(lang, 'pages').emptyState;
+---
+
+<BaseLayout lang={lang} title={page.metaTitle} description={page.metaDescription}>
+  <section class="section section-page-top section--rule">
+    <div class="section-header reveal">
+      <span class="section-tag">{page.tag}</span>
+      <h2 class="section-title">{page.title}</h2>
+      <p class="section-subtitle">{page.subtitle}</p>
+    </div>
+    <div class="reveal">
+      <EmptyState
+        heading={empty.heading}
+        body={empty.galleryBody}
+        ticketLabel={empty.ticketCta}
+      />
+    </div>
+  </section>
+</BaseLayout>
