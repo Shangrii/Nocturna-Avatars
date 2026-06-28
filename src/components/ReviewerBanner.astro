@@ -1,0 +1,29 @@
+---
+/**
+ * ReviewerBanner — prominent "draft pending legal review" notice (D-13, T-01-11).
+ *
+ * Rendered ONLY by the Terms page when lang === 'en', because the English Terms
+ * ship as a Claude-written DRAFT ahead of legal sign-off while the Spanish text
+ * is authoritative/verbatim. The banner makes the draft status unambiguous to any
+ * visitor and persists until the user later clears it (out of scope this phase).
+ *
+ * Copy is passed in from terms.json (author-controlled) and rendered through
+ * Astro auto-escaping — no set:html.
+ *
+ * Contains the Spanish phrase "revisión legal" in its accessible label so the
+ * draft status is also flagged for Spanish-reading reviewers (must_haves).
+ */
+interface Props {
+  title: string;
+  body: string;
+}
+const { title, body } = Astro.props;
+---
+
+<aside class="reviewer-banner" role="note" aria-label="Borrador pendiente de revisión legal">
+  <span class="reviewer-banner-flag">DRAFT</span>
+  <div class="reviewer-banner-text">
+    <strong class="reviewer-banner-title">{title}</strong>
+    <p class="reviewer-banner-body">{body}</p>
+  </div>
+</aside>

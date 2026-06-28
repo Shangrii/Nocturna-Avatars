@@ -1,0 +1,156 @@
+/* ═══════════════════════════════════════════════
+   NOCTURNA AVATARS — Terms & Conditions (I18N-04)
+   Long-form legal page styling, carried from the
+   old .terms-modal/.terms-block styles into a full
+   page. Legal copy uses --lh-legal (1.8). Reviewer
+   banner (EN draft, D-13). No hard-coded brand hex —
+   every value reads from tokens.css.
+   ═══════════════════════════════════════════════ */
+
+.terms-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 var(--page-gutter);
+}
+
+/* ── Reviewer banner (EN draft, pending legal review) ── */
+.reviewer-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--red-soft);
+  border: 1px solid var(--red);
+  border-left: 4px solid var(--red);
+  border-radius: 4px;
+}
+.reviewer-banner-flag {
+  flex-shrink: 0;
+  align-self: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--red);
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+.reviewer-banner-text {
+  min-width: 0;
+}
+.reviewer-banner-title {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: var(--space-2xs);
+}
+.reviewer-banner-body {
+  font-size: var(--type-body-dense);
+  line-height: var(--lh-body);
+  color: var(--white-dim);
+}
+
+/* ── Summary (4-item intro) ── */
+.terms-summary {
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-lg);
+  background: var(--navy-surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.terms-summary-title {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: var(--space-md);
+}
+.terms-summary-list {
+  list-style: none;
+  display: grid;
+  gap: var(--space-sm);
+}
+.terms-summary-list li {
+  position: relative;
+  padding-left: var(--space-md);
+  font-size: var(--type-body);
+  line-height: var(--lh-body);
+  color: var(--white-dim);
+}
+.terms-summary-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  background: var(--red);
+  border-radius: 50%;
+}
+.terms-summary-list strong {
+  color: var(--white);
+  font-weight: 400;
+}
+
+/* ── Numbered blocks (long-form legal) ── */
+.terms-blocks {
+  display: grid;
+  gap: var(--space-xl);
+}
+.terms-block {
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--border);
+}
+.terms-block:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+.terms-block-title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--type-card-title);
+  color: var(--white);
+  line-height: var(--lh-heading);
+  margin-bottom: var(--space-sm);
+}
+.terms-block-num {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--red);
+  flex-shrink: 0;
+}
+.terms-block-body {
+  font-size: var(--type-body);
+  line-height: var(--lh-legal);
+  color: var(--white-dim);
+}
+.terms-block-body strong {
+  color: var(--white);
+  font-weight: 400;
+  border-bottom: 1px solid var(--red);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .reviewer-banner {
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+  }
+  .reviewer-banner-flag {
+    align-self: flex-start;
+  }
+  .terms-summary {
+    padding: var(--space-md);
+  }
+}

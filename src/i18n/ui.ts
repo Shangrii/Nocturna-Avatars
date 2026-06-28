@@ -9,6 +9,7 @@ import homeDict from './home.json';
 import navDict from './nav.json';
 import packagesDict from './packages.json';
 import pagesDict from './pages.json';
+import termsDict from './terms.json';
 
 export const languages = {
   es: 'Español',
@@ -38,6 +39,7 @@ const dictionaries = {
   nav: navDict as Dict<(typeof navDict)['es']>,
   packages: packagesDict as Dict<(typeof packagesDict)['es']>,
   pages: pagesDict as Dict<(typeof pagesDict)['es']>,
+  terms: termsDict as Dict<(typeof termsDict)['es']>,
 };
 
 export type DictName = keyof typeof dictionaries;

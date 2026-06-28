@@ -1,0 +1,214 @@
+{
+  "es": {
+    "metaTitle": "Términos y Condiciones — Nocturna Avatars",
+    "metaDescription": "Términos y condiciones del servicio de edición de avatares de Nocturna Avatars: proceso, pagos, entregas, revisiones y políticas.",
+    "tag": "Legal",
+    "title": "Términos y Condiciones",
+    "subtitle": "Lee con calma cómo trabajamos antes de abrir tu ticket. Estos términos aplican a todos los clientes y paquetes.",
+    "summaryTitle": "En resumen",
+    "summary": [
+      { "lead": "50% de anticipo", "rest": " para iniciar el trabajo." },
+      { "lead": "Pagos en USD", "rest": " y 48 horas para confirmar la cotización." },
+      { "lead": "No se entrega Unity Package", "rest": "; la entrega es el avatar listo para VRChat." },
+      { "lead": "Revisiones incluidas", "rest": ", cambios extra se cotizan por separado." }
+    ],
+    "blocks": [
+      {
+        "num": "01",
+        "title": "Proceso de trabajo",
+        "body": [
+          { "text": "Todo servicio comienza con la apertura de un ticket oficial a través de nuestros canales designados. No se acepta ni se garantiza ningún trabajo solicitado por mensajes directos sin ticket activo. El cliente proporciona únicamente referencias visuales, preferencias estéticas o indicaciones de estilo; Nocturna Avatars se encarga del resto. Una vez confirmada la cotización, se requiere el " },
+          { "text": "50% del total como anticipo", "strong": true },
+          { "text": " para iniciar el trabajo. El pago restante se cobra al momento de la entrega." }
+        ]
+      },
+      {
+        "num": "02",
+        "title": "Pagos",
+        "body": [
+          { "text": "Todos los precios se manejan en " },
+          { "text": "dólares estadounidenses (USD)", "strong": true },
+          { "text": ". Aceptamos PayPal y otros métodos acordados al momento del ticket. El anticipo no es reembolsable una vez iniciado el trabajo. Los pagos deben realizarse dentro de las " },
+          { "text": "48 horas", "strong": true },
+          { "text": " siguientes a la confirmación de cotización, de lo contrario el ticket podría ser cancelado." }
+        ]
+      },
+      {
+        "num": "03",
+        "title": "Assets y materiales",
+        "body": [
+          { "text": "La disponibilidad de un avatar o asset específico queda sujeta a evaluación previa; en caso de no ser viable, se ofrecerán alternativas similares. Nocturna Avatars no se hace responsable de restricciones de uso, licencias o derechos de terceros sobre los materiales utilizados. Cualquier avatar o asset que requiera de licencias de uso deberá ser proporcionado por el cliente para poder trabajar con él." }
+        ]
+      },
+      {
+        "num": "04",
+        "title": "Entregas y archivos",
+        "body": [
+          { "text": "No se entrega el proyecto de Unity (.unitypackage) bajo ninguna circunstancia.", "strong": true },
+          { "text": " La entrega consiste exclusivamente en el avatar subido a la cuenta del cliente, listo para su uso en VRChat. Esta política aplica para todos los clientes y paquetes, sin excepciones. El avatar entregado es para uso personal del cliente y no debe revenderse ni redistribuirse." }
+        ]
+      },
+      {
+        "num": "05",
+        "title": "Revisiones",
+        "body": [
+          { "text": "Cada paquete incluye un número determinado de revisiones. Una revisión cubre ajustes menores sobre el trabajo original. " },
+          { "text": "Los cambios fuera del brief original o que alteren el alcance del trabajo se cotizan por separado", "strong": true },
+          { "text": " como un nuevo ticket o add-on. Las revisiones deben solicitarse dentro de los " },
+          { "text": "5 días hábiles", "strong": true },
+          { "text": " siguientes a la entrega." }
+        ]
+      },
+      {
+        "num": "06",
+        "title": "Tiempos de entrega",
+        "body": [
+          { "text": "Los tiempos indicados en cada paquete son estimados en días hábiles a partir del pago del anticipo. Nocturna Avatars enviará actualizaciones periódicas al cliente. En caso de demora justificada, se notificará con anticipación. " },
+          { "text": "El cliente debe responder en un máximo de 48 horas", "strong": true },
+          { "text": " ante cualquier solicitud de información o aprobación; de lo contrario, el trabajo continúa según el último brief confirmado." }
+        ]
+      },
+      {
+        "num": "07",
+        "title": "Cancelaciones",
+        "body": [
+          { "text": "Si el cliente cancela " },
+          { "text": "antes de iniciar el trabajo", "strong": true },
+          { "text": ", el anticipo puede reembolsarse total o parcialmente a criterio del equipo. Si el trabajo ya fue iniciado, " },
+          { "text": "el anticipo no es reembolsable", "strong": true },
+          { "text": ". Nocturna Avatars se reserva el derecho de cancelar un ticket en casos de comportamiento irrespetuoso, información falsa o incumplimiento de estos términos, sin obligación de reembolso." }
+        ]
+      },
+      {
+        "num": "08",
+        "title": "Uso del trabajo realizado",
+        "body": [
+          { "text": "Nocturna Avatars puede utilizar imágenes del avatar terminado como muestra de trabajo en sus canales de publicidad y redes sociales, a menos que el cliente indique explícitamente lo contrario al momento del ticket. El cliente retiene el derecho de uso personal del avatar entregado." }
+        ]
+      },
+      {
+        "num": "09",
+        "title": "Conducta",
+        "body": [
+          { "text": "Nos reservamos el derecho de " },
+          { "text": "rechazar o cancelar cualquier ticket", "strong": true },
+          { "text": " ante conducta irrespetuosa, acoso, o solicitudes que violen nuestras políticas internas. El respeto mutuo es condición para recibir el servicio." }
+        ]
+      },
+      {
+        "num": "10",
+        "title": "Modificaciones",
+        "body": [
+          { "text": "Nocturna Avatars puede actualizar estos términos en cualquier momento. Los cambios aplicarán a tickets abiertos después de la fecha de actualización. Se recomienda revisar esta página periódicamente." }
+        ]
+      }
+    ]
+  },
+  "en": {
+    "metaTitle": "Terms & Conditions — Nocturna Avatars",
+    "metaDescription": "Terms and conditions for Nocturna Avatars' avatar editing service: process, payments, deliveries, revisions, and policies. English draft pending legal review.",
+    "tag": "Legal",
+    "title": "Terms & Conditions",
+    "subtitle": "Please read how we work before opening your ticket. These terms apply to every client and package.",
+    "bannerTitle": "Draft — translation pending legal review",
+    "bannerBody": "This English version is a working translation provided for convenience. The authoritative terms are the Spanish version; in case of any discrepancy, the Spanish text prevails.",
+    "summaryTitle": "In short",
+    "summary": [
+      { "lead": "50% deposit", "rest": " to start the work." },
+      { "lead": "Payments in USD", "rest": " and 48 hours to confirm the quote." },
+      { "lead": "No Unity Package is delivered", "rest": "; delivery is the avatar ready for VRChat." },
+      { "lead": "Revisions included", "rest": "; extra changes are quoted separately." }
+    ],
+    "blocks": [
+      {
+        "num": "01",
+        "title": "Work process",
+        "body": [
+          { "text": "Every service begins by opening an official ticket through our designated channels. No requested work is accepted or guaranteed via direct messages without an active ticket. The client provides only visual references, aesthetic preferences, or style guidance; Nocturna Avatars handles the rest. Once the quote is confirmed, a " },
+          { "text": "50% deposit of the total", "strong": true },
+          { "text": " is required to begin the work. The remaining payment is charged at the time of delivery." }
+        ]
+      },
+      {
+        "num": "02",
+        "title": "Payments",
+        "body": [
+          { "text": "All prices are handled in " },
+          { "text": "United States dollars (USD)", "strong": true },
+          { "text": ". We accept PayPal and other methods agreed upon when the ticket is opened. The deposit is non-refundable once work has begun. Payments must be made within " },
+          { "text": "48 hours", "strong": true },
+          { "text": " of the quote confirmation, otherwise the ticket may be cancelled." }
+        ]
+      },
+      {
+        "num": "03",
+        "title": "Assets and materials",
+        "body": [
+          { "text": "The availability of a specific avatar or asset is subject to prior evaluation; if it is not viable, similar alternatives will be offered. Nocturna Avatars is not responsible for usage restrictions, licenses, or third-party rights over the materials used. Any avatar or asset that requires usage licenses must be provided by the client in order to work with it." }
+        ]
+      },
+      {
+        "num": "04",
+        "title": "Deliveries and files",
+        "body": [
+          { "text": "The Unity project (.unitypackage) is not delivered under any circumstances.", "strong": true },
+          { "text": " Delivery consists exclusively of the avatar uploaded to the client's account, ready for use in VRChat. This policy applies to all clients and packages, without exception. The delivered avatar is for the client's personal use and may not be resold or redistributed." }
+        ]
+      },
+      {
+        "num": "05",
+        "title": "Revisions",
+        "body": [
+          { "text": "Each package includes a set number of revisions. A revision covers minor adjustments to the original work. " },
+          { "text": "Changes outside the original brief or that alter the scope of the work are quoted separately", "strong": true },
+          { "text": " as a new ticket or add-on. Revisions must be requested within " },
+          { "text": "5 business days", "strong": true },
+          { "text": " of delivery." }
+        ]
+      },
+      {
+        "num": "06",
+        "title": "Delivery times",
+        "body": [
+          { "text": "The times listed in each package are estimates in business days starting from the deposit payment. Nocturna Avatars will send periodic updates to the client. In the event of a justified delay, advance notice will be given. " },
+          { "text": "The client must respond within a maximum of 48 hours", "strong": true },
+          { "text": " to any request for information or approval; otherwise, the work continues according to the last confirmed brief." }
+        ]
+      },
+      {
+        "num": "07",
+        "title": "Cancellations",
+        "body": [
+          { "text": "If the client cancels " },
+          { "text": "before work begins", "strong": true },
+          { "text": ", the deposit may be refunded in full or in part at the team's discretion. If the work has already begun, " },
+          { "text": "the deposit is non-refundable", "strong": true },
+          { "text": ". Nocturna Avatars reserves the right to cancel a ticket in cases of disrespectful behavior, false information, or breach of these terms, with no obligation to refund." }
+        ]
+      },
+      {
+        "num": "08",
+        "title": "Use of completed work",
+        "body": [
+          { "text": "Nocturna Avatars may use images of the finished avatar as work samples on its advertising channels and social media, unless the client explicitly states otherwise when the ticket is opened. The client retains the right to personal use of the delivered avatar." }
+        ]
+      },
+      {
+        "num": "09",
+        "title": "Conduct",
+        "body": [
+          { "text": "We reserve the right to " },
+          { "text": "refuse or cancel any ticket", "strong": true },
+          { "text": " in response to disrespectful conduct, harassment, or requests that violate our internal policies. Mutual respect is a condition for receiving the service." }
+        ]
+      },
+      {
+        "num": "10",
+        "title": "Modifications",
+        "body": [
+          { "text": "Nocturna Avatars may update these terms at any time. Changes will apply to tickets opened after the update date. We recommend reviewing this page periodically." }
+        ]
+      }
+    ]
+  }
+}
