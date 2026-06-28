@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Plan 01-03 COMPLETE (human-verify approved incl. the English-first + localized-slug revision round; SUMMARY written). Ready for 01-04 (Terms + cutover). Nothing pushed.
-last_updated: "2026-06-28T18:19:57.026Z"
+status: verifying
+stopped_at: Completed 01-04-PLAN.md (Phase 1 done); user approved local verify
+last_updated: "2026-06-28T18:44:06.191Z"
 last_activity: 2026-06-28
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 3
-  percent: 75
+  completed_plans: 4
+  percent: 20
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 
 ## Current Position
 
-Phase: 01 (foundation-bilingual-shell) — EXECUTING
+Phase: 01 (foundation-bilingual-shell) — COMPLETE
 Plan: 4 of 4
-Status: In progress — awaiting human-verify checkpoint (Terms + cutover parity); push + Pages cutover are the user's actions
+Status: Phase complete (all plans + user-approved local verify). PENDING USER GO-LIVE: push revamp + set Pages Source → GitHub Actions + confirm custom domain survives (deferred, not a blocker)
 Last activity: 2026-06-28
 
-Progress: [████████░░] 75%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [████████░░] 75%
 | Phase 01 P01-01 | 16 | 2 tasks | 16 files |
 | Phase 01 P01-02 | 21min | 2 tasks | 10 files |
 | Phase 01 P01-03 | 78min | 2 tasks | 24 files |
+| Phase 01 P04 | 6 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,9 @@ Recent decisions affecting current work:
 - [Roadmap]: i18n established in Phase 1 so all later content is bilingual from the start
 - [Phase ?]: [01-01] Pinned Astro 7.0.3 (not 5.x) — only npm-audit-clean version; satisfies supply-chain mitigation T-01-SC (0 vulns)
 - [Phase ?]: [01-03] English is the primary/default language (defaultLocale en) with per-locale English URL slugs (/en/services, /en/gallery) via central route map (src/i18n/routes.ts) + [lang]/[page].astro resolver; legacy old-EN-slug redirects. Supersedes the earlier ES-default assumption (I18N-03). Spanish browsers still routed to /es/.
+- [Phase ?]: Terms ship via the [lang]/[page].astro resolver as a 'terms' concept (no standalone terminos.astro); URLs /es/terminos + /en/terms from routes.ts (01-04)
+- [Phase ?]: EN Terms ship as a flagged DRAFT behind a prominent ReviewerBanner; ES is authoritative/verbatim (D-13, 01-04)
+- [Phase ?]: Standalone index.html.astro omitted (Astro route collision with root index); legacy /index.html served by the root English-first redirect — D-02 met (01-04)
 
 ### Pending Todos
 
@@ -92,12 +96,13 @@ Items acknowledged and carried forward from previous milestone close:
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
+| Cutover | Go-live: push `revamp` + set Pages Source → GitHub Actions + confirm `nocturna-avatars.site` survives (D-09/PLAT-02 domain-survival, verifiable only post-cutover) — user action, NOT a blocker | Pending user go-live | 2026-06-28 |
 | Experimental | Real-time 3D avatar viewer (Three.js) — FX2-01 | Deferred to v2 | 2026-06-28 |
 | Experimental | Ambient music player / audio toggle — FX2-02 | Deferred to v2 | 2026-06-28 |
 | Gallery | Filter gallery by category/tag — GAL2-01 | Deferred to v2 | 2026-06-28 |
 
 ## Session Continuity
 
-Last session: 2026-06-28T18:19:46.958Z
-Stopped at: Plan 01-03 COMPLETE — landing composition + dedicated shells (servicios/galeria/404), then a post-checkpoint cross-cutting revision round (English-first default, per-locale localized slugs via routes.ts + [lang]/[page].astro resolver + legacy redirects, globe-icon switcher, "Nocturna" wordmark). Human-verify approved both rounds; SUMMARY written. Ready for 01-04 (Terms + cutover). Nothing pushed.
-Resume file: .planning/phases/01-foundation-bilingual-shell/01-04-PLAN.md (resume at the human-verify checkpoint; tasks 1-2 done, commits 19c8712 + 23c65ad)
+Last session: 2026-06-28T18:44:06.183Z
+Stopped at: Completed 01-04-PLAN.md (Phase 1 done); user approved local verify
+Resume file: None

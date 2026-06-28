@@ -13,7 +13,7 @@ Rebuild the Nocturna Avatars portfolio as an Astro static site that ships live t
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation & Bilingual Shell** - Astro + design system + i18n + structure + deploy; the live, branded, convertible shell
+- [x] **Phase 1: Foundation & Bilingual Shell** - Astro + design system + i18n + structure + deploy; the live, branded, convertible shell (completed 2026-06-28)
 - [ ] **Phase 2: Experimental Motion Layer** - WebGL hero, smooth scroll, scroll reveals, animated page transitions, cursor effects
 - [ ] **Phase 3: Service Catalog** - Data-driven packages + modular catalog from `services.json` (ES/EN, "Cotizar")
 - [ ] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized
@@ -49,7 +49,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-04-PLAN.md — Terms (ES verbatim + EN flagged draft) + legacy redirects + responsiveness pass + cutover parity
+- [x] 01-04-PLAN.md — Terms (ES verbatim + EN flagged draft) + legacy redirects + responsiveness pass + cutover parity
 
 **UI hint**: yes
 **Notes**: Brownfield migration — carry over existing content (packages, terms, about/process copy) and brand tokens from `index.html`/`styles.css`/`functions.js`. Establish the i18n routing/dictionary system here so all later content is bilingual from the start. Decide image storage path (`assets/gallery/` vs `public/gallery/`) in this phase. Bump the "A Another Tag" type scale and reserve it for display/accents. **Dependency:** Terms EN translation needs human/legal review (I18N-04 ships with a placeholder/reviewed copy gate).
@@ -134,7 +134,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Bilingual Shell | 3/4 | In Progress|  |
+| 1. Foundation & Bilingual Shell | 4/4 | Complete   | 2026-06-28 |
 | 2. Experimental Motion Layer | 0/TBD | Not started | - |
 | 3. Service Catalog | 0/TBD | Not started | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |

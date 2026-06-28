@@ -8,7 +8,7 @@
 ### Foundation & Deploy
 
 - [x] **PLAT-01**: Site is built with Astro and produces static output
-- [x] **PLAT-02**: Site deploys to GitHub Pages preserving the existing custom domain (CNAME)
+- [x] **PLAT-02**: Site deploys to GitHub Pages preserving the existing custom domain (CNAME) _(Build-side complete: `dist/CNAME` = `nocturna-avatars.site` on every build, parity-ready. **Domain-survival at the live cutover is human-pending** — the user must push `revamp`, set Pages Source → GitHub Actions, and confirm the domain stays bound; tracked under Deferred Items / 01-04 go-live.)_
 - [x] **PLAT-03**: Brand design system (colors, fonts, grain, shared components) is centralized and reused across all pages
 - [x] **PLAT-04**: A visitor on mobile sees a fully responsive layout
 
@@ -17,7 +17,7 @@
 - [x] **I18N-01**: A visitor can switch between Spanish and English from any page
 - [x] **I18N-02**: All UI and marketing copy renders from per-language content dictionaries
 - [x] **I18N-03**: A default language is set and URLs are language-scoped (`/es`, `/en`). _(Superseded in 01-03: **English** is now the primary/default language — defaultLocale `en` — with per-locale English URL slugs (`/en/services`, `/en/gallery`); Spanish browsers are still routed to `/es/`. Original wording said Spanish was default.)_
-- [ ] **I18N-04**: Terms & Conditions render in both Spanish and English
+- [x] **I18N-04**: Terms & Conditions render in both Spanish and English
 
 ### Structure & Conversion
 
@@ -90,7 +90,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | I18N-01 | Phase 1 | Complete |
 | I18N-02 | Phase 1 | Complete |
 | I18N-03 | Phase 1 | Complete |
-| I18N-04 | Phase 1 | Pending |
+| I18N-04 | Phase 1 | Complete |
 | NAV-01 | Phase 1 | Complete |
 | NAV-02 | Phase 1 | Complete |
 | NAV-03 | Phase 1 | Complete |
