@@ -83,13 +83,44 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (to be filled by roadmap) | — | Pending |
+| PLAT-01 | Phase 1 | Pending |
+| PLAT-02 | Phase 1 | Pending |
+| PLAT-03 | Phase 1 | Pending |
+| PLAT-04 | Phase 1 | Pending |
+| I18N-01 | Phase 1 | Pending |
+| I18N-02 | Phase 1 | Pending |
+| I18N-03 | Phase 1 | Pending |
+| I18N-04 | Phase 1 | Pending |
+| NAV-01 | Phase 1 | Pending |
+| NAV-02 | Phase 1 | Pending |
+| NAV-03 | Phase 1 | Pending |
+| NAV-04 | Phase 2 | Pending |
+| FX-01 | Phase 2 | Pending |
+| FX-02 | Phase 2 | Pending |
+| FX-03 | Phase 2 | Pending |
+| FX-04 | Phase 2 | Pending |
+| CAT-01 | Phase 3 | Pending |
+| CAT-02 | Phase 3 | Pending |
+| CAT-03 | Phase 3 | Pending |
+| CAT-04 | Phase 3 | Pending |
+| GAL-01 | Phase 4 | Pending |
+| GAL-02 | Phase 4 | Pending |
+| GAL-03 | Phase 4 | Pending |
+| GAL-04 | Phase 4 | Pending |
+| BOT-01 | Phase 5 | Pending |
+| BOT-02 | Phase 5 | Pending |
+| BOT-03 | Phase 5 | Pending |
+| BOT-04 | Phase 5 | Pending |
+| BOT-05 | Phase 5 | Pending |
+| BOT-06 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 27 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 27 ⚠️
+- v1 requirements: 30 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6)
+- Mapped to phases: 30 ✓
+- Unmapped: 0 ✓
+
+> Note: an earlier draft footer counted "27 v1"; the actual enumerated v1 list contains 30 requirements. Count corrected here.
 
 ---
 *Requirements defined: 2026-06-28*
-*Last updated: 2026-06-28 after initial definition*
+*Last updated: 2026-06-28 after roadmap creation (traceability + coverage)*
