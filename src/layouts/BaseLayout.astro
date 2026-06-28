@@ -8,6 +8,8 @@
  */
 import type { Lang } from '../i18n/ui';
 import '../styles/global.css';
+import '../styles/chrome.css';
+import Nav from '../components/Nav.astro';
 
 interface Props {
   lang: Lang;
@@ -35,12 +37,17 @@ const { lang, title, description } = Astro.props;
     />
   </head>
   <body>
-    <!-- Chrome (nav / lang switcher) is added in Plan 02 via this slot. -->
+    <!-- Global chrome (top): fixed nav, language switcher, Discord CTA. -->
+    <Nav lang={lang} />
     <slot name="chrome-top" />
 
     <slot />
 
-    <!-- Footer / persistent floating CTA land in Plan 02 via this slot. -->
+    <!-- Global chrome (bottom): footer, floating CTA, Discord modal — Task 2. -->
     <slot name="chrome-bottom" />
+
+    <script>
+      import '../scripts/chrome.ts';
+    </script>
   </body>
 </html>

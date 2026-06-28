@@ -6,6 +6,7 @@
  */
 import commonDict from './common.json';
 import homeDict from './home.json';
+import navDict from './nav.json';
 
 export const languages = {
   es: 'Español',
@@ -30,6 +31,7 @@ type Dict<T> = Record<Lang, T>;
 const dictionaries = {
   common: commonDict as Dict<(typeof commonDict)['es']>,
   home: homeDict as Dict<(typeof homeDict)['es']>,
+  nav: navDict as Dict<(typeof navDict)['es']>,
 };
 
 export type DictName = keyof typeof dictionaries;

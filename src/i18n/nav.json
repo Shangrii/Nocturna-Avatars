@@ -1,0 +1,40 @@
+{
+  "es": {
+    "brandWordmark": "NOCTURNA",
+    "navHome": "Home",
+    "navAbout": "Nosotros",
+    "navServices": "Servicios",
+    "navGallery": "Galería",
+    "navTerms": "Términos",
+    "ctaDiscord": "Discord",
+    "ctaTicket": "Abrir Ticket",
+    "navMenuLabel": "Menú",
+    "langSwitchLabel": "Cambiar idioma",
+    "modalTitle": "¿Listo para <em>ordenar</em>?",
+    "modalBody": "Únete a nuestro servidor de Discord para abrir un ticket, recibir una cotización personalizada y discutir los detalles de tu proyecto.",
+    "modalConfirm": "Abrir Discord",
+    "modalDismiss": "Quizás después",
+    "footerInstagram": "Instagram",
+    "footerDiscord": "Discord",
+    "footerCopy": "2026 Nocturna Avatars — El avatar que querías, sin el dolor de cabeza."
+  },
+  "en": {
+    "brandWordmark": "NOCTURNA",
+    "navHome": "Home",
+    "navAbout": "About",
+    "navServices": "Services",
+    "navGallery": "Gallery",
+    "navTerms": "Terms",
+    "ctaDiscord": "Discord",
+    "ctaTicket": "Open a Ticket",
+    "navMenuLabel": "Menu",
+    "langSwitchLabel": "Switch language",
+    "modalTitle": "Ready to <em>order</em>?",
+    "modalBody": "Join our Discord server to open a ticket, get a personalized quote, and discuss your project details.",
+    "modalConfirm": "Open Discord",
+    "modalDismiss": "Maybe later",
+    "footerInstagram": "Instagram",
+    "footerDiscord": "Discord",
+    "footerCopy": "2026 Nocturna Avatars — The avatar you wanted, without the headache."
+  }
+}

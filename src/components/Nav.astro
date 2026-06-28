@@ -1,0 +1,67 @@
+---
+/**
+ * Nav (NAV-03, multi-page model D / canonical).
+ *
+ * Fixed top nav, height var(--nav-h). Left: brand wordmark linking to /<lang>/.
+ * Right (desktop): localized PAGE links (not anchors), the LanguageSwitcher, and
+ * a Discord CTA (.dc-trigger → shared modal). Mobile: a .nav-toggle hamburger
+ * toggles a drawer holding the same controls. Active link is marked by comparing
+ * each href to Astro.url.pathname. All interactive controls reach ≥44px (PLAT-04)
+ * via chrome.css. Client behaviors (scroll state, drawer, lang persistence) live
+ * in src/scripts/chrome.ts, loaded once by BaseLayout.
+ */
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang, 'nav');
+
+const links = [
+  { href: `/${lang}/`, label: t.navHome },
+  { href: `/${lang}/servicios`, label: t.navServices },
+  { href: `/${lang}/galeria`, label: t.navGallery },
+  { href: `/${lang}/terminos`, label: t.navTerms },
+];
+
+// Normalize for comparison: treat /es and /es/ as equal.
+const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isActive = (href: string) => {
+  const h = href.replace(/\/+$/, '') || '/';
+  return h === current;
+};
+---
+
+<nav class="nav" id="nav" data-nav>
+  <a href={`/${lang}/`} class="nav-brand">{t.brandWordmark}</a>
+
+  <button
+    class="nav-toggle"
+    id="navToggle"
+    aria-label={t.navMenuLabel}
+    aria-expanded="false"
+    aria-controls="navLinks"
+    data-nav-toggle
+  >
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="nav-links" id="navLinks" data-nav-links>
+    {
+      links.map((link) => (
+        <a
+          href={link.href}
+          class:list={['nav-link', { active: isActive(link.href) }]}
+          aria-current={isActive(link.href) ? 'page' : undefined}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+    <LanguageSwitcher lang={lang} />
+    <button class="nav-cta dc-trigger" type="button">{t.ctaDiscord}</button>
+  </div>
+</nav>

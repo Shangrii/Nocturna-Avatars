@@ -1,0 +1,59 @@
+---
+/**
+ * LanguageSwitcher (I18N-01, D-05, D-06).
+ *
+ * Renders an `ES | EN` toggle. Each option is an <a> whose href is the CURRENT
+ * path with only its leading locale segment swapped to the other language
+ * (e.g. /es/servicios → /en/servicios). At a bare locale root (/es or /es/),
+ * the target is /<other>/. The active locale renders in --red, the inactive in
+ * --white-dim. Each option pads to a ≥44px hit area (PLAT-04).
+ *
+ * The `data-lang-switch="<target>"` attribute lets chrome.ts persist the manual
+ * choice to localStorage('nocturna-lang') BEFORE navigation, so plan 01's root
+ * redirect honors the same pick. Only the literals 'es'/'en' are ever written
+ * (T-01-05): the switcher emits a fixed allow-listed value, never a raw input.
+ */
+import { langCodes, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+/**
+ * Swap only the leading locale segment of the current path to `target`.
+ * Falls back to `/<target>/` at a bare locale root.
+ */
+function pathForLocale(pathname: string, target: Lang): string {
+  const segments = pathname.split('/').filter(Boolean); // drop leading/trailing ''
+  if (segments.length === 0) return `/${target}/`;
+  // Replace the first segment (the locale) regardless of its current value.
+  segments[0] = target;
+  const rest = segments.slice(1);
+  // Preserve trailing-slash style for the bare root.
+  return rest.length === 0 ? `/${target}/` : `/${segments.join('/')}`;
+}
+
+const pathname = Astro.url.pathname;
+---
+
+<div class="lang-switch" role="group" aria-label="Language">
+  {
+    langCodes.map((code, i) => (
+      <>
+        {i > 0 && <span class="lang-sep" aria-hidden="true">|</span>}
+        <a
+          class="lang-opt"
+          href={pathForLocale(pathname, code)}
+          data-lang-switch={code}
+          data-active={code === lang ? '' : undefined}
+          aria-current={code === lang ? 'true' : undefined}
+          hreflang={code}
+        >
+          {code.toUpperCase()}
+        </a>
+      </>
+    ))
+  }
+</div>
