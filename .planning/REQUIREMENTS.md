@@ -10,7 +10,7 @@
 - [x] **PLAT-01**: Site is built with Astro and produces static output
 - [x] **PLAT-02**: Site deploys to GitHub Pages preserving the existing custom domain (CNAME)
 - [x] **PLAT-03**: Brand design system (colors, fonts, grain, shared components) is centralized and reused across all pages
-- [ ] **PLAT-04**: A visitor on mobile sees a fully responsive layout
+- [x] **PLAT-04**: A visitor on mobile sees a fully responsive layout
 
 ### Internationalization
 
@@ -23,7 +23,7 @@
 
 - [ ] **NAV-01**: A visitor sees a landing with hero, featured work, packages summary, gallery teaser, and about/process
 - [ ] **NAV-02**: Dedicated pages exist for Servicios, Galería, and Términos
-- [ ] **NAV-03**: An "Abrir Ticket" / Discord CTA is reachable from every page
+- [x] **NAV-03**: An "Abrir Ticket" / Discord CTA is reachable from every page
 - [ ] **NAV-04**: Navigating between pages uses animated transitions
 
 ### Experimental Motion
@@ -86,14 +86,14 @@ Which phases cover which requirements. Populated during roadmap creation.
 | PLAT-01 | Phase 1 | Complete |
 | PLAT-02 | Phase 1 | Complete |
 | PLAT-03 | Phase 1 | Complete |
-| PLAT-04 | Phase 1 | Pending |
+| PLAT-04 | Phase 1 | Complete |
 | I18N-01 | Phase 1 | Complete |
 | I18N-02 | Phase 1 | Complete |
 | I18N-03 | Phase 1 | Complete |
 | I18N-04 | Phase 1 | Pending |
 | NAV-01 | Phase 1 | Pending |
 | NAV-02 | Phase 1 | Pending |
-| NAV-03 | Phase 1 | Pending |
+| NAV-03 | Phase 1 | Complete |
 | NAV-04 | Phase 2 | Pending |
 | FX-01 | Phase 2 | Pending |
 | FX-02 | Phase 2 | Pending |

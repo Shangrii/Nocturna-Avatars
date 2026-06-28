@@ -44,7 +44,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02-PLAN.md — Global chrome: nav, path-preserving language switcher, persistent floating CTA, Discord modal, footer
+- [x] 01-02-PLAN.md — Global chrome: nav, path-preserving language switcher, persistent floating CTA, Discord modal, footer
 - [ ] 01-03-PLAN.md — Landing composition + dedicated shells (/servicios real packages, /galeria shell, branded 404)
 
 **Wave 3** *(blocked on Wave 2 completion)*
@@ -134,7 +134,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Bilingual Shell | 1/4 | In Progress|  |
+| 1. Foundation & Bilingual Shell | 2/4 | In Progress|  |
 | 2. Experimental Motion Layer | 0/TBD | Not started | - |
 | 3. Service Catalog | 0/TBD | Not started | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
