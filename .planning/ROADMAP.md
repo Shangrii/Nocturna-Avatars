@@ -32,7 +32,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. A visitor can reach an "Abrir Ticket" / Discord CTA from every page
   5. A visitor on mobile sees a fully responsive layout using the centralized brand design system (colors, fonts, grain, shared components)
   6. Terms & Conditions render in both Spanish and English (EN flagged for human/legal review before publish)
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [ ] 01-01-PLAN.md — Astro scaffold + i18n routing + design tokens + base layout + localized hero + revamp-branch deploy (thinnest deployable end-to-end slice)
+- [ ] 01-02-PLAN.md — Global chrome: nav, path-preserving language switcher, persistent floating CTA, Discord modal, footer
+- [ ] 01-03-PLAN.md — Landing composition + dedicated shells (/servicios real packages, /galeria shell, branded 404)
+- [ ] 01-04-PLAN.md — Terms (ES verbatim + EN flagged draft) + legacy redirects + responsiveness pass + cutover parity
 **UI hint**: yes
 **Notes**: Brownfield migration — carry over existing content (packages, terms, about/process copy) and brand tokens from `index.html`/`styles.css`/`functions.js`. Establish the i18n routing/dictionary system here so all later content is bilingual from the start. Decide image storage path (`assets/gallery/` vs `public/gallery/`) in this phase. Bump the "A Another Tag" type scale and reserve it for display/accents. **Dependency:** Terms EN translation needs human/legal review (I18N-04 ships with a placeholder/reviewed copy gate).
 
@@ -104,7 +109,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Bilingual Shell | 0/TBD | Not started | - |
+| 1. Foundation & Bilingual Shell | 0/4 | Not started | - |
 | 2. Experimental Motion Layer | 0/TBD | Not started | - |
 | 3. Service Catalog | 0/TBD | Not started | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
