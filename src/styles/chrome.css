@@ -251,6 +251,11 @@
 /* ── Footer ── */
 .footer {
   padding: 52px var(--page-gutter);
+  /* Reserve clearance at the bottom so the fixed floating CTA (bottom-right,
+     ~44px tall + its own bottom offset) never covers footer links/copy at any
+     width — the floating CTA scrolls over the page but rests above this gap when
+     the user reaches the footer (PLAT-04). */
+  padding-bottom: calc(52px + var(--touch-min) + clamp(16px, 4vw, 32px));
   text-align: center;
   border-top: 1px solid var(--border);
   background: var(--navy-surface);
