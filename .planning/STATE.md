@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_plan
-stopped_at: Phase 01 complete (4/4) — ready to discuss Phase 2
-last_updated: 2026-06-28T22:34:54.013Z
+status: planning
+stopped_at: Phase 2 context gathered
+last_updated: "2026-06-28T23:06:22.045Z"
 last_activity: 2026-06-28
 progress:
   total_phases: 5
@@ -103,6 +103,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-28T18:44:06.183Z
-Stopped at: Completed 01-04-PLAN.md (Phase 1 done); user approved local verify
-Resume file: None
+Last session: 2026-06-28T23:06:22.036Z
+Stopped at: Phase 2 context gathered
+Resume file: .planning/phases/02-experimental-motion-layer/02-CONTEXT.md
