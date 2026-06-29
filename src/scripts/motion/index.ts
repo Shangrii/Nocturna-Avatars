@@ -15,6 +15,7 @@
 
 import { initSmoothScroll, destroySmoothScroll } from './smooth-scroll';
 import { initReveals, destroyReveals } from './reveals';
+import { initHeroShader, destroyHeroShader } from './hero-shader/shader';
 
 /** Guards against double-binding when astro:page-load re-fires (Pitfall 1). */
 let inited = false;
@@ -29,12 +30,14 @@ function initMotion(): void {
 
   initSmoothScroll();
   initReveals();
+  initHeroShader(); // HeroShader (FX-03) — no-ops without a [data-hero-shader] canvas
 }
 
 function teardownMotion(): void {
   if (!inited) return;
   inited = false;
 
+  destroyHeroShader(); // HeroShader teardown: cancelAnimationFrame, lose GL context
   destroyReveals();
   destroySmoothScroll();
 
