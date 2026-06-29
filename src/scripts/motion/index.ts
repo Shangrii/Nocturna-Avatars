@@ -16,6 +16,7 @@
 import { initSmoothScroll, destroySmoothScroll } from './smooth-scroll';
 import { initReveals, destroyReveals } from './reveals';
 import { initHeroShader, destroyHeroShader } from './hero-shader/shader';
+import { initCursor, destroyCursor } from './cursor';
 
 /** Guards against double-binding when astro:page-load re-fires (Pitfall 1). */
 let inited = false;
@@ -31,12 +32,14 @@ function initMotion(): void {
   initSmoothScroll();
   initReveals();
   initHeroShader(); // HeroShader (FX-03) — no-ops without a [data-hero-shader] canvas
+  initCursor(); // Custom cursor + magnetism (FX-04) — no-ops off fine-pointer / reduced-motion
 }
 
 function teardownMotion(): void {
   if (!inited) return;
   inited = false;
 
+  destroyCursor(); // Cursor teardown: remove listeners, kill tweens, remove the cursor div
   destroyHeroShader(); // HeroShader teardown: cancelAnimationFrame, lose GL context
   destroyReveals();
   destroySmoothScroll();

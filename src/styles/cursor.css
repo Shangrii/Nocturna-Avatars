@@ -1,0 +1,57 @@
+/* ═══════════════════════════════════════════════
+   Custom cursor (FX-04, D-06/07/08) — blend-difference invert circle.
+
+   The cursor div is created by cursor.ts ONLY when finePointer && !prefersReduced,
+   so these rules are additionally hard-gated behind (pointer: fine) and (hover: hover)
+   for defence in depth, and fully suppressed under prefers-reduced-motion (D-21).
+
+   `mix-blend-mode: difference` derives its contrast from whatever sits beneath it and
+   introduces NO new hue (D-06) — it is never tinted red. `pointer-events: none` is the
+   hard rule: the cursor can never steal or shift a click target (Pitfall 7, D-19).
+   ═══════════════════════════════════════════════ */
+
+@media (pointer: fine) and (hover: hover) {
+  .cursor-fx {
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* gsap.quickTo drives x/y as a transform; center the circle on the hotspot. */
+    width: var(--space-md); /* 24px */
+    height: var(--space-md);
+    margin-top: calc(var(--space-md) / -2);
+    margin-left: calc(var(--space-md) / -2);
+    border-radius: 999px;
+    background: var(--white);
+    mix-blend-mode: difference;
+    pointer-events: none; /* Pitfall 7 — never a click target */
+    z-index: 10000; /* above chrome, below nothing it can block (pointer-events:none) */
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    transition:
+      width 0.22s ease,
+      height 0.22s ease,
+      opacity 0.2s ease;
+    will-change: transform;
+  }
+
+  /* Revealed once the pointer is over the document (cursor.ts toggles the class). */
+  .cursor-fx--visible {
+    opacity: 1;
+  }
+
+  /* Grows over interactive targets (D-07) — scale via box size, not transform, so it
+     never fights the quickTo x/y transform driving the follow. */
+  .cursor-fx--grow {
+    width: var(--space-2xl); /* 64px */
+    height: var(--space-2xl);
+    margin-top: calc(var(--space-2xl) / -2);
+    margin-left: calc(var(--space-2xl) / -2);
+  }
+}
+
+/* D-21 — reduced-motion: no custom cursor at all, native cursor restored. */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-fx {
+    display: none !important;
+  }
+}

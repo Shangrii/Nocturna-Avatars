@@ -1,0 +1,133 @@
+/* ═══════════════════════════════════════════════
+   Choreography & micro-interactions (D-09, D-19).
+
+   The cohesive, "tasteful not noisy" interaction language: a subtle lift on buttons
+   and cards, an underline-draw on links, a brief glitch-flicker accent echoing the
+   hero, and the persistent CTA pulse. Red (--red-glow) appears ONLY as the flicker /
+   pulse accent (UI-SPEC Color) — never as a tint on every effect.
+
+   Everything here is transform/opacity/shadow only (no layout properties) and is
+   neutralised under prefers-reduced-motion (D-21). All values come from tokens.css.
+   ═══════════════════════════════════════════════ */
+
+/* ── Micro-interaction: lift (D-09) ── buttons + cards rise slightly on hover. */
+.hero-cta,
+.card,
+.btn-primary,
+.nav-cta,
+.card-cta {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+@media (hover: hover) {
+  .hero-cta:hover,
+  .btn-primary:hover,
+  .nav-cta:hover,
+  .card-cta:hover {
+    transform: translateY(calc(var(--space-3xs) * -1)); /* -4px lift */
+  }
+  .card:hover {
+    transform: translateY(calc(var(--space-2xs) * -1)); /* -8px lift */
+  }
+}
+
+/* ── Micro-interaction: underline-draw (D-09) ── nav + arrow links draw an underline. */
+.nav-link,
+.link-arrow {
+  position: relative;
+}
+.nav-link::after,
+.link-arrow::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: calc(var(--space-3xs) * -1);
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.28s ease;
+}
+@media (hover: hover) {
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after,
+  .link-arrow:hover::after,
+  .link-arrow:focus-visible::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ── Micro-interaction: glitch-flicker accent (D-09) ── a brief, low-coverage red
+   flicker that echoes the hero shader, fired on hover of primary actions only. */
+@keyframes nocturna-glitch-flicker {
+  0%,
+  100% {
+    text-shadow: none;
+  }
+  20% {
+    text-shadow: var(--space-3xs) 0 0 var(--red-glow);
+  }
+  40% {
+    text-shadow: calc(var(--space-3xs) * -1) 0 0 var(--red-glow);
+  }
+  60% {
+    text-shadow: 0 0 var(--space-3xs) var(--red-glow);
+  }
+}
+@media (hover: hover) {
+  .hero-cta--outline:hover,
+  .btn-primary:hover {
+    animation: nocturna-glitch-flicker 0.4s steps(2, end) 1;
+  }
+}
+
+/* ── CTA pulse (D-19) ── the persistent FloatingCTA breathes a red-glow halo so the
+   conversion path stays the eye-magnet. Mirrors chrome.css:326-339 red-glow values. */
+@keyframes nocturna-cta-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 24px rgba(192, 25, 44, 0.35),
+      0 0 0 1px rgba(232, 34, 59, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 12px 32px rgba(192, 25, 44, 0.5),
+      0 0 0 3px rgba(232, 34, 59, 0.55);
+  }
+}
+.floating-cta {
+  animation: nocturna-cta-pulse 2.8s ease-in-out infinite;
+}
+.floating-cta:hover {
+  animation-play-state: paused; /* hover takes over with the chrome.css lift state */
+}
+
+/* ── D-21 reduced-motion: neutralise lift / underline / flicker / pulse ──
+   The conversion path stays reachable; only the motion is removed. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta,
+  .card,
+  .btn-primary,
+  .nav-cta,
+  .card-cta {
+    transition: none;
+  }
+  .hero-cta:hover,
+  .btn-primary:hover,
+  .nav-cta:hover,
+  .card-cta:hover,
+  .card:hover {
+    transform: none;
+    animation: none;
+  }
+  .nav-link::after,
+  .link-arrow::after {
+    transition: none;
+  }
+  .floating-cta {
+    animation: none;
+  }
+}
