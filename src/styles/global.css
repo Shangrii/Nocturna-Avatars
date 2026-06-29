@@ -25,8 +25,15 @@
 }
 
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: var(--nav-h);
+}
+
+/* Native smooth scroll survives only when Lenis is OFF (reduced-motion), so the two
+   never double-handle the same wheel/anchor scroll (RESEARCH State of the Art). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {

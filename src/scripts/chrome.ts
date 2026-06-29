@@ -15,6 +15,15 @@
 const LANG_KEY = 'nocturna-lang';
 const VALID_LANGS = ['es', 'en'] as const;
 
+/**
+ * Under ClientRouter the swapped DOM gives fresh per-element nodes each navigation,
+ * so per-element addEventListener calls never stack. The only listeners that DO stack
+ * are the document-level Escape/outside-click handlers below — bind those exactly once
+ * across the page's lifetime, guarded by these module flags (RESEARCH Pitfall 8).
+ */
+let langDocListenersBound = false;
+let modalDocListenersBound = false;
+
 function initNav(): void {
   const nav = document.querySelector<HTMLElement>('[data-nav]');
   const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
@@ -71,18 +80,40 @@ function initLangSwitch(): void {
       list.toggleAttribute('hidden', !open);
       menu.classList.toggle('open', open);
     };
+    // Per-element listener: the swapped DOM gives a fresh trigger node each navigation,
+    // so this never stacks.
     trigger.addEventListener('click', (e) => {
       e.stopPropagation();
       setOpen(list.hasAttribute('hidden'));
     });
-    // Option click: persistence is handled above; just let navigation proceed.
+  }
+
+  // Document-level listeners bind ONCE for the page's lifetime (guard flag) and
+  // re-query the live DOM at event time so they never hold stale post-swap nodes.
+  if (!langDocListenersBound) {
+    langDocListenersBound = true;
+    const liveMenu = () => document.querySelector<HTMLElement>('[data-lang-menu]');
+    const closeMenu = () => {
+      const m = liveMenu();
+      const t = m?.querySelector<HTMLButtonElement>('[data-lang-trigger]');
+      const l = m?.querySelector<HTMLElement>('[data-lang-list]');
+      if (m && t && l) {
+        t.setAttribute('aria-expanded', 'false');
+        l.toggleAttribute('hidden', true);
+        m.classList.toggle('open', false);
+      }
+    };
     document.addEventListener('click', (e) => {
-      if (!menu.contains(e.target as Node)) setOpen(false);
+      const m = liveMenu();
+      if (m && !m.contains(e.target as Node)) closeMenu();
     });
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !list.hasAttribute('hidden')) {
-        setOpen(false);
-        trigger.focus();
+      const m = liveMenu();
+      const l = m?.querySelector<HTMLElement>('[data-lang-list]');
+      const t = m?.querySelector<HTMLButtonElement>('[data-lang-trigger]');
+      if (e.key === 'Escape' && l && !l.hasAttribute('hidden')) {
+        closeMenu();
+        t?.focus();
       }
     });
   }
@@ -117,9 +148,20 @@ function initDiscordModal(): void {
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) close();
   });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay.classList.contains('active')) close();
-  });
+
+  // Document-level Escape binds ONCE for the page's lifetime (guard flag) and
+  // re-queries the live overlay at event time to avoid holding a stale post-swap node.
+  if (!modalDocListenersBound) {
+    modalDocListenersBound = true;
+    document.addEventListener('keydown', (e) => {
+      const live = document.querySelector<HTMLElement>('[data-dc-overlay]');
+      if (e.key === 'Escape' && live?.classList.contains('active')) {
+        live.classList.remove('active');
+        live.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    });
+  }
 }
 
 function init(): void {
@@ -128,8 +170,8 @@ function init(): void {
   initDiscordModal();
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+// Re-run on every ClientRouter navigation (and the initial load, which also fires
+// astro:page-load). The per-element binds use the fresh swapped DOM; the document-level
+// handlers self-guard against stacking. Replaces the old one-shot ready-state gate
+// that died after the first view-transition swap (RESEARCH Pitfall 8).
+document.addEventListener('astro:page-load', init);

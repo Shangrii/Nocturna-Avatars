@@ -7,8 +7,10 @@
  * from global.css — do NOT duplicate it here.
  */
 import type { Lang } from '../i18n/ui';
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import '../styles/chrome.css';
+import '../styles/motion.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import FloatingCTA from '../components/FloatingCTA.astro';
@@ -38,6 +40,7 @@ const { lang, title, description } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <ClientRouter />
   </head>
   <body>
     <!-- Global chrome (top): fixed nav, language switcher, Discord CTA. -->
@@ -54,6 +57,9 @@ const { lang, title, description } = Astro.props;
 
     <script>
       import '../scripts/chrome.ts';
+    </script>
+    <script>
+      import '../scripts/motion/index.ts';
     </script>
   </body>
 </html>
