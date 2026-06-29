@@ -72,7 +72,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 02-01-PLAN.md — Foundation slice: ClientRouter + lifecycle motion controller + Lenis smooth scroll (FX-01) + GSAP/ScrollTrigger+SplitText reveals (FX-02) + mandatory chrome.ts swap-safe migration + global.css scroll-behavior guard
+- [x] 02-01-PLAN.md — Foundation slice: ClientRouter + lifecycle motion controller + Lenis smooth scroll (FX-01) + GSAP/ScrollTrigger+SplitText reveals (FX-02) + mandatory chrome.ts swap-safe migration + global.css scroll-behavior guard
 
 **Wave 2** *(blocked on Wave 1)*
 
@@ -152,7 +152,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Bilingual Shell | 4/4 | Complete   | 2026-06-28 |
-| 2. Experimental Motion Layer | 0/4 | Planned | - |
+| 2. Experimental Motion Layer | 1/4 | In Progress|  |
 | 3. Service Catalog | 0/TBD | Not started | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |

@@ -24,12 +24,12 @@
 - [x] **NAV-01**: A visitor sees a landing with hero, featured work, packages summary, gallery teaser, and about/process
 - [x] **NAV-02**: Dedicated pages exist for Servicios, Galería, and Términos
 - [x] **NAV-03**: An "Abrir Ticket" / Discord CTA is reachable from every page
-- [ ] **NAV-04**: Navigating between pages uses animated transitions
+- [x] **NAV-04**: Navigating between pages uses animated transitions
 
 ### Experimental Motion
 
-- [ ] **FX-01**: The site uses smooth scrolling
-- [ ] **FX-02**: Sections animate / reveal on scroll
+- [x] **FX-01**: The site uses smooth scrolling
+- [x] **FX-02**: Sections animate / reveal on scroll
 - [ ] **FX-03**: The hero displays a WebGL shader effect (noise/distortion)
 - [ ] **FX-04**: The cursor has an interactive effect
 
@@ -94,9 +94,9 @@ Which phases cover which requirements. Populated during roadmap creation.
 | NAV-01 | Phase 1 | Complete |
 | NAV-02 | Phase 1 | Complete |
 | NAV-03 | Phase 1 | Complete |
-| NAV-04 | Phase 2 | Pending |
-| FX-01 | Phase 2 | Pending |
-| FX-02 | Phase 2 | Pending |
+| NAV-04 | Phase 2 | Complete |
+| FX-01 | Phase 2 | Complete |
+| FX-02 | Phase 2 | Complete |
 | FX-03 | Phase 2 | Pending |
 | FX-04 | Phase 2 | Pending |
 | CAT-01 | Phase 3 | Pending |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-06-29T05:50:33.922Z"
-last_activity: 2026-06-29 -- Phase 02 planning complete
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-06-29T06:10:56.734Z"
+last_activity: 2026-06-29
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 8
-  completed_plans: 4
+  completed_plans: 5
   percent: 20
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** A visitor is visually impressed and reaches "Abrir Ticket" on Discord, while staff keep gallery/catalog current without touching code.
-**Current focus:** Phase 2 — experimental motion layer
+**Current focus:** Phase 02 — experimental-motion-layer
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
+Phase: 02 (experimental-motion-layer) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-06-29 -- Phase 02 planning complete
+Last activity: 2026-06-29
 
-Progress: [██████████] 100%
+Progress: [██████░░░░] 63%
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Progress: [██████████] 100%
 | Phase 01 P01-02 | 21min | 2 tasks | 10 files |
 | Phase 01 P01-03 | 78min | 2 tasks | 24 files |
 | Phase 01 P04 | 6 | 2 tasks | 7 files |
+| Phase 02 P01 | 25min | 4 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,8 @@ Recent decisions affecting current work:
 - [Phase ?]: Terms ship via the [lang]/[page].astro resolver as a 'terms' concept (no standalone terminos.astro); URLs /es/terminos + /en/terms from routes.ts (01-04)
 - [Phase ?]: EN Terms ship as a flagged DRAFT behind a prominent ReviewerBanner; ES is authoritative/verbatim (D-13, 01-04)
 - [Phase ?]: Standalone index.html.astro omitted (Astro route collision with root index); legacy /index.html served by the root English-first redirect — D-02 met (01-04)
+- [Phase ?]: [02-01] lenis@1.3.25 + gsap@3.15.0 exact pins, npm audit clean (T-02-SC, approved); ClientRouter + lifecycle motion controller (initMotion on astro:page-load / teardownMotion on astro:before-swap) is the scaffold all later Phase 2 slices mount on
+- [Phase ?]: [02-01] chrome.ts document-level Escape/outside-click handlers re-query the live DOM at event time (not stale post-swap nodes); scroll-behavior:smooth re-scoped under @media reduced-motion to avoid Lenis double-handling
 
 ### Pending Todos
 
@@ -103,6 +106,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-28T23:15:52.089Z
-Stopped at: Phase 2 UI-SPEC approved
-Resume file: .planning/phases/02-experimental-motion-layer/02-UI-SPEC.md
+Last session: 2026-06-29T06:10:56.724Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
