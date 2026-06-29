@@ -13,6 +13,7 @@ import Teaser from '../../components/sections/Teaser.astro';
 import PackagesSummary from '../../components/sections/PackagesSummary.astro';
 import { localizedPath } from '../../i18n/routes';
 import '../../styles/sections.css';
+import '../../styles/hero-shader.css';
 
 export function getStaticPaths() {
   return langCodes.map((lang) => ({ params: { lang } }));
@@ -27,6 +28,23 @@ const empty = useTranslations(lang, 'pages').emptyState;
 <BaseLayout lang={lang} title={t.metaTitle} description={t.metaDescription}>
   <section id="home" class="hero">
     <div class="hero-bg" aria-hidden="true">
+      <!-- Default-visible static fallback (D-04/D-20): the hero background with
+           JS off, before the shader confirms it is live, or on any degradation.
+           The shader (Plan 02-02) reveals its canvas and retires this <img> by
+           toggling data-shader-live on .hero-bg once it renders a frame. -->
+      <img
+        class="hero-fallback"
+        src="/hero-fallback.avif"
+        alt=""
+        aria-hidden="true"
+        decoding="async"
+        fetchpriority="high"
+        data-hero-fallback
+      />
+      <!-- WebGL2 glitch shader mount point — stays empty/hidden until live. -->
+      <canvas data-hero-shader aria-hidden="true"></canvas>
+      <!-- Contrast/vignette legibility guard so headline + CTA hold AA (D-04). -->
+      <div class="hero-shader-overlay"></div>
       <div class="hero-grid"></div>
       <div class="hero-glow"></div>
     </div>

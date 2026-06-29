@@ -1,0 +1,87 @@
+/* ═══════════════════════════════════════════════
+   Hero WebGL shader layer (FX-03) — styling for the
+   shader canvas, its static fallback <img>, and the
+   contrast/vignette legibility overlay (D-04/D-21/D-22).
+
+   Layering inside .hero-bg (which is `position:absolute; inset:0`):
+     z 0  → static fallback <img>  (default-visible background)
+     z 1  → <canvas data-hero-shader> (revealed only once the shader is live)
+     z 2  → .hero-shader-overlay   (contrast/vignette so headline + CTA hold AA)
+   .hero-content sits at z-index 2 in the page's own hero styles and the existing
+   .hero-grid / .hero-glow keep painting above the shader field. The global
+   film-grain `body::after` (global.css, z 9999) stays the ONLY CSS grain — the
+   shader owns the *hero* grain at a lower amplitude (no second full grain here).
+   ═══════════════════════════════════════════════ */
+
+/* Default state: the static fallback image IS the hero background. The shader only
+   reveals itself by toggling `data-shader-live` on .hero-bg once it actually renders
+   a frame, so JS-off / pre-init / degraded all resolve to this image (D-04/D-20). */
+.hero-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 65% 50%;
+  z-index: 0;
+  /* AVIF can decode async; a navy base under it avoids a flash of nothing. */
+  background: var(--navy);
+}
+
+[data-hero-shader] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+  /* Hidden until the shader confirms it is live (first frame rendered). */
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+/* When the shader is confirmed live: reveal the canvas, retire the static image. */
+.hero-bg[data-shader-live] [data-hero-shader] {
+  opacity: 1;
+}
+.hero-bg[data-shader-live] .hero-fallback {
+  opacity: 0;
+}
+
+/* Contrast / vignette legibility guard (D-04): darkens the hero field — heaviest at
+   the center where the headline + CTA live — so `--white` text stays ≥ AA even at a
+   peak glitch burst. Sits above the canvas/img, below the .hero-content (z 2). */
+.hero-shader-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 70% 60% at 50% 52%,
+      rgba(10, 12, 20, 0.62) 0%,
+      rgba(10, 12, 20, 0.34) 45%,
+      rgba(10, 12, 20, 0.12) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(10, 12, 20, 0.45) 0%,
+      transparent 28%,
+      transparent 72%,
+      rgba(10, 12, 20, 0.55) 100%
+    );
+}
+
+/* Reduced-motion (D-21): no live shader. Force the static image visible and keep the
+   canvas hidden regardless of any JS state — the safe default wins. */
+@media (prefers-reduced-motion: reduce) {
+  [data-hero-shader],
+  .hero-bg[data-shader-live] [data-hero-shader] {
+    opacity: 0 !important;
+  }
+  .hero-fallback,
+  .hero-bg[data-shader-live] .hero-fallback {
+    opacity: 1 !important;
+  }
+}
