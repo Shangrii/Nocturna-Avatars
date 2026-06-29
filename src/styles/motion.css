@@ -1,5 +1,22 @@
 /* ═══════════════════════════════════════════════
    NOCTURNA AVATARS — Motion layer styles
    Reveal initial states + reduced-motion escape hatch.
-   Reveal states arrive in Task 3 (FX-02).
    ═══════════════════════════════════════════════ */
+
+/* Reveal initial state is gated behind .motion-ready (added to <html> by the motion
+   controller) so that with JS disabled — or before the controller runs — content is
+   never stuck invisible (D-20 progressive enhancement). GSAP overwrites these inline
+   once the entrance animation runs. Travel offsets use the --space-* tokens. */
+html.motion-ready .reveal {
+  opacity: 0;
+  transform: translateY(var(--space-md));
+}
+
+/* Reduced-motion: never hide .reveal content; collapse to fully-visible, no travel.
+   The controller still applies a gentle JS fade, but CSS guarantees visibility (D-21). */
+@media (prefers-reduced-motion: reduce) {
+  html.motion-ready .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
