@@ -1,143 +1,175 @@
 /* ═══════════════════════════════════════════════
    NOCTURNA AVATARS — Terms & Conditions (I18N-04)
-   Long-form legal page styling, carried from the
-   old .terms-modal/.terms-block styles into a full
-   page. Legal copy uses --lh-legal (1.8). Reviewer
-   banner (EN draft, D-13). No hard-coded brand hex —
-   every value reads from tokens.css.
+   Refined Street Editorial re-skin (02.1-03, D-07/D-13).
+   Paper reading column: warm-dark paper field, off-white text,
+   65–75ch measure, --lh-legal (1.8) body line-height.
+   Single red accent: Space Mono block numbers (the thread).
+   Reviewer banner (EN draft, D-13) — restyled to paper system,
+   behavior and copy unchanged.
+   0px radii + hairline 1px rules. No hard-coded hex — all values
+   read from @theme tokens (theme.css).
    ═══════════════════════════════════════════════ */
 
+/* ── Reading column container ──
+   The section's background is paper (set by .section--surface or inline).
+   The column constrains readable measure per §5.5 spec (65–75ch). */
 .terms-wrap {
-  max-width: 760px;
+  max-width: 70ch;
   margin: 0 auto;
   padding: 0 var(--page-gutter);
 }
 
-/* ── Reviewer banner (EN draft, pending legal review) ── */
+/* ── Reviewer banner (EN draft, pending legal review) ──
+   Paper-field version: dark-paper background, red left accent rule,
+   Space Mono flag tag. Behavior (EN-only, D-13) unchanged. */
 .reviewer-banner {
   display: flex;
   align-items: flex-start;
   gap: var(--space-md);
   margin-bottom: var(--space-2xl);
   padding: var(--space-md) var(--space-lg);
-  background: var(--red-soft);
-  border: 1px solid var(--red);
-  border-left: 4px solid var(--red);
-  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-red) 8%, var(--color-paper));
+  border: 1px solid color-mix(in srgb, var(--color-red) 30%, transparent);
+  border-left: 3px solid var(--color-red);
+  /* 0px radii — editorial system */
 }
+
 .reviewer-banner-flag {
   flex-shrink: 0;
   align-self: center;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--white);
-  background: var(--red);
+  color: var(--color-white);
+  background: var(--color-red);
   padding: 6px 10px;
-  border-radius: 3px;
+  /* No border-radius — 0px radii */
 }
+
 .reviewer-banner-text {
   min-width: 0;
 }
+
 .reviewer-banner-title {
   display: block;
   font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  color: var(--white);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-on-paper);
   margin-bottom: var(--space-2xs);
 }
+
 .reviewer-banner-body {
   font-size: var(--type-body-dense);
   line-height: var(--lh-body);
-  color: var(--white-dim);
+  color: color-mix(in srgb, var(--color-ink-on-paper) 72%, transparent);
 }
 
-/* ── Summary (4-item intro) ── */
+/* ── Summary (4-item intro) ──
+   Paper-system card: subtle border, no fill (reads on paper field).
+   AA: --color-ink-on-paper (#f0eae4) on --color-paper (#11141f) = 13.95:1. */
 .terms-summary {
   margin-bottom: var(--space-2xl);
   padding: var(--space-lg);
-  background: var(--navy-surface);
-  border: 1px solid var(--border);
-  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-ink-on-paper) 4%, var(--color-paper));
+  border: 1px solid color-mix(in srgb, var(--color-ink-on-paper) 12%, transparent);
+  /* 0px radii — editorial system */
 }
+
 .terms-summary-title {
   font-family: var(--font-mono);
   font-size: var(--type-label);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--color-red-on-paper);
   margin-bottom: var(--space-md);
 }
+
 .terms-summary-list {
   list-style: none;
   display: grid;
   gap: var(--space-sm);
 }
+
 .terms-summary-list li {
   position: relative;
   padding-left: var(--space-md);
   font-size: var(--type-body);
   line-height: var(--lh-body);
-  color: var(--white-dim);
+  color: color-mix(in srgb, var(--color-ink-on-paper) 78%, transparent);
 }
+
 .terms-summary-list li::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 0.6em;
-  width: 6px;
-  height: 6px;
-  background: var(--red);
-  border-radius: 50%;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  background: var(--color-red);
+  /* No border-radius — 0px radii (square marker) */
 }
+
 .terms-summary-list strong {
-  color: var(--white);
+  color: var(--color-ink-on-paper);
   font-weight: 400;
 }
 
-/* ── Numbered blocks (long-form legal) ── */
+/* ── Numbered blocks (long-form legal) ──
+   Hairline 1px top rule between blocks; Space Mono red number as the
+   single accent per block. Body at --lh-legal (1.8) for comfortable
+   legal reading (§5.5 spec). */
 .terms-blocks {
   display: grid;
   gap: var(--space-xl);
 }
+
 .terms-block {
   padding-top: var(--space-xl);
-  border-top: 1px solid var(--border);
+  border-top: 1px solid color-mix(in srgb, var(--color-ink-on-paper) 12%, transparent);
 }
+
 .terms-block:first-child {
   padding-top: 0;
   border-top: none;
 }
+
 .terms-block-title {
   display: flex;
   align-items: baseline;
   gap: var(--space-sm);
   font-family: var(--font-display);
   font-size: var(--type-card-title);
-  color: var(--white);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-ink-on-paper);
   line-height: var(--lh-heading);
   margin-bottom: var(--space-sm);
 }
+
+/* Space Mono red number — the single accent per block (D-07/D-09). */
 .terms-block-num {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--red);
+  letter-spacing: 0.12em;
+  color: var(--color-red-on-paper);
   flex-shrink: 0;
 }
+
+/* Legal body copy: 1.8 line-height per spec, on-paper text. */
 .terms-block-body {
   font-size: var(--type-body);
   line-height: var(--lh-legal);
-  color: var(--white-dim);
+  color: color-mix(in srgb, var(--color-ink-on-paper) 80%, transparent);
 }
+
 .terms-block-body strong {
-  color: var(--white);
+  color: var(--color-ink-on-paper);
   font-weight: 400;
-  border-bottom: 1px solid var(--red);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-red) 50%, transparent);
 }
 
 /* ── Responsive ── */
@@ -147,10 +179,17 @@
     gap: var(--space-sm);
     padding: var(--space-md);
   }
+
   .reviewer-banner-flag {
     align-self: flex-start;
   }
+
   .terms-summary {
     padding: var(--space-md);
+  }
+
+  /* On narrow screens the column constraint relaxes to fill available width */
+  .terms-wrap {
+    max-width: 100%;
   }
 }
