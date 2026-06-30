@@ -16,14 +16,18 @@
   padding: 0 var(--page-gutter);
 }
 .section-tag {
-  /* Giant Space Mono editorial marker — the one red accent of the header (D-09). */
+  /* Giant Space Mono editorial marker — the one red accent of the header (D-09).
+     Uses the AA-safe red on the ink field; brand red on the paper field below. */
   font-family: var(--font-mono);
   font-size: clamp(11px, 1.6vw, 14px);
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--color-red);
+  color: var(--color-red-on-ink);
   display: block;
   margin-bottom: var(--space-md);
+}
+.section--surface .section-tag {
+  color: var(--color-red);
 }
 .section-title {
   font-family: var(--font-display);
@@ -160,8 +164,12 @@
   font-size: clamp(11px, 1.5vw, 13px);
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--color-red);
+  color: var(--color-red-on-ink);
   margin-bottom: var(--space-xl);
+}
+.section--surface .workflow-title,
+.section--surface .about-story-title {
+  color: var(--color-red);
 }
 .workflow-steps {
   display: grid;
@@ -195,8 +203,11 @@
   font-family: var(--font-mono);
   font-size: clamp(13px, 1.6vw, 15px);
   letter-spacing: 0.1em;
-  color: var(--color-red);
+  color: var(--color-red-on-ink);
   order: -1;
+}
+.section--surface .workflow-step::after {
+  color: var(--color-red);
 }
 .workflow-steps {
   counter-reset: nocturna-step;
@@ -329,8 +340,11 @@
   font-size: 9px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--color-red);
+  color: var(--color-red-on-ink);
   margin-bottom: var(--space-2xs);
+}
+.section--surface .card-popular {
+  color: var(--color-red);
 }
 .card-tier {
   font-family: var(--font-mono);
@@ -391,9 +405,12 @@
 }
 .card-note {
   font-size: 13px;
-  color: var(--color-red);
+  color: var(--color-red-on-ink);
   font-style: italic;
   margin-bottom: var(--space-md);
+}
+.section--surface .card-note {
+  color: var(--color-red);
 }
 .card-divider {
   height: 1px;
@@ -504,9 +521,12 @@
   font-size: 10px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--color-red);
+  color: var(--color-red-on-ink);
   text-align: center;
   margin-bottom: var(--space-md);
+}
+.section--surface .addons-title {
+  color: var(--color-red);
 }
 .addon-grid {
   display: grid;
@@ -540,8 +560,11 @@
 .addon-item .price {
   font-family: var(--font-mono);
   font-size: 13px;
-  color: var(--color-red);
+  color: var(--color-red-on-ink);
   font-variant-numeric: tabular-nums;
+}
+.section--surface .addon-item .price {
+  color: var(--color-red);
 }
 .addons-note {
   font-size: 13px;

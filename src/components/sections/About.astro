@@ -13,12 +13,14 @@ import { useTranslations, type Lang } from '../../i18n/ui';
 
 interface Props {
   lang: Lang;
+  /** Render as a paper (off-white) editorial surface to break the ink rhythm (D-07). */
+  surface?: boolean;
 }
-const { lang } = Astro.props;
+const { lang, surface = false } = Astro.props;
 const t = useTranslations(lang, 'pages').about;
 ---
 
-<section id="about" class="section section--rule">
+<section id="about" class={`section${surface ? ' section--surface' : ''} section--rule`}>
   <div class="section-header reveal">
     <span class="section-tag">{t.tag}</span>
     <h2 class="section-title">{t.title}</h2>

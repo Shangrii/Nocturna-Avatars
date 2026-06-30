@@ -50,12 +50,11 @@ const empty = useTranslations(lang, 'pages').emptyState;
     </div>
     <div class="hero-content">
       <p class="hero-eyebrow reveal">{t.eyebrow}</p>
-      <h1 class="hero-title">{t.brandWordmark}</h1>
-      <div class="hero-taglines">
-        <span class="hero-tagline reveal">{t.taglineA}</span>
-        <span class="hero-diamond" aria-hidden="true">{t.taglineDivider}</span>
-        <span class="hero-tagline reveal">{t.taglineB}</span>
-      </div>
+      <span class="hero-wordmark reveal" aria-hidden="true">{t.brandWordmark}</span>
+      <h1 class="hero-title">
+        <span class="hero-title-line reveal">{t.taglineA}</span>
+        <span class="hero-title-line reveal">{t.taglineB}</span>
+      </h1>
       <div class="hero-services reveal">
         {
           t.services.map((service, i) => (
@@ -67,10 +66,10 @@ const empty = useTranslations(lang, 'pages').emptyState;
         }
       </div>
       <div class="hero-ctas reveal">
-        <a href={localizedPath('services', lang)} class="hero-cta">{t.ctaSecondary}</a>
-        <button class="hero-cta hero-cta--outline dc-trigger" type="button">
+        <button class="hero-cta dc-trigger" type="button">
           {t.ctaPrimary}
         </button>
+        <a href={localizedPath('services', lang)} class="hero-cta hero-cta--outline">{t.ctaSecondary}</a>
       </div>
     </div>
     <div class="hero-scroll" aria-hidden="true">
@@ -79,10 +78,14 @@ const empty = useTranslations(lang, 'pages').emptyState;
     </div>
   </section>
 
-  <!-- Curated landing summary below the hero (D-10): about/process →
-       featured teaser → packages summary → gallery teaser → closing. -->
-  <About lang={lang} />
+  <!-- Visual-first landing order (D-12): hero → featured gallery → about+process
+       → packages summary → gallery teaser → closing. The featured teaser is raised
+       to #2 to impress before the about/process; the gallery teaser is kept after
+       packages so its data-teaser="gallery" marquee choreography hook survives.
+       Ink/paper rhythm alternates: featured(ink) → about(paper) → packages(ink)
+       → gallery(paper) → closing(ink). -->
   <Teaser lang={lang} variant="featured" />
+  <About lang={lang} surface />
   <PackagesSummary lang={lang} />
   <Teaser lang={lang} variant="gallery" />
 
@@ -101,169 +104,114 @@ const empty = useTranslations(lang, 'pages').emptyState;
 </BaseLayout>
 
 <style>
-  /* Hero — ported faithfully from styles.css (lines 180-401), tokens-driven. */
+  /* Hero — Refined Street Editorial (D-04/D-05/D-11). Clean editorial composition:
+     Space Grotesk tagline is the headline, the graffiti "Nocturna" wordmark is the
+     signature accent, the retained shader/grid is a decorative ink backdrop that
+     never gates legibility. The old busy hero treatment is fully removed. */
   .hero {
     position: relative;
-    min-height: 100vh;
     min-height: 100dvh;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 8%;
-    right: -100px;
-    width: 320px;
-    height: 320px;
-    background: radial-gradient(circle, rgba(232, 34, 59, 0.2) 0%, transparent 58%);
-    filter: blur(28px);
-    pointer-events: none;
+    background: var(--color-ink);
   }
 
   .hero-bg {
     position: absolute;
     inset: 0;
   }
-  /* Diagonal split — brand banner red/navy split. */
-  .hero-bg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--red-dark) 0%, #3a0a10 34%, var(--navy) 34.5%);
-    opacity: 0.45;
-  }
+  /* Subtle editorial grid backdrop (decorative only). */
   .hero-grid {
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(240, 234, 228, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(240, 234, 228, 0.035) 1px, transparent 1px);
-    background-size: 50px 50px;
-    mask-image: radial-gradient(ellipse 80% 70% at 65% 50%, black 20%, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 65% 50%, black 20%, transparent 70%);
+      linear-gradient(rgba(240, 234, 228, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240, 234, 228, 0.03) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 78%);
   }
+  /* Legibility guard — a flat ink scrim so the headline + CTA always hold AA over
+     the decorative shader/grid backdrop (D-11). */
   .hero-glow {
     position: absolute;
-    top: 15%;
-    left: 10%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(192, 25, 44, 0.18) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 120px;
-    background: linear-gradient(to bottom, transparent, var(--navy));
-    z-index: 3;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      var(--color-ink) 0%,
+      color-mix(in srgb, var(--color-ink) 78%, transparent) 55%,
+      color-mix(in srgb, var(--color-ink) 40%, transparent) 100%
+    );
     pointer-events: none;
   }
 
   .hero-content {
     position: relative;
-    text-align: center;
+    text-align: left;
     z-index: 2;
-    padding: 0 var(--space-2xs);
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: calc(var(--nav-h) + var(--space-2xl)) var(--page-gutter) var(--space-2xl);
   }
 
   .hero-eyebrow {
     font-family: var(--font-mono);
-    font-size: var(--type-label);
-    letter-spacing: 0.35em;
+    font-size: clamp(11px, 1.4vw, 13px);
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--white-dim);
-    margin-bottom: var(--space-md);
+    color: var(--color-red-on-ink);
+    margin-bottom: var(--space-lg);
   }
 
-  .hero-title {
+  /* Graffiti wordmark — signature accent ONLY (D-05). No heavy shadow/splatter. */
+  .hero-wordmark {
+    display: block;
     font-family: var(--font-tag);
-    font-size: var(--type-display);
-    color: var(--white);
-    line-height: var(--lh-display);
-    letter-spacing: 12px;
-    margin-bottom: var(--space-md);
-    position: relative;
-    display: inline-block;
-    text-shadow:
-      3px 3px 0 var(--red-dark),
-      6px 6px 0 rgba(122, 15, 26, 0.3),
-      0 0 80px rgba(192, 25, 44, 0.25);
-  }
-  /* Ink splatter decorations. */
-  .hero-title::before,
-  .hero-title::after {
-    content: '';
-    position: absolute;
-    background: var(--red);
-    border-radius: 50% 42% 55% 48%;
-    opacity: 0.2;
-    pointer-events: none;
-  }
-  .hero-title::before {
-    width: 55px;
-    height: 55px;
-    left: -35px;
-    top: -18px;
-    transform: rotate(-20deg);
-    filter: blur(1px);
-  }
-  .hero-title::after {
-    width: 35px;
-    height: 30px;
-    right: -22px;
-    bottom: 8px;
-    transform: rotate(25deg);
-    filter: blur(1px);
+    font-size: clamp(40px, 9vw, 130px);
+    line-height: 0.9;
+    letter-spacing: 4px;
+    color: var(--color-red);
+    margin-bottom: var(--space-sm);
   }
 
-  .hero-taglines {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-sm);
-    flex-wrap: wrap;
-    margin-bottom: 28px;
+  /* Tagline = the editorial headline, oversized Space Grotesk (D-04). */
+  .hero-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 8vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--color-white);
+    margin-bottom: var(--space-xl);
   }
-  .hero-tagline {
-    font-size: clamp(14px, 2.2vw, 19px);
-    font-style: italic;
-    color: var(--white-dim);
-    font-weight: 300;
-  }
-  .hero-diamond {
-    color: var(--red);
-    font-size: 10px;
+  .hero-title-line {
+    display: block;
   }
 
   .hero-services {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: var(--space-xs);
     flex-wrap: wrap;
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--white-dim);
-    margin-bottom: var(--space-lg);
+    color: var(--color-white-dim);
+    margin-bottom: var(--space-xl);
   }
   .hero-services .sep {
-    color: var(--red);
+    color: var(--color-red);
     font-size: 8px;
   }
 
   .hero-ctas {
     display: flex;
     gap: var(--space-sm);
-    justify-content: center;
     flex-wrap: wrap;
   }
   .hero-cta {
@@ -275,23 +223,36 @@ const empty = useTranslations(lang, 'pages').emptyState;
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--white);
-    background: var(--red);
+    color: var(--color-white);
+    background: var(--color-red);
+    border: 1px solid var(--color-red);
     padding: 14px 32px;
     transition:
       background 0.3s,
       transform 0.2s;
   }
   .hero-cta:hover {
-    background: var(--red-dark);
+    background: var(--color-red-dark);
+    border-color: var(--color-red-dark);
     transform: translateY(-2px);
   }
   .hero-cta--outline {
     background: transparent;
-    border: 1px solid var(--red);
+    color: var(--color-white);
   }
   .hero-cta--outline:hover {
-    background: var(--red);
+    background: var(--color-red);
+    border-color: var(--color-red);
+  }
+
+  @media (max-width: 768px) {
+    .hero-glow {
+      background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-ink) 55%, transparent) 0%,
+        var(--color-ink) 70%
+      );
+    }
   }
 
   .hero-scroll {
@@ -310,12 +271,12 @@ const empty = useTranslations(lang, 'pages').emptyState;
     font-size: 9px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--white-dim);
+    color: var(--color-white-dim);
   }
   .hero-scroll-line {
     width: 1px;
     height: 40px;
-    background: linear-gradient(to bottom, var(--red), transparent);
+    background: linear-gradient(to bottom, var(--color-red), transparent);
     animation: scrollPulse 2s ease-in-out infinite;
   }
 

@@ -18,6 +18,11 @@
   --color-red-dark: #7a0f1a;
   --color-red-glow: #e8223b;
   --color-red-soft: rgba(192, 25, 44, 0.12);
+  /* AA-safe red for SMALL red text on the dark ink field. Brand red #c0192c only
+     clears about 3.2:1 on ink, which fails AA for small text; this brighter tint
+     clears 4.5:1 so mono labels/tags/eyebrows stay legible on ink (T-02.1-A11Y).
+     The brand red is still used for fills, rules, and red text on the paper field. */
+  --color-red-on-ink: #e84a5e;
 
   /* Brand color — Navy surfaces. */
   --color-navy: #0a0c14;
@@ -105,6 +110,7 @@
   --red-dark: var(--color-red-dark);
   --red-glow: var(--color-red-glow);
   --red-soft: var(--color-red-soft);
+  --red-on-ink: var(--color-red-on-ink);
   --navy: var(--color-navy);
   --navy-mid: var(--color-navy-mid);
   --navy-light: var(--color-navy-light);
