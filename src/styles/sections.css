@@ -27,7 +27,7 @@
   margin-bottom: var(--space-md);
 }
 .section--surface .section-tag {
-  color: var(--color-red);
+  color: var(--color-red-on-paper);
 }
 .section-title {
   font-family: var(--font-display);
@@ -169,7 +169,7 @@
 }
 .section--surface .workflow-title,
 .section--surface .about-story-title {
-  color: var(--color-red);
+  color: var(--color-red-on-paper);
 }
 .workflow-steps {
   display: grid;
@@ -207,7 +207,7 @@
   order: -1;
 }
 .section--surface .workflow-step::after {
-  color: var(--color-red);
+  color: var(--color-red-on-paper);
 }
 .workflow-steps {
   counter-reset: nocturna-step;
@@ -344,7 +344,7 @@
   margin-bottom: var(--space-2xs);
 }
 .section--surface .card-popular {
-  color: var(--color-red);
+  color: var(--color-red-on-paper);
 }
 .card-tier {
   font-family: var(--font-mono);
@@ -410,7 +410,7 @@
   margin-bottom: var(--space-md);
 }
 .section--surface .card-note {
-  color: var(--color-red);
+  color: var(--color-red-on-paper);
 }
 .card-divider {
   height: 1px;
@@ -440,8 +440,11 @@
   position: absolute;
   left: 0;
   top: 2px;
-  color: var(--color-red);
+  color: var(--color-red-on-ink);
   font-size: 9px;
+}
+.section--surface .card-features li::before {
+  color: var(--color-red-on-paper);
 }
 .card-features li.highlight {
   color: var(--color-white);
@@ -507,7 +510,10 @@
   color: var(--color-ink-on-paper);
 }
 .link-arrow:hover {
-  color: var(--color-red);
+  color: var(--color-red-on-ink);
+}
+.section--surface .link-arrow:hover {
+  color: var(--color-red-on-paper);
 }
 
 /* ── Add-ons ── */
@@ -526,7 +532,7 @@
   margin-bottom: var(--space-md);
 }
 .section--surface .addons-title {
-  color: var(--color-red);
+  color: var(--color-red-on-paper);
 }
 .addon-grid {
   display: grid;
@@ -564,7 +570,7 @@
   font-variant-numeric: tabular-nums;
 }
 .section--surface .addon-item .price {
-  color: var(--color-red);
+  color: var(--color-red-on-paper);
 }
 .addons-note {
   font-size: 13px;

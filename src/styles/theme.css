@@ -23,10 +23,15 @@
      clears 4.5:1 so mono labels/tags/eyebrows stay legible on ink (T-02.1-A11Y).
      The brand red is still used for fills, rules, and red text on the paper field. */
   --color-red-on-ink: #e84a5e;
-  /* Wordmark red — the big graffiti "Nocturna" carries a glow on top, so it read
-     noticeably brighter than the rest of the UI's red. Nudged down toward the
-     brand red while still clearing AA on ink (#df3d50 = 4.58:1 on #0a0c14). */
-  --color-red-wordmark: #df3d50;
+  /* AA-safe red for small red text on the DIM PAPER field. The paper is now a dim
+     warm greige, so the brand red no longer clears 4.5:1 on it; this darker red
+     does (#8f121f = 5.24:1 on #cdc2ae). Used for tags/labels in paper sections. */
+  --color-red-on-paper: #8f121f;
+  /* Wordmark red — the big graffiti "Nocturna" is LARGE display type (AA large-text
+     threshold 3:1) and carries a glow/searchlights on top, so it can sit near the
+     brand red and still pop. Darkened toward brand red so it stops reading too
+     bright (#cd2236 = 3.61:1 on #0a0c14, clears the 3:1 large-text bar). */
+  --color-red-wordmark: #cd2236;
 
   /* Brand color — Navy surfaces. Disciplined two-step navy palette: the base
      field navy and ONE deliberately-lighter raised navy. The legacy mid/light/
@@ -49,11 +54,13 @@
        ink-raised = ONE deliberately lighter navy for layered surfaces (cards,
                     feature tiles) so they separate from the ink field without
                     introducing ad-hoc greys/blacks. Same navy hue, not grey.
-     paper is a warm, dimmed off-white (softened from the harsh #f0eae4 that hurt
-     the eyes); ink-on-paper text + red-on-paper both still clear AA on it. */
+     paper is now a DIM warm greige/taupe — a tonal sibling of the ink, not a bright
+     field — so the brightness gap to the ink sections is gentle and the whole page
+     reads darker/moodier (user feedback, 3rd pass). ink-on-paper text stays 11.09:1;
+     red on paper uses the darker --color-red-on-paper to hold AA on this dim field. */
   --color-ink: #0a0c14;
   --color-ink-raised: #10131e;
-  --color-paper: #e7ddcf;
+  --color-paper: #cdc2ae;
   --color-ink-on-paper: #0a0c14;
   --color-paper-on-ink: #f0eae4;
 
@@ -125,6 +132,7 @@
   --red-glow: var(--color-red-glow);
   --red-soft: var(--color-red-soft);
   --red-on-ink: var(--color-red-on-ink);
+  --red-on-paper: var(--color-red-on-paper);
   --red-wordmark: var(--color-red-wordmark);
   --navy: var(--color-navy);
   --navy-mid: var(--color-navy-mid);

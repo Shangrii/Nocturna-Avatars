@@ -258,8 +258,13 @@
      the user reaches the footer (PLAT-04). */
   padding-bottom: calc(52px + var(--touch-min) + clamp(16px, 4vw, 32px));
   text-align: center;
-  border-top: 1px solid var(--border);
-  background: var(--navy-surface);
+  /* Surface-color alignment to the unified ink palette (02.1-02 P-E): the footer
+     previously used navy-surface, reading as a different dark tone than the ink
+     sections. Match the base ink field + the ink hairline border so it is tonally
+     consistent with the rest of the page. NOTE for Wave 4: this is a surgical color
+     alignment only — preserve these ink tokens when fully re-skinning the footer. */
+  border-top: 1px solid var(--color-border);
+  background: var(--color-ink);
 }
 .footer-brand {
   font-family: var(--font-tag);
