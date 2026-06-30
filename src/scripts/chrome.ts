@@ -20,9 +20,13 @@ const VALID_LANGS = ['es', 'en'] as const;
  * so per-element addEventListener calls never stack. The only listeners that DO stack
  * are the document-level Escape/outside-click handlers below — bind those exactly once
  * across the page's lifetime, guarded by these module flags (RESEARCH Pitfall 8).
+ *
+ * scrollHandler is module-scoped so initNav() can remove the previous scroll listener
+ * before adding a new one — prevents stacking one per navigation (WR-05).
  */
 let langDocListenersBound = false;
 let modalDocListenersBound = false;
+let scrollHandler: (() => void) | null = null;
 
 function initNav(): void {
   const nav = document.querySelector<HTMLElement>('[data-nav]');
@@ -48,6 +52,10 @@ function initNav(): void {
       }
       lastY = y;
     };
+    // Remove any previous scroll listener before adding the fresh one so
+    // repeated navigations don't stack handlers on window (WR-05).
+    if (scrollHandler) window.removeEventListener('scroll', scrollHandler);
+    scrollHandler = onScroll;
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   }
