@@ -34,7 +34,7 @@ export function initReveals(): void {
   const reveals = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
 
   // Reduced-motion: a single gentle whole-element fade, no stagger/clip/split (D-21).
-  if (prefersReduced) {
+  if (prefersReduced()) {
     reveals.forEach((el) => {
       gsap.fromTo(
         el,

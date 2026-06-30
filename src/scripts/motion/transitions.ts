@@ -54,7 +54,7 @@ export function initTransitions(): void {
   introHandled = true;
 
   // D-18/D-21: never under reduced-motion, never after the first-ever visit.
-  if (prefersReduced || hasSeenIntro()) return;
+  if (prefersReduced() || hasSeenIntro()) return;
 
   markIntroSeen();
 

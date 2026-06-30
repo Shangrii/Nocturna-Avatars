@@ -6,13 +6,20 @@
  * src/pages/index.astro's language-detect block — a browser-API probe that always
  * falls back to a safe default.
  *
- *   liveShader   = webglOK() && !prefersReduced && perfBudgetOK
- *   customCursor = finePointer && !prefersReduced
- *   smoothScroll = !prefersReduced
+ *   liveShader   = webglOK() && !prefersReduced() && perfBudgetOK
+ *   customCursor = finePointer && !prefersReduced()
+ *   smoothScroll = !prefersReduced()
  */
 
-/** True when the user asked the OS to reduce motion. The safe default to gate from. */
-export const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+/**
+ * Returns true when the user asked the OS to reduce motion. Evaluated at call
+ * time so it picks up runtime OS changes and is safe in SSR/prerender contexts
+ * where matchMedia is undefined (CR-05).
+ */
+export function prefersReduced(): boolean {
+  if (typeof matchMedia === 'undefined') return true; // safe default in SSR
+  return matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
 
 /** True only on real mouse/trackpad pointers (desktop) — gates wheel-inertia & cursor FX. */
 export const finePointer = matchMedia('(pointer: fine) and (hover: hover)').matches;

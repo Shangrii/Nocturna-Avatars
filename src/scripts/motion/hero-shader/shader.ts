@@ -209,7 +209,7 @@ export function initHeroShader(): void {
 
   // Capability gate (single source of truth): no live shader under no-WebGL2 or
   // reduced-motion — leave the static <img> fallback visible (D-04/D-21).
-  if (!webglOK() || prefersReduced) {
+  if (!webglOK() || prefersReduced()) {
     canvas = null;
     host = null;
     return;

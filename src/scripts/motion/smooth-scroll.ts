@@ -20,7 +20,7 @@ let tickerCb: ((time: number) => void) | null = null;
 
 export function initSmoothScroll(): void {
   // Reduced-motion: keep native scroll, never construct Lenis (D-21).
-  if (prefersReduced) return;
+  if (prefersReduced()) return;
   // Idempotent: never double-init within a single page lifecycle.
   if (lenis) return;
 

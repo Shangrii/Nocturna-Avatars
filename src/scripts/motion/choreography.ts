@@ -44,7 +44,7 @@ function isLanding(): boolean {
 
 export function initChoreography(): void {
   // D-21 / D-12: reduced-motion or non-landing → leave Plan 01's gentle reveals alone.
-  if (prefersReduced || !isLanding()) return;
+  if (prefersReduced() || !isLanding()) return;
 
   gsap.registerPlugin(ScrollTrigger);
 
