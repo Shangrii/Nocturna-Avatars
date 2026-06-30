@@ -35,7 +35,9 @@ let pointerBound = false;
 
 // Frame-budget guard state (Pitfall 5 / UI-SPEC degradation order).
 const BUDGET_MS = 22; // ~45fps floor
-const WINDOW_MS = 1000; // sustained window before bailing
+const WINDOW_MS = 1000; // steady-state sustained window before bailing
+const WARMUP_MS = 700; // initial window after start that uses the tighter bail below
+const WARMUP_WINDOW_MS = 350; // sustained miss during warmup → bail fast (no-accel guard)
 let overBudgetSince = 0;
 let lastFrame = 0;
 
@@ -65,6 +67,28 @@ function readBrandColors(el: HTMLElement): void {
     red: toRgb('--red', brand.red),
     redGlow: toRgb('--red-glow', brand.redGlow),
   };
+}
+
+/**
+ * Detect a software / no-hardware-acceleration WebGL renderer (SwiftShader, llvmpipe,
+ * Mesa offscreen, Microsoft Basic Render, …). `failIfMajorPerformanceCaveat` is not
+ * reliable on its own — Chrome's SwiftShader fallback still hands back a context — so we
+ * additionally read the UNMASKED_RENDERER string and refuse to start the loop when it
+ * names a known software rasterizer. Without this the glitch field runs at single-digit
+ * fps on machines/browsers with hardware acceleration off (user report). The static
+ * <img> fallback stays visible instead (perf wins, D-22).
+ */
+function isSoftwareRenderer(glc: WebGL2RenderingContext): boolean {
+  try {
+    const ext = glc.getExtension('WEBGL_debug_renderer_info');
+    if (!ext) return false;
+    const r = String(glc.getParameter(ext.UNMASKED_RENDERER_WEBGL) || '').toLowerCase();
+    return /swiftshader|llvmpipe|software|basic render|microsoft basic|mesa offscreen|paravirtual|angle \(software/.test(
+      r,
+    );
+  } catch {
+    return false;
+  }
 }
 
 function compile(glc: WebGL2RenderingContext, type: number, src: string): WebGLShader | null {
@@ -135,9 +159,13 @@ function frame(now: number): void {
   // --- frame-budget guard: bail to fallback on a sustained miss (D-22) ------
   if (lastFrame !== 0) {
     const dt = now - lastFrame;
+    // Tighter sustained-miss window during the warmup phase so a weak renderer that
+    // slipped past isSoftwareRenderer() bails in ~350ms instead of churning for a full
+    // second; steady-state keeps the lenient 1s window so transient hitches don't kill it.
+    const window = now - startTime < WARMUP_MS ? WARMUP_WINDOW_MS : WINDOW_MS;
     if (dt > BUDGET_MS) {
       if (overBudgetSince === 0) overBudgetSince = now;
-      else if (now - overBudgetSince > WINDOW_MS) {
+      else if (now - overBudgetSince > window) {
         swapToFallback();
         return;
       }
@@ -202,6 +230,15 @@ export function initHeroShader(): void {
     return;
   }
   gl = ctx;
+
+  // No-hardware-acceleration guard: SwiftShader/llvmpipe/etc. slip past the caveat flag
+  // but render the field at single-digit fps. Never start the loop — keep the fallback.
+  if (isSoftwareRenderer(gl)) {
+    gl = null;
+    canvas = null;
+    host = null;
+    return;
+  }
 
   program = link(gl);
   if (!program) {
