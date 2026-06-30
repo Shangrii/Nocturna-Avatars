@@ -115,7 +115,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 — owns shared sections.css/PackageCard/EmptyState)*
 
-- [ ] 02.1-02-PLAN.md — Landing re-skin: editorial hero + featured-first reorder + ink/paper section system
+- [x] 02.1-02-PLAN.md — Landing re-skin: editorial hero + featured-first reorder + ink/paper section system
 
 **Wave 3** *(blocked on Wave 2 — consumes re-skinned shared blocks)*
 
