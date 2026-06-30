@@ -89,6 +89,42 @@ Plans:
 **UI hint**: yes
 **Notes**: Performance budget is a hard constraint — experimental but fast; the "Abrir Ticket" path must remain reachable in all motion states. WebGL is a single hero shader, not a 3D scene (Three.js explicitly deferred to v2). MVP vertical-slice sequencing; the 4 plans serialize because each effect registers into the shared motion controller (`src/scripts/motion/index.ts`) — true wave-parallelism is blocked by that single shared file, but each wave is independently shippable with the CTA reachable throughout (D-19/D-20).
 
+### Phase 02.1: Visual Redesign — Refined Street Editorial (INSERTED)
+
+**Goal**: The existing site is re-skinned to the "Refined Street Editorial" look on top of the Phase 2 motion layer — oversized Space Grotesk editorial type with graffiti as a signature accent, a red/navy editorial rhythm (alternating ink/paper sections), Tailwind v4 design tokens, the custom cursor removed, and the landing reordered (featured gallery above about) — without breaking the conversion path, i18n, or content.
+**Mode:** mvp
+**Depends on**: Phase 2
+**Requirements**: PLAT-03, PLAT-04 (visual quality + a11y; design contract in `docs/superpowers/specs/2026-06-30-website-redesign-design.md`)
+**Success Criteria** (what must be TRUE):
+
+  1. A visitor sees the new editorial type system — Space Grotesk for oversized display, the graffiti face reserved for the wordmark/section tags/one hero accent — legible at every size
+  2. Sections alternate an ink (navy) / paper (off-white) editorial rhythm with red used surgically as the single accent; brand identity stays recognizable
+  3. Tailwind v4 is integrated CSS-first (`@tailwindcss/vite` + `@theme`), brand tokens become utilities, the old `tokens.css` is retired, and no React/shadcn is added; site stays Astro static on GitHub Pages with CNAME intact
+  4. The custom cursor is removed and the Phase 2 motion layer (smooth scroll, reveals, page transitions, hero backdrop) still works, re-skinned
+  5. The landing order is hero → featured gallery → about + process → packages summary → closing CTA (gallery raised for visual-first impact)
+  6. `/servicios`, `/galeria`, `/terminos`, 404, and chrome (nav/footer/floating CTA/lang switcher) are restyled to the system; "Abrir Ticket" reachable from every page; responsive at 375/768/1024/1440; AA contrast in both ink and paper sections; `prefers-reduced-motion` respected
+
+**UI hint**: yes
+**Notes**: Pure visual + structural re-skin — no copy, i18n logic, gallery automation, or catalog data changes. Sequenced BEFORE Phase 3/4 so the catalog and gallery are built directly in the new design system. Tailwind migration is incremental (add tokens alongside existing CSS, then convert component-by-component, retiring old CSS as each lands) so the site stays shippable throughout. Graffiti/film-grain/hero-backdrop effects stay as small custom CSS layers; only `cursor.ts`/`cursor.css` are deleted from the motion layer.
+
+**Plans**: 4 plans
+Plans:
+**Wave 1**
+
+- [ ] 02.1-01-PLAN.md — Tailwind v4 + @theme token foundation in BaseLayout + cursor removal (enabling slice; existing look intact)
+
+**Wave 2** *(blocked on Wave 1 — owns shared sections.css/PackageCard/EmptyState)*
+
+- [ ] 02.1-02-PLAN.md — Landing re-skin: editorial hero + featured-first reorder + ink/paper section system
+
+**Wave 3** *(blocked on Wave 2 — consumes re-skinned shared blocks)*
+
+- [ ] 02.1-03-PLAN.md — Dedicated pages re-skin: /servicios + /galeria + /terminos paper column + 404
+
+**Wave 4** *(blocked on Wave 3 — global chrome in BaseLayout, final a11y/responsive sweep)*
+
+- [ ] 02.1-04-PLAN.md — Chrome re-skin: nav/footer/floating CTA/modal/lang switcher + whole-site quality-bar sweep
+
 ### Phase 3: Service Catalog
 
 **Goal**: A visitor sees the 3 packages and a modular catalog rendered entirely from `services.json`, in both languages, with undecided prices shown as "Cotizar" — fully editable without touching code.
