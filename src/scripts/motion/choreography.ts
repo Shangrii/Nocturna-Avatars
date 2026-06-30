@@ -148,10 +148,11 @@ export function destroyChoreography(): void {
     if (id && id.startsWith(ST_ID)) t.kill();
   });
 
-  // Remove tilt listeners and reset any in-flight rotation.
+  // Remove tilt listeners, reset CSS state, and reset any in-flight rotation.
   tilts.forEach(({ el, move, leave }) => {
     el.removeEventListener('pointermove', move);
     el.removeEventListener('pointerleave', leave);
+    el.classList.remove('card--tilt'); // reset CSS state so re-init starts clean (WR-08)
     gsap.killTweensOf(el);
     gsap.set(el, { rotateX: 0, rotateY: 0 });
   });
