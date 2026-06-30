@@ -23,7 +23,7 @@ const t = useTranslations(lang, 'nav');
 const DISCORD_INVITE = 'https://discord.gg/DSMmwU35cs';
 ---
 
-<div class="dc-overlay" id="dcOverlay" data-dc-overlay aria-hidden="true" role="dialog" aria-modal="true">
+<div class="dc-overlay" id="dcOverlay" data-dc-overlay aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="dcModalTitle">
   <div class="dc-modal">
     <div class="dc-modal-glow" aria-hidden="true"></div>
     <div class="dc-header">
@@ -34,7 +34,7 @@ const DISCORD_INVITE = 'https://discord.gg/DSMmwU35cs';
       </div>
     </div>
     <div class="dc-body">
-      <h3 class="dc-title">{t.modalTitleBefore}<em>{t.modalTitleEm}</em>{t.modalTitleAfter}</h3>
+      <h3 class="dc-title" id="dcModalTitle">{t.modalTitleBefore}<em>{t.modalTitleEm}</em>{t.modalTitleAfter}</h3>
       <p class="dc-desc">{t.modalBody}</p>
       <a href={DISCORD_INVITE} target="_blank" rel="noopener noreferrer" class="dc-open-btn">
         {t.modalConfirm}

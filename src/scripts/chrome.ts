@@ -140,21 +140,33 @@ function initDiscordModal(): void {
   const overlay = document.querySelector<HTMLElement>('[data-dc-overlay]');
   if (!overlay) return;
 
-  const open = () => {
+  // Track the element that triggered the modal so focus can be returned on close (CR-02).
+  let lastFocus: HTMLElement | null = null;
+
+  const open = (trigger?: HTMLElement) => {
+    lastFocus = trigger ?? (document.activeElement as HTMLElement | null);
     overlay.classList.add('active');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    // Move focus into the modal so keyboard/AT users can reach its controls (CR-02).
+    const firstFocusable = overlay.querySelector<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    firstFocusable?.focus();
   };
   const close = () => {
     overlay.classList.remove('active');
     overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    // Return focus to the triggering element (CR-02).
+    lastFocus?.focus();
+    lastFocus = null;
   };
 
   document.querySelectorAll<HTMLElement>('.dc-trigger').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      open();
+      open(btn);
     });
   });
 
