@@ -1,10 +1,9 @@
 /* ═══════════════════════════════════════════════
    NOCTURNA AVATARS — Global base styles
    Reset, base body, film-grain overlay, @font-face.
-   Pulls design tokens (must be imported first).
+   Design tokens now live in theme.css (@theme), imported
+   ahead of this file in BaseLayout — token retirement (D-02).
    ═══════════════════════════════════════════════ */
-
-@import './tokens.css';
 
 /* ── Custom display font (local only — .ttf is the sole asset) ── */
 @font-face {

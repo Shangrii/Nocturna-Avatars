@@ -8,10 +8,10 @@
  */
 import type { Lang } from '../i18n/ui';
 import { ClientRouter } from 'astro:transitions';
+import '../styles/theme.css';
 import '../styles/global.css';
 import '../styles/chrome.css';
 import '../styles/motion.css';
-import '../styles/cursor.css';
 import '../styles/choreography.css';
 import '../styles/transitions.css';
 import Nav from '../components/Nav.astro';
@@ -54,7 +54,7 @@ const glitchWipe = { forwards: glitchPair, backwards: glitchPair };
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400&family=Space+Mono:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400&family=Space+Grotesk:wght@700&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
     <ClientRouter />

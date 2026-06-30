@@ -12,35 +12,35 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Brand color — Accent (red) ──
-     Tailwind maps --color-* → bg-*/text-*/border-* (e.g. --color-red → text-red). */
+  /* Brand color — Accent (red). Tailwind maps color tokens to bg, text and
+     border utilities (e.g. the red token becomes text-red). */
   --color-red: #c0192c;
   --color-red-dark: #7a0f1a;
   --color-red-glow: #e8223b;
   --color-red-soft: rgba(192, 25, 44, 0.12);
 
-  /* ── Brand color — Navy surfaces ── */
+  /* Brand color — Navy surfaces. */
   --color-navy: #0a0c14;
   --color-navy-mid: #10131e;
   --color-navy-light: #181c2e;
   --color-navy-surface: #141828;
 
-  /* ── Brand color — Foreground / off-white ── */
+  /* Brand color — Foreground, off-white. */
   --color-white: #f0eae4;
   --color-white-dim: #9a9198;
   --color-white-muted: rgba(240, 234, 228, 0.06);
   --color-border: rgba(255, 255, 255, 0.06);
 
-  /* ── Semantic surface tokens (D-07) — editorial ink / paper rhythm ──
-     ink = navy field, off-white text; paper = off-white field, near-black text. */
+  /* Semantic surface tokens (D-07) — editorial ink and paper rhythm.
+     ink = navy field with off-white text; paper = off-white field with near-black text. */
   --color-ink: #0a0c14;
   --color-paper: #f0eae4;
-  --color-ink-on-paper: #0a0c14; /* near-black text ON a paper surface */
-  --color-paper-on-ink: #f0eae4; /* off-white text ON an ink surface */
+  --color-ink-on-paper: #0a0c14;
+  --color-paper-on-ink: #f0eae4;
 
-  /* ── Fonts ── Tailwind maps --font-* → font-* (e.g. --font-display → font-display).
-     Space Grotesk 700 is the NEW oversized editorial display workhorse (D-04).
-     The graffiti face demotes to signature accent only via --font-tag (D-05). */
+  /* Fonts. Each font token becomes a font utility (the display token becomes
+     font-display). Space Grotesk 700 is the new oversized editorial display
+     workhorse (D-04); the graffiti face demotes to a signature accent (D-05). */
   --font-display: 'Space Grotesk', sans-serif;
   --font-tag: 'A Another Tag', 'Permanent Marker', cursive;
   --font-body: 'Inter', -apple-system, sans-serif;
