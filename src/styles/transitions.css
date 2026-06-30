@@ -91,8 +91,42 @@
   background-size: 200px 200px;
   mix-blend-mode: screen;
 }
+/* Chromatic-aberration channels: two flat colour fields (red + cyan) that slam
+   apart horizontally during the burst, reading as RGB-split signal failure. Plus a
+   thin scanline band on ::after. All GPU-cheap (transform/opacity only), screen-blended,
+   pointer-events:none, and only animate while <html>.is-navigating. */
+.glitch-static::before,
+.glitch-static::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+.glitch-static::before {
+  background: var(--red-glow);
+}
+.glitch-static::after {
+  /* cyan complement of the red fringe + repeating scanlines */
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(31, 217, 255, 0.5) 0,
+      rgba(31, 217, 255, 0.5) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    #1fd9ff;
+}
 :root.is-navigating .glitch-static {
   animation: nocturna-static-burst 0.34s steps(5, end) 1;
+}
+:root.is-navigating .glitch-static::before {
+  animation: nocturna-ca-red 0.34s steps(4, end) 1;
+}
+:root.is-navigating .glitch-static::after {
+  animation: nocturna-ca-cyan 0.34s steps(4, end) 1;
 }
 @keyframes nocturna-static-burst {
   0% {
@@ -114,6 +148,44 @@
   100% {
     opacity: 0;
     transform: translate3d(0, 0, 0);
+  }
+}
+/* Red channel pulls LEFT, cyan channel pulls RIGHT — the split reads as chromatic
+   aberration. clip-path slices keep it to torn horizontal bands, not a full wash. */
+@keyframes nocturna-ca-red {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  30% {
+    opacity: 0.16;
+    transform: translate3d(-9px, 0, 0);
+    clip-path: inset(8% 0 52% 0);
+  }
+  65% {
+    opacity: 0.12;
+    transform: translate3d(-6px, 0, 0);
+    clip-path: inset(58% 0 12% 0);
+  }
+}
+@keyframes nocturna-ca-cyan {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  30% {
+    opacity: 0.14;
+    transform: translate3d(9px, 0, 0);
+    clip-path: inset(40% 0 18% 0);
+  }
+  65% {
+    opacity: 0.1;
+    transform: translate3d(6px, 0, 0);
+    clip-path: inset(20% 0 60% 0);
   }
 }
 
@@ -217,7 +289,9 @@
   .nav--hidden {
     transform: none;
   }
-  :root.is-navigating .glitch-static {
+  :root.is-navigating .glitch-static,
+  :root.is-navigating .glitch-static::before,
+  :root.is-navigating .glitch-static::after {
     animation: none;
   }
   .glitch-static {

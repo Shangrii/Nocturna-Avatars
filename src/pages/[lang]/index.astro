@@ -168,8 +168,8 @@ const empty = useTranslations(lang, 'pages').emptyState;
 
   /* Graffiti wordmark — signature accent ONLY (D-05). Enlarged so the signature
      reads as a confident accent above the tagline (no heavy shadow/splatter).
-     Rendered in the AA-safe red-on-ink so the red actually reads against the ink
-     field instead of getting lost (user feedback 02.1-02). */
+     Rendered in the wordmark red (nudged down from the bright AA red so it sits
+     closer to the rest of the palette, still 4.58:1 on ink — user feedback). */
   .hero-wordmark {
     position: relative;
     display: inline-block;
@@ -177,7 +177,7 @@ const empty = useTranslations(lang, 'pages').emptyState;
     font-size: clamp(64px, 14vw, 200px);
     line-height: 0.86;
     letter-spacing: 3px;
-    color: var(--color-red-on-ink);
+    color: var(--color-red-wordmark);
     margin-bottom: var(--space-md);
   }
   /* ONE restrained atmospheric touch: a soft, slow-drifting red haze behind the
