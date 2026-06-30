@@ -110,7 +110,7 @@
   border-color: color-mix(in srgb, var(--color-ink-on-paper) 14%, transparent);
 }
 .feature-card {
-  background: var(--color-ink);
+  background: var(--color-ink-raised);
   padding: var(--space-xl) var(--space-lg);
   transition:
     border-color 0.3s,
@@ -292,7 +292,7 @@
   margin-bottom: var(--space-xl);
 }
 .card {
-  background: var(--color-ink);
+  background: var(--color-ink-raised);
   padding: var(--space-xl) var(--space-lg);
   position: relative;
   transition:
@@ -325,7 +325,7 @@
 }
 .card.featured {
   /* The one red-accented tier — solid hairline red rule, no glow gradient. */
-  background: var(--color-ink);
+  background: var(--color-ink-raised);
   box-shadow: inset 0 0 0 1px var(--color-red);
 }
 .section--surface .card.featured {
@@ -536,7 +536,7 @@
   border: 1px solid var(--color-border);
 }
 .addon-item {
-  background: var(--color-ink);
+  background: var(--color-ink-raised);
   padding: var(--space-md) var(--space-md);
   transition: background 0.2s;
 }
@@ -544,7 +544,7 @@
   background: var(--color-paper);
 }
 .addon-item:hover {
-  background: var(--color-navy-light);
+  background: color-mix(in srgb, var(--color-paper-on-ink) 5%, var(--color-ink-raised));
 }
 .section--surface .addon-item:hover {
   background: color-mix(in srgb, var(--color-ink-on-paper) 5%, var(--color-paper));

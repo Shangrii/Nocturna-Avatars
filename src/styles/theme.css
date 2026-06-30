@@ -24,11 +24,14 @@
      The brand red is still used for fills, rules, and red text on the paper field. */
   --color-red-on-ink: #e84a5e;
 
-  /* Brand color — Navy surfaces. */
+  /* Brand color — Navy surfaces. Disciplined two-step navy palette: the base
+     field navy and ONE deliberately-lighter raised navy. The legacy mid/light/
+     surface steps now collapse onto the raised navy so older component CSS
+     reading them no longer produces an inconsistent grey/black/navy mix. */
   --color-navy: #0a0c14;
   --color-navy-mid: #10131e;
-  --color-navy-light: #181c2e;
-  --color-navy-surface: #141828;
+  --color-navy-light: #10131e;
+  --color-navy-surface: #10131e;
 
   /* Brand color — Foreground, off-white. */
   --color-white: #f0eae4;
@@ -37,9 +40,16 @@
   --color-border: rgba(255, 255, 255, 0.06);
 
   /* Semantic surface tokens (D-07) — editorial ink and paper rhythm.
-     ink = navy field with off-white text; paper = off-white field with near-black text. */
+     The dark palette is disciplined: exactly two intentional navy surfaces.
+       ink        = the single base navy field (off-white text).
+       ink-raised = ONE deliberately lighter navy for layered surfaces (cards,
+                    feature tiles) so they separate from the ink field without
+                    introducing ad-hoc greys/blacks. Same navy hue, not grey.
+     paper is a warm, dimmed off-white (softened from the harsh #f0eae4 that hurt
+     the eyes); ink-on-paper text + red-on-paper both still clear AA on it. */
   --color-ink: #0a0c14;
-  --color-paper: #f0eae4;
+  --color-ink-raised: #10131e;
+  --color-paper: #e7ddcf;
   --color-ink-on-paper: #0a0c14;
   --color-paper-on-ink: #f0eae4;
 
@@ -122,6 +132,7 @@
 
   /* Semantic editorial surface aliases (short forms of the D-07 tokens). */
   --ink: var(--color-ink);
+  --ink-raised: var(--color-ink-raised);
   --paper: var(--color-paper);
   --ink-on-paper: var(--color-ink-on-paper);
   --paper-on-ink: var(--color-paper-on-ink);
