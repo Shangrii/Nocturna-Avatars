@@ -33,7 +33,7 @@ const currentCode = lang.toUpperCase();
   <button
     type="button"
     class="lang-trigger"
-    aria-haspopup="true"
+    aria-haspopup="listbox"
     aria-expanded="false"
     aria-label={`Language: ${languages[lang]}`}
     data-lang-trigger
@@ -63,17 +63,16 @@ const currentCode = lang.toUpperCase();
     </svg>
   </button>
 
-  <ul class="lang-menu" role="menu" data-lang-list hidden>
+  <ul class="lang-menu" data-lang-list hidden>
     {
       langCodes.map((code) => (
-        <li role="none">
+        <li>
           <a
             class="lang-menu-opt"
-            role="menuitem"
             href={translatePath(pathname, code)}
             data-lang-switch={code}
             data-active={code === lang ? '' : undefined}
-            aria-current={code === lang ? 'true' : undefined}
+            aria-current={code === lang ? 'page' : undefined}
             hreflang={code}
             lang={code}
           >
