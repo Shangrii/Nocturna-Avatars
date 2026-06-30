@@ -2,17 +2,23 @@
 precision highp float;
 
 /*
- * Hero glitch field (FX-03 / D-01..D-04).
+ * Hero glitch field (FX-03 / D-01..D-04) — "constant malfunction" rework.
  *
- * A navy/black base field (u_navy) with a MINORITY red bleed (u_red / u_redGlow),
- * layering four effects so red never floods (D-02):
- *   1. film-grain noise, LOWER amplitude than a second full grain (Pitfall 6 —
- *      the global body::after grain still paints on top)
- *   2. RGB-channel-split chromatic aberration (red fringe from the brand red)
- *   3. periodic digital glitch bursts (block/scanline displacement) keyed off u_time
- *   4. a mouse-reactive warp toward u_mouse (throttled/ambient by the runtime)
+ * A navy/black base field (u_navy) with a MINORITY red bleed (u_red / u_redGlow).
+ * INVERTED behavior (user feedback 02.1-02): the field is in a PERSISTENT low-level
+ * malfunction by default — always-present grain, chromatic aberration and signal
+ * instability — and PERIODICALLY (randomized intervals) everything SNAPS into clean
+ * clarity for a moment before degrading back. A "clarity" factor in [0..1] drives
+ * this: clarity≈1 => clean/stable, clarity≈0 => full malfunction.
  *
- * Brand colors arrive as uniforms from tokens.css — NO hard-coded brand hex here.
+ * Lights (D / user feedback): the pointer light (u_mouse) plus TWO autonomous roaming
+ * glow points that wander on slow Lissajous paths driven by u_time (no extra JS /
+ * uniforms — GPU-cheap). All three share the same warp+glow look; the roamers are
+ * smaller. Legibility is guaranteed by the persistent malfunction staying subtle and
+ * by the CSS .hero-shader-overlay scrim above this field (AA holds even mid-glitch).
+ * Under prefers-reduced-motion the shader never runs (static fallback => clean/stable).
+ *
+ * Brand colors arrive as uniforms from theme.css — NO hard-coded brand hex here.
  */
 
 in vec2 v_uv;
@@ -43,56 +49,80 @@ float vnoise(vec2 p) {
   return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
 
+// A soft warp + reddish glow contribution from a single light point `p` (aspect
+// space). `strength` scales the pull, `glow` scales the additive red glow, both so
+// the roaming lights can be smaller than the pointer light.
+void lightPoint(in vec2 cen, in vec2 p, in float strength, in float glow,
+                inout vec2 uv, inout float glowAccum, in vec2 aspect) {
+  float d = distance(cen, p);
+  float pull = strength / (d * d + 0.04);
+  uv -= normalize(cen - p + 1e-4) * pull;
+  glowAccum += glow * smoothstep(0.55, 0.0, d);
+}
+
 void main() {
   // Aspect-correct coords centered at 0; uv stays 0..1 for sampling.
   vec2 uv = v_uv;
   vec2 aspect = vec2(u_resolution.x / max(u_resolution.y, 1.0), 1.0);
   vec2 cen = (uv - 0.5) * aspect;
 
-  // --- mouse / ambient warp (4) ---------------------------------------------
-  // u_mouse defaults to (0.5,0.5); the runtime drifts it on touch so the field
-  // breathes even with no pointer (D-22 ambient).
+  // --- CLARITY cycle: persistent malfunction, periodic snap-to-clean ---------
+  // A slow noise track triggers brief clarity windows at irregular intervals. When
+  // clarity≈1 the malfunction (grain/aberration/jitter/scanline) is suppressed; the
+  // default (clarity≈0) is the constant low-level malfunction state.
+  float claritySeed = vnoise(vec2(u_time * 0.55, 3.0));
+  float clarity = smoothstep(0.62, 0.92, claritySeed);
+  // The amount of malfunction currently applied (never fully zero so the field still
+  // has texture even when "clean", but heavily reduced during a clarity window).
+  float malf = mix(1.0, 0.12, clarity);
+
+  // --- lights: pointer + two autonomous roamers ------------------------------
   vec2 m = (u_mouse - 0.5) * aspect;
-  float md = distance(cen, m);
-  float pull = 0.012 / (md * md + 0.04);       // soft falloff toward the cursor
-  vec2 warp = normalize(cen - m + 1e-4) * pull;
-  uv -= warp;
+  float glowAccum = 0.0;
+  // Pointer light (or ambient-centered when u_mouse stays at 0.5,0.5).
+  lightPoint(cen, m, 0.012, 0.14, uv, glowAccum, aspect);
+  // Roamer 1 — slow Lissajous path, smaller.
+  vec2 l1 = vec2(cos(u_time * 0.17 + 0.0), sin(u_time * 0.13 + 1.7)) * vec2(0.62, 0.42) * aspect;
+  lightPoint(cen, l1, 0.006, 0.085, uv, glowAccum, aspect);
+  // Roamer 2 — different speeds/phase so the two never lock together.
+  vec2 l2 = vec2(cos(u_time * 0.11 + 2.6), sin(u_time * 0.19 + 4.1)) * vec2(0.5, 0.55) * aspect;
+  lightPoint(cen, l2, 0.005, 0.07, uv, glowAccum, aspect);
 
-  // --- glitch bursts (3) -----------------------------------------------------
-  // Bursts gate on a slow noise track so the field is calm most of the time and
-  // jolts occasionally (digital displacement + scanline tear).
-  float burstSeed = vnoise(vec2(u_time * 1.7, 11.0));
-  float burst = smoothstep(0.72, 0.96, burstSeed);
+  // --- signal instability (persistent, scaled by malf) -----------------------
+  // Constant block/scanline displacement + occasional harder tear spikes. Even when
+  // "clean" a faint amount remains (malf floor) so it reads as a fragile signal.
+  float tearSpike = smoothstep(0.80, 0.97, vnoise(vec2(u_time * 2.3, 19.0)));
+  float instability = malf * (0.35 + tearSpike);
   float line = floor(uv.y * 90.0);
-  float jitter = (hash21(vec2(line, floor(u_time * 24.0))) - 0.5);
-  float blockShift = jitter * 0.06 * burst;
-  uv.x += blockShift;
-  // thin scanline darkening that intensifies during a burst
-  float scan = 0.04 * burst * step(0.5, fract(uv.y * 220.0 + u_time * 2.0));
+  float jitter = (hash21(vec2(line, floor(u_time * 26.0))) - 0.5);
+  uv.x += jitter * 0.05 * instability;
+  // thin rolling scanline darkening, always faintly present, stronger mid-malfunction
+  float scan = (0.018 + 0.05 * tearSpike) * malf
+             * step(0.5, fract(uv.y * 220.0 + u_time * 2.0));
 
-  // --- chromatic aberration (2) ---------------------------------------------
-  // Channel split grows with radius and with the active burst — the RED fringe
-  // is what carries the brand bleed (D-01/D-02).
-  float ca = (0.0025 + 0.012 * burst) * (0.4 + length(cen));
+  // --- chromatic aberration (persistent, scaled by malf) ---------------------
+  // RGB channel split: a constant baseline aberration (so it's always slightly
+  // broken) growing with radius and with active tears. Suppressed during clarity.
+  float ca = (0.0016 + 0.011 * instability) * (0.45 + length(cen));
   vec2 dir = normalize(cen + 1e-4);
   float rN = vnoise(uv * 3.0 + u_time * 0.05 + dir * ca);
   float gN = vnoise(uv * 3.0 + u_time * 0.05);
   float bN = vnoise(uv * 3.0 + u_time * 0.05 - dir * ca);
 
-  // --- film grain (1), LOW amplitude (Pitfall 6) ----------------------------
+  // --- film grain (persistent, scaled by malf) -------------------------------
   float grain = hash21(uv * u_resolution.xy * 0.5 + fract(u_time) * 91.7);
-  float grainAmt = 0.05;
+  float grainAmt = mix(0.02, 0.075, malf);
 
   // --- compose: navy base, red as a minority accent -------------------------
-  // Base luminance field from the noise channels (cool, dim).
   float base = mix(gN, bN, 0.5) * 0.22;
   vec3 col = u_navy + base * 0.5;
 
-  // Red bleed: only where the red-shifted channel leads, kept minority via the
-  // 0.18 ceiling; the glow rides the active burst.
+  // Red bleed: only where the red-shifted channel leads, kept minority.
   float redLead = clamp(rN - gN, 0.0, 1.0);
   col += u_red * redLead * 0.18;
-  col += u_redGlow * burst * smoothstep(0.4, 0.0, md) * 0.12;
+  // Light glow (red-glow) from the pointer + roamers; rides a touch higher during a
+  // tear so the malfunction flares red, but stays a minority accent.
+  col += u_redGlow * glowAccum * (0.85 + 0.6 * tearSpike * malf);
 
   // grain + scanline
   col += (grain - 0.5) * grainAmt;
