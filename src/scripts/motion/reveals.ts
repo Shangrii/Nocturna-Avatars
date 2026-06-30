@@ -35,7 +35,7 @@ export function initReveals(): void {
 
   // Reduced-motion: a single gentle whole-element fade, no stagger/clip/split (D-21).
   if (prefersReduced()) {
-    reveals.forEach((el) => {
+    reveals.forEach((el, i) => {
       gsap.fromTo(
         el,
         { opacity: 0 },
@@ -43,7 +43,7 @@ export function initReveals(): void {
           opacity: 1,
           duration: 0.6,
           ease: 'power1.out',
-          scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+          scrollTrigger: { id: `reveal-${i}`, trigger: el, start: 'top 90%', once: true },
         },
       );
     });
@@ -67,7 +67,7 @@ export function initReveals(): void {
         duration: bold ? 0.8 : 0.6,
         ease: bold ? 'power3.out' : 'power2.out',
         delay: bold ? (i % 4) * 0.05 : 0, // light offset stagger on landing
-        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+        scrollTrigger: { id: `reveal-${i}`, trigger: el, start: 'top 85%', once: true },
       },
     );
   });
@@ -79,7 +79,7 @@ export function initReveals(): void {
   );
   if (headings.length) {
     document.fonts.ready.then(() => {
-      headings.forEach((h) => {
+      headings.forEach((h, i) => {
         const split = new SplitText(h, { type: 'words,chars' });
         splits.push(split);
         gsap.from(split.chars, {
@@ -88,7 +88,7 @@ export function initReveals(): void {
           duration: 0.5,
           ease: 'power3.out',
           stagger: bold ? 0.02 : 0.01,
-          scrollTrigger: { trigger: h, start: 'top 85%', once: true },
+          scrollTrigger: { id: `reveal-heading-${i}`, trigger: h, start: 'top 85%', once: true },
         });
       });
       // Heights changed after the font swap + split — recompute trigger positions.
@@ -101,7 +101,11 @@ export function initReveals(): void {
 }
 
 export function destroyReveals(): void {
-  ScrollTrigger.getAll().forEach((t) => t.kill());
+  // Kill ONLY this module's triggers (tagged with the 'reveal-' prefix) — never
+  // choreography's choreo-marquee / choreo-parallax triggers (CR-07).
+  ScrollTrigger.getAll()
+    .filter((t) => (t.vars as { id?: string }).id?.startsWith('reveal-'))
+    .forEach((t) => t.kill());
   splits.forEach((s) => s.revert());
   splits = [];
 }
