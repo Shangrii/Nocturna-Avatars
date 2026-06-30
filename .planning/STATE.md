@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "02.1-04 Task 3 checkpoint:human-verify — chrome re-skin complete, awaiting final human QA"
-last_updated: "2026-06-30T12:47:30.000Z"
+stopped_at: "Phase 02.1 complete — all 4 plans done, human QA approved; ready for Phase 3"
+last_updated: "2026-06-30T13:00:00.000Z"
 last_activity: 2026-06-30
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 12
-  completed_plans: 11
-  percent: 33
+  completed_plans: 12
+  percent: 50
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** A visitor is visually impressed and reaches "Abrir Ticket" on Discord, while staff keep gallery/catalog current without touching code.
-**Current focus:** Phase 02.1 — visual-redesign-refined-street-editorial
+**Current focus:** Phase 3 — Service Catalog (next phase)
 
 ## Current Position
 
-Phase: 02.1 (visual-redesign-refined-street-editorial) — AWAITING HUMAN VERIFY
-Plan: 4 of 4 — at checkpoint:human-verify (Task 3)
-Status: Tasks 1+2 committed; chrome re-skin + build verified; awaiting final visual QA
+Phase: 02.1 (visual-redesign-refined-street-editorial) — COMPLETE
+Plan: 4 of 4 — all plans complete, human QA approved
+Status: Phase 02.1 closed; next is Phase 3 (Service Catalog)
 Last activity: 2026-06-30
 
-Progress: [█████████░] 92%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [█████████░] 92%
 | Phase 02 P01 | 25min | 4 tasks | 9 files |
 | Phase 02 P02 | ~20min | 2 tasks tasks | 7 files files |
 | Phase 02.1 P01 | 6min | 3 tasks | 9 files |
+| Phase 02.1 P04 | — | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [Phase ?]: [02.1-01] Tailwind v4 wired CSS-first via @tailwindcss/vite@4.3.2 (exact pin, T-02.1-SC approved); brand tokens live in src/styles/theme.css @theme block (bg-ink/bg-paper/text-red/font-display), tokens.css retired; var(--..) carried for incremental migration (D-01/D-02/D-03)
 - [Phase ?]: [02.1-01] Tailwind v4 @theme inline comments must avoid '*'+'/' glob-like sequences — they break the v4 CSS parser; use plain prose inside @theme
 - [Phase ?]: [02.1-01] Custom cursor removed (cursor.ts + cursor.css deleted, unwired from motion/index.ts); rest of motion layer intact (D-10)
+- [Phase ?]: [02.1-04] Floating CTA keeps 999px pill radius — distinct persistent conversion anchor from squared editorial chrome
+- [Phase ?]: [02.1-04] Nav backdrop at 0.95 opacity ensures off-white text AA over both ink and paper sections
+- [Phase ?]: [02.1-04] Phase 02.1 complete — all 6 ROADMAP success criteria verified by human QA (2026-06-30)
 
 ### Pending Todos
 
@@ -116,6 +120,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-30T18:38:53.233Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-06-30T13:00:00.000Z
+Stopped at: Phase 02.1 complete — all 4 plans done; ready for Phase 3 (Service Catalog)
 Resume file: None

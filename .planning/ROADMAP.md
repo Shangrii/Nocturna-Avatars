@@ -123,7 +123,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3 — global chrome in BaseLayout, final a11y/responsive sweep)*
 
-- [ ] 02.1-04-PLAN.md — Chrome re-skin: nav/footer/floating CTA/modal/lang switcher + whole-site quality-bar sweep
+- [x] 02.1-04-PLAN.md — Chrome re-skin: nav/footer/floating CTA/modal/lang switcher + whole-site quality-bar sweep
 
 ### Phase 3: Service Catalog
 
@@ -189,6 +189,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Foundation & Bilingual Shell | 4/4 | Complete   | 2026-06-28 |
 | 2. Experimental Motion Layer | 4/4 | Complete   | 2026-06-30 |
+| 2.1 Visual Redesign — Refined Street Editorial | 4/4 | Complete   | 2026-06-30 |
 | 3. Service Catalog | 0/TBD | Not started | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
