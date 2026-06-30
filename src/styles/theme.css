@@ -85,3 +85,38 @@
   /* ── Min touch target (a11y, PLAT-04) ── */
   --touch-min: 44px;
 }
+
+/* ═══════════════════════════════════════════════
+   LEGACY TOKEN ALIASES (Rule 1 fix — regression repair)
+   Plan 01 retired tokens.css and renamed brand colors to the Tailwind
+   v4 convention (the color tokens carry a color- prefix so they emit
+   utilities). But the existing component CSS (sections.css, chrome.css,
+   global.css, the landing hero, the section components) still reads the
+   short legacy names like var(--red) / var(--navy) / var(--white). Those
+   custom properties were left undefined after tokens.css was deleted, so
+   every var(--red) etc. resolved to nothing and the live site lost its
+   colors. Bridge the short names to the @theme color tokens so all
+   not-yet-converted CSS keeps resolving during the incremental migration
+   (D-03). New editorial CSS authored in this phase targets the canonical
+   --color- tokens directly.
+   ═══════════════════════════════════════════════ */
+:root {
+  --red: var(--color-red);
+  --red-dark: var(--color-red-dark);
+  --red-glow: var(--color-red-glow);
+  --red-soft: var(--color-red-soft);
+  --navy: var(--color-navy);
+  --navy-mid: var(--color-navy-mid);
+  --navy-light: var(--color-navy-light);
+  --navy-surface: var(--color-navy-surface);
+  --white: var(--color-white);
+  --white-dim: var(--color-white-dim);
+  --white-muted: var(--color-white-muted);
+  --border: var(--color-border);
+
+  /* Semantic editorial surface aliases (short forms of the D-07 tokens). */
+  --ink: var(--color-ink);
+  --paper: var(--color-paper);
+  --ink-on-paper: var(--color-ink-on-paper);
+  --paper-on-ink: var(--color-paper-on-ink);
+}

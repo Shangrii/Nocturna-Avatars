@@ -1,49 +1,70 @@
 /* ═══════════════════════════════════════════════
    NOCTURNA AVATARS — Sections & shared blocks
-   Tokenized section/card/empty-state styles carried
-   from styles.css. Used by landing sections + the
-   /servicios, /galeria, /404 shells. No hard-coded
-   brand hex — every value reads from tokens.css.
+   Refined Street Editorial re-skin (02.1-02, D-04/05/07/08/09).
+   Ink (navy) / paper (off-white) section rhythm, oversized Space
+   Grotesk display titles, giant Space Mono editorial tags, surgical
+   red (one accent per section), 0px radii + hairline 1px rules.
+   Every class selector name is preserved so the section components
+   and the motion choreography keep matching. Color values read the
+   Tailwind v4 @theme color tokens (the short var aliases also resolve).
    ═══════════════════════════════════════════════ */
 
 /* ── Section header (tag + title + subtitle) ── */
 .section-header {
-  text-align: center;
-  max-width: 620px;
-  margin: 0 auto clamp(40px, 6vw, 70px);
-  padding: 0 var(--space-sm);
+  max-width: 1000px;
+  margin: 0 auto clamp(40px, 6vw, 72px);
+  padding: 0 var(--page-gutter);
 }
 .section-tag {
+  /* Giant Space Mono editorial marker — the one red accent of the header (D-09). */
   font-family: var(--font-mono);
-  font-size: var(--type-label);
-  letter-spacing: 0.28em;
+  font-size: clamp(11px, 1.6vw, 14px);
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--color-red);
   display: block;
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-md);
 }
 .section-title {
   font-family: var(--font-display);
-  font-size: var(--type-heading);
-  color: var(--white);
-  margin-bottom: var(--space-sm);
-  line-height: var(--lh-heading);
+  font-size: clamp(30px, 6vw, 64px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  color: var(--color-white);
+  margin-bottom: var(--space-md);
 }
 .section-subtitle {
   font-size: var(--type-body);
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   font-weight: 300;
   line-height: var(--lh-body);
+  max-width: 60ch;
 }
 
 /* ── Generic section wrappers ── */
 .section {
+  /* Default = INK: navy field, off-white text (D-07). */
   padding: var(--section-pad) 0;
   position: relative;
+  background: var(--color-ink);
+  color: var(--color-paper-on-ink);
 }
+/* PAPER surface — off-white field, near-black text. Breaks the ink rhythm
+   like a magazine spread (D-07). Descendant text/cards re-point below. */
 .section--surface {
-  background: var(--navy-mid);
+  background: var(--color-paper);
+  color: var(--color-ink-on-paper);
 }
+.section--surface .section-title {
+  color: var(--color-ink-on-paper);
+}
+.section--surface .section-subtitle {
+  color: color-mix(in srgb, var(--color-ink-on-paper) 72%, transparent);
+}
+/* section-tag stays red on both surfaces (red is the constant thread, D-07). */
+
 .section--rule::before,
 .section--rule::after {
   content: '';
@@ -51,7 +72,11 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  background: var(--color-border);
+}
+.section--surface.section--rule::before,
+.section--surface.section--rule::after {
+  background: color-mix(in srgb, var(--color-ink-on-paper) 14%, transparent);
 }
 .section--rule::before {
   top: 0;
@@ -69,28 +94,34 @@
    ═══════════════════════════════════ */
 .about-features {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2px;
-  max-width: 1000px;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 1px;
+  background: var(--color-border);
+  max-width: 1080px;
   margin: 0 auto var(--space-2xl);
-  padding: 0 var(--page-gutter);
+  border: 1px solid var(--color-border);
+}
+.section--surface .about-features {
+  background: color-mix(in srgb, var(--color-ink-on-paper) 14%, transparent);
+  border-color: color-mix(in srgb, var(--color-ink-on-paper) 14%, transparent);
 }
 .feature-card {
-  background: var(--navy-mid);
+  background: var(--color-ink);
   padding: var(--space-xl) var(--space-lg);
-  border: 1px solid var(--border);
   transition:
     border-color 0.3s,
     transform 0.3s;
 }
+.section--surface .feature-card {
+  background: var(--color-paper);
+}
 .feature-card:hover {
-  border-color: rgba(192, 25, 44, 0.3);
   transform: translateY(-4px);
 }
 .feature-icon {
-  width: 40px;
-  height: 40px;
-  color: var(--red);
+  width: 38px;
+  height: 38px;
+  color: var(--color-red);
   margin-bottom: var(--space-md);
 }
 .feature-icon svg {
@@ -99,145 +130,132 @@
 }
 .feature-card h3 {
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
   margin-bottom: var(--space-xs);
-  color: var(--white);
+  color: var(--color-white);
+}
+.section--surface .feature-card h3 {
+  color: var(--color-ink-on-paper);
 }
 .feature-card p {
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   font-size: var(--type-body-dense);
   line-height: var(--lh-body);
 }
+.section--surface .feature-card p {
+  color: color-mix(in srgb, var(--color-ink-on-paper) 70%, transparent);
+}
 
-/* ── Workflow ── */
+/* ── Workflow — editorial process timeline with Space Mono numbered markers (D-12) ── */
 .workflow {
-  max-width: 960px;
+  max-width: 1000px;
   margin: 0 auto var(--space-2xl);
   padding: 0 var(--page-gutter);
-  text-align: center;
 }
 .workflow-title,
 .about-story-title {
   font-family: var(--font-mono);
-  font-size: var(--type-label);
-  letter-spacing: 0.28em;
+  font-size: clamp(11px, 1.5vw, 13px);
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--color-red);
   margin-bottom: var(--space-xl);
 }
 .workflow-steps {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
   gap: 0;
+  border-top: 1px solid var(--color-border);
+}
+.section--surface .workflow-steps {
+  border-top-color: color-mix(in srgb, var(--color-ink-on-paper) 16%, transparent);
 }
 .workflow-step {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-xs);
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-md) var(--space-md) 0;
+  counter-increment: nocturna-step;
+  border-right: 1px solid var(--color-border);
   overflow: visible;
 }
-.workflow-step::before {
-  content: attr(data-tooltip);
-  position: absolute;
-  top: -132px;
-  left: 50%;
-  transform: translateX(-50%) scale(0.95);
-  width: min(240px, calc(100vw - 80px));
-  padding: 14px var(--space-sm);
-  background: rgba(16, 24, 42, 0.96);
-  color: var(--white);
-  font-size: 13px;
-  line-height: 1.5;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  pointer-events: none;
-  white-space: normal;
-  text-align: center;
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-  z-index: 10;
+.section--surface .workflow-step {
+  border-right-color: color-mix(in srgb, var(--color-ink-on-paper) 12%, transparent);
 }
+.workflow-step:last-child {
+  border-right: none;
+}
+/* Giant Space Mono step number — the editorial timeline marker. */
 .workflow-step::after {
-  content: '';
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 10px solid rgba(16, 24, 42, 0.96);
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-  transform: translateX(-50%);
+  content: counter(nocturna-step, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.6vw, 15px);
+  letter-spacing: 0.1em;
+  color: var(--color-red);
+  order: -1;
 }
-.workflow-step:hover::before {
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
-}
-.workflow-step:hover::after {
-  opacity: 1;
+.workflow-steps {
+  counter-reset: nocturna-step;
 }
 .step-icon {
-  width: 52px;
-  height: 52px;
-  border: 1px solid rgba(192, 25, 44, 0.35);
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: var(--red);
+  justify-content: flex-start;
+  color: var(--color-red);
   transition:
-    background 0.3s,
-    border-color 0.3s,
-    transform 0.3s;
+    transform 0.3s,
+    opacity 0.3s;
+}
+.section--surface .step-icon {
+  color: var(--color-ink-on-paper);
 }
 .step-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
 }
 .workflow-step:hover .step-icon {
-  background: var(--red-soft);
-  border-color: var(--red);
-  transform: scale(1.1);
+  transform: translateY(-2px);
 }
 .step-label {
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.15em;
+  font-size: 10px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--white-dim);
+  color: var(--color-white-dim);
+  line-height: 1.4;
+}
+.section--surface .step-label {
+  color: color-mix(in srgb, var(--color-ink-on-paper) 64%, transparent);
+}
+/* Tooltip text is now surfaced inline as the step label — keep the hook quiet. */
+.workflow-step::before {
+  content: '';
+  display: none;
 }
 .workflow-connector {
-  width: 36px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(192, 25, 44, 0.4), transparent);
-  flex-shrink: 0;
+  display: none;
 }
 
 /* ── About story ── */
 .about-story {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
   padding: 0 var(--page-gutter);
-  text-align: center;
 }
 .about-story p {
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   font-size: var(--type-body-dense);
   line-height: 1.85;
   margin-bottom: var(--space-sm);
+}
+.section--surface .about-story p {
+  color: color-mix(in srgb, var(--color-ink-on-paper) 76%, transparent);
 }
 .about-story p:last-child {
   margin-bottom: 0;
@@ -248,49 +266,60 @@
    ═══════════════════════════════════ */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2px;
-  max-width: 1000px;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 1px;
+  background: var(--color-border);
+  max-width: 1080px;
   margin: 0 auto var(--space-2xl);
-  padding: 0 var(--page-gutter);
+  border: 1px solid var(--color-border);
+}
+.section--surface .cards {
+  background: color-mix(in srgb, var(--color-ink-on-paper) 14%, transparent);
+  border-color: color-mix(in srgb, var(--color-ink-on-paper) 14%, transparent);
 }
 .cards--summary {
   margin-bottom: var(--space-xl);
 }
 .card {
-  background: var(--navy);
-  border: 1px solid var(--border);
-  padding: 44px var(--space-lg) var(--space-xl);
+  background: var(--color-ink);
+  padding: var(--space-xl) var(--space-lg);
   position: relative;
   transition:
     transform 0.4s,
-    border-color 0.4s;
+    background 0.4s;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  color: var(--color-paper-on-ink);
+}
+.section--surface .card {
+  background: var(--color-paper);
+  color: var(--color-ink-on-paper);
 }
 .card::before {
+  /* Hairline red top rule, drawn on hover (one accent). */
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--red);
+  background: var(--color-red);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.5s;
-}
-.card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(192, 25, 44, 0.35);
 }
 .card:hover::before {
   transform: scaleX(1);
 }
 .card.featured {
-  border-color: rgba(192, 25, 44, 0.3);
-  background: linear-gradient(180deg, rgba(192, 25, 44, 0.06) 0%, var(--navy) 40%);
+  /* The one red-accented tier — solid hairline red rule, no glow gradient. */
+  background: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--color-red);
+}
+.section--surface .card.featured {
+  background: var(--color-paper);
+  box-shadow: inset 0 0 0 1px var(--color-red);
 }
 .card.featured::before {
   transform: scaleX(1);
@@ -298,58 +327,81 @@
 .card-popular {
   font-family: var(--font-mono);
   font-size: 9px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--color-red);
   margin-bottom: var(--space-2xs);
 }
 .card-tier {
   font-family: var(--font-mono);
   font-size: 9px;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--white-dim);
-  background: var(--white-muted);
-  border: 1px solid var(--border);
+  color: var(--color-white-dim);
+  border: 1px solid var(--color-border);
   padding: var(--space-3xs) var(--space-xs);
   display: inline-block;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
   align-self: flex-start;
+}
+.section--surface .card-tier {
+  color: color-mix(in srgb, var(--color-ink-on-paper) 64%, transparent);
+  border-color: color-mix(in srgb, var(--color-ink-on-paper) 22%, transparent);
 }
 .card-name {
   font-family: var(--font-display);
-  font-size: var(--type-card-title);
-  color: var(--white);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--color-white);
   margin-bottom: var(--space-3xs);
+}
+.section--surface .card-name {
+  color: var(--color-ink-on-paper);
 }
 .card-subtitle {
   font-style: italic;
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   font-size: 14px;
   margin-bottom: var(--space-md);
 }
+.section--surface .card-subtitle {
+  color: color-mix(in srgb, var(--color-ink-on-paper) 66%, transparent);
+}
 .card-price {
   font-family: var(--font-mono);
-  font-size: 40px;
-  color: var(--white);
+  font-size: clamp(34px, 4.5vw, 44px);
+  color: var(--color-white);
   margin-bottom: var(--space-3xs);
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.section--surface .card-price {
+  color: var(--color-ink-on-paper);
 }
 .card-price span {
   font-size: var(--type-body);
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   font-weight: 400;
+}
+.section--surface .card-price span {
+  color: color-mix(in srgb, var(--color-ink-on-paper) 60%, transparent);
 }
 .card-note {
   font-size: 13px;
-  color: var(--red);
+  color: var(--color-red);
   font-style: italic;
   margin-bottom: var(--space-md);
 }
 .card-divider {
   height: 1px;
-  background: var(--border);
-  margin: 20px 0;
+  background: var(--color-border);
+  margin: var(--space-md) 0;
+}
+.section--surface .card-divider {
+  background: color-mix(in srgb, var(--color-ink-on-paper) 16%, transparent);
 }
 .card-features {
   display: flex;
@@ -358,30 +410,39 @@
 }
 .card-features li {
   font-size: 14px;
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   padding-left: 18px;
   position: relative;
   line-height: 1.5;
+}
+.section--surface .card-features li {
+  color: color-mix(in srgb, var(--color-ink-on-paper) 74%, transparent);
 }
 .card-features li::before {
   content: '✦';
   position: absolute;
   left: 0;
   top: 2px;
-  color: var(--red);
+  color: var(--color-red);
   font-size: 9px;
 }
 .card-features li.highlight {
-  color: var(--white);
+  color: var(--color-white);
+}
+.section--surface .card-features li.highlight {
+  color: var(--color-ink-on-paper);
 }
 .card-oneliner {
   font-size: 14px;
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   line-height: 1.6;
   margin-bottom: var(--space-sm);
 }
+.section--surface .card-oneliner {
+  color: color-mix(in srgb, var(--color-ink-on-paper) 72%, transparent);
+}
 .card-cta {
-  margin-top: var(--space-lg);
+  margin-top: auto;
   display: block;
   width: 100%;
   text-align: center;
@@ -389,22 +450,19 @@
   font-size: 10px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--white);
-  background: var(--red);
+  color: var(--color-white);
+  background: var(--color-red);
   border: none;
   cursor: pointer;
   min-height: var(--touch-min);
-  padding: 14px;
+  padding: var(--space-sm);
+  margin-top: var(--space-lg);
   transition:
     background 0.2s,
     transform 0.2s;
 }
 .card-cta:hover {
-  background: var(--red-dark);
-  transform: translateY(-2px);
-}
-.card.featured .card-cta {
-  box-shadow: 0 4px 24px rgba(192, 25, 44, 0.3);
+  background: var(--color-red-dark);
 }
 .card--condensed {
   padding-top: var(--space-xl);
@@ -423,18 +481,21 @@
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--white);
-  border-bottom: 1px solid var(--red);
+  color: var(--color-white);
+  border-bottom: 1px solid var(--color-red);
   padding: var(--space-2xs) var(--space-3xs);
   transition: color 0.2s;
 }
+.section--surface .link-arrow {
+  color: var(--color-ink-on-paper);
+}
 .link-arrow:hover {
-  color: var(--red);
+  color: var(--color-red);
 }
 
 /* ── Add-ons ── */
 .addons {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 var(--page-gutter);
 }
@@ -443,37 +504,48 @@
   font-size: 10px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--color-red);
   text-align: center;
   margin-bottom: var(--space-md);
 }
 .addon-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
   gap: 1px;
-  background: var(--border);
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
 }
 .addon-item {
-  background: var(--navy);
-  padding: 20px 22px;
+  background: var(--color-ink);
+  padding: var(--space-md) var(--space-md);
   transition: background 0.2s;
 }
+.section--surface .addon-item {
+  background: var(--color-paper);
+}
 .addon-item:hover {
-  background: var(--navy-light);
+  background: var(--color-navy-light);
+}
+.section--surface .addon-item:hover {
+  background: color-mix(in srgb, var(--color-ink-on-paper) 5%, var(--color-paper));
 }
 .addon-item .name {
   font-size: 14px;
-  color: var(--white);
+  color: var(--color-white);
   margin-bottom: var(--space-3xs);
+}
+.section--surface .addon-item .name {
+  color: var(--color-ink-on-paper);
 }
 .addon-item .price {
   font-family: var(--font-mono);
   font-size: 13px;
-  color: var(--red);
+  color: var(--color-red);
+  font-variant-numeric: tabular-nums;
 }
 .addons-note {
   font-size: 13px;
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   font-style: italic;
   text-align: center;
   margin-top: var(--space-sm);
@@ -483,35 +555,40 @@
    EMPTY STATE (shells / teasers / 404)
    ═══════════════════════════════════ */
 .empty-state {
-  max-width: 560px;
+  max-width: 640px;
   margin: 0 auto;
   padding: clamp(40px, 7vw, 72px) var(--page-gutter);
   text-align: center;
-  border: 1px dashed var(--border);
-  border-radius: 4px;
-  background: var(--navy-mid);
+  border: 1px solid var(--color-border);
+  background: transparent;
   position: relative;
 }
-.empty-state::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 70% 60% at 50% 0%, var(--red-soft), transparent 70%);
-  pointer-events: none;
+.section--surface .empty-state {
+  border-color: color-mix(in srgb, var(--color-ink-on-paper) 18%, transparent);
 }
 .empty-state-heading {
   font-family: var(--font-display);
-  font-size: var(--type-card-title);
-  color: var(--white);
-  margin-bottom: var(--space-sm);
+  font-size: clamp(22px, 3.4vw, 34px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--color-white);
+  margin-bottom: var(--space-md);
   position: relative;
 }
+.section--surface .empty-state-heading {
+  color: var(--color-ink-on-paper);
+}
 .empty-state-body {
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   font-size: var(--type-body-dense);
   line-height: var(--lh-body);
   margin-bottom: var(--space-lg);
   position: relative;
+}
+.section--surface .empty-state-body {
+  color: color-mix(in srgb, var(--color-ink-on-paper) 72%, transparent);
 }
 .empty-state-actions {
   display: flex;
@@ -529,9 +606,9 @@
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--white);
-  background: var(--red);
-  border: 1px solid var(--red);
+  color: var(--color-white);
+  background: var(--color-red);
+  border: 1px solid var(--color-red);
   cursor: pointer;
   padding: 14px var(--space-lg);
   transition:
@@ -539,8 +616,8 @@
     transform 0.2s;
 }
 .btn-primary:hover {
-  background: var(--red-dark);
-  transform: translateY(-2px);
+  background: var(--color-red-dark);
+  border-color: var(--color-red-dark);
 }
 .btn-outline {
   display: inline-flex;
@@ -551,17 +628,21 @@
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--white);
+  color: var(--color-white);
   background: transparent;
-  border: 1px solid var(--red);
+  border: 1px solid var(--color-red);
   padding: 14px var(--space-lg);
   transition:
     background 0.2s,
+    color 0.2s,
     transform 0.2s;
 }
+.section--surface .btn-outline {
+  color: var(--color-ink-on-paper);
+}
 .btn-outline:hover {
-  background: var(--red);
-  transform: translateY(-2px);
+  background: var(--color-red);
+  color: var(--color-white);
 }
 
 /* ═══════════════════════════════════
@@ -569,7 +650,7 @@
    ═══════════════════════════════════ */
 .closing {
   text-align: center;
-  max-width: 640px;
+  max-width: 760px;
   margin: 0 auto;
   padding: 0 var(--page-gutter);
 }
@@ -584,6 +665,7 @@
    ═══════════════════════════════════ */
 .notfound {
   min-height: 70vh;
+  min-height: 70dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -594,29 +676,29 @@
   font-family: var(--font-tag);
   font-size: clamp(72px, 18vw, 180px);
   line-height: 0.9;
-  color: var(--white);
+  color: var(--color-white);
   letter-spacing: 8px;
-  text-shadow:
-    3px 3px 0 var(--red-dark),
-    0 0 80px rgba(192, 25, 44, 0.25);
   margin-bottom: var(--space-md);
 }
 .notfound-heading {
   font-family: var(--font-display);
-  font-size: var(--type-heading);
-  color: var(--white);
-  line-height: var(--lh-heading);
-  margin-bottom: var(--space-sm);
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--color-white);
+  line-height: 0.98;
+  margin-bottom: var(--space-md);
 }
 .notfound-body {
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   font-size: var(--type-body);
   line-height: var(--lh-body);
   margin-bottom: var(--space-2xs);
   max-width: 480px;
 }
 .notfound-body--alt {
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   font-size: var(--type-body-dense);
   font-style: italic;
   margin-bottom: var(--space-lg);
@@ -632,12 +714,26 @@
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .workflow-steps {
-    gap: 4px;
+    grid-template-columns: 1fr 1fr;
   }
-  .workflow-connector {
-    width: 16px;
+  .workflow-step {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding-right: var(--space-md);
+  }
+  .section--surface .workflow-step {
+    border-bottom-color: color-mix(in srgb, var(--color-ink-on-paper) 12%, transparent);
   }
   .addon-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .workflow-steps {
+    grid-template-columns: 1fr;
+  }
+  .section-title {
+    font-size: clamp(28px, 11vw, 44px);
   }
 }
