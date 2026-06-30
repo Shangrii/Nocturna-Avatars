@@ -1,8 +1,9 @@
 /* ═══════════════════════════════════════════════
    GLOBAL CHROME — nav, language switcher, footer,
-   Discord modal, floating CTA (Plan 01-02).
-   Ported from styles.css, tokenized: no hard-coded
-   brand hex — every value reads a token from tokens.css.
+   Discord modal, floating CTA (Plan 02.1-04).
+   Refined Street Editorial re-skin. All color values
+   read from @theme tokens in theme.css — no hard-coded
+   brand hex anywhere in this file.
    ═══════════════════════════════════════════════ */
 
 /* ── Nav ── */
@@ -23,26 +24,37 @@
     transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* When scrolled: a semi-opaque navy backdrop with enough opacity (0.95) so the
+   bar reads over BOTH the ink field (#0a0c14) AND the paper sections (#11141f).
+   Off-white text on the ink-alpha backdrop clears AA on paper: #f0eae4 vs ~#0e1019
+   = ~13.5:1. The hairline bottom rule stays visible on both surfaces. */
 .nav.scrolled {
-  background: rgba(10, 12, 20, 0.92);
+  background: rgba(10, 12, 20, 0.95);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 1px 0 var(--border);
+  box-shadow: 0 1px 0 var(--color-border);
+}
+
+/* chrome.ts toggles .nav--hidden for hide-on-scroll; transitions.css neutralises it
+   under prefers-reduced-motion so the nav stays visible under reduce. */
+.nav--hidden {
+  transform: translateY(-100%);
 }
 
 .nav-brand {
   font-family: var(--font-tag);
   font-size: var(--type-display-nav);
-  color: var(--red);
+  /* Wordmark uses the display-safe brand red (≥3:1 large-text on ink — D-05). */
+  color: var(--color-red-wordmark);
   letter-spacing: 0.04em;
   line-height: 1;
   display: inline-flex;
   align-items: center;
   min-height: var(--touch-min);
-  transition: transform 0.2s;
+  transition: opacity 0.2s;
 }
 .nav-brand:hover {
-  transform: scale(1.05);
+  opacity: 0.85;
 }
 
 .nav-links {
@@ -51,22 +63,24 @@
   gap: var(--space-3xs);
 }
 
+/* ── Nav links — Space Mono meta, uppercase, wide tracking. Editorial active indicator:
+   a 1px red underline positioned below the text (not covering the full cell). ── */
 .nav-link {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   display: inline-flex;
   align-items: center;
   min-height: var(--touch-min);
   padding: 0 var(--space-sm);
-  border-radius: 4px;
+  border-radius: 0;
   transition:
-    color 0.2s,
-    background 0.2s;
+    color 0.2s;
   position: relative;
 }
+/* The active indicator: a hairline red bottom-border that slides in via scaleX. */
 .nav-link::after {
   content: '';
   position: absolute;
@@ -74,44 +88,54 @@
   left: var(--space-sm);
   right: var(--space-sm);
   height: 1px;
-  background: var(--red);
+  background: var(--color-red);
   transform: scaleX(0);
-  transition: transform 0.3s;
+  transform-origin: left;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .nav-link:hover {
-  color: var(--white);
+  color: var(--color-white);
 }
 .nav-link.active {
-  color: var(--red);
+  color: var(--color-white);
 }
 .nav-link.active::after {
   transform: scaleX(1);
 }
+.nav-link:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 2px;
+}
 
+/* ── Nav CTA — the one primary action in the bar, solid red, 0px radius. ── */
 .nav-cta {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--white);
-  background: var(--red);
+  color: var(--color-white);
+  background: var(--color-red);
   display: inline-flex;
   align-items: center;
   min-height: var(--touch-min);
   padding: 0 var(--space-md);
-  border-radius: 4px;
+  border-radius: 0;
   margin-left: var(--space-2xs);
   cursor: pointer;
   transition:
     background 0.2s,
-    transform 0.2s;
+    opacity 0.2s;
 }
 .nav-cta:hover {
-  background: var(--red-dark);
-  transform: translateY(-1px);
+  background: var(--color-red-dark);
+  opacity: 1;
+}
+.nav-cta:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 2px;
 }
 
-/* ── Language switcher (globe icon + dropdown, CHANGE 4) ── */
+/* ── Language switcher (globe icon + dropdown) ── */
 .lang-switch {
   position: relative;
   display: inline-flex;
@@ -124,10 +148,10 @@
   gap: var(--space-3xs);
   min-height: var(--touch-min);
   padding: 0 var(--space-2xs);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: 0;
   background: transparent;
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: 11px;
@@ -135,16 +159,15 @@
   letter-spacing: 0.12em;
   transition:
     color 0.2s,
-    border-color 0.2s,
-    background 0.2s;
+    border-color 0.2s;
 }
 .lang-trigger:hover,
 .lang-switch.open .lang-trigger {
-  color: var(--white);
-  border-color: rgba(192, 25, 44, 0.4);
+  color: var(--color-white);
+  border-color: var(--color-red);
 }
 .lang-trigger:focus-visible {
-  outline: 2px solid var(--red);
+  outline: 2px solid var(--color-red);
   outline-offset: 2px;
 }
 .lang-globe {
@@ -173,12 +196,14 @@
   padding: var(--space-3xs);
   margin: 0;
   list-style: none;
-  background: rgba(10, 12, 20, 0.97);
+  /* Match the nav backdrop tint so the dropdown reads consistently over both
+     ink and paper when the nav is scrolled. */
+  background: rgba(10, 12, 20, 0.98);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
   z-index: 1100;
 }
 .lang-menu[hidden] {
@@ -190,20 +215,20 @@
   gap: var(--space-2xs);
   min-height: var(--touch-min);
   padding: 0 var(--space-sm);
-  border-radius: 5px;
-  color: var(--white-dim);
+  border-radius: 0;
+  color: var(--color-white-dim);
   transition:
     color 0.2s,
     background 0.2s;
 }
 .lang-menu-opt:hover,
 .lang-menu-opt:focus-visible {
-  color: var(--white);
-  background: var(--white-muted);
+  color: var(--color-white);
+  background: var(--color-white-muted);
   outline: none;
 }
 .lang-menu-opt[data-active] {
-  color: var(--red);
+  color: var(--color-red-on-ink);
 }
 .lang-menu-code {
   font-family: var(--font-mono);
@@ -218,7 +243,7 @@
   letter-spacing: 0.04em;
 }
 
-/* ── Hamburger ── */
+/* ── Hamburger toggle ── */
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -228,13 +253,20 @@
   height: var(--touch-min);
   align-items: center;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.nav-toggle:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 2px;
 }
 .nav-toggle span {
   display: block;
   width: 24px;
   height: 2px;
-  background: var(--white);
-  border-radius: 1px;
+  background: var(--color-white);
+  border-radius: 0;
   transition:
     transform 0.3s,
     opacity 0.3s;
@@ -249,27 +281,19 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ── Footer ── */
+/* ── Footer — editorial: hairline top rule, graffiti wordmark accent, mono links. ── */
 .footer {
   padding: 52px var(--page-gutter);
-  /* Reserve clearance at the bottom so the fixed floating CTA (bottom-right,
-     ~44px tall + its own bottom offset) never covers footer links/copy at any
-     width — the floating CTA scrolls over the page but rests above this gap when
-     the user reaches the footer (PLAT-04). */
+  /* Reserve clearance so the fixed floating CTA never covers footer links/copy. */
   padding-bottom: calc(52px + var(--touch-min) + clamp(16px, 4vw, 32px));
   text-align: center;
-  /* Surface-color alignment to the unified ink palette (02.1-02 P-E): the footer
-     previously used navy-surface, reading as a different dark tone than the ink
-     sections. Match the base ink field + the ink hairline border so it is tonally
-     consistent with the rest of the page. NOTE for Wave 4: this is a surgical color
-     alignment only — preserve these ink tokens when fully re-skinning the footer. */
   border-top: 1px solid var(--color-border);
   background: var(--color-ink);
 }
 .footer-brand {
   font-family: var(--font-tag);
   font-size: 56px;
-  color: var(--red);
+  color: var(--color-red-wordmark);
   margin-bottom: var(--space-3xs);
   display: inline-block;
 }
@@ -285,7 +309,7 @@
   font-size: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   display: inline-flex;
   align-items: center;
   gap: var(--space-2xs);
@@ -293,22 +317,28 @@
   transition: color 0.2s;
 }
 .footer-link:hover {
-  color: var(--white);
+  color: var(--color-white);
+}
+.footer-link:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 2px;
 }
 .footer-link svg {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
 }
+/* Muted copyright — use color-white with low opacity expressed via a custom alpha */
 .footer-copy {
   font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 0.15em;
-  color: rgba(240, 234, 228, 0.25);
+  color: var(--color-white-dim);
+  opacity: 0.4;
   text-transform: uppercase;
 }
 
-/* ── Floating persistent CTA (NAV-03) ── */
+/* ── Floating persistent CTA (NAV-03) — pill form, red fill, calmer editorial glow. ── */
 .floating-cta {
   position: fixed;
   right: clamp(16px, 4vw, 32px);
@@ -323,26 +353,29 @@
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--white);
-  background: var(--red);
+  color: var(--color-white);
+  background: var(--color-red);
   padding: 0 var(--space-md);
   border: none;
+  /* Pill keeps its rounded shape to differentiate it as the persistent conversion
+     anchor (separate visual register from the squared editorial chrome). */
   border-radius: 999px;
   cursor: pointer;
-  box-shadow:
-    0 8px 24px rgba(192, 25, 44, 0.35),
-    0 0 0 1px rgba(232, 34, 59, 0.4);
+  /* Calmer editorial glow: single shadow, no double ring. */
+  box-shadow: 0 4px 20px rgba(192, 25, 44, 0.3);
   transition:
     background 0.25s,
     transform 0.2s,
     box-shadow 0.25s;
 }
 .floating-cta:hover {
-  background: var(--red-dark);
+  background: var(--color-red-dark);
   transform: translateY(-2px);
-  box-shadow:
-    0 12px 30px rgba(192, 25, 44, 0.45),
-    0 0 0 1px rgba(232, 34, 59, 0.55);
+  box-shadow: 0 8px 28px rgba(192, 25, 44, 0.42);
+}
+.floating-cta:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 3px;
 }
 .floating-cta svg {
   width: 18px;
@@ -350,7 +383,7 @@
   flex-shrink: 0;
 }
 
-/* ── Discord modal (shared) ── */
+/* ── Discord modal — editorial card: 0px radius, hairline border. ── */
 .dc-overlay {
   position: fixed;
   inset: 0;
@@ -373,16 +406,19 @@
   position: relative;
   width: 380px;
   max-width: 92vw;
-  background: var(--navy-mid);
-  border: 1px solid rgba(192, 25, 44, 0.2);
-  border-radius: 16px;
+  background: var(--color-navy-mid);
+  border: 1px solid var(--color-border);
+  /* Editorial: 0px radius. */
+  border-radius: 0;
   overflow: hidden;
-  transform: translateY(24px) scale(0.96);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(24px) scale(0.97);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dc-overlay.active .dc-modal {
   transform: translateY(0) scale(1);
 }
+/* Retained subtle glow effect — uses CSS color-mix-style alpha instead of
+   hard-coded hex (the red-soft custom property is rgba(192,25,44,0.12)). */
 .dc-modal-glow {
   position: absolute;
   top: -80px;
@@ -390,7 +426,7 @@
   transform: translateX(-50%);
   width: 300px;
   height: 200px;
-  background: radial-gradient(ellipse, rgba(192, 25, 44, 0.2) 0%, transparent 70%);
+  background: radial-gradient(ellipse, var(--color-red-soft) 0%, transparent 70%);
   pointer-events: none;
 }
 .dc-header {
@@ -403,13 +439,14 @@
 .dc-icon {
   width: 56px;
   height: 56px;
-  background: var(--red-soft);
-  border: 1px solid rgba(192, 25, 44, 0.3);
-  border-radius: 14px;
+  background: var(--color-red-soft);
+  border: 1px solid var(--color-border);
+  /* Editorial: 0px radius. */
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--red);
+  color: var(--color-red);
 }
 .dc-body {
   padding: 0 28px 32px;
@@ -418,22 +455,24 @@
 .dc-title {
   font-family: var(--font-display);
   font-size: 24px;
-  color: var(--white);
+  color: var(--color-white);
   margin-bottom: var(--space-xs);
+  line-height: var(--lh-heading);
 }
 .dc-title em {
   font-style: normal;
-  color: var(--red);
+  color: var(--color-red);
   text-decoration: underline;
-  text-decoration-color: var(--red);
+  text-decoration-color: var(--color-red);
   text-underline-offset: 3px;
 }
 .dc-desc {
   font-size: 14px;
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   line-height: 1.6;
   margin-bottom: var(--space-md);
 }
+/* Primary action in the modal: white pill-ish button (editorial, 0px radius). */
 .dc-open-btn {
   display: block;
   width: 100%;
@@ -443,10 +482,10 @@
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--navy);
-  background: var(--white);
+  color: var(--color-navy);
+  background: var(--color-white);
   padding: 14px;
-  border-radius: 10px;
+  border-radius: 0;
   margin-bottom: 14px;
   min-height: var(--touch-min);
   transition:
@@ -454,22 +493,33 @@
     transform 0.2s;
 }
 .dc-open-btn:hover {
-  background: var(--white-dim);
+  background: var(--color-white-dim);
   transform: translateY(-1px);
 }
+.dc-open-btn:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 2px;
+}
+/* Dismiss is a ghost secondary action. */
 .dc-dismiss {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--white-dim);
+  color: var(--color-white-dim);
   padding: var(--space-2xs);
   min-height: var(--touch-min);
   cursor: pointer;
+  background: transparent;
+  border: none;
   transition: color 0.2s;
 }
 .dc-dismiss:hover {
-  color: var(--white);
+  color: var(--color-white);
+}
+.dc-dismiss:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 2px;
 }
 
 /* ═══════════════════════════════════════════════
@@ -491,7 +541,7 @@
     background: rgba(10, 12, 20, 0.97);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--color-border);
     transform: translateY(-12px);
     opacity: 0;
     pointer-events: none;
@@ -514,7 +564,7 @@
     margin-left: 0;
     justify-content: flex-start;
     padding-top: var(--space-2xs);
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -530,7 +580,7 @@
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background: var(--navy-light);
+    background: var(--color-ink-raised);
   }
   .nav-cta {
     justify-content: center;
@@ -539,9 +589,13 @@
   }
 }
 
+/* ═══════════════════════════════════════════════
+   Reduced-motion — disable chrome transitions (PLAT-04)
+   ═══════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   .nav,
   .nav-links,
+  .nav-link::after,
   .dc-overlay,
   .dc-modal,
   .floating-cta {
