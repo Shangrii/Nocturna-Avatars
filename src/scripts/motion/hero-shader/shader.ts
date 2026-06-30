@@ -249,7 +249,7 @@ export function initHeroShader(): void {
     return;
   }
 
-  // Read brand colors from tokens.css (NO hard-coded hex in GLSL/runtime).
+  // Read brand colors from theme.css @theme tokens (NO hard-coded hex in GLSL/runtime).
   readBrandColors(canvas);
   uniforms = {
     time: gl.getUniformLocation(program, 'u_time'),

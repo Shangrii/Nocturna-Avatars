@@ -7,7 +7,7 @@
    pulse accent (UI-SPEC Color) — never as a tint on every effect.
 
    Everything here is transform/opacity/shadow only (no layout properties) and is
-   neutralised under prefers-reduced-motion (D-21). All values come from tokens.css.
+   neutralised under prefers-reduced-motion (D-21). All values come from theme.css @theme tokens.
    ═══════════════════════════════════════════════ */
 
 /* ── Micro-interaction: lift (D-09) ── buttons + cards rise slightly on hover. */
