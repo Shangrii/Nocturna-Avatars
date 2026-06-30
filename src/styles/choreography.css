@@ -105,9 +105,46 @@
   animation-play-state: paused; /* hover takes over with the chrome.css lift state */
 }
 
-/* ── D-21 reduced-motion: neutralise lift / underline / flicker / pulse ──
+/* ═══════════════════════════════════════════════
+   Landing choreography structure (D-14/15/16) — JS in choreography.ts drives the
+   transforms; these rules only set up the stage (overflow clip, 3D perspective,
+   will-change hints). The classes are added by JS so they never apply when the
+   effects are gated off (reduced-motion / non-landing / touch).
+   ═══════════════════════════════════════════════ */
+
+/* D-14 marquee — clip the horizontal overscroll so the translateX track reads as a
+   marquee rather than a page-widening overflow. */
+[data-teaser='gallery'] {
+  overflow: hidden;
+}
+.marquee-track {
+  will-change: transform;
+}
+
+/* D-16 parallax — promote the parallaxing layer to its own compositor layer. */
+[data-teaser='featured'] [data-teaser-body] {
+  will-change: transform;
+}
+
+/* D-15 card tilt — the perspective lives on the card itself (transformPerspective is
+   also set per-tween in JS); back the GPU layer with will-change. */
+.card--tilt {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ── D-21 reduced-motion: neutralise lift / underline / flicker / pulse + choreography ──
    The conversion path stays reachable; only the motion is removed. */
 @media (prefers-reduced-motion: reduce) {
+  [data-teaser='gallery'] {
+    overflow: visible;
+  }
+  .marquee-track,
+  [data-teaser='featured'] [data-teaser-body],
+  .card--tilt {
+    transform: none !important;
+    will-change: auto;
+  }
   .hero-cta,
   .card,
   .btn-primary,

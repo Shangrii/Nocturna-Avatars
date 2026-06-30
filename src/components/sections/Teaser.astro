@@ -21,12 +21,15 @@ const head = variant === 'featured' ? p.teaser.featured : p.teaser.gallery;
 const e = p.emptyState;
 ---
 
-<section class={`section${variant === 'gallery' ? ' section--surface' : ''} section--rule`}>
+<section
+  class={`section${variant === 'gallery' ? ' section--surface' : ''} section--rule`}
+  data-teaser={variant}
+>
   <div class="section-header reveal">
     <span class="section-tag">{head.tag}</span>
     <h2 class="section-title">{head.title}</h2>
   </div>
-  <div class="reveal">
+  <div class="reveal" data-teaser-body>
     <EmptyState
       heading={e.heading}
       body={e.galleryBody}
