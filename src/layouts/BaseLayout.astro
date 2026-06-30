@@ -76,6 +76,24 @@ const glitchWipe = { forwards: glitchPair, backwards: glitchPair };
     <FloatingCTA lang={lang} />
     <DiscordModal lang={lang} />
 
+    <!-- Film-static burst overlay for the D-17 page-transition (reads as intentional
+         analog static, not a render error — user feedback 02.1-02). pointer-events:none
+         and below the nav/CTA z-index so the conversion path is never blocked. -->
+    <div class="glitch-static" aria-hidden="true" transition:persist></div>
+
+    <script>
+      // Flag <html> while a view-transition navigation is in flight so the
+      // .glitch-static overlay flickers for that window only. The burst itself is
+      // disabled under reduced-motion via CSS; the flag is harmless if events
+      // never fire (e.g. ClientRouter unsupported).
+      const root = document.documentElement;
+      const flagOn = () => root.classList.add('is-navigating');
+      const flagOff = () =>
+        window.setTimeout(() => root.classList.remove('is-navigating'), 360);
+      document.addEventListener('astro:before-preparation', flagOn);
+      document.addEventListener('astro:after-swap', flagOff);
+    </script>
+
     <script>
       import '../scripts/chrome.ts';
     </script>

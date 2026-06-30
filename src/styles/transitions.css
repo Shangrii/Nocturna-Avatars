@@ -16,7 +16,11 @@
    on the <main> page wrapper. The named animations below are referenced by the
    Astro transition object; nav/footer/FloatingCTA sit OUTSIDE <main> so they never
    wipe (the CTA stays put — T-02-CTA). Quick + steps() easing reads as digital glitch,
-   red fringe (--red-glow) echoes the hero shader. */
+   red fringe (--red-glow) echoes the hero shader.
+
+   A short film-STATIC burst is layered over the wipe (the .glitch-static overlay
+   below) so the effect reads as an intentional analog-static transition rather than
+   a render error (user feedback 02.1-02). Reduced-motion strips both to a plain fade. */
 @keyframes glitch-out {
   0% {
     opacity: 1;
@@ -68,6 +72,48 @@
     transform: translate3d(0, 0, 0);
     filter: none;
     clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Film-static burst overlay — a fixed grain layer that flickers on for the duration
+   of a page navigation, so the glitch wipe reads as an intentional analog-static
+   transition. transitions.ts adds .is-navigating to <html> for the wipe window.
+   It is pointer-events:none and sits below the nav/CTA z-index so the conversion
+   path is never blocked (T-02-CTA). Cheap: one repeating SVG-noise PNG-less data URI,
+   GPU-friendly opacity/transform only. */
+.glitch-static {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  pointer-events: none;
+  opacity: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  mix-blend-mode: screen;
+}
+:root.is-navigating .glitch-static {
+  animation: nocturna-static-burst 0.34s steps(5, end) 1;
+}
+@keyframes nocturna-static-burst {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  25% {
+    opacity: 0.22;
+    transform: translate3d(-7px, 4px, 0);
+  }
+  55% {
+    opacity: 0.16;
+    transform: translate3d(6px, -5px, 0);
+  }
+  80% {
+    opacity: 0.2;
+    transform: translate3d(-4px, 3px, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -170,5 +216,11 @@
   }
   .nav--hidden {
     transform: none;
+  }
+  :root.is-navigating .glitch-static {
+    animation: none;
+  }
+  .glitch-static {
+    display: none;
   }
 }

@@ -67,13 +67,19 @@
     text-shadow: none;
   }
   20% {
-    text-shadow: var(--space-3xs) 0 0 var(--red-glow);
+    text-shadow:
+      var(--space-3xs) 0 0 var(--red-on-ink),
+      calc(var(--space-3xs) * -1) 0 var(--space-3xs) var(--red-glow);
   }
   40% {
-    text-shadow: calc(var(--space-3xs) * -1) 0 0 var(--red-glow);
+    text-shadow:
+      calc(var(--space-3xs) * -1) 0 0 var(--red-on-ink),
+      var(--space-3xs) 0 var(--space-3xs) var(--red-glow);
   }
   60% {
-    text-shadow: 0 0 var(--space-3xs) var(--red-glow);
+    text-shadow:
+      0 0 var(--space-2xs) var(--red-on-ink),
+      0 0 var(--space-sm) var(--red-glow);
   }
 }
 @media (hover: hover) {
