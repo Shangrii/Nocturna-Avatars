@@ -2,7 +2,7 @@
    NOCTURNA AVATARS — Terms & Conditions (I18N-04)
    Refined Street Editorial re-skin (02.1-03, D-07/D-13).
    Paper reading column: warm-dark paper field, off-white text,
-   65–75ch measure, --lh-legal (1.8) body line-height.
+   760px column, --lh-legal (1.8) body line-height.
    Single red accent: Space Mono block numbers (the thread).
    Reviewer banner (EN draft, D-13) — restyled to paper system,
    behavior and copy unchanged.
@@ -11,10 +11,10 @@
    ═══════════════════════════════════════════════ */
 
 /* ── Reading column container ──
-   The section's background is paper (set by .section--surface or inline).
-   The column constrains readable measure per §5.5 spec (65–75ch). */
+   The section's background is paper (set by .section--surface).
+   Column width kept at 760px (matches pre-reskin layout). */
 .terms-wrap {
-  max-width: 70ch;
+  max-width: 760px;
   margin: 0 auto;
   padding: 0 var(--page-gutter);
 }
@@ -186,10 +186,5 @@
 
   .terms-summary {
     padding: var(--space-md);
-  }
-
-  /* On narrow screens the column constraint relaxes to fill available width */
-  .terms-wrap {
-    max-width: 100%;
   }
 }

@@ -184,7 +184,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-sm);
   padding: var(--space-lg) var(--space-md) var(--space-md) 0;
   counter-increment: nocturna-step;
@@ -217,7 +217,7 @@
   height: 40px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   color: var(--color-red);
   transition:
     transform 0.3s,
@@ -240,6 +240,7 @@
   text-transform: uppercase;
   color: var(--color-white-dim);
   line-height: 1.4;
+  text-align: center;
 }
 .section--surface .step-label {
   color: color-mix(in srgb, var(--color-ink-on-paper) 64%, transparent);
@@ -725,6 +726,8 @@
   line-height: var(--lh-body);
   margin-bottom: var(--space-2xs);
   max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .notfound-body--alt {
   color: var(--color-white-dim);
@@ -732,6 +735,9 @@
   font-style: italic;
   margin-bottom: var(--space-lg);
   opacity: 0.8;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .notfound-actions {
   display: flex;

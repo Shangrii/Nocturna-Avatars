@@ -2,12 +2,14 @@
 /**
  * GalleryPage — body of the /galeria (es) · /gallery (en) page.
  *
- * Page chrome header + category-filter affordance (visual-only, aria-disabled —
- * real filtering is Phase 4) + the branded coming-soon EmptyState (the masonry +
+ * Page chrome header + the branded coming-soon EmptyState (the masonry +
  * lightbox data-driven gallery from gallery.json is Phase 4). No image grid —
  * the empty state keeps the page from looking broken and keeps the Discord CTA
  * reachable (NAV-03). Extracted into a component so the localized [page].astro
  * resolver stays thin.
+ *
+ * Category filter chips removed (UAT feedback): non-functional affordances
+ * are confusing without data. Phase 4 will add real filtering.
  */
 import EmptyState from '../EmptyState.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
@@ -18,13 +20,6 @@ interface Props {
 const { lang } = Astro.props;
 const page = useTranslations(lang, 'pages').galeria;
 const empty = useTranslations(lang, 'pages').emptyState;
-
-/* Category filter affordance — visual-only until Phase 4 data layer.
-   Labels are bilingual-neutral service categories. The first chip is
-   marked active (cosmetic only; no JS state). */
-const filterChips = lang === 'es'
-  ? ['Todo', 'Outfits', 'Accesorios', 'Texturas', 'Blender']
-  : ['All', 'Outfits', 'Accessories', 'Textures', 'Blender'];
 ---
 
 <section class="section section-page-top section--rule">
@@ -33,23 +28,6 @@ const filterChips = lang === 'es'
     <h2 class="section-title">{page.title}</h2>
     <p class="section-subtitle">{page.subtitle}</p>
   </div>
-
-  <!-- Category filter affordance: visual-only, Phase 4 will wire data.
-       aria-disabled marks each chip as non-interactive (cosmetic only). -->
-  <div class="gallery-filter reveal" role="group" aria-label={lang === 'es' ? 'Filtrar por categoría (próximamente)' : 'Filter by category (coming soon)'}>
-    {filterChips.map((label, i) => (
-      <button
-        type="button"
-        class={`gallery-filter-chip${i === 0 ? ' gallery-filter-chip--active' : ''}`}
-        aria-disabled="true"
-        tabindex="-1"
-        inert
-      >
-        {label}
-      </button>
-    ))}
-  </div>
-
   <div class="reveal">
     <EmptyState
       heading={empty.heading}
@@ -58,53 +36,3 @@ const filterChips = lang === 'es'
     />
   </div>
 </section>
-
-<style>
-/* ── Gallery category-filter affordance ──
-   Visual-only chip row; real filtering is Phase 4. Hairline 1px borders,
-   Space Mono labels, 0px radii (editorial system). Touch targets ≥44px.
-   aria-disabled + inert prevent interaction (cosmetic skeleton). */
-.gallery-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2xs);
-  max-width: 1000px;
-  margin: 0 auto var(--space-2xl);
-  padding: 0 var(--page-gutter);
-}
-
-.gallery-filter-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--touch-min);
-  padding: 0 var(--space-md);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-white-dim);
-  background: transparent;
-  border: 1px solid var(--color-border);
-  cursor: default;
-  pointer-events: none;
-  user-select: none;
-  /* No border-radius — 0px radii per editorial system */
-}
-
-.gallery-filter-chip--active {
-  color: var(--color-white);
-  border-color: var(--color-red-on-ink);
-}
-
-/* ── Responsive ── */
-@media (max-width: 420px) {
-  .gallery-filter {
-    gap: var(--space-3xs);
-  }
-  .gallery-filter-chip {
-    padding: 0 var(--space-sm);
-    font-size: 9px;
-  }
-}
-</style>
