@@ -29,9 +29,25 @@ function initNav(): void {
   const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
   const links = document.querySelector<HTMLElement>('[data-nav-links]');
 
-  // (a) Scroll state.
+  // (a) Scroll state + D-19 hide-on-scroll. ONE shared passive listener (Pitfall 8 —
+  // never bind a second 'scroll' handler): it toggles `.scrolled` at 60px AND hides the
+  // nav on scroll-down / shows it on scroll-up. The top zone always shows the nav; a
+  // small delta threshold avoids jitter; equal positions are a no-op. The reduced-motion
+  // neutralisation lives in transitions.css (.nav--hidden → transform:none), so the nav
+  // stays visible under reduce even if the class toggles. The FloatingCTA is a separate
+  // fixed element and is never hidden by this.
   if (nav) {
-    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      nav.classList.toggle('scrolled', y > 60);
+      if (y > lastY + 6 && y > 120) {
+        nav.classList.add('nav--hidden'); // scrolling down, past the top zone
+      } else if (y < lastY - 6 || y <= 120) {
+        nav.classList.remove('nav--hidden'); // scrolling up, or back in the top zone
+      }
+      lastY = y;
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   }
