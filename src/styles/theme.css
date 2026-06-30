@@ -26,7 +26,7 @@
   /* AA-safe red for small red text on the PAPER field. Paper is now a DARK warm
      espresso-charcoal (see --color-paper), so its red is a LIGHT tint like the on-ink
      red (#ee5a6b = 5.00:1 on #241d15). Used for tags/labels/numbers in paper sections. */
-  --color-red-on-paper: #ee5a6b;
+  --color-red-on-paper: #c0192c;
   /* Wordmark red — the big graffiti "Nocturna" is LARGE display type (AA large-text
      threshold 3:1) and carries a glow/searchlights on top, so it can sit near the
      brand red and still pop. Darkened toward brand red so it stops reading too
@@ -63,7 +63,7 @@
      tones stay perceptibly distinct via the warm/cool hue shift (navy L*≈3.4, paper L*≈11.3). */
   --color-ink: #0a0c14;
   --color-ink-raised: #10131e;
-  --color-paper: #241d15;
+  --color-paper: #11141f;
   --color-ink-on-paper: #f0eae4;
   --color-paper-on-ink: #f0eae4;
 
