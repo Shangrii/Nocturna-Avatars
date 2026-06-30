@@ -23,10 +23,10 @@
      clears 4.5:1 so mono labels/tags/eyebrows stay legible on ink (T-02.1-A11Y).
      The brand red is still used for fills, rules, and red text on the paper field. */
   --color-red-on-ink: #e84a5e;
-  /* AA-safe red for small red text on the DIM PAPER field. The paper is now a dim
-     warm greige, so the brand red no longer clears 4.5:1 on it; this darker red
-     does (#8f121f = 5.24:1 on #cdc2ae). Used for tags/labels in paper sections. */
-  --color-red-on-paper: #8f121f;
+  /* AA-safe red for small red text on the PAPER field. Paper is now a DARK warm
+     espresso-charcoal (see --color-paper), so its red is a LIGHT tint like the on-ink
+     red (#ee5a6b = 5.00:1 on #241d15). Used for tags/labels/numbers in paper sections. */
+  --color-red-on-paper: #ee5a6b;
   /* Wordmark red — the big graffiti "Nocturna" is LARGE display type (AA large-text
      threshold 3:1) and carries a glow/searchlights on top, so it can sit near the
      brand red and still pop. Darkened toward brand red so it stops reading too
@@ -54,14 +54,17 @@
        ink-raised = ONE deliberately lighter navy for layered surfaces (cards,
                     feature tiles) so they separate from the ink field without
                     introducing ad-hoc greys/blacks. Same navy hue, not grey.
-     paper is now a DIM warm greige/taupe — a tonal sibling of the ink, not a bright
-     field — so the brightness gap to the ink sections is gentle and the whole page
-     reads darker/moodier (user feedback, 3rd pass). ink-on-paper text stays 11.09:1;
-     red on paper uses the darker --color-red-on-paper to hold AA on this dim field. */
+     paper is now a DARK warm espresso-charcoal — a WARM counterpoint to the COOL navy
+     ink, NOT a bright field — so the editorial section rhythm reads as a warm-dark vs
+     cool-dark alternation and the whole page stays dark/moody (user feedback, 4th pass:
+     "find another color, not bright"). Its foreground flips to off-white (on-paper text
+     13.95:1; on-paper red --color-red-on-paper holds AA). --color-ink-on-paper is now
+     repurposed as the off-white FOREGROUND used on the dark paper sections. The two dark
+     tones stay perceptibly distinct via the warm/cool hue shift (navy L*≈3.4, paper L*≈11.3). */
   --color-ink: #0a0c14;
   --color-ink-raised: #10131e;
-  --color-paper: #cdc2ae;
-  --color-ink-on-paper: #0a0c14;
+  --color-paper: #241d15;
+  --color-ink-on-paper: #f0eae4;
   --color-paper-on-ink: #f0eae4;
 
   /* Fonts. Each font token becomes a font utility (the display token becomes
