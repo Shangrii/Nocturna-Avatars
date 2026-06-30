@@ -17,7 +17,7 @@
   --color-red: #c0192c;
   --color-red-dark: #7a0f1a;
   --color-red-glow: #e8223b;
-  --color-red-soft: rgba(192, 25, 44, 0.12);
+  --color-red-soft: color-mix(in srgb, #c0192c 12%, transparent);
   /* AA-safe red for SMALL red text on the dark ink field. Brand red #c0192c only
      clears about 3.2:1 on ink, which fails AA for small text; this brighter tint
      clears 4.5:1 so mono labels/tags/eyebrows stay legible on ink (T-02.1-A11Y).
@@ -45,8 +45,8 @@
   /* Brand color — Foreground, off-white. */
   --color-white: #f0eae4;
   --color-white-dim: #9a9198;
-  --color-white-muted: rgba(240, 234, 228, 0.06);
-  --color-border: rgba(255, 255, 255, 0.06);
+  --color-white-muted: color-mix(in srgb, #f0eae4 6%, transparent);
+  --color-border: color-mix(in srgb, #ffffff 6%, transparent);
 
   /* Semantic surface tokens (D-07) — editorial ink and paper rhythm.
      The dark palette is disciplined: exactly two intentional navy surfaces.
