@@ -119,7 +119,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 — consumes re-skinned shared blocks)*
 
-- [ ] 02.1-03-PLAN.md — Dedicated pages re-skin: /servicios + /galeria + /terminos paper column + 404
+- [x] 02.1-03-PLAN.md — Dedicated pages re-skin: /servicios + /galeria + /terminos paper column + 404
 
 **Wave 4** *(blocked on Wave 3 — global chrome in BaseLayout, final a11y/responsive sweep)*
 
