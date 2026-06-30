@@ -80,7 +80,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 — shares the motion controller)*
 
-- [ ] 02-03-PLAN.md — Cursor + micro-interactions (FX-04) + landing choreography: gallery marquee (D-14), card 3D tilt (D-15), featured parallax (D-16)
+- [x] 02-03-PLAN.md — Cursor + micro-interactions (FX-04) + landing choreography: gallery marquee (D-14), card 3D tilt (D-15), featured parallax (D-16)
 
 **Wave 4** *(blocked on Wave 3 — shares the motion controller + BaseLayout)*
 
@@ -152,7 +152,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Bilingual Shell | 4/4 | Complete   | 2026-06-28 |
-| 2. Experimental Motion Layer | 2/4 | In Progress|  |
+| 2. Experimental Motion Layer | 3/4 | In Progress|  |
 | 3. Service Catalog | 0/TBD | Not started | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |

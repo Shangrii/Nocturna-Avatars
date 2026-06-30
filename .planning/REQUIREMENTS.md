@@ -31,7 +31,7 @@
 - [x] **FX-01**: The site uses smooth scrolling
 - [x] **FX-02**: Sections animate / reveal on scroll
 - [x] **FX-03**: The hero displays a WebGL shader effect (noise/distortion)
-- [ ] **FX-04**: The cursor has an interactive effect
+- [x] **FX-04**: The cursor has an interactive effect
 
 ### Service Catalog
 
@@ -98,7 +98,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | FX-01 | Phase 2 | Complete |
 | FX-02 | Phase 2 | Complete |
 | FX-03 | Phase 2 | Complete |
-| FX-04 | Phase 2 | Pending |
+| FX-04 | Phase 2 | Complete |
 | CAT-01 | Phase 3 | Pending |
 | CAT-02 | Phase 3 | Pending |
 | CAT-03 | Phase 3 | Pending |
