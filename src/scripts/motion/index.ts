@@ -39,15 +39,18 @@ function initMotion(): void {
 
 function teardownMotion(): void {
   if (!inited) return;
+  // Reset the guard FIRST so that if any destroyer throws, the next astro:page-load
+  // can still re-init cleanly rather than being permanently short-circuited (CR-03).
   inited = false;
+  // Remove the CSS gate now so even a partial teardown (exception mid-destroyers) does
+  // not leave .reveal elements frozen at opacity:0 across the subsequent re-init.
+  document.documentElement.classList.remove('motion-ready');
 
   destroyTransitions(); // Intro teardown: pull the overlay + skip listeners if a swap interrupts it
   destroyChoreography(); // Choreography teardown: kill ONLY this module's tagged triggers + tilts
   destroyHeroShader(); // HeroShader teardown: cancelAnimationFrame, lose GL context
   destroyReveals();
   destroySmoothScroll();
-
-  document.documentElement.classList.remove('motion-ready');
 }
 
 // Register ONCE at module scope — these survive across navigations.
