@@ -402,6 +402,11 @@
   opacity: 1;
   pointer-events: all;
 }
+/* Ensure [hidden] wins over the display:flex rule so the overlay is
+   truly display:none (fully removed from layout and AT) when closed (WR-01). */
+.dc-overlay[hidden] {
+  display: none;
+}
 .dc-modal {
   position: relative;
   width: 380px;

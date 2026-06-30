@@ -145,6 +145,9 @@ function initDiscordModal(): void {
 
   const open = (trigger?: HTMLElement) => {
     lastFocus = trigger ?? (document.activeElement as HTMLElement | null);
+    // Remove [hidden] BEFORE adding .active so the element enters the layout and
+    // the CSS fade transition plays correctly (WR-01).
+    overlay.removeAttribute('hidden');
     overlay.classList.add('active');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -161,6 +164,11 @@ function initDiscordModal(): void {
     // Return focus to the triggering element (CR-02).
     lastFocus?.focus();
     lastFocus = null;
+    // Re-add [hidden] after the CSS fade completes so the dialog is fully removed
+    // from the accessibility tree when closed (WR-01).
+    overlay.addEventListener('transitionend', () => overlay.setAttribute('hidden', ''), {
+      once: true,
+    });
   };
 
   document.querySelectorAll<HTMLElement>('.dc-trigger').forEach((btn) => {
@@ -184,9 +192,14 @@ function initDiscordModal(): void {
     document.addEventListener('keydown', (e) => {
       const live = document.querySelector<HTMLElement>('[data-dc-overlay]');
       if (e.key === 'Escape' && live?.classList.contains('active')) {
+        // Mirror close() behaviour: remove active, restore scroll, re-add [hidden]
+        // after the fade, and return focus to the last focused element (CR-02/WR-01).
         live.classList.remove('active');
         live.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
+        live.addEventListener('transitionend', () => live.setAttribute('hidden', ''), {
+          once: true,
+        });
       }
     });
   }
