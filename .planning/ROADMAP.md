@@ -14,7 +14,7 @@ Rebuild the Nocturna Avatars portfolio as an Astro static site that ships live t
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Bilingual Shell** - Astro + design system + i18n + structure + deploy; the live, branded, convertible shell (completed 2026-06-28)
-- [ ] **Phase 2: Experimental Motion Layer** - WebGL hero, smooth scroll, scroll reveals, animated page transitions, cursor effects
+- [x] **Phase 2: Experimental Motion Layer** - WebGL hero, smooth scroll, scroll reveals, animated page transitions, cursor effects (completed 2026-06-30)
 - [ ] **Phase 3: Service Catalog** - Data-driven packages + modular catalog from `services.json` (ES/EN, "Cotizar")
 - [ ] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized
 - [ ] **Phase 5: Photo-Publishing Bot Cog** - Discord cog in `nocturna-bot` (✅ approve / 🗑️ remove / Pillow optimize / cross-repo commit)
@@ -84,7 +84,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3 — shares the motion controller + BaseLayout)*
 
-- [ ] 02-04-PLAN.md — Page transitions (NAV-04): glitch-wipe + first-visit intro (D-18) + nav hide-on-scroll & persistent pulsing CTA (D-19)
+- [x] 02-04-PLAN.md — Page transitions (NAV-04): glitch-wipe + first-visit intro (D-18) + nav hide-on-scroll & persistent pulsing CTA (D-19)
 
 **UI hint**: yes
 **Notes**: Performance budget is a hard constraint — experimental but fast; the "Abrir Ticket" path must remain reachable in all motion states. WebGL is a single hero shader, not a 3D scene (Three.js explicitly deferred to v2). MVP vertical-slice sequencing; the 4 plans serialize because each effect registers into the shared motion controller (`src/scripts/motion/index.ts`) — true wave-parallelism is blocked by that single shared file, but each wave is independently shippable with the CTA reachable throughout (D-19/D-20).
@@ -152,7 +152,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Bilingual Shell | 4/4 | Complete   | 2026-06-28 |
-| 2. Experimental Motion Layer | 3/4 | In Progress|  |
+| 2. Experimental Motion Layer | 4/4 | Complete   | 2026-06-30 |
 | 3. Service Catalog | 0/TBD | Not started | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
