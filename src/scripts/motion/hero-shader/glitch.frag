@@ -51,13 +51,15 @@ float vnoise(vec2 p) {
 
 // A soft warp + reddish glow contribution from a single light point `p` (aspect
 // space). `strength` scales the pull, `glow` scales the additive red glow, both so
-// the roaming lights can be smaller than the pointer light.
+// the roaming lights can be smaller than the pointer light. `radius` sets how far
+// the glow reaches — small radii read as tight SEARCHLIGHT beams cutting the dark.
 void lightPoint(in vec2 cen, in vec2 p, in float strength, in float glow,
-                inout vec2 uv, inout float glowAccum, in vec2 aspect) {
+                in float radius, inout vec2 uv, inout float glowAccum, in vec2 aspect) {
   float d = distance(cen, p);
   float pull = strength / (d * d + 0.04);
   uv -= normalize(cen - p + 1e-4) * pull;
-  glowAccum += glow * smoothstep(0.55, 0.0, d);
+  // Tight bright core with a quick falloff so darkness dominates between the beams.
+  glowAccum += glow * pow(smoothstep(radius, 0.0, d), 1.8);
 }
 
 void main() {
@@ -76,17 +78,24 @@ void main() {
   // has texture even when "clean", but heavily reduced during a clarity window).
   float malf = mix(1.0, 0.12, clarity);
 
-  // --- lights: pointer + two autonomous roamers ------------------------------
+  // --- lights: pointer + FOUR autonomous roaming searchlights ----------------
+  // Darkness dominates; the moving lights cut through it like searchlights. Glow
+  // levels are intentionally low and the cores tight (small radii) so the field
+  // reads dark between the beams (user feedback: "luces de búsqueda en la oscuridad").
   vec2 m = (u_mouse - 0.5) * aspect;
   float glowAccum = 0.0;
-  // Pointer light (or ambient-centered when u_mouse stays at 0.5,0.5).
-  lightPoint(cen, m, 0.012, 0.14, uv, glowAccum, aspect);
-  // Roamer 1 — slow Lissajous path, smaller.
-  vec2 l1 = vec2(cos(u_time * 0.17 + 0.0), sin(u_time * 0.13 + 1.7)) * vec2(0.62, 0.42) * aspect;
-  lightPoint(cen, l1, 0.006, 0.085, uv, glowAccum, aspect);
-  // Roamer 2 — different speeds/phase so the two never lock together.
-  vec2 l2 = vec2(cos(u_time * 0.11 + 2.6), sin(u_time * 0.19 + 4.1)) * vec2(0.5, 0.55) * aspect;
-  lightPoint(cen, l2, 0.005, 0.07, uv, glowAccum, aspect);
+  // Pointer light — tightened so it no longer floods the field.
+  lightPoint(cen, m, 0.010, 0.10, 0.42, uv, glowAccum, aspect);
+  // Roamer 1..4 — varied speeds / phases / path sizes so they wander organically and
+  // never lock together. Smaller than the pointer light.
+  vec2 l1 = vec2(cos(u_time * 0.17 + 0.0), sin(u_time * 0.13 + 1.7)) * vec2(0.66, 0.44) * aspect;
+  lightPoint(cen, l1, 0.0050, 0.060, 0.34, uv, glowAccum, aspect);
+  vec2 l2 = vec2(cos(u_time * 0.11 + 2.6), sin(u_time * 0.19 + 4.1)) * vec2(0.54, 0.56) * aspect;
+  lightPoint(cen, l2, 0.0045, 0.055, 0.30, uv, glowAccum, aspect);
+  vec2 l3 = vec2(cos(u_time * 0.23 + 5.0), sin(u_time * 0.09 + 0.6)) * vec2(0.70, 0.36) * aspect;
+  lightPoint(cen, l3, 0.0040, 0.050, 0.28, uv, glowAccum, aspect);
+  vec2 l4 = vec2(cos(u_time * 0.08 + 3.3), sin(u_time * 0.15 + 2.2)) * vec2(0.46, 0.60) * aspect;
+  lightPoint(cen, l4, 0.0042, 0.052, 0.32, uv, glowAccum, aspect);
 
   // --- signal instability (persistent, scaled by malf) -----------------------
   // Constant block/scanline displacement + occasional harder tear spikes. Even when
@@ -113,9 +122,11 @@ void main() {
   float grain = hash21(uv * u_resolution.xy * 0.5 + fract(u_time) * 91.7);
   float grainAmt = mix(0.02, 0.075, malf);
 
-  // --- compose: navy base, red as a minority accent -------------------------
-  float base = mix(gN, bN, 0.5) * 0.22;
-  vec3 col = u_navy + base * 0.5;
+  // --- compose: DARK navy base, red as a minority accent --------------------
+  // The ambient field is dialled down so darkness dominates and the searchlights
+  // read as light cutting through it (user feedback: darker/moodier hero).
+  float base = mix(gN, bN, 0.5) * 0.14;
+  vec3 col = u_navy * 0.82 + base * 0.32;
 
   // Red bleed: only where the red-shifted channel leads, kept minority.
   float redLead = clamp(rN - gN, 0.0, 1.0);
