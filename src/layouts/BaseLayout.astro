@@ -13,6 +13,7 @@ import '../styles/chrome.css';
 import '../styles/motion.css';
 import '../styles/cursor.css';
 import '../styles/choreography.css';
+import '../styles/transitions.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import FloatingCTA from '../components/FloatingCTA.astro';
@@ -25,6 +26,20 @@ interface Props {
 }
 
 const { lang, title, description } = Astro.props;
+
+/**
+ * D-17 glitch-wipe: a quick (~0.26s) digital wipe with a red-fringe RGB-split that
+ * echoes the hero shader (one motif). Applied to the <main> page wrapper only, so the
+ * nav / footer / FloatingCTA (siblings of the wrapper) stay put across navigation — the
+ * Abrir Ticket CTA never wipes (T-02-CTA). steps() easing reads as glitch, not a smooth
+ * fade. Under reduced-motion the keyframes collapse to a plain opacity fade (transitions.css).
+ */
+const glitchStep = { duration: '0.26s', easing: 'steps(6, end)', fillMode: 'both' as const };
+const glitchPair = {
+  old: [{ name: 'glitch-out', ...glitchStep }],
+  new: [{ name: 'glitch-in', ...glitchStep, delay: '0.04s' }],
+};
+const glitchWipe = { forwards: glitchPair, backwards: glitchPair };
 ---
 
 <!doctype html>
@@ -49,7 +64,11 @@ const { lang, title, description } = Astro.props;
     <Nav lang={lang} />
     <slot name="chrome-top" />
 
-    <slot />
+    <!-- Page content wrapper carries the D-17 glitch-wipe view-transition. Nav/footer/CTA
+         live OUTSIDE it so they persist (and stay clickable) across navigations. -->
+    <main transition:animate={glitchWipe}>
+      <slot />
+    </main>
 
     <!-- Global chrome (bottom): footer, floating CTA, shared Discord modal. -->
     <slot name="chrome-bottom" />

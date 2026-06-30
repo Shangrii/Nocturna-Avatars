@@ -18,6 +18,7 @@ import { initReveals, destroyReveals } from './reveals';
 import { initHeroShader, destroyHeroShader } from './hero-shader/shader';
 import { initCursor, destroyCursor } from './cursor';
 import { initChoreography, destroyChoreography } from './choreography';
+import { initTransitions, destroyTransitions } from './transitions';
 
 /** Guards against double-binding when astro:page-load re-fires (Pitfall 1). */
 let inited = false;
@@ -35,12 +36,14 @@ function initMotion(): void {
   initHeroShader(); // HeroShader (FX-03) — no-ops without a [data-hero-shader] canvas
   initCursor(); // Custom cursor + magnetism (FX-04) — no-ops off fine-pointer / reduced-motion
   initChoreography(); // Landing marquee/tilt/parallax (D-14/15/16) — landing + !reduced only
+  initTransitions(); // First-visit glitch intro (D-18) — initial load + first-ever visit + !reduced
 }
 
 function teardownMotion(): void {
   if (!inited) return;
   inited = false;
 
+  destroyTransitions(); // Intro teardown: pull the overlay + skip listeners if a swap interrupts it
   destroyCursor(); // Cursor teardown: remove listeners, kill tweens, remove the cursor div
   destroyChoreography(); // Choreography teardown: kill ONLY this module's tagged triggers + tilts
   destroyHeroShader(); // HeroShader teardown: cancelAnimationFrame, lose GL context

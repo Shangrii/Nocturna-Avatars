@@ -1,0 +1,174 @@
+/* ═══════════════════════════════════════════════
+   NOCTURNA AVATARS — Page transitions & intro (Plan 02-04, NAV-04)
+
+   Three glitch surfaces share one language with the hero shader / cursor:
+     D-17  Quick glitch-wipe page transition (≤~300ms, RGB-split red fringe).
+     D-18  First-visit-only skippable glitch-tag intro (~1s, no copy).
+     D-19  Nav hide-on-scroll-down / show-on-scroll-up (the .nav--hidden state).
+
+   transitions.ts drives D-18 (overlay) + the intro flag; chrome.ts toggles
+   .nav--hidden in its single shared scroll handler. Under reduced-motion the
+   glitch wipe collapses to a plain fade, the intro never plays, and the nav
+   never hides (D-21 partial-reduce — gentle fades kept, bold motion removed).
+   ═══════════════════════════════════════════════ */
+
+/* ── D-17 glitch-wipe ── applied by BaseLayout's `transition:animate={glitchWipe}`
+   on the <main> page wrapper. The named animations below are referenced by the
+   Astro transition object; nav/footer/FloatingCTA sit OUTSIDE <main> so they never
+   wipe (the CTA stays put — T-02-CTA). Quick + steps() easing reads as digital glitch,
+   red fringe (--red-glow) echoes the hero shader. */
+@keyframes glitch-out {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: none;
+    clip-path: inset(0 0 0 0);
+  }
+  20% {
+    transform: translate3d(-2%, 0, 0);
+    filter: drop-shadow(3px 0 var(--red-glow)) drop-shadow(-3px 0 #1fd9ff);
+    clip-path: inset(0 0 42% 0);
+  }
+  45% {
+    transform: translate3d(2%, 0, 0);
+    filter: drop-shadow(-3px 0 var(--red));
+    clip-path: inset(46% 0 0 0);
+  }
+  70% {
+    transform: translate3d(-1%, 0, 0);
+    filter: drop-shadow(4px 0 var(--red-glow));
+    clip-path: inset(0 0 72% 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-3%, 0, 0);
+    filter: drop-shadow(2px 0 var(--red-glow));
+  }
+}
+
+@keyframes glitch-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(3%, 0, 0);
+    filter: drop-shadow(-2px 0 var(--red-glow));
+  }
+  35% {
+    opacity: 1;
+    transform: translate3d(-1%, 0, 0);
+    filter: drop-shadow(3px 0 #1fd9ff);
+    clip-path: inset(0 0 55% 0);
+  }
+  70% {
+    transform: translate3d(1%, 0, 0);
+    filter: drop-shadow(-3px 0 var(--red));
+    clip-path: inset(32% 0 0 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: none;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ── D-18 first-visit intro ── opaque navy field with three glitching bars (purely
+   visual — NO copy string, no i18n). pointer-events:none so it NEVER blocks the
+   FloatingCTA underneath (D-19 / T-02-CTA); a window-level tap/key in transitions.ts
+   skips it, and a ~1s timer auto-dismisses. */
+.nocturna-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  pointer-events: none;
+  animation: nocturna-intro-veil 1s steps(9, end) both;
+}
+
+.nocturna-intro__bar {
+  display: block;
+  width: 3px;
+  height: clamp(48px, 12vh, 120px);
+  background: var(--white);
+  box-shadow: 0 0 18px var(--red-glow);
+  animation: nocturna-intro-bar 0.28s steps(4, end) infinite;
+}
+.nocturna-intro__bar:nth-child(2) {
+  background: var(--red-glow);
+  animation-delay: 0.06s;
+  height: clamp(64px, 16vh, 160px);
+}
+.nocturna-intro__bar:nth-child(3) {
+  animation-delay: 0.12s;
+}
+
+/* Veil fades its field out over the last beats so the hero reads through as it ends. */
+@keyframes nocturna-intro-veil {
+  0%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.92;
+  }
+}
+@keyframes nocturna-intro-bar {
+  0% {
+    transform: translate3d(0, 0, 0) scaleY(1);
+    filter: none;
+  }
+  50% {
+    transform: translate3d(-6px, 0, 0) scaleY(0.7);
+    filter: drop-shadow(4px 0 var(--red-glow)) drop-shadow(-4px 0 #1fd9ff);
+  }
+  100% {
+    transform: translate3d(5px, 0, 0) scaleY(1.15);
+  }
+}
+
+/* Skip / auto-dismiss: quick fade-out, then transitions.ts removes the node. */
+.nocturna-intro--out {
+  animation: nocturna-intro-out 0.35s ease forwards;
+}
+@keyframes nocturna-intro-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ── D-19 nav hide-on-scroll ── chrome.ts toggles .nav--hidden from its single shared
+   scroll handler (the transform transition is added to .nav in chrome.css). The
+   FloatingCTA is a separate fixed element and is NOT affected by this. */
+.nav--hidden {
+  transform: translateY(-100%);
+}
+
+/* ── D-21 reduced-motion ── glitch wipe collapses to a plain opacity fade, the intro
+   never shows, and the nav never hides (content + chrome stay fully present). */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes glitch-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes glitch-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .nocturna-intro {
+    display: none;
+  }
+  .nav--hidden {
+    transform: none;
+  }
+}
