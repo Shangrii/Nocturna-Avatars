@@ -111,7 +111,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 02.1-01-PLAN.md — Tailwind v4 + @theme token foundation in BaseLayout + cursor removal (enabling slice; existing look intact)
+- [x] 02.1-01-PLAN.md — Tailwind v4 + @theme token foundation in BaseLayout + cursor removal (enabling slice; existing look intact)
 
 **Wave 2** *(blocked on Wave 1 — owns shared sections.css/PackageCard/EmptyState)*
 

@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-06-29T06:22:39.738Z"
-last_activity: 2026-06-29
+last_updated: "2026-06-30T10:59:57.260Z"
+last_activity: 2026-06-30
 progress:
-  total_phases: 5
-  completed_phases: 1
-  total_plans: 8
-  completed_plans: 6
-  percent: 20
+  total_phases: 6
+  completed_phases: 2
+  total_plans: 12
+  completed_plans: 9
+  percent: 33
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** A visitor is visually impressed and reaches "Abrir Ticket" on Discord, while staff keep gallery/catalog current without touching code.
-**Current focus:** Phase 02 — experimental-motion-layer
+**Current focus:** Phase 02.1 — visual-redesign-refined-street-editorial
 
 ## Current Position
 
-Phase: 02 (experimental-motion-layer) — EXECUTING
-Plan: 3 of 4
+Phase: 02.1 (visual-redesign-refined-street-editorial) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-06-29
+Last activity: 2026-06-30
 
 Progress: [████████░░] 75%
 
@@ -58,8 +58,13 @@ Progress: [████████░░] 75%
 | Phase 01 P04 | 6 | 2 tasks | 7 files |
 | Phase 02 P01 | 25min | 4 tasks | 9 files |
 | Phase 02 P02 | ~20min | 2 tasks tasks | 7 files files |
+| Phase 02.1 P01 | 6min | 3 tasks | 9 files |
 
 ## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 02.1 inserted after Phase 2: Visual Redesign — Refined Street Editorial (re-skin on Phase 2 motion base, before catalog/gallery) (URGENT)
 
 ### Decisions
 
@@ -78,6 +83,9 @@ Recent decisions affecting current work:
 - [Phase ?]: [02-01] lenis@1.3.25 + gsap@3.15.0 exact pins, npm audit clean (T-02-SC, approved); ClientRouter + lifecycle motion controller (initMotion on astro:page-load / teardownMotion on astro:before-swap) is the scaffold all later Phase 2 slices mount on
 - [Phase ?]: [02-01] chrome.ts document-level Escape/outside-click handlers re-query the live DOM at event time (not stale post-swap nodes); scroll-behavior:smooth re-scoped under @media reduced-motion to avoid Lenis double-handling
 - [Phase ?]: [02-02] Hero WebGL2 glitch shader (FX-03): static AVIF fallback is the default-visible hero bg, canvas reveals only after first frame; gates on webglOK && !prefersReduced + failIfMajorPerformanceCaveat; ~22ms/1s frame-budget guard + contextlost swap; brand colors via tokens.css uniforms (no GLSL hex); mounted on the 02-01 controller
+- [Phase ?]: [02.1-01] Tailwind v4 wired CSS-first via @tailwindcss/vite@4.3.2 (exact pin, T-02.1-SC approved); brand tokens live in src/styles/theme.css @theme block (bg-ink/bg-paper/text-red/font-display), tokens.css retired; var(--..) carried for incremental migration (D-01/D-02/D-03)
+- [Phase ?]: [02.1-01] Tailwind v4 @theme inline comments must avoid '*'+'/' glob-like sequences — they break the v4 CSS parser; use plain prose inside @theme
+- [Phase ?]: [02.1-01] Custom cursor removed (cursor.ts + cursor.css deleted, unwired from motion/index.ts); rest of motion layer intact (D-10)
 
 ### Pending Todos
 
@@ -108,6 +116,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-29T06:21:40.461Z
+Last session: 2026-06-30T10:59:17.240Z
 Stopped at: Completed 02-01-PLAN.md
 Resume file: None
