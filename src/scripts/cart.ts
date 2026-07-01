@@ -28,6 +28,11 @@ const cart = new Map<string, CartEntry>();
 // Module-level guard — document-level listeners bound only once per page lifetime
 let cartDocListenersBound = false;
 
+// Module-level modal/drawer focus trap state (Plan 03.1-06)
+let lastFocusBeforeModal: HTMLElement | null = null;
+let drawerTrapHandler: ((e: KeyboardEvent) => void) | null = null;
+let modalTrapHandler: ((e: KeyboardEvent) => void) | null = null;
+
 // ---------------------------------------------------------------------------
 // SECTION 2 — Cart state functions (pure, no DOM)
 // ---------------------------------------------------------------------------
@@ -113,15 +118,17 @@ function syncCartUI(): void {
     );
   }
 
-  // 7. Show/hide pill
+  // 7. Show/hide pill (prefers-reduced-motion guard on both show and hide paths)
   if (pill) {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (count > 0) {
       pill.removeAttribute('hidden');
-      pill.classList.remove('cart-pill--hiding');
-      pill.classList.add('cart-pill--visible');
+      if (!prefersReduced) {
+        pill.classList.remove('cart-pill--hiding');
+        pill.classList.add('cart-pill--visible');
+      }
     } else {
       pill.classList.remove('cart-pill--visible');
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReduced) {
         pill.classList.remove('cart-pill--hiding');
         pill.setAttribute('hidden', '');
@@ -304,27 +311,50 @@ function openDrawer(): void {
   const backdrop = document.querySelector<HTMLElement>('#cartBackdrop');
   if (!drawer || !backdrop || getCount() === 0) return;
 
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // WR-01: remove [hidden] BEFORE adding .active so the CSS transition plays
   backdrop.removeAttribute('hidden');
   drawer.removeAttribute('hidden');
   document.body.style.overflow = 'hidden';
-  requestAnimationFrame(() => {
+
+  if (prefersReduced) {
+    // Skip rAF trick — apply classes immediately for instant show
     backdrop.classList.add('active');
     drawer.classList.add('active');
     drawer.setAttribute('aria-hidden', 'false');
-  });
+  } else {
+    requestAnimationFrame(() => {
+      backdrop.classList.add('active');
+      drawer.classList.add('active');
+      drawer.setAttribute('aria-hidden', 'false');
+    });
+  }
 
   // Move focus into the drawer for keyboard/AT users
   const firstFocusable = drawer.querySelector<HTMLElement>(
     'button, [href], input, [tabindex]:not([tabindex="-1"])',
   );
   firstFocusable?.focus();
+
+  // Attach drawer focus trap
+  if (drawerTrapHandler) document.removeEventListener('keydown', drawerTrapHandler);
+  drawerTrapHandler = trapFocus(drawer);
+  document.addEventListener('keydown', drawerTrapHandler);
 }
 
 function closeDrawer(): void {
   const drawer = document.querySelector<HTMLElement>('#cartDrawer');
   const backdrop = document.querySelector<HTMLElement>('#cartBackdrop');
   if (!drawer) return;
+
+  // Remove drawer focus trap
+  if (drawerTrapHandler) {
+    document.removeEventListener('keydown', drawerTrapHandler);
+    drawerTrapHandler = null;
+  }
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   drawer.classList.remove('active');
   backdrop?.classList.remove('active');
@@ -333,16 +363,22 @@ function closeDrawer(): void {
 
   // WR-01: re-add [hidden] AFTER transform transition completes
   // Filter by 'transform' to avoid early trigger from 'opacity' (RESEARCH.md Risk 4)
-  drawer.addEventListener(
-    'transitionend',
-    (e) => {
-      if (e.propertyName === 'transform') {
-        drawer.setAttribute('hidden', '');
-        backdrop?.setAttribute('hidden', '');
-      }
-    },
-    { once: true },
-  );
+  if (prefersReduced) {
+    // No transition — hide immediately
+    drawer.setAttribute('hidden', '');
+    backdrop?.setAttribute('hidden', '');
+  } else {
+    drawer.addEventListener(
+      'transitionend',
+      (e) => {
+        if (e.propertyName === 'transform') {
+          drawer.setAttribute('hidden', '');
+          backdrop?.setAttribute('hidden', '');
+        }
+      },
+      { once: true },
+    );
+  }
 
   // Return focus to the pill
   document.querySelector<HTMLElement>('#cartPill')?.focus();
@@ -401,16 +437,190 @@ function bindDrawerTicket(): void {
 }
 
 // ---------------------------------------------------------------------------
-// SECTION 9 — Stubs for openCartModal / closeCartModal (filled in Plan 03.1-06)
+// SECTION 9 — Focus trap helper, clipboard builder, openCartModal / closeCartModal
 // ---------------------------------------------------------------------------
 
-// Forward declaration — full implementation in Plan 03.1-06
+/**
+ * trapFocus — returns a keydown handler that cycles Tab/Shift+Tab within container.
+ * Filters out elements that are inside a [hidden] ancestor so they are not focusable.
+ */
+function trapFocus(container: HTMLElement): (e: KeyboardEvent) => void {
+  return (e: KeyboardEvent) => {
+    if (e.key !== 'Tab') return;
+    const focusable = Array.from(
+      container.querySelectorAll<HTMLElement>('button, [href], input, [tabindex]:not([tabindex="-1"])'),
+    ).filter((el) => !el.hasAttribute('disabled') && !el.closest('[hidden]'));
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  };
+}
+
+/**
+ * buildClipboardText — constructs the plain-text cart summary for clipboard copy (D-13).
+ * Uses textContent from cart Map entries (set at add time from DOM — T-03.1-08).
+ */
+function buildClipboardText(lang: 'es' | 'en'): string {
+  const lines: string[] = [];
+  lines.push(lang === 'es' ? 'Mi selección de servicios:' : 'My service selection:');
+
+  cart.forEach((entry) => {
+    const parsed = parseInt(entry.price, 10);
+    if (entry.qty === 1) {
+      const priceStr = isNaN(parsed) ? 'Cotizar' : `$${parsed} USD`;
+      lines.push(`• ${entry.name} — ${priceStr}`);
+    } else {
+      const priceStr = isNaN(parsed) ? 'Cotizar' : `$${parsed * entry.qty} USD`;
+      lines.push(`• ${entry.name} x${entry.qty} — ${priceStr}`);
+    }
+  });
+
+  lines.push('');
+  const total = getTotal();
+  lines.push(
+    lang === 'es'
+      ? `Total estimado: $${total} USD`
+      : `Estimated total: $${total} USD`,
+  );
+  lines.push(
+    lang === 'es'
+      ? '(Precios sujetos a cotización final)'
+      : '(Prices subject to final quote)',
+  );
+
+  return lines.join('\n');
+}
+
 function openCartModal(): void {
-  // stub — Plan 03.1-06 implements this
+  const overlay = document.querySelector<HTMLElement>('[data-cart-modal-overlay]');
+  if (!overlay) return;
+  const lang = (document.documentElement.lang || 'en') as 'es' | 'en';
+
+  // Populate modal list — createElement + textContent (T-03.1-08 XSS guard)
+  const listEl = overlay.querySelector<HTMLElement>('.cart-modal__list');
+  const totalEl = overlay.querySelector<HTMLElement>('.cart-modal__total');
+  if (listEl) {
+    while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
+    cart.forEach((entry) => {
+      const p = document.createElement('p');
+      const parsed = parseInt(entry.price, 10);
+      const lineTotal = isNaN(parsed) ? 'Cotizar' : `$${parsed * entry.qty} USD`;
+      const qtyStr = entry.qty > 1 ? ` ×${entry.qty}` : '';
+      p.textContent = `• ${entry.name}${qtyStr} — ${lineTotal}`;
+      listEl.appendChild(p);
+    });
+  }
+  if (totalEl) {
+    const totalNum = getTotal();
+    totalEl.textContent =
+      lang === 'es'
+        ? `Total estimado: $${totalNum} USD`
+        : `Estimated total: $${totalNum} USD`;
+  }
+
+  // Store focus origin so closeCartModal can return focus (a11y)
+  lastFocusBeforeModal = document.activeElement as HTMLElement;
+
+  // WR-01 open pattern: unhide FIRST, then add .active in next frame
+  overlay.removeAttribute('hidden');
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => {
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+  });
+
+  // Focus first focusable element in modal (setTimeout allows rAF to complete)
+  const firstFocusable = overlay.querySelector<HTMLElement>('button, [href]');
+  setTimeout(() => firstFocusable?.focus(), 50);
+
+  // Attach modal focus trap
+  if (modalTrapHandler) document.removeEventListener('keydown', modalTrapHandler);
+  modalTrapHandler = trapFocus(overlay);
+  document.addEventListener('keydown', modalTrapHandler);
+
+  // Wire dismiss button (once — re-wired each open)
+  overlay.querySelector<HTMLButtonElement>('[data-cart-modal-dismiss]')?.addEventListener(
+    'click',
+    closeCartModal,
+    { once: true },
+  );
+
+  // Wire backdrop click (clicking the overlay outside the inner modal)
+  overlay.addEventListener(
+    'click',
+    (e) => { if (e.target === overlay) closeCartModal(); },
+    { once: true },
+  );
+
+  // Wire copy button (once — re-wired each open)
+  const copyBtn = overlay.querySelector<HTMLButtonElement>('[data-cart-copy]');
+  if (copyBtn) {
+    copyBtn.addEventListener(
+      'click',
+      () => {
+        const text = buildClipboardText(lang);
+        navigator.clipboard.writeText(text).then(() => {
+          // Success: show ¡Copiado! state for 1500ms then revert
+          copyBtn.classList.add('cart-modal__copy--copied');
+          copyBtn.textContent = lang === 'es' ? '¡Copiado!' : 'Copied!';
+          setTimeout(() => {
+            copyBtn.classList.remove('cart-modal__copy--copied');
+            copyBtn.textContent = lang === 'es' ? 'Copiar selección' : 'Copy selection';
+          }, 1500);
+        }).catch(() => {
+          // Failure: insert a pre element for manual copy (no alert())
+          const existingPre = overlay.querySelector('.cart-modal__copy-fallback');
+          if (!existingPre) {
+            const pre = document.createElement('pre');
+            pre.className = 'cart-modal__copy-fallback';
+            pre.style.cssText =
+              'font-size:12px;overflow-x:auto;padding:8px;background:rgba(255,255,255,0.05);' +
+              'margin-top:8px;white-space:pre-wrap;word-break:break-word;';
+            pre.textContent = text; // textContent — T-03.1-08 XSS guard
+            copyBtn.insertAdjacentElement('afterend', pre);
+            const msg = document.createElement('p');
+            msg.style.cssText = 'font-size:12px;color:var(--color-white-dim);margin-top:4px;';
+            msg.textContent =
+              lang === 'es'
+                ? 'No se pudo copiar. Selecciona el texto manualmente.'
+                : 'Could not copy. Please select the text manually.';
+            pre.insertAdjacentElement('afterend', msg);
+          }
+        });
+      },
+      { once: true },
+    );
+  }
 }
 
 function closeCartModal(): void {
-  // stub — Plan 03.1-06 implements this
+  const overlay = document.querySelector<HTMLElement>('[data-cart-modal-overlay]');
+  if (!overlay) return;
+
+  // Remove modal focus trap
+  if (modalTrapHandler) {
+    document.removeEventListener('keydown', modalTrapHandler);
+    modalTrapHandler = null;
+  }
+
+  // WR-01 close pattern
+  overlay.classList.remove('active');
+  overlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  overlay.addEventListener(
+    'transitionend',
+    () => overlay.setAttribute('hidden', ''),
+    { once: true },
+  );
+
+  // Return focus to last focused element before modal opened
+  lastFocusBeforeModal?.focus();
+  lastFocusBeforeModal = null;
 }
 
 // ---------------------------------------------------------------------------
