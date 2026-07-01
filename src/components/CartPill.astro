@@ -1,0 +1,114 @@
+---
+interface Props {
+  lang: 'es' | 'en';
+}
+const { lang } = Astro.props;
+---
+
+<button
+  class="cart-pill"
+  id="cartPill"
+  type="button"
+  aria-label={lang === 'es' ? 'Ver selección: 0 servicios' : 'View selection: 0 services'}
+  hidden
+>
+  <span class="cart-pill__badge" aria-hidden="true">0</span>
+  <span class="cart-pill__label" data-cart-label>
+    <span lang="es" hidden={lang === 'en' || undefined}>servicios → Abrir Ticket</span>
+    <span lang="en" hidden={lang === 'es' || undefined}>services → Open Ticket</span>
+  </span>
+</button>
+
+<style>
+  .cart-pill {
+    position: fixed;
+    right: clamp(16px, 4vw, 32px);
+    bottom: calc(clamp(16px, 4vw, 32px) + 44px + 12px); /* above FloatingCTA with 12px gap */
+    z-index: 910;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs); /* 8px between badge and label */
+    padding: 0 var(--space-sm); /* 16px h-padding */
+    min-height: 44px;
+    min-width: 44px;
+    background: var(--color-red);
+    color: var(--color-white);
+    border: none;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, opacity 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .cart-pill:hover {
+    background: var(--color-red-dark);
+    transform: translateY(-2px);
+  }
+
+  .cart-pill:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+  }
+
+  /* Hidden state: [hidden] wins per WR-01 pattern */
+  .cart-pill[hidden] {
+    display: none;
+  }
+
+  .cart-pill__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 4px;
+    background: rgba(0, 0, 0, 0.25);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 10px;
+  }
+
+  /* Entrance animation */
+  .cart-pill--visible {
+    animation: cart-pill-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes cart-pill-enter {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Exit animation */
+  .cart-pill--hiding {
+    animation: cart-pill-exit 0.2s ease forwards;
+  }
+
+  @keyframes cart-pill-exit {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  /* Respect reduced-motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .cart-pill--visible,
+    .cart-pill--hiding {
+      animation: none;
+    }
+  }
+</style>
