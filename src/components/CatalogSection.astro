@@ -1,0 +1,129 @@
+---
+/**
+ * CatalogSection — modular service catalog rendered from services.json catalog[].
+ *
+ * Loops each category in the catalog array and renders:
+ * - A section-tag + heading (uses global .section-header / .section-tag from sections.css)
+ * - If category has items: editorial row list (<ul>/<li>) — name left, price right, 1px hairlines.
+ *   Price sentinel "cotizar" (case-insensitive) renders as "Cotizar" in --color-red-on-paper.
+ * - If category is empty: EmptyState with bilingual "Próximamente" / "Coming Soon" copy.
+ *
+ * All content is staff-edited JSON; Astro auto-escapes all rendered strings — T-03-04.
+ * reveal class on animated containers picked up by existing GSAP ScrollTrigger (Phase 2 motion).
+ */
+import EmptyState from './EmptyState.astro';
+
+interface CatalogItem {
+  name: { es: string; en: string };
+  price: string;
+}
+interface CatalogCategory {
+  id: string;
+  category: { es: string; en: string };
+  items: CatalogItem[];
+}
+interface Props {
+  catalog: CatalogCategory[];
+  lang: 'es' | 'en';
+  /** Bilingual copy for EmptyState fallback (per-category). */
+  emptyHeading: string;
+  emptyBody: string;
+  emptyTicketLabel: string;
+}
+
+const { catalog, lang, emptyHeading, emptyBody, emptyTicketLabel } = Astro.props;
+---
+
+{catalog.map((category) => (
+  <div class="catalog-category" data-category={category.id}>
+    <div class="section-header reveal">
+      <span class="section-tag">{(category.category as { es: string; en: string })[lang]}</span>
+      <h2 class="section-title">{(category.category as { es: string; en: string })[lang]}</h2>
+    </div>
+
+    {category.items.length === 0 ? (
+      <div class="reveal">
+        <EmptyState
+          heading={emptyHeading}
+          body={emptyBody}
+          ticketLabel={emptyTicketLabel}
+        />
+      </div>
+    ) : (
+      <ul class="catalog-rows reveal" aria-label={(category.category as { es: string; en: string })[lang]}>
+        {category.items.map((item) => {
+          const isCotizar = item.price.toLowerCase() === 'cotizar';
+          return (
+            <li class="catalog-row">
+              <span class="catalog-row__name">{(item.name as { es: string; en: string })[lang]}</span>
+              <span class={`catalog-row__price${isCotizar ? ' catalog-row__price--cotizar' : ''}`}>
+                {isCotizar ? 'Cotizar' : item.price}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    )}
+  </div>
+))}
+
+<style>
+  /* Category wrapper — space between categories */
+  .catalog-category {
+    margin-bottom: var(--space-lg);
+  }
+  .catalog-category:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Row list container — centred, page-guttered, max-width editorial column */
+  .catalog-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 1000px;
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+
+  /* Individual row — flex, touch target, hairline separators */
+  .catalog-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: var(--touch-min);
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-ink-on-paper) 14%, transparent);
+    transition: background 0.2s ease;
+  }
+  .catalog-row:first-child {
+    border-top: 1px solid color-mix(in srgb, var(--color-ink-on-paper) 14%, transparent);
+  }
+  .catalog-row:hover {
+    background: color-mix(in srgb, var(--color-ink-on-paper) 4%, transparent);
+  }
+
+  /* Name column — Inter body */
+  .catalog-row__name {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--color-ink-on-paper);
+  }
+
+  /* Price column — Space Mono, tabular, no-shrink */
+  .catalog-row__price {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-on-paper);
+    flex-shrink: 0;
+  }
+
+  /* Cotizar sentinel — brand red, signals "contact us for pricing" */
+  .catalog-row__price--cotizar {
+    color: var(--color-red-on-paper);
+  }
+</style>
