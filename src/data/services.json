@@ -76,7 +76,7 @@
       { "name": { "es": "Outfit adicional", "en": "Additional outfit" }, "price": "+$5 USD" },
       { "name": { "es": "Accesorio extra", "en": "Extra accessory" }, "price": "+$5 USD" },
       { "name": { "es": "Cabello adicional", "en": "Additional hair" }, "price": "+$5 USD" },
-      { "name": { "es": "Expressions personalizadas", "en": "Custom expressions" }, "price": "+$15 USD" },
+      { "name": { "es": "Expresiones personalizadas", "en": "Custom expressions" }, "price": "+$15 USD" },
       { "name": { "es": "Sesión fotográfica", "en": "Photo session" }, "price": "+$5 USD" },
       { "name": { "es": "Revisión extra", "en": "Extra revision" }, "price": "+$5 USD" },
       { "name": { "es": "Entrega urgente", "en": "Rush delivery" }, "price": "+$15 USD" },
@@ -90,28 +90,53 @@
   "catalog": [
     {
       "id": "unity",
-      "category": { "es": "Unity", "en": "Unity" },
-      "items": []
+      "category": { "es": "Unity & Configuración", "en": "Unity & Configuration" },
+      "items": [
+        { "id": "physbones", "name": { "es": "PhysBones", "en": "PhysBones" }, "price": "99" },
+        { "id": "face-tracking", "name": { "es": "Face Tracking", "en": "Face Tracking" }, "price": "99" },
+        { "id": "expresiones-personalizadas", "name": { "es": "Expresiones personalizadas", "en": "Custom expressions" }, "price": "99" },
+        { "id": "parametros-menus", "name": { "es": "Optimización de parámetros y menús", "en": "Parameter & menu optimization" }, "price": "99" },
+        { "id": "animacion-afk", "name": { "es": "Animación AFK personalizada", "en": "Custom AFK animation" }, "price": "99" },
+        { "id": "rostro-blendshapes", "name": { "es": "Rostro personalizado (Face Blendshapes)", "en": "Custom face (Face Blendshapes)" }, "price": "99" }
+      ]
     },
     {
       "id": "blender",
-      "category": { "es": "Blender / Malla", "en": "Blender / Mesh" },
-      "items": []
+      "category": { "es": "Blender & Malla", "en": "Blender & Mesh" },
+      "items": [
+        { "id": "fitting-rigging", "name": { "es": "Ajuste de Fitting & Rigging de ropa", "en": "Clothing fitting & rigging adjustment" }, "price": "99" },
+        { "id": "blendshapes-ropa", "name": { "es": "Adaptación de blendshapes en ropa externa", "en": "External clothing blendshape adaptation" }, "price": "99" },
+        { "id": "fusion-modelos", "name": { "es": "Fusión de modelos (quimeras)", "en": "Model fusion (chimeras)" }, "price": "99" },
+        { "id": "blendshapes-personalizadas", "name": { "es": "Creación de blendshapes personalizadas", "en": "Custom blendshapes creation" }, "price": "99" },
+        { "id": "cabello-estilismo", "name": { "es": "Aplicación y estilismo de cabello", "en": "Hair application and styling" }, "price": "99" },
+        { "id": "outfit-adicional", "name": { "es": "Outfit adicional", "en": "Additional outfit" }, "price": "99", "repeatable": true },
+        { "id": "cabello-adicional", "name": { "es": "Cabello adicional", "en": "Additional hair" }, "price": "99", "repeatable": true }
+      ]
     },
     {
       "id": "textures",
-      "category": { "es": "Texturas", "en": "Textures" },
-      "items": []
-    },
-    {
-      "id": "accessories",
-      "category": { "es": "Accesorios", "en": "Accessories" },
-      "items": []
+      "category": { "es": "Texturas & Visual", "en": "Textures & Visual" },
+      "items": [
+        { "id": "texturizado-personalizado", "name": { "es": "Texturizado personalizado", "en": "Custom texturing" }, "price": "99" },
+        { "id": "tatuajes", "name": { "es": "Tatuajes personalizados", "en": "Custom tattoos" }, "price": "99" },
+        { "id": "maquillaje", "name": { "es": "Maquillaje personalizado", "en": "Custom makeup" }, "price": "99" },
+        { "id": "diseno-ojos", "name": { "es": "Diseño de ojos personalizados", "en": "Custom eye design" }, "price": "99" },
+        { "id": "iluminacion-shaders", "name": { "es": "Corrección de iluminación y shaders", "en": "Lighting and shader correction" }, "price": "99" }
+      ]
     },
     {
       "id": "extras",
-      "category": { "es": "Extras / NSFW", "en": "Extras / NSFW" },
-      "items": []
+      "category": { "es": "Extras", "en": "Extras" },
+      "items": [
+        { "id": "integracion-accesorios", "name": { "es": "Integración de accesorios (props, toys & VFX)", "en": "Accessory integration (props, toys & VFX)" }, "price": "99" },
+        { "id": "configuracion-nsfw", "name": { "es": "Configuración NSFW", "en": "NSFW configuration" }, "price": "99" },
+        { "id": "fotografia-render", "name": { "es": "Fotografía y render de presentación", "en": "Presentation photography and render" }, "price": "99" },
+        { "id": "accesorio-extra", "name": { "es": "Accesorio extra", "en": "Extra accessory" }, "price": "99", "repeatable": true },
+        { "id": "revision-extra", "name": { "es": "Revisión extra", "en": "Extra revision" }, "price": "99", "repeatable": true },
+        { "id": "entrega-urgente", "name": { "es": "Entrega urgente", "en": "Rush delivery" }, "price": "99" },
+        { "id": "sesion-fotografica", "name": { "es": "Sesión fotográfica", "en": "Photo session" }, "price": "99" },
+        { "id": "nsfw", "name": { "es": "NSFW", "en": "NSFW" }, "price": "99" }
+      ]
     }
   ]
 }
