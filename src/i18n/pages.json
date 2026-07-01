@@ -67,7 +67,13 @@
       "title": "Nuestros paquetes",
       "subtitle": "Precios claros, entregables definidos. Elige tu nivel y abre un ticket.",
       "catalogTag": "Catálogo",
-      "catalogTitle": "Catálogo modular"
+      "catalogTitle": "Catálogo modular",
+      "advanceNote": "50% de anticipo requerido",
+      "usd": "USD",
+      "popularBadge": "⬡ Más popular",
+      "ctaTicket": "Abrir Ticket",
+      "summaryCtaAll": "Ver todos los servicios",
+      "addonsTitle": "Add-ons disponibles"
     },
     "notFound": {
       "metaTitle": "Página no encontrada — Nocturna Avatars",
@@ -148,7 +154,13 @@
       "title": "Our packages",
       "subtitle": "Clear pricing, defined deliverables. Choose your level and open a ticket.",
       "catalogTag": "Catalog",
-      "catalogTitle": "Modular catalog"
+      "catalogTitle": "Modular catalog",
+      "advanceNote": "50% deposit required",
+      "usd": "USD",
+      "popularBadge": "⬡ Most popular",
+      "ctaTicket": "Open a Ticket",
+      "summaryCtaAll": "View all services",
+      "addonsTitle": "Available add-ons"
     },
     "notFound": {
       "metaTitle": "Page not found — Nocturna Avatars",
