@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Phase 3.1 Plan 04 complete — CatalogSection cart controls wired + cart components mounted in ServicesPage; Wave 3 (03.1-05 cart.ts engine) next"
-last_updated: "2026-07-01T03:36:00.000Z"
+stopped_at: Phase 03.1 Plan 05 complete — cart.ts full engine implemented; Wave 4 (03.1-06 CartSummaryModal + clipboard) next
+last_updated: "2026-07-01T09:38:12.258Z"
 last_activity: 2026-07-01
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 4
-  total_plans: 15
-  completed_plans: 15
-  percent: 67
+  total_plans: 21
+  completed_plans: 20
+  percent: 57
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 03.1 (catalog-configurator) — IN PROGRESS
-Plan: 4 of 6 — Plans 01, 02, 03, 04 complete
-Status: Executing — Wave 3 plan (03.1-05 cart.ts engine) next, then Wave 4 (06)
+Plan: 5 of 6 — Plans 01, 02, 03, 04 complete
+Status: Ready to execute
 Last activity: 2026-07-01
 
-Progress: [██████████] 100%
+Progress: [██████████] 95%
 
 ## Performance Metrics
 
@@ -63,6 +63,7 @@ Progress: [██████████] 100%
 | Phase 03-service-catalog P01 | 5 | 2 tasks | 1 files |
 | Phase 03-service-catalog P02 | 10 | 5 tasks | 4 files |
 | Phase 03.1-catalog-configurator P01 | 8min | 2 tasks | 2 files |
+| Phase 03.1 P05 | 10min | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -96,6 +97,9 @@ Recent decisions affecting current work:
 - [Phase 03.1]: [03.1-01] services.json catalog[] restructured to 4 categories (unity, blender, textures, extras), 26 items, id+repeatable schema; packages.addons[] typo "Expressions" fixed to "Expresiones"; addons block removed from ServicesPage.astro; enableCart={true} prop wired on CatalogSection
 - [Phase 03.1]: [03.1-04] cart.ts stub created in Plan 04 (empty initCart) so build succeeds during Wave 2b; full implementation deferred to Plan 05
 - [Phase 03.1]: [03.1-04] data-item-id attribute set on both the li row and individual cart buttons to give cart.ts multiple query targets
+- [Phase ?]: [03.1-05] transitionend drawer close filtered by e.propertyName === 'transform' to prevent early [hidden] from opacity firing first
+- [Phase ?]: [03.1-05] openCartModal/closeCartModal stubs — full implementation in Plan 03.1-06
+- [Phase ?]: [03.1-05] createElement + textContent for drawer list items — T-03.1-05 XSS guard
 
 ### Pending Todos
 
@@ -126,6 +130,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-01T03:36:00.000Z
-Stopped at: Phase 03.1 Plan 04 complete — catalog cart controls in DOM + CartDrawer/CartPill/CartSummaryModal mounted; Plan 05 (cart.ts engine) next
+Last session: 2026-07-01T09:38:12.247Z
+Stopped at: Phase 03.1 Plan 05 complete — cart.ts full engine implemented; Wave 4 (03.1-06 CartSummaryModal + clipboard) next
 Resume file: None

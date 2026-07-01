@@ -185,7 +185,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2)*
 
-- [ ] 03.1-05-PLAN.md — cart.ts engine (Map state, add/remove/qty, DOM sync, drawer open/close, WR-01 pattern)
+- [x] 03.1-05-PLAN.md — cart.ts engine (Map state, add/remove/qty, DOM sync, drawer open/close, WR-01 pattern)
 
 **Wave 4** *(blocked on Wave 3)*
 
@@ -243,6 +243,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Experimental Motion Layer | 4/4 | Complete   | 2026-06-30 |
 | 2.1 Visual Redesign — Refined Street Editorial | 4/4 | Complete   | 2026-06-30 |
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
-| 3.1 Catalog Configurator | 4/6 | Executing | - |
+| 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
