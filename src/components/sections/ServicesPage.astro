@@ -8,7 +8,7 @@
  * Extracted into a component so the localized [page].astro resolver stays thin.
  */
 import PackageCard from '../PackageCard.astro';
-import EmptyState from '../EmptyState.astro';
+import CatalogSection from '../CatalogSection.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
 import servicesData from '../../data/services.json';
 
@@ -17,7 +17,12 @@ interface Props {
 }
 const { lang } = Astro.props;
 const page = useTranslations(lang, 'pages').servicios;
-const empty = useTranslations(lang, 'pages').emptyState;
+
+const catalogEmptyHeading = lang === 'es' ? 'Próximamente' : 'Coming Soon';
+const catalogEmptyBody = lang === 'es'
+  ? 'Estamos definiendo los precios. Abre un ticket y te damos info de primera mano.'
+  : "We're finalizing pricing. Open a ticket and we'll give you the details directly.";
+const catalogEmptyTicketLabel = lang === 'es' ? 'Abrir Ticket' : 'Open Ticket';
 
 const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
   ...tier,
@@ -76,11 +81,11 @@ const addonsNote = (servicesData.packages.addonsNote as { es: string; en: string
     <span class="section-tag">{page.catalogTag}</span>
     <h2 class="section-title">{page.catalogTitle}</h2>
   </div>
-  <div class="reveal">
-    <EmptyState
-      heading={empty.heading}
-      body={empty.serviciosBody}
-      ticketLabel={empty.ticketCta}
-    />
-  </div>
+  <CatalogSection
+    catalog={servicesData.catalog}
+    lang={lang}
+    emptyHeading={catalogEmptyHeading}
+    emptyBody={catalogEmptyBody}
+    emptyTicketLabel={catalogEmptyTicketLabel}
+  />
 </section>
