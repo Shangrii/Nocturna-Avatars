@@ -4,21 +4,38 @@
  *
  * The REAL 3-package section (faithful data, D-12) via PackageCard + the
  * add-ons block, followed by a "coming soon" shell for the full modular catalog
- * (the data-driven services.json catalog is Phase 3). Copy from packages.json +
- * pages.json. Extracted into a component so the localized [page].astro resolver
- * stays thin.
+ * (the data-driven services.json catalog is Phase 3). Copy from pages.json.
+ * Extracted into a component so the localized [page].astro resolver stays thin.
  */
 import PackageCard from '../PackageCard.astro';
 import EmptyState from '../EmptyState.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
+import servicesData from '../../data/services.json';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-const pkg = useTranslations(lang, 'packages');
 const page = useTranslations(lang, 'pages').servicios;
 const empty = useTranslations(lang, 'pages').emptyState;
+
+const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
+  ...tier,
+  tier: (tier.tier as { es: string; en: string })[lang],
+  subtitle: (tier.subtitle as { es: string; en: string })[lang],
+  oneLiner: (tier.oneLiner as { es: string; en: string })[lang],
+  features: tier.features.map((f) => ({
+    text: (f.text as { es: string; en: string })[lang],
+    highlight: f.highlight,
+  })),
+}));
+
+const resolvedAddons = servicesData.packages.addons.map((a) => ({
+  name: (a.name as { es: string; en: string })[lang],
+  price: a.price,
+}));
+
+const addonsNote = (servicesData.packages.addonsNote as { es: string; en: string })[lang];
 ---
 
 <section class="section section-page-top section--rule">
@@ -29,28 +46,28 @@ const empty = useTranslations(lang, 'pages').emptyState;
   </div>
 
   <div class="cards">
-    {pkg.tiers.map((tier) => (
+    {resolvedTiers.map((tier) => (
       <PackageCard
         tier={tier}
-        usd={pkg.usd}
-        advanceNote={pkg.advanceNote}
-        popularBadge={pkg.popularBadge}
-        ctaLabel={pkg.ctaTicket}
+        usd={page.usd}
+        advanceNote={page.advanceNote}
+        popularBadge={page.popularBadge}
+        ctaLabel={page.ctaTicket}
       />
     ))}
   </div>
 
   <div class="addons reveal">
-    <h3 class="addons-title">{pkg.addonsTitle}</h3>
+    <h3 class="addons-title">{page.addonsTitle}</h3>
     <div class="addon-grid">
-      {pkg.addons.map((addon) => (
+      {resolvedAddons.map((addon) => (
         <div class="addon-item">
           <div class="name">{addon.name}</div>
           <div class="price">{addon.price}</div>
         </div>
       ))}
     </div>
-    <p class="addons-note">{pkg.addonsNote}</p>
+    <p class="addons-note">{addonsNote}</p>
   </div>
 </section>
 
