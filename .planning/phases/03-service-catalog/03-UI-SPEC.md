@@ -56,22 +56,14 @@ Exceptions:
 
 ## Typography
 
-Source: Phase 02.1 D-04, D-05, D-06, D-09; theme.css `--type-*` and `--lh-*` tokens.
+*Type scale carried forward from Phase 02.1 — see `src/styles/theme.css @theme`. All existing roles (body, label, section-tag, section-title, card-name, package-price) remain unchanged.*
 
-| Role | Font | Size | Weight | Transform | Tracking | Line Height |
-|------|------|------|--------|-----------|----------|-------------|
-| Body | Inter | 16px (`--type-body`) | 300–400 | none | normal | 1.7 (`--lh-body`) |
-| Label / eyebrow | Space Mono | clamp(11px, 1.6vw, 14px) | 400 | uppercase | 0.32em | 1.4 (`--lh-label`) |
-| Price / mono value | Space Mono | 16px (inline in row) | 400 | none | 0.04em | 1.4 |
-| Package price (card) | Space Mono | clamp(34px, 4.5vw, 44px) | 400 | none | -0.02em | 1.0 |
-| Category heading | Space Grotesk | clamp(24px, 4vw, 44px) | 700 | uppercase | -0.02em | 0.95 (`--lh-heading`) |
-| Section title | Space Grotesk | clamp(30px, 6vw, 64px) | 700 | uppercase | -0.02em | 0.95 |
-| Card name | Space Grotesk | clamp(22px, 3vw, 30px) | 700 | uppercase | -0.02em | 1.0 |
-| Section tag | Space Mono | clamp(11px, 1.6vw, 14px) | 400 | uppercase | 0.32em | 1.4 |
-| Feature list item | Inter | 14px | 400 | none | normal | 1.5 |
-| Card subtitle | Inter | 14px | 400 italic | none | normal | 1.4 |
-| Empty state heading | Space Grotesk | clamp(20px, 3vw, 28px) | 700 | none | -0.02em | 1.15 |
-| Empty state body | Inter | 16px | 400 | none | normal | 1.7 |
+**Phase 3 additions:**
+
+| Role | Size | Weight | Font | Usage |
+|------|------|--------|------|-------|
+| Catalog row — name | 16px (inherits body) | 400 | Inter | Service item name in editorial row |
+| Catalog row — price | 16px | 400 | Space Mono | Price or "Cotizar" value in editorial row |
 
 ---
 
