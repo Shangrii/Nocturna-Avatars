@@ -146,7 +146,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 — consumers need the data file)*
 
-- [ ] 03-02-PLAN.md — Migrate packages consumers: rewire PackagesSummary + ServicesPage to import services.json directly; add UI labels to pages.json; retire packages from ui.ts
+- [x] 03-02-PLAN.md — Migrate packages consumers: rewire PackagesSummary + ServicesPage to import services.json directly; add UI labels to pages.json; retire packages from ui.ts
 
 **Wave 3** *(blocked on Wave 2 — catalog section needs wired package section)*
 
@@ -203,6 +203,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Foundation & Bilingual Shell | 4/4 | Complete   | 2026-06-28 |
 | 2. Experimental Motion Layer | 4/4 | Complete   | 2026-06-30 |
 | 2.1 Visual Redesign — Refined Street Editorial | 4/4 | Complete   | 2026-06-30 |
-| 3. Service Catalog | 1/3 | In Progress|  |
+| 3. Service Catalog | 2/3 | In Progress|  |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
