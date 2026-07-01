@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Phase 3.1 planned (6 plans, 4 waves) — ready for /gsd-execute-phase 3.1"
-last_updated: "2026-07-01T14:00:00.000Z"
+stopped_at: "Phase 3.1 Plan 01 complete — services.json restructured (4 cat, 26 items), ServicesPage addons block removed"
+last_updated: "2026-07-01T03:17:00.000Z"
 last_activity: 2026-07-01
 progress:
   total_phases: 6
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 
 ## Current Position
 
-Phase: 02.1 (visual-redesign-refined-street-editorial) — COMPLETE
-Plan: 4 of 4 — all plans complete, human QA approved
-Status: Phase complete — ready for verification
+Phase: 03.1 (catalog-configurator) — IN PROGRESS
+Plan: 1 of 6 — Plan 01 complete
+Status: Executing — Wave 2 plans (03.1-02, 03.1-03, 03.1-04) ready to execute
 Last activity: 2026-07-01
 
 Progress: [██████████] 100%
@@ -62,6 +62,7 @@ Progress: [██████████] 100%
 | Phase 02.1 P04 | — | 3 tasks | 3 files |
 | Phase 03-service-catalog P01 | 5 | 2 tasks | 1 files |
 | Phase 03-service-catalog P02 | 10 | 5 tasks | 4 files |
+| Phase 03.1-catalog-configurator P01 | 8min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,7 @@ Recent decisions affecting current work:
 - [Phase ?]: [02.1-04] Floating CTA keeps 999px pill radius — distinct persistent conversion anchor from squared editorial chrome
 - [Phase ?]: [02.1-04] Nav backdrop at 0.95 opacity ensures off-white text AA over both ink and paper sections
 - [Phase ?]: [02.1-04] Phase 02.1 complete — all 6 ROADMAP success criteria verified by human QA (2026-06-30)
+- [Phase 03.1]: [03.1-01] services.json catalog[] restructured to 4 categories (unity, blender, textures, extras), 26 items, id+repeatable schema; packages.addons[] typo "Expressions" fixed to "Expresiones"; addons block removed from ServicesPage.astro; enableCart={true} prop wired on CatalogSection
 
 ### Pending Todos
 
@@ -122,6 +124,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-01T12:00:00.000Z
-Stopped at: Phase 3.1 discuss-phase complete — CONTEXT.md + DISCUSSION-LOG.md written; ready for /gsd-plan-phase 3.1
+Last session: 2026-07-01T03:17:00.000Z
+Stopped at: Phase 03.1 Plan 01 complete — data schema + ServicesPage cleanup done; Wave 2 ready
 Resume file: None

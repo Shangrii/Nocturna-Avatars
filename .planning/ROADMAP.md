@@ -175,7 +175,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 03.1-01-PLAN.md — Restructure services.json (4 categories, 26 items, id+repeatable schema) + remove addons block from ServicesPage
+- [x] 03.1-01-PLAN.md — Restructure services.json (4 categories, 26 items, id+repeatable schema) + remove addons block from ServicesPage
 
 **Wave 2** *(blocked on Wave 1)*
 
@@ -243,6 +243,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Experimental Motion Layer | 4/4 | Complete   | 2026-06-30 |
 | 2.1 Visual Redesign — Refined Street Editorial | 4/4 | Complete   | 2026-06-30 |
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
-| 3.1 Catalog Configurator | 0/6 | Planned | - |
+| 3.1 Catalog Configurator | 1/6 | Executing | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
