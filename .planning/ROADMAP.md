@@ -16,6 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation & Bilingual Shell** - Astro + design system + i18n + structure + deploy; the live, branded, convertible shell (completed 2026-06-28)
 - [x] **Phase 2: Experimental Motion Layer** - WebGL hero, smooth scroll, scroll reveals, animated page transitions, cursor effects (completed 2026-06-30)
 - [x] **Phase 3: Service Catalog** - Data-driven packages + modular catalog from `services.json` (ES/EN, "Cotizar") (completed 2026-07-01)
+- [ ] **Phase 3.1: Catalog Configurator** - Interactive "arma tu paquete" cart: individual services selectable 1-by-1 with prices and running total, "Open Ticket" with cart summary (INSERTED)
 - [ ] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized
 - [ ] **Phase 5: Photo-Publishing Bot Cog** - Discord cog in `nocturna-bot` (✅ approve / 🗑️ remove / Pillow optimize / cross-repo commit)
 
@@ -155,6 +156,25 @@ Plans:
 **UI hint**: yes
 **Notes**: Migrate package data (Penumbra $40 / Umbra $60 / Eclipse $90) from the current site. **Open content item:** modular catalog prices are not yet agreed by the team → render as "Cotizar" until decided. Catalog copy flows through the i18n dictionaries established in Phase 1.
 
+### Phase 3.1: Catalog Configurator (INSERTED)
+
+**Goal**: A visitor can browse the modular catalog, select individual services 1-by-1 into a cart, see a running total, and open a Discord ticket with their selection pre-summarized — without any backend or code changes needed when staff update prices.
+**Mode:** mvp
+**Depends on**: Phase 3
+**Requirements**: CAT-02, CAT-03 (extends)
+**Success Criteria** (what must be TRUE):
+
+  1. A visitor can add/remove individual catalog services to a cart, one at a time
+  2. The cart shows a running price total of selected items
+  3. A visitor clicks "Abrir Ticket" and sees their full selection summarized (with a copy-to-clipboard option) before going to Discord
+  4. Prices for individual services show $99 USD placeholder; staff update them in `services.json` only — no code changes needed
+  5. The tiers (Penumbra/Umbra/Eclipse) coexist with the configurator — quick picks vs. custom builds
+  6. The configurator works in both ES and EN
+
+**Plans**: TBD
+**UI hint**: yes
+**Notes**: Pure client-side JS (no backend). Cart state lives in the page; prices in `services.json`. The "Open Ticket" flow cannot pre-fill a Discord ticket directly — a modal with cart summary + "Copiar selección" + Discord link is the UX. Builds directly on Phase 3's CatalogSection and services.json schema.
+
 ### Phase 4: Gallery & Data Layer
 
 **Goal**: A visitor browses a masonry photo wall with lightbox rendered from `gallery.json`, sees a featured subset on the landing, and the `gallery.json` schema is finalized so the bot can write to it.
@@ -204,5 +224,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Experimental Motion Layer | 4/4 | Complete   | 2026-06-30 |
 | 2.1 Visual Redesign — Refined Street Editorial | 4/4 | Complete   | 2026-06-30 |
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
+| 3.1 Catalog Configurator | 0/TBD | Not started | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
