@@ -142,7 +142,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 03-01-PLAN.md — Create `src/data/services.json`: bilingual-per-entry schema, migrated package data (3 tiers, 8 add-ons, addonsNote), 5 empty catalog categories
+- [x] 03-01-PLAN.md — Create `src/data/services.json`: bilingual-per-entry schema, migrated package data (3 tiers, 8 add-ons, addonsNote), 5 empty catalog categories
 
 **Wave 2** *(blocked on Wave 1 — consumers need the data file)*
 
@@ -203,6 +203,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Foundation & Bilingual Shell | 4/4 | Complete   | 2026-06-28 |
 | 2. Experimental Motion Layer | 4/4 | Complete   | 2026-06-30 |
 | 2.1 Visual Redesign — Refined Street Editorial | 4/4 | Complete   | 2026-06-30 |
-| 3. Service Catalog | 0/3 | Planned | - |
+| 3. Service Catalog | 1/3 | In Progress|  |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |

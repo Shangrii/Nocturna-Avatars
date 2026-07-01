@@ -35,10 +35,10 @@
 
 ### Service Catalog
 
-- [ ] **CAT-01**: The 3 packages (Penumbra/Umbra/Eclipse) render from `services.json` with features and prices
-- [ ] **CAT-02**: A modular catalog lists individual services grouped by category (Unity, Blender/mesh, Textures, Accessories, Extras/NSFW)
-- [ ] **CAT-03**: Services with undecided prices display "Cotizar"
-- [ ] **CAT-04**: Catalog content is fully editable via JSON without touching code
+- [x] **CAT-01**: The 3 packages (Penumbra/Umbra/Eclipse) render from `services.json` with features and prices
+- [x] **CAT-02**: A modular catalog lists individual services grouped by category (Unity, Blender/mesh, Textures, Accessories, Extras/NSFW)
+- [x] **CAT-03**: Services with undecided prices display "Cotizar"
+- [x] **CAT-04**: Catalog content is fully editable via JSON without touching code
 
 ### Gallery
 
@@ -99,10 +99,10 @@ Which phases cover which requirements. Populated during roadmap creation.
 | FX-02 | Phase 2 | Complete |
 | FX-03 | Phase 2 | Complete |
 | FX-04 | Phase 2 | Complete |
-| CAT-01 | Phase 3 | Pending |
-| CAT-02 | Phase 3 | Pending |
-| CAT-03 | Phase 3 | Pending |
-| CAT-04 | Phase 3 | Pending |
+| CAT-01 | Phase 3 | Complete |
+| CAT-02 | Phase 3 | Complete |
+| CAT-03 | Phase 3 | Complete |
+| CAT-04 | Phase 3 | Complete |
 | GAL-01 | Phase 4 | Pending |
 | GAL-02 | Phase 4 | Pending |
 | GAL-03 | Phase 4 | Pending |
