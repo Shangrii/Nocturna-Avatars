@@ -171,7 +171,26 @@ Plans:
   5. The tiers (Penumbra/Umbra/Eclipse) coexist with the configurator — quick picks vs. custom builds
   6. The configurator works in both ES and EN
 
-**Plans**: TBD
+**Plans**: 6 plans
+Plans:
+**Wave 1**
+
+- [ ] 03.1-01-PLAN.md — Restructure services.json (4 categories, 26 items, id+repeatable schema) + remove addons block from ServicesPage
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 03.1-02-PLAN.md — CartPill.astro + CartDrawer.astro static shells (HTML/CSS, no behavior)
+- [ ] 03.1-03-PLAN.md — CartSummaryModal.astro static shell (reuses dc-overlay/dc-modal)
+- [ ] 03.1-04-PLAN.md — CatalogSection cart controls + mount all cart components in ServicesPage
+
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] 03.1-05-PLAN.md — cart.ts engine (Map state, add/remove/qty, DOM sync, drawer open/close, WR-01 pattern)
+
+**Wave 4** *(blocked on Wave 3)*
+
+- [ ] 03.1-06-PLAN.md — Modal behavior + clipboard copy + focus traps + a11y + human verification
+
 **UI hint**: yes
 **Notes**: Pure client-side JS (no backend). Cart state lives in the page; prices in `services.json`. The "Open Ticket" flow cannot pre-fill a Discord ticket directly — a modal with cart summary + "Copiar selección" + Discord link is the UX. Builds directly on Phase 3's CatalogSection and services.json schema.
 
