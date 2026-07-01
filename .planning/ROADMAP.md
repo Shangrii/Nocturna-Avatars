@@ -138,7 +138,20 @@ Plans:
   3. A visitor sees "Cotizar" for any service whose price is not yet agreed
   4. A staff member can edit packages and catalog content by editing JSON only — no component/code changes needed — and the change renders in both ES and EN
 
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — Create `src/data/services.json`: bilingual-per-entry schema, migrated package data (3 tiers, 8 add-ons, addonsNote), 5 empty catalog categories
+
+**Wave 2** *(blocked on Wave 1 — consumers need the data file)*
+
+- [ ] 03-02-PLAN.md — Migrate packages consumers: rewire PackagesSummary + ServicesPage to import services.json directly; add UI labels to pages.json; retire packages from ui.ts
+
+**Wave 3** *(blocked on Wave 2 — catalog section needs wired package section)*
+
+- [ ] 03-03-PLAN.md — Build CatalogSection.astro + wire into ServicesPage; editorial rows, Cotizar styling, per-category EmptyState
+
 **UI hint**: yes
 **Notes**: Migrate package data (Penumbra $40 / Umbra $60 / Eclipse $90) from the current site. **Open content item:** modular catalog prices are not yet agreed by the team → render as "Cotizar" until decided. Catalog copy flows through the i18n dictionaries established in Phase 1.
 
@@ -190,6 +203,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Foundation & Bilingual Shell | 4/4 | Complete   | 2026-06-28 |
 | 2. Experimental Motion Layer | 4/4 | Complete   | 2026-06-30 |
 | 2.1 Visual Redesign — Refined Street Editorial | 4/4 | Complete   | 2026-06-30 |
-| 3. Service Catalog | 0/TBD | Not started | - |
+| 3. Service Catalog | 0/3 | Planned | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
