@@ -1,0 +1,200 @@
+---
+/**
+ * CartSummaryModal — cart summary overlay opened by cart.ts when the user
+ * clicks "Abrir Ticket / Open Ticket" inside the CartDrawer.
+ *
+ * Reuses dc-overlay / dc-modal / dc-body / dc-title / dc-dismiss from chrome.css
+ * for the entrance animation and base modal sizing.
+ *
+ * CRITICAL: The Discord link uses ONLY class="cart-modal__discord" — do not add
+ * the chrome.css open-button class; it inherits white-background styles that conflict
+ * with the red fill required by the UI-SPEC.
+ *
+ * cart.ts populates .cart-modal__list and .cart-modal__total at runtime via
+ * textContent (never innerHTML) to prevent XSS (T-03.1-03).
+ *
+ * data-* attributes for cart.ts targeting:
+ *   data-cart-modal-overlay  → overlay div (querySelector hook)
+ *   data-cart-copy           → copy button
+ *   data-cart-modal-dismiss  → close button
+ */
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const { lang } = Astro.props;
+---
+
+<div
+  class="dc-overlay cart-modal-overlay"
+  id="cartModalOverlay"
+  data-cart-modal-overlay
+  hidden
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="cartModalTitle"
+>
+  <div class="dc-modal cart-modal">
+    <div class="dc-body cart-modal__body">
+
+      <h3 class="dc-title cart-modal__title" id="cartModalTitle">
+        {lang === 'es' ? 'Tu selección de servicios' : 'Your service selection'}
+      </h3>
+
+      <!-- Item list: populated by cart.ts openCartModal() via textContent only -->
+      <div
+        class="cart-modal__list"
+        aria-label={lang === 'es' ? 'Selección' : 'Selection'}
+      >
+      </div>
+
+      <!-- Total line: populated by cart.ts -->
+      <div class="cart-modal__total">
+      </div>
+
+      <!-- Disclaimer -->
+      <p class="cart-modal__disclaimer">
+        {lang === 'es'
+          ? '(Precios sujetos a cotización final)'
+          : '(Prices subject to final quote)'}
+      </p>
+
+      <!-- Action buttons -->
+      <div class="cart-modal__actions">
+        <button class="cart-modal__copy" type="button" data-cart-copy>
+          {lang === 'es' ? 'Copiar selección' : 'Copy selection'}
+        </button>
+        <!-- Discord CTA: class="cart-modal__discord" ONLY — no chrome.css open-button class -->
+        <a
+          class="cart-modal__discord"
+          href="https://discord.gg/DSMmwU35cs"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {lang === 'es' ? 'Ir a Discord' : 'Go to Discord'}
+        </a>
+      </div>
+
+      <!-- Close button — reuses dc-dismiss styles from chrome.css -->
+      <button class="dc-dismiss" type="button" data-cart-modal-dismiss>
+        {lang === 'es' ? 'Cerrar' : 'Close'}
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Width override — wider than the 380px Discord modal */
+  .cart-modal {
+    width: 480px;
+    max-width: 94vw;
+  }
+
+  /* Body layout override — flex column instead of dc-body centered */
+  .cart-modal__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  /* Title — left aligned, display font */
+  .cart-modal__title {
+    font-family: var(--font-display);
+    font-size: var(--type-card-title);
+    font-weight: 700;
+    color: var(--color-white);
+    text-align: left;
+    margin-bottom: var(--space-2xs);
+  }
+
+  /* Item list area */
+  .cart-modal__list {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-paper-on-ink);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-sm) 0;
+    text-align: left;
+  }
+
+  /* Total line */
+  .cart-modal__total {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-white);
+    text-align: left;
+  }
+
+  /* Disclaimer */
+  .cart-modal__disclaimer {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-white-dim);
+    line-height: 1.5;
+    text-align: left;
+  }
+
+  /* Actions row */
+  .cart-modal__actions {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  /* Copy button */
+  .cart-modal__copy {
+    flex: 1;
+    min-height: 44px;
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-white-dim);
+    font-family: var(--font-body);
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .cart-modal__copy:hover,
+  .cart-modal__copy:focus-visible {
+    border-color: var(--color-paper-on-ink);
+    color: var(--color-paper-on-ink);
+  }
+  .cart-modal__copy:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+  /* ¡Copiado! transient state */
+  .cart-modal__copy--copied {
+    border-color: var(--color-red-on-paper);
+    color: var(--color-red-on-paper);
+  }
+
+  /* Discord CTA — red fill (standalone class only, no chrome.css open-button inheritance) */
+  .cart-modal__discord {
+    flex: 1;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-red);
+    color: var(--color-white);
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .cart-modal__discord:hover {
+    background: var(--color-red-dark);
+  }
+  .cart-modal__discord:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+  }
+</style>
