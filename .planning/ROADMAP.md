@@ -179,8 +179,8 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1)*
 
-- [ ] 03.1-02-PLAN.md — CartPill.astro + CartDrawer.astro static shells (HTML/CSS, no behavior)
-- [ ] 03.1-03-PLAN.md — CartSummaryModal.astro static shell (reuses dc-overlay/dc-modal)
+- [x] 03.1-02-PLAN.md — CartPill.astro + CartDrawer.astro static shells (HTML/CSS, no behavior)
+- [x] 03.1-03-PLAN.md — CartSummaryModal.astro static shell (reuses dc-overlay/dc-modal)
 - [ ] 03.1-04-PLAN.md — CatalogSection cart controls + mount all cart components in ServicesPage
 
 **Wave 3** *(blocked on Wave 2)*
