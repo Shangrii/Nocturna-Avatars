@@ -16,6 +16,8 @@ import EmptyState from './EmptyState.astro';
 interface CatalogItem {
   name: { es: string; en: string };
   price: string;
+  id: string;           // required — unique slug from services.json
+  repeatable?: boolean; // optional — omitted = false (toggle behavior)
 }
 interface CatalogCategory {
   id: string;
@@ -29,9 +31,10 @@ interface Props {
   emptyHeading: string;
   emptyBody: string;
   emptyTicketLabel: string;
+  enableCart?: boolean; // when true, renders cart controls in each row
 }
 
-const { catalog, lang, emptyHeading, emptyBody, emptyTicketLabel } = Astro.props;
+const { catalog, lang, emptyHeading, emptyBody, emptyTicketLabel, enableCart = false } = Astro.props;
 ---
 
 {catalog.map((category) => (
@@ -54,11 +57,25 @@ const { catalog, lang, emptyHeading, emptyBody, emptyTicketLabel } = Astro.props
         {category.items.map((item) => {
           const isCotizar = item.price.toLowerCase() === 'cotizar';
           return (
-            <li class="catalog-row">
+            <li class={`catalog-row${enableCart ? ' catalog-row--interactive' : ''}`}
+                data-item-id={enableCart ? item.id : undefined}>
               <span class="catalog-row__name">{(item.name as { es: string; en: string })[lang]}</span>
               <span class={`catalog-row__price${isCotizar ? ' catalog-row__price--cotizar' : ''}`}>
-                {isCotizar ? 'Cotizar' : item.price}
+                {isCotizar ? 'Cotizar' : (enableCart ? `$${item.price}` : item.price)}
               </span>
+              {enableCart && (
+                item.repeatable
+                  ? <div class="catalog-row__qty" role="group" aria-label={lang === 'es' ? `Cantidad: ${(item.name as { es: string; en: string })[lang]}` : `Quantity: ${(item.name as { es: string; en: string })[lang]}`}>
+                      <button class="qty-btn qty-btn--dec" type="button" data-item-id={item.id} aria-label={lang === 'es' ? `Reducir cantidad de ${(item.name as { es: string; en: string })[lang]}` : `Decrease quantity of ${(item.name as { es: string; en: string })[lang]}`}>−</button>
+                      <span class="qty-count" aria-live="polite">0</span>
+                      <button class="qty-btn qty-btn--inc" type="button" data-item-id={item.id} aria-label={lang === 'es' ? `Aumentar cantidad de ${(item.name as { es: string; en: string })[lang]}` : `Increase quantity of ${(item.name as { es: string; en: string })[lang]}`}>+</button>
+                    </div>
+                  : <button class="catalog-row__cart-btn cart-add-trigger" type="button"
+                            data-item-id={item.id}
+                            aria-label={lang === 'es' ? `Agregar ${(item.name as { es: string; en: string })[lang]}` : `Add ${(item.name as { es: string; en: string })[lang]}`}>
+                      {lang === 'es' ? 'Agregar' : 'Add'}
+                    </button>
+              )}
             </li>
           );
         })}
@@ -125,5 +142,99 @@ const { catalog, lang, emptyHeading, emptyBody, emptyTicketLabel } = Astro.props
   /* Cotizar sentinel — brand red, signals "contact us for pricing" */
   .catalog-row__price--cotizar {
     color: var(--color-red-on-paper);
+  }
+
+  /* Interactive row variant — cart controls present */
+  .catalog-row--interactive {
+    gap: var(--space-sm);
+  }
+  /* Name: flex:1, truncate on mobile */
+  .catalog-row--interactive .catalog-row__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* Price: no-shrink */
+  .catalog-row--interactive .catalog-row__price {
+    flex-shrink: 0;
+  }
+  /* Hide price on very narrow mobile — still visible in drawer */
+  @media (max-width: 480px) {
+    .catalog-row--interactive .catalog-row__price {
+      display: none;
+    }
+  }
+  /* Agregar / Quitar toggle button */
+  .catalog-row__cart-btn {
+    flex-shrink: 0;
+    min-width: 80px;
+    min-height: 32px;
+    padding: 0 var(--space-xs);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-white-dim);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .catalog-row__cart-btn:hover,
+  .catalog-row__cart-btn:focus-visible {
+    border-color: var(--color-paper-on-ink);
+    color: var(--color-paper-on-ink);
+  }
+  .catalog-row__cart-btn:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+  /* Added state — item in cart */
+  .catalog-row__cart-btn--added {
+    border-color: var(--color-red-on-paper);
+    color: var(--color-red-on-paper);
+  }
+  .catalog-row__cart-btn--added:hover,
+  .catalog-row__cart-btn--added:focus-visible {
+    background: var(--color-red-soft);
+  }
+  /* Qty control group */
+  .catalog-row__qty {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    flex-shrink: 0;
+  }
+  .qty-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    min-height: 32px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-white-dim);
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .qty-btn:hover, .qty-btn:focus-visible {
+    border-color: var(--color-paper-on-ink);
+    color: var(--color-paper-on-ink);
+  }
+  .qty-btn:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+  .qty-count {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-ink-on-paper);
+    min-width: 20px;
+    text-align: center;
   }
 </style>
