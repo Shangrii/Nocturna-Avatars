@@ -35,12 +35,6 @@ const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
   })),
 }));
 
-const resolvedAddons = servicesData.packages.addons.map((a) => ({
-  name: (a.name as { es: string; en: string })[lang],
-  price: a.price,
-}));
-
-const addonsNote = (servicesData.packages.addonsNote as { es: string; en: string })[lang];
 ---
 
 <section class="section section-page-top section--rule">
@@ -62,18 +56,6 @@ const addonsNote = (servicesData.packages.addonsNote as { es: string; en: string
     ))}
   </div>
 
-  <div class="addons reveal">
-    <h3 class="addons-title">{page.addonsTitle}</h3>
-    <div class="addon-grid">
-      {resolvedAddons.map((addon) => (
-        <div class="addon-item">
-          <div class="name">{addon.name}</div>
-          <div class="price">{addon.price}</div>
-        </div>
-      ))}
-    </div>
-    <p class="addons-note">{addonsNote}</p>
-  </div>
 </section>
 
 <section class="section section--surface section--rule">
@@ -87,5 +69,6 @@ const addonsNote = (servicesData.packages.addonsNote as { es: string; en: string
     emptyHeading={catalogEmptyHeading}
     emptyBody={catalogEmptyBody}
     emptyTicketLabel={catalogEmptyTicketLabel}
+    enableCart={true}
   />
 </section>
