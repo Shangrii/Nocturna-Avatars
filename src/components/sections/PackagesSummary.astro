@@ -2,7 +2,7 @@
 /**
  * PackagesSummary — condensed 3-tier packages block on the landing (NAV-01).
  *
- * Renders the three tiers via PackageCard (condensed) from packages.json, plus
+ * Renders the three tiers via PackageCard (condensed) from services.json, plus
  * a "Ver todos los servicios" / "View all services" link to /<lang>/servicios.
  * Hard data is faithful (D-12): Penumbra $40 / Umbra $60 / Eclipse $90, Umbra
  * featured. The full feature lists + add-ons live on /servicios.
@@ -10,35 +10,47 @@
 import PackageCard from '../PackageCard.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
 import { localizedPath } from '../../i18n/routes';
+import servicesData from '../../data/services.json';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-const t = useTranslations(lang, 'packages');
+const page = useTranslations(lang, 'pages').servicios;
+
+const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
+  ...tier,
+  tier: (tier.tier as { es: string; en: string })[lang],
+  subtitle: (tier.subtitle as { es: string; en: string })[lang],
+  oneLiner: (tier.oneLiner as { es: string; en: string })[lang],
+  features: tier.features.map((f) => ({
+    text: (f.text as { es: string; en: string })[lang],
+    highlight: f.highlight,
+  })),
+}));
 ---
 
 <section id="services" class="section section--rule">
   <div class="section-header reveal">
-    <span class="section-tag">{t.sectionTag}</span>
-    <h2 class="section-title">{t.sectionTitle}</h2>
-    <p class="section-subtitle">{t.sectionSubtitle}</p>
+    <span class="section-tag">{page.tag}</span>
+    <h2 class="section-title">{page.title}</h2>
+    <p class="section-subtitle">{page.subtitle}</p>
   </div>
 
   <div class="cards cards--summary">
-    {t.tiers.map((tier) => (
+    {resolvedTiers.map((tier) => (
       <PackageCard
         tier={tier}
-        usd={t.usd}
-        advanceNote={t.advanceNote}
-        popularBadge={t.popularBadge}
-        ctaLabel={t.ctaTicket}
+        usd={page.usd}
+        advanceNote={page.advanceNote}
+        popularBadge={page.popularBadge}
+        ctaLabel={page.ctaTicket}
         condensed
       />
     ))}
   </div>
 
   <div class="cards-summary-action reveal">
-    <a href={localizedPath('services', lang)} class="link-arrow">{t.summaryCtaAll} →</a>
+    <a href={localizedPath('services', lang)} class="link-arrow">{page.summaryCtaAll} →</a>
   </div>
 </section>
