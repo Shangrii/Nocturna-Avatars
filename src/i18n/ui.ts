@@ -7,7 +7,6 @@
 import commonDict from './common.json';
 import homeDict from './home.json';
 import navDict from './nav.json';
-import packagesDict from './packages.json';
 import pagesDict from './pages.json';
 import termsDict from './terms.json';
 
@@ -37,7 +36,6 @@ const dictionaries = {
   common: commonDict as Dict<(typeof commonDict)['es']>,
   home: homeDict as Dict<(typeof homeDict)['es']>,
   nav: navDict as Dict<(typeof navDict)['es']>,
-  packages: packagesDict as Dict<(typeof packagesDict)['es']>,
   pages: pagesDict as Dict<(typeof pagesDict)['es']>,
   terms: termsDict as Dict<(typeof termsDict)['es']>,
 };
