@@ -243,6 +243,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Experimental Motion Layer | 4/4 | Complete   | 2026-06-30 |
 | 2.1 Visual Redesign — Refined Street Editorial | 4/4 | Complete   | 2026-06-30 |
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
-| 3.1 Catalog Configurator | 0/TBD | Not started | - |
+| 3.1 Catalog Configurator | 0/6 | Planned | - |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
