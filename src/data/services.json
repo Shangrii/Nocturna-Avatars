@@ -1,0 +1,117 @@
+{
+  "packages": {
+    "tiers": [
+      {
+        "id": "penumbra",
+        "tier": { "es": "Nivel I", "en": "Level I" },
+        "name": "Penumbra",
+        "subtitle": { "es": "Para empezar a destacar", "en": "To start standing out" },
+        "price": "$40",
+        "oneLiner": {
+          "es": "2 outfits, 1 cabello y lo esencial para empezar a destacar.",
+          "en": "2 outfits, 1 hair, and the essentials to start standing out."
+        },
+        "featured": false,
+        "features": [
+          { "text": { "es": "2 outfits", "en": "2 outfits" }, "highlight": true },
+          { "text": { "es": "1 cabello", "en": "1 hair" }, "highlight": true },
+          { "text": { "es": "1 accesorio (Objetos, juguetes, efectos)", "en": "1 accessory (props, toys, effects)" }, "highlight": false },
+          { "text": { "es": "Texturas simples (logo o imagen en ropa/accesorios)", "en": "Simple textures (logo or image on clothing/accessories)" }, "highlight": false },
+          { "text": { "es": "Toggles de outfits incluidos", "en": "Outfit toggles included" }, "highlight": false },
+          { "text": { "es": "Ajustes de fitting básicos (blender)", "en": "Basic fitting adjustments (Blender)" }, "highlight": false },
+          { "text": { "es": "Entrega a partir de 1–2 semanas", "en": "Delivery from 1–2 weeks" }, "highlight": false },
+          { "text": { "es": "1 Ajuste de ropa post-entrega", "en": "1 post-delivery clothing adjustment" }, "highlight": false }
+        ]
+      },
+      {
+        "id": "umbra",
+        "tier": { "es": "Nivel II", "en": "Level II" },
+        "name": "Umbra",
+        "subtitle": { "es": "Más opciones, más personalidad", "en": "More options, more personality" },
+        "price": "$60",
+        "oneLiner": {
+          "es": "3 outfits, rostro personalizado y más personalidad.",
+          "en": "3 outfits, a custom face, and more personality."
+        },
+        "featured": false,
+        "features": [
+          { "text": { "es": "3 outfits", "en": "3 outfits" }, "highlight": true },
+          { "text": { "es": "1 cabello", "en": "1 hair" }, "highlight": true },
+          { "text": { "es": "2 accesorios (Objetos, juguetes, efectos)", "en": "2 accessories (props, toys, effects)" }, "highlight": true },
+          { "text": { "es": "Rostro personalizado (blendshapes)", "en": "Custom face (blendshapes)" }, "highlight": true },
+          { "text": { "es": "Texturas personalizadas (Colores, degradados, logos)", "en": "Custom textures (colors, gradients, logos)" }, "highlight": false },
+          { "text": { "es": "Toggles de outfits incluidos", "en": "Outfit toggles included" }, "highlight": false },
+          { "text": { "es": "Ajustes de fitting intermedios (blender)", "en": "Intermediate fitting adjustments (Blender)" }, "highlight": false },
+          { "text": { "es": "Entrega a partir de 2–3 semanas", "en": "Delivery from 2–3 weeks" }, "highlight": false },
+          { "text": { "es": "2 Ajustes de ropa post-entrega", "en": "2 post-delivery clothing adjustments" }, "highlight": false }
+        ]
+      },
+      {
+        "id": "eclipse",
+        "tier": { "es": "Nivel III", "en": "Level III" },
+        "name": "Eclipse",
+        "subtitle": { "es": "El paquete completo", "en": "The complete package" },
+        "price": "$90",
+        "oneLiner": {
+          "es": "4 outfits, sesión fotográfica y prioridad en cola.",
+          "en": "4 outfits, a photo session, and priority in the queue."
+        },
+        "featured": true,
+        "features": [
+          { "text": { "es": "4 outfits", "en": "4 outfits" }, "highlight": true },
+          { "text": { "es": "1 cabello", "en": "1 hair" }, "highlight": true },
+          { "text": { "es": "3 accesorios (Objetos, juguetes, efectos)", "en": "3 accessories (props, toys, effects)" }, "highlight": true },
+          { "text": { "es": "Rostro personalizado (blendshapes)", "en": "Custom face (blendshapes)" }, "highlight": true },
+          { "text": { "es": "Texturas completamente personalizadas", "en": "Fully custom textures" }, "highlight": false },
+          { "text": { "es": "Toggles de outfits incluidos", "en": "Outfit toggles included" }, "highlight": false },
+          { "text": { "es": "Ajustes de fitting avanzados (blender)", "en": "Advanced fitting adjustments (Blender)" }, "highlight": false },
+          { "text": { "es": "Sesión fotográfica", "en": "Photo session" }, "highlight": true },
+          { "text": { "es": "Prioridad en cola de trabajo", "en": "Priority in the work queue" }, "highlight": true },
+          { "text": { "es": "Entrega a partir de 3 semanas", "en": "Delivery from 3 weeks" }, "highlight": false },
+          { "text": { "es": "3 Ajustes de ropa post-entrega", "en": "3 post-delivery clothing adjustments" }, "highlight": false }
+        ]
+      }
+    ],
+    "addons": [
+      { "name": { "es": "Outfit adicional", "en": "Additional outfit" }, "price": "+$5 USD" },
+      { "name": { "es": "Accesorio extra", "en": "Extra accessory" }, "price": "+$5 USD" },
+      { "name": { "es": "Cabello adicional", "en": "Additional hair" }, "price": "+$5 USD" },
+      { "name": { "es": "Expressions personalizadas", "en": "Custom expressions" }, "price": "+$15 USD" },
+      { "name": { "es": "Sesión fotográfica", "en": "Photo session" }, "price": "+$5 USD" },
+      { "name": { "es": "Revisión extra", "en": "Extra revision" }, "price": "+$5 USD" },
+      { "name": { "es": "Entrega urgente", "en": "Rush delivery" }, "price": "+$15 USD" },
+      { "name": { "es": "NSFW", "en": "NSFW" }, "price": "+$15 USD" }
+    ],
+    "addonsNote": {
+      "es": "¿Tu avatar necesita ajustes de malla (quimeras, mezcla de cabellos, etc), blendshapes nuevos o requiere algún tipo de trabajo en 3D? Contáctanos y cotizamos según el contenido.",
+      "en": "Does your avatar need mesh adjustments (chimeras, hair blending, etc.), new blendshapes, or some kind of 3D work? Reach out and we'll quote based on the content."
+    }
+  },
+  "catalog": [
+    {
+      "id": "unity",
+      "category": { "es": "Unity", "en": "Unity" },
+      "items": []
+    },
+    {
+      "id": "blender",
+      "category": { "es": "Blender / Malla", "en": "Blender / Mesh" },
+      "items": []
+    },
+    {
+      "id": "textures",
+      "category": { "es": "Texturas", "en": "Textures" },
+      "items": []
+    },
+    {
+      "id": "accessories",
+      "category": { "es": "Accesorios", "en": "Accessories" },
+      "items": []
+    },
+    {
+      "id": "extras",
+      "category": { "es": "Extras / NSFW", "en": "Extras / NSFW" },
+      "items": []
+    }
+  ]
+}
