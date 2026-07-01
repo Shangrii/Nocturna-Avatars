@@ -9,6 +9,9 @@
  */
 import PackageCard from '../PackageCard.astro';
 import CatalogSection from '../CatalogSection.astro';
+import CartDrawer from '../CartDrawer.astro';
+import CartPill from '../CartPill.astro';
+import CartSummaryModal from '../CartSummaryModal.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
 import servicesData from '../../data/services.json';
 
@@ -72,3 +75,11 @@ const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
     enableCart={true}
   />
 </section>
+
+<CartDrawer lang={lang} />
+<CartPill lang={lang} />
+<CartSummaryModal lang={lang} />
+
+<script>
+  import '../../scripts/cart.ts';
+</script>
