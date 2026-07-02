@@ -62,7 +62,7 @@ const EAGER_COUNT = 4;
       {entries.map((entry, i) => (
         <button
           type="button"
-          class="gallery-tile reveal"
+          class="gallery-tile"
           data-gallery-tile
           data-index={i}
           data-file={entry.file}
@@ -90,3 +90,8 @@ const EAGER_COUNT = 4;
     </div>
   )}
 </section>
+
+<!-- Masonry wall init + hand-rolled lightbox controller (swap-safe, Plan 02). -->
+<script>
+  import '../../scripts/gallery.ts';
+</script>

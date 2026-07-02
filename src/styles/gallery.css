@@ -41,6 +41,12 @@
   }
 }
 
+/* Once Masonry.js (Plan 02) takes over it absolutely-positions the tiles; the
+   static grid above is only the no-JS / pre-init fallback. */
+.gallery-wall.is-masonry {
+  display: block;
+}
+
 /* Tile — a real, keyboard-focusable <button>. Squared editorial surface with no
    decorative framing so the photo defines its own edge. The aspect-ratio is set
    inline per-entry (style="aspect-ratio:W/H") from the stored width/height so the
@@ -57,6 +63,46 @@
   cursor: zoom-in;
   -webkit-appearance: none;
   appearance: none;
+}
+
+/* Under Masonry each tile is percent-width so columns stay fluid (percentPosition).
+   These widths mirror the 2/3/4-column breakpoints; Masonry's gutter handles gaps. */
+.gallery-wall.is-masonry .gallery-tile {
+  width: calc((100% - var(--gallery-gutter)) / 2);
+}
+@media (min-width: 768px) {
+  .gallery-wall.is-masonry .gallery-tile {
+    width: calc((100% - 2 * var(--gallery-gutter)) / 3);
+  }
+}
+@media (min-width: 1024px) {
+  .gallery-wall.is-masonry .gallery-tile {
+    width: calc((100% - 3 * var(--gallery-gutter)) / 4);
+  }
+}
+
+/* Reveal — driven by gallery.ts (data-revealed) AFTER Masonry positions the tiles,
+   so the fade never fights the absolute layout (UI-SPEC ordering caveat). The gallery
+   owns its own reveal (NOT the global .reveal/GSAP system) precisely for this reason.
+   Tiles start hidden only once JS has taken over (.is-masonry) so no-JS still shows
+   the full wall. */
+.gallery-wall.is-masonry .gallery-tile {
+  opacity: 0;
+  transform: translateY(var(--space-md));
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+.gallery-wall.is-masonry .gallery-tile[data-revealed] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-wall.is-masonry .gallery-tile {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .gallery-tile > img {
