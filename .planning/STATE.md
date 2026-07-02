@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 4 UI-SPEC approved
-last_updated: "2026-07-02T17:55:00.011Z"
-last_activity: 2026-07-02 -- Phase 04 planning complete
+last_updated: "2026-07-02T18:17:25.070Z"
+last_activity: 2026-07-02
 progress:
   total_phases: 8
   completed_phases: 4
   total_plans: 24
-  completed_plans: 20
+  completed_plans: 21
   percent: 50
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** A visitor is visually impressed and reaches "Abrir Ticket" on Discord, while staff keep gallery/catalog current without touching code.
-**Current focus:** Phase 3.1 — Catalog Configurator (6 plans ready; execute next)
+**Current focus:** Phase 04 — gallery-data-layer
 
 ## Current Position
 
-Phase: 03.1 (catalog-configurator) — IN PROGRESS
-Plan: 5 of 6 — Plans 01, 02, 03, 04 complete
+Phase: 04 (gallery-data-layer) — EXECUTING
+Plan: 2 of 3
 Status: Ready to execute
-Last activity: 2026-07-02 -- Phase 04 planning complete
+Last activity: 2026-07-02
 
-Progress: [██████████] 95%
+Progress: [█████████░] 88%
 
 ## Performance Metrics
 
@@ -64,6 +64,7 @@ Progress: [██████████] 95%
 | Phase 03-service-catalog P02 | 10 | 5 tasks | 4 files |
 | Phase 03.1-catalog-configurator P01 | 8min | 2 tasks | 2 files |
 | Phase 03.1 P05 | 10min | 1 tasks | 1 files |
+| Phase 04 P01 | 12min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [03.1-05] transitionend drawer close filtered by e.propertyName === 'transform' to prevent early [hidden] from opacity firing first
 - [Phase ?]: [03.1-05] openCartModal/closeCartModal stubs — full implementation in Plan 03.1-06
 - [Phase ?]: [03.1-05] createElement + textContent for drawer list items — T-03.1-05 XSS guard
+- [Phase ?]: [04-01] gallery.json schema { file, caption?, width, height, date } locked as an empty top-level array [] — the exact Phase 5 bot write-target; images live in public/gallery/<file> served as-is by GitHub Pages (D-01/D-06/D-07)
+- [Phase ?]: [04-01] masonry-layout@4.2.2 + imagesloaded@5.0.0 exact-pinned (+ @types), npm audit clean (T-04-SC); GalleryPage renders data-gallery-wall/data-gallery-tile CLS-free aspect boxes, caption-or-fallback alt, eager-first-row/lazy-rest, EmptyState fallback when empty (D-04/D-09/D-12)
 
 ### Pending Todos
 
@@ -131,6 +134,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-02T12:22:43.257Z
+Last session: 2026-07-02T18:16:33.086Z
 Stopped at: Phase 4 UI-SPEC approved
-Resume file: .planning/phases/04-gallery-data-layer/04-UI-SPEC.md
+Resume file: None

@@ -245,7 +245,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2.1 Visual Redesign — Refined Street Editorial | 4/4 | Complete   | 2026-06-30 |
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
-| 4. Gallery & Data Layer | 0/TBD | Not started | - |
+| 4. Gallery & Data Layer | 1/3 | In Progress|  |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
 | 6. Asset Store | 0/TBD | Not started | - |
 
