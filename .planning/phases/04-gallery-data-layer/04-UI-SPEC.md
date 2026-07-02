@@ -1,7 +1,7 @@
 ---
 phase: 4
 slug: gallery-data-layer
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-07-02
@@ -100,6 +100,8 @@ The gallery inherits the editorial ink/paper rhythm. Red stays a surgical accent
 ## Layout Contract — Masonry Wall (`/galeria` · `/gallery`)
 
 Replaces the `EmptyState` body in `GalleryPage.astro` with the data-driven wall. The `EmptyState` is retained ONLY as the empty-`gallery.json` fallback (D-12).
+
+**Focal point:** the photo wall itself is the sole visual anchor of `/galeria` — the photos ARE the content. Chrome (header, controls, hairlines) stays deliberately quiet so nothing competes with the imagery: tiles carry no text (D-12), surfaces are squared with no decorative framing, and red is held to the surgical accents listed in Color. On the landing, the featured grid is the anchor of its own block; every other element (eyebrow, "View full gallery" link) is subordinate to the images.
 
 | Property | Mobile (375–767) | Tablet (768–1023) | Desktop (1024–1439) | Wide (≥ 1440) |
 |----------|------------------|-------------------|---------------------|---------------|
@@ -253,11 +255,11 @@ No shadcn, no third-party UI registries. Runtime libraries (Masonry.js, imagesLo
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS (n/a — no registry)
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS (checker FLAG resolved — explicit focal-point statement added to the Masonry Wall Layout Contract)
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS (n/a — no registry)
 
-**Approval:** pending
+**Approval:** approved 2026-07-02 (gsd-ui-checker — 5 PASS + 1 FLAG, FLAG fix applied)
