@@ -19,6 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3.1: Catalog Configurator** - Interactive "arma tu paquete" cart: individual services selectable 1-by-1 with prices and running total, "Open Ticket" with cart summary (INSERTED)
 - [ ] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized
 - [ ] **Phase 5: Photo-Publishing Bot Cog** - Discord cog in `nocturna-bot` (✅ approve / 🗑️ remove / Pillow optimize / cross-repo commit)
+- [ ] **Phase 6: Asset Store** - Dedicated store to sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine
 
 ## Phase Details
 
@@ -206,7 +207,7 @@ Plans:
   2. A visitor can open any photo in a lightbox
   3. A photo can display an optional caption / alt text when present in the entry
   4. A visitor sees a featured subset of the gallery on the landing
-  5. The `gallery.json` entry schema (`{ file, caption?, date }`) and image storage path are finalized and documented for the bot to target
+  5. The `gallery.json` entry schema (`{ file, caption?, width, height, date }`) and image storage path are finalized and documented for the bot to target
 
 **Plans**: TBD
 **UI hint**: yes
@@ -233,9 +234,9 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
-(Phases 2, 3, and 4 each depend only on Phase 1 and may be planned in parallel; Phase 5 must follow Phase 4.)
+(Phases 2, 3, and 4 each depend only on Phase 1 and may be planned in parallel; Phase 5 must follow Phase 4. Phase 6 (Asset Store) depends only on Phase 3.1's cart engine + Phase 2.1's design system — independent of Phases 4/5, so it may be sequenced flexibly.)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -246,3 +247,25 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 0/TBD | Not started | - |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
+| 6. Asset Store | 0/TBD | Not started | - |
+
+### Phase 6: Asset Store
+
+**Goal**: A visitor can browse Nocturna's own VRChat assets in a dedicated store section, add them to a REAL shopping cart (a purchase flow, distinct from the /servicios cotización), and complete a purchase via a hosted checkout — with staff able to add/edit products by editing data only, no code changes.
+**Mode:** mvp
+**Depends on**: Phase 3.1 (reuses the cart engine + Cart* components) and Phase 2.1 (design system). Independent of Phase 4 (Gallery) and Phase 5 (Bot) — can be sequenced flexibly.
+**Requirements**: STORE-01, STORE-02, STORE-03, STORE-04, STORE-05 (NEW — add to REQUIREMENTS.md during planning)
+**Success Criteria** (what must be TRUE):
+
+  1. A visitor sees a dedicated store section listing Nocturna's own VRChat assets rendered from a data file (e.g. `store.json`), in ES + EN
+  2. Each product shows price, preview image(s), and description; staff add/edit products by editing data only — no component/code changes — rendering in both ES and EN
+  3. A visitor can add/remove assets to a REAL shopping cart with a running total, reusing the Phase 3.1 cart engine (cart.ts + Cart* components) reframed for purchase — without breaking the /servicios cotización
+  4. A visitor can complete a purchase and receive their asset(s): checkout + payment + digital fulfillment handled by a hosted third-party service (no self-hosted backend), preserving Astro static + GitHub Pages + CNAME
+  5. The store is reachable from the site chrome (nav) and keeps the "Abrir Ticket" Discord path intact; responsive + AA contrast + `prefers-reduced-motion` respected, consistent with the Refined Street Editorial system
+
+**UI hint**: yes
+**Notes**: **Static-site constraint** — no self-hosted payment/fulfillment backend. Payment provider is an in-phase decision: a static-site cart+checkout (e.g. Snipcart / Foxy.io) to keep OUR multi-item cart, OR per-product hosted links (Gumroad / Payhip / Lemon Squeezy / Ko-fi / Stripe Payment Links). Reuses the cart engine built in Phase 3.1 (the /servicios "cotización" is the same engine reframed as non-purchase). Product data, asset-file hosting, and preview-image storage path decided in-phase. STORE-* requirements to be added to REQUIREMENTS.md during discuss/plan.
+
+**Plans**: TBD (run `/gsd-plan-phase 6` to break down)
+Plans:
+- [ ] TBD
