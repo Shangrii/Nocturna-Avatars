@@ -141,3 +141,125 @@
     filter: none;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   Lightbox (D-13/D-14) — reuses .dc-overlay (chrome.css) for the backdrop +
+   fade; this layers the stage, controls, counter and caption on top. All
+   motion is neutralized under prefers-reduced-motion (kill list in chrome.css).
+   ═══════════════════════════════════════════════ */
+
+/* The overlay is a full-viewport flex centering column (overrides .dc-overlay's
+   row centering just enough to seat the stage in the middle with edge controls). */
+.lightbox.dc-overlay {
+  flex-direction: column;
+}
+
+/* Stage — the image + its meta block. Image contains within 92vw / 86vh so the
+   caption + counter sit below without overflow (UI-SPEC Stage contract). */
+.lightbox__stage {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  max-width: 92vw;
+  padding: var(--space-md);
+  transform: translateY(24px) scale(0.97);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.lightbox.dc-overlay.active .lightbox__stage {
+  transform: translateY(0) scale(1);
+}
+.lightbox__img {
+  display: block;
+  max-width: 92vw;
+  max-height: 86vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  background: var(--color-ink-raised); /* letterbox behind the contain box */
+}
+
+/* Meta block — counter above caption, centered. */
+.lightbox__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3xs);
+  text-align: center;
+}
+.lightbox__counter {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-white);
+}
+.lightbox__caption {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-white-dim);
+  max-width: 60ch;
+}
+.lightbox__caption[hidden] {
+  display: none;
+}
+
+/* Controls — real buttons, 44px touch target, off-white → red on hover, red
+   focus-visible outline (mirrors .dc-open-btn:focus-visible). */
+.lightbox__ctrl {
+  position: absolute;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-white);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: color 0.2s ease;
+}
+@media (hover: hover) {
+  .lightbox__ctrl:hover {
+    color: var(--color-red-on-ink);
+  }
+}
+.lightbox__ctrl:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 2px;
+}
+.lightbox__close {
+  top: var(--space-md);
+  right: var(--space-md);
+}
+.lightbox__prev {
+  left: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+}
+.lightbox__next {
+  right: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox__stage,
+  .lightbox__ctrl {
+    transition: none;
+  }
+  .lightbox.dc-overlay.active .lightbox__stage {
+    transform: none;
+  }
+}

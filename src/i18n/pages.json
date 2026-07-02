@@ -50,6 +50,13 @@
       "altFallback": "Nocturna Avatars — edición de avatar VRChat",
       "viewAll": "Ver galería completa"
     },
+    "lightbox": {
+      "close": "Cerrar",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "counterLabel": "Imagen {n} de {total}",
+      "dialogLabel": "Galería — visor de imagen"
+    },
     "emptyState": {
       "heading": "Muy pronto",
       "galleryBody": "Nuestra galería se actualiza sola desde Discord. Mientras tanto, abre un ticket y cuéntanos qué quieres crear.",
@@ -140,6 +147,13 @@
     "gallery": {
       "altFallback": "Nocturna Avatars — VRChat avatar edit",
       "viewAll": "View full gallery"
+    },
+    "lightbox": {
+      "close": "Close",
+      "prev": "Previous",
+      "next": "Next",
+      "counterLabel": "Image {n} of {total}",
+      "dialogLabel": "Gallery — image viewer"
     },
     "emptyState": {
       "heading": "Coming soon",

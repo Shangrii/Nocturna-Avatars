@@ -604,6 +604,9 @@
   .nav-link::after,
   .dc-overlay,
   .dc-modal,
+  .lightbox,
+  .lightbox__stage,
+  .lightbox__ctrl,
   .floating-cta {
     transition: none;
   }
