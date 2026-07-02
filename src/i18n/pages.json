@@ -46,6 +46,10 @@
         "title": "Avatares que hablan por sí solos"
       }
     },
+    "gallery": {
+      "altFallback": "Nocturna Avatars — edición de avatar VRChat",
+      "viewAll": "Ver galería completa"
+    },
     "emptyState": {
       "heading": "Muy pronto",
       "galleryBody": "Nuestra galería se actualiza sola desde Discord. Mientras tanto, abre un ticket y cuéntanos qué quieres crear.",
@@ -132,6 +136,10 @@
         "tag": "Gallery",
         "title": "Avatars that speak for themselves"
       }
+    },
+    "gallery": {
+      "altFallback": "Nocturna Avatars — VRChat avatar edit",
+      "viewAll": "View full gallery"
     },
     "emptyState": {
       "heading": "Coming soon",

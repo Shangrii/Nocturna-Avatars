@@ -1,0 +1,97 @@
+/**
+ * gallery.css — masonry wall + tile styling for /galeria · /gallery (Phase 4).
+ *
+ * Composes the "Refined Street Editorial" token system (theme.css) — it does NOT
+ * introduce a parallel visual language. Squared (0px radius) tiles, tokenized
+ * responsive gutters, a --color-ink-raised aspect-box placeholder so the wall
+ * lays out CLS-free (D-04), a red focus-visible ring mirroring
+ * .dc-open-btn:focus-visible (chrome.css), and a hover-capable scale lift that is
+ * neutralized under prefers-reduced-motion.
+ *
+ * Reveal INITIAL state lives in motion.css (.reveal) — do NOT re-author it here;
+ * tiles just carry the .reveal class. Masonry.js layout init is Plan 02's job —
+ * this ships the static markup + the CSS the wall needs. Without JS the tiles
+ * still render as a valid flowed grid so the build + content are verifiable now.
+ */
+
+/* Wall container. Sits inside .section (--page-gutter horizontal inset already
+   applied by the section wrapper). Static fallback = a fluid grid; Masonry.js
+   (Plan 02) will absolutely-position the tiles for true row balancing. */
+.gallery-wall {
+  --gallery-gutter: var(--space-xs); /* mobile (< 768) */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* mobile: 2 columns */
+  gap: var(--gallery-gutter);
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+@media (min-width: 768px) {
+  .gallery-wall {
+    --gallery-gutter: var(--space-sm); /* tablet */
+    grid-template-columns: repeat(3, 1fr); /* tablet: 3 columns */
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-wall {
+    --gallery-gutter: var(--space-md); /* desktop + wide */
+    grid-template-columns: repeat(4, 1fr); /* desktop: 4 columns */
+  }
+}
+
+/* Tile — a real, keyboard-focusable <button>. Squared editorial surface with no
+   decorative framing so the photo defines its own edge. The aspect-ratio is set
+   inline per-entry (style="aspect-ratio:W/H") from the stored width/height so the
+   box reserves its space before the image paints — no CLS, no reflow (D-04). */
+.gallery-tile {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0; /* editorial: squared surfaces */
+  background: var(--color-ink-raised); /* placeholder until the image decodes */
+  overflow: hidden;
+  cursor: zoom-in;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gallery-tile > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Red focus ring — mirrors .dc-open-btn:focus-visible (chrome.css:504-508). */
+.gallery-tile:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 2px;
+}
+
+/* Subtle hover lift on pointer-capable devices only. Neutralized under
+   prefers-reduced-motion (UI-SPEC Motion section). */
+@media (hover: hover) {
+  .gallery-tile {
+    transition:
+      transform 0.3s ease,
+      filter 0.3s ease;
+  }
+  .gallery-tile:hover {
+    transform: scale(1.02);
+    filter: brightness(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-tile {
+    transition: none;
+  }
+  .gallery-tile:hover {
+    transform: none;
+    filter: none;
+  }
+}

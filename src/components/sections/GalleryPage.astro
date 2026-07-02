@@ -2,17 +2,34 @@
 /**
  * GalleryPage — body of the /galeria (es) · /gallery (en) page.
  *
- * Page chrome header + the branded coming-soon EmptyState (the masonry +
- * lightbox data-driven gallery from gallery.json is Phase 4). No image grid —
- * the empty state keeps the page from looking broken and keeps the Discord CTA
- * reachable (NAV-03). Extracted into a component so the localized [page].astro
- * resolver stays thin.
+ * Data-driven masonry wall read from src/data/gallery.json (Phase 5 bot write
+ * target). Entries render newest-first by `date` (D-05) as a wall of squared,
+ * CLS-free aspect-ratio tiles (D-04) — each a focusable <button> the Plan 02
+ * lightbox opens at its index. When gallery.json is empty the page keeps the
+ * branded EmptyState so it never looks broken and the Discord CTA stays
+ * reachable (D-12).
  *
- * Category filter chips removed (UAT feedback): non-functional affordances
- * are confusing without data. Phase 4 will add real filtering.
+ * Masonry.js layout + the lightbox are wired in Plan 02 (src/scripts/gallery.ts);
+ * this ships the static markup + data hooks + CSS the wall needs. Without JS the
+ * tiles still render as a valid flowed grid so the build and content verify now.
+ *
+ * All caption/alt text is rendered through Astro auto-escaping — raw HTML
+ * injection is never used. Captions originate from Discord (untrusted) but are
+ * only ever an `alt` attribute here, so a malicious caption cannot execute
+ * (T-04-01).
  */
 import EmptyState from '../EmptyState.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
+import galleryData from '../../data/gallery.json';
+import '../../styles/gallery.css';
+
+interface GalleryEntry {
+  file: string;
+  caption?: string;
+  width: number;
+  height: number;
+  date: string;
+}
 
 interface Props {
   lang: Lang;
@@ -20,6 +37,17 @@ interface Props {
 const { lang } = Astro.props;
 const page = useTranslations(lang, 'pages').galeria;
 const empty = useTranslations(lang, 'pages').emptyState;
+const altFallback = useTranslations(lang, 'pages').gallery.altFallback;
+
+// Newest-first by `date` (D-05). Copy before sorting so the imported module
+// array is never mutated.
+const entries = ([...(galleryData as GalleryEntry[])]).sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+);
+
+// Desktop column count (UI-SPEC Layout Contract) — the first row loads eagerly
+// to fill the fold fast; everything after defers via native lazy-loading (D-09).
+const EAGER_COUNT = 4;
 ---
 
 <section class="section section-page-top section--rule">
@@ -28,11 +56,37 @@ const empty = useTranslations(lang, 'pages').emptyState;
     <h2 class="section-title">{page.title}</h2>
     <p class="section-subtitle">{page.subtitle}</p>
   </div>
-  <div class="reveal">
-    <EmptyState
-      heading={empty.heading}
-      body={empty.galleryBody}
-      ticketLabel={empty.ticketCta}
-    />
-  </div>
+
+  {entries.length ? (
+    <div class="gallery-wall" data-gallery-wall>
+      {entries.map((entry, i) => (
+        <button
+          type="button"
+          class="gallery-tile reveal"
+          data-gallery-tile
+          data-index={i}
+          data-file={entry.file}
+          data-caption={entry.caption ?? ''}
+          style={`aspect-ratio:${entry.width}/${entry.height}`}
+        >
+          <img
+            src={`/gallery/${entry.file}`}
+            width={entry.width}
+            height={entry.height}
+            alt={entry.caption ?? altFallback}
+            loading={i < EAGER_COUNT ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </button>
+      ))}
+    </div>
+  ) : (
+    <div class="reveal">
+      <EmptyState
+        heading={empty.heading}
+        body={empty.galleryBody}
+        ticketLabel={empty.ticketCta}
+      />
+    </div>
+  )}
 </section>
