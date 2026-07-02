@@ -41,10 +41,15 @@ function initNav(): void {
   // stays visible under reduce even if the class toggles. The FloatingCTA is a separate
   // fixed element and is never hidden by this.
   if (nav) {
+    // Interior pages (services/gallery/terms) have no hero, so the transparent
+    // top-of-page nav would float over flat sections and read as undefined. On
+    // those pages keep the solid navy-blur bar always; only the hero landing gets
+    // the transparent-at-top treatment (turning solid past 60px).
+    const hasHero = !!document.querySelector('.hero');
     let lastY = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
-      nav.classList.toggle('scrolled', y > 60);
+      nav.classList.toggle('scrolled', y > 60 || !hasHero);
       if (y > lastY + 6 && y > 120) {
         nav.classList.add('nav--hidden'); // scrolling down, past the top zone
       } else if (y < lastY - 6 || y <= 120) {

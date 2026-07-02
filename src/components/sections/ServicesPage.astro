@@ -9,9 +9,6 @@
  */
 import PackageCard from '../PackageCard.astro';
 import CatalogSection from '../CatalogSection.astro';
-import CartDrawer from '../CartDrawer.astro';
-import CartPill from '../CartPill.astro';
-import CartSummaryModal from '../CartSummaryModal.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
 import servicesData from '../../data/services.json';
 
@@ -55,6 +52,7 @@ const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
         advanceNote={page.advanceNote}
         popularBadge={page.popularBadge}
         ctaLabel={page.ctaTicket}
+        quoteTicket={true}
       />
     ))}
   </div>
@@ -74,11 +72,74 @@ const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
     emptyTicketLabel={catalogEmptyTicketLabel}
     enableCart={true}
   />
+
+  <p class="catalog-contact-note reveal">
+    {lang === 'es'
+      ? '¿Necesitas una modificación que no aparece en las opciones? '
+      : 'Need a modification that isn’t listed in the options? '}
+    <button type="button" class="catalog-contact-note__link dc-trigger">
+      {lang === 'es' ? 'Contáctanos' : 'Contact us'}
+    </button>
+  </p>
 </section>
 
-<CartDrawer lang={lang} />
-<CartPill lang={lang} />
-<CartSummaryModal lang={lang} />
+<!--
+  The cart/quote overlays (CartDrawer, CartPill, CartSummaryModal) are rendered by
+  [page].astro into BaseLayout's body-level chrome-bottom slot so they escape the
+  <main> view-transition stacking context. This page only loads the engine + tweaks
+  the FloatingCTA position below.
+
+  The cart circle (#cartPill) occupies the bottom-right corner on this page, so
+  shift the global FloatingCTA left to sit beside it. This <style is:global> ships
+  only on pages that render ServicesPage (the services route), so it does not move
+  the FloatingCTA anywhere else.
+-->
+<style is:global>
+  .floating-cta {
+    right: calc(clamp(16px, 4vw, 32px) + 52px + 12px);
+  }
+
+  /* Interior page (no hero): keep the nav in its solid dark state at all times so it
+     reads dark like the landing, instead of the transparent top-of-page nav showing
+     the page behind it. CSS-level guarantee (independent of the JS scroll handler). */
+  .nav {
+    background: rgba(10, 12, 20, 0.95);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 var(--color-border);
+  }
+</style>
+
+<style>
+  .catalog-contact-note {
+    max-width: 1000px;
+    margin: var(--space-xl) auto 0;
+    padding-inline: var(--page-gutter);
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-white-dim);
+  }
+  .catalog-contact-note__link {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: var(--color-red-on-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .catalog-contact-note__link:hover {
+    color: var(--color-red-glow);
+  }
+  .catalog-contact-note__link:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+</style>
 
 <script>
   import '../../scripts/cart.ts';

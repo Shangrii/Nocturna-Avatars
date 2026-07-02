@@ -1,4 +1,16 @@
 ---
+/**
+ * CartPill — persistent circular "ver cotización" button, fixed bottom-right,
+ * sitting to the right of the "Abrir Ticket" FloatingCTA (which ServicesPage shifts
+ * left to make room). Same red-fill / glow register as the FloatingCTA. Always
+ * visible on the services page; the count badge only appears once items are added.
+ *
+ * This drives a QUOTATION (cotización), not a shopping cart — so the glyph is a
+ * receipt/quote sheet, not a shopping cart. (The real cart is reserved for the
+ * future store section.) IDs/classes remain the cart.ts contract:
+ *   #cartPill            → click opens the quote drawer; syncCartUI updates aria-label
+ *   .cart-pill__badge    → count badge; cart.ts sets textContent + toggles [hidden]
+ */
 interface Props {
   lang: 'es' | 'en';
 }
@@ -6,109 +18,94 @@ const { lang } = Astro.props;
 ---
 
 <button
-  class="cart-pill"
+  class="cart-fab"
   id="cartPill"
   type="button"
-  aria-label={lang === 'es' ? 'Ver selección: 0 servicios' : 'View selection: 0 services'}
-  hidden
+  aria-label={lang === 'es' ? 'Ver mi cotización: 0 servicios' : 'View my quote: 0 services'}
 >
-  <span class="cart-pill__badge" aria-hidden="true">0</span>
-  <span class="cart-pill__label" data-cart-label>
-    <span lang="es" hidden={lang === 'en' || undefined}>servicios → Abrir Ticket</span>
-    <span lang="en" hidden={lang === 'es' || undefined}>services → Open Ticket</span>
-  </span>
+  <svg viewBox="0 0 24 24" fill="none" width="22" height="22" aria-hidden="true">
+    <path
+      d="M6 3h9l3 3v13.5a.5.5 0 01-.76.43L15.5 18.6l-1.9 1.2a.6.6 0 01-.64 0l-1.96-1.2-1.9 1.2a.6.6 0 01-.64 0L6.5 18.6l-1.74 1.06A.5.5 0 014 19.23V4a1 1 0 011-1h1z"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linejoin="round"
+    />
+    <path d="M8 8.5h6M8 11.5h6M8 14.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  </svg>
+  <span class="cart-pill__badge" aria-hidden="true" hidden>0</span>
 </button>
 
 <style>
-  .cart-pill {
+  .cart-fab {
     position: fixed;
     right: clamp(16px, 4vw, 32px);
-    bottom: calc(clamp(16px, 4vw, 32px) + 44px + 12px); /* above FloatingCTA with 12px gap */
-    z-index: 910;
-    display: flex;
+    bottom: clamp(16px, 4vw, 32px);
+    z-index: 905;
+    display: inline-flex;
     align-items: center;
-    gap: var(--space-2xs); /* 8px between badge and label */
-    padding: 0 var(--space-sm); /* 16px h-padding */
-    min-height: 44px;
-    min-width: 44px;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border: none;
+    border-radius: 999px;
     background: var(--color-red);
     color: var(--color-white);
-    border: none;
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 400;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease, opacity 0.3s ease;
-    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(192, 25, 44, 0.3);
+    transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
   }
 
-  .cart-pill:hover {
+  .cart-fab:hover {
     background: var(--color-red-dark);
     transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(192, 25, 44, 0.42);
   }
 
-  .cart-pill:focus-visible {
+  .cart-fab:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 3px;
   }
 
-  /* Hidden state: [hidden] wins per WR-01 pattern */
-  .cart-pill[hidden] {
-    display: none;
-  }
-
+  /* Count badge — navy chip on the red circle, off-white numerals */
   .cart-pill__badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 4px;
-    background: rgba(0, 0, 0, 0.25);
+    min-width: 21px;
+    height: 21px;
+    padding: 0 5px;
+    background: var(--color-ink);
+    color: var(--color-white);
+    border: 2px solid var(--color-paper);
+    border-radius: 999px;
     font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 700;
     line-height: 1;
-    border-radius: 10px;
+    font-variant-numeric: tabular-nums;
   }
 
-  /* Entrance animation */
-  .cart-pill--visible {
-    animation: cart-pill-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .cart-pill__badge[hidden] {
+    display: none;
   }
 
-  @keyframes cart-pill-enter {
-    from {
-      opacity: 0;
-      transform: translateY(12px) scale(0.92);
+  /* Subtle attention pulse when the badge first appears (skipped for reduced motion) */
+  @media (prefers-reduced-motion: no-preference) {
+    .cart-pill__badge:not([hidden]) {
+      animation: cart-badge-pop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  /* Exit animation */
-  .cart-pill--hiding {
-    animation: cart-pill-exit 0.2s ease forwards;
-  }
-
-  @keyframes cart-pill-exit {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-  }
-
-  /* Respect reduced-motion preference */
-  @media (prefers-reduced-motion: reduce) {
-    .cart-pill--visible,
-    .cart-pill--hiding {
-      animation: none;
+    @keyframes cart-badge-pop {
+      from {
+        transform: scale(0.4);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
   }
 </style>

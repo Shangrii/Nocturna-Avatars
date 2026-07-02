@@ -1,14 +1,27 @@
 ---
+/**
+ * CartDrawer — slide-in side panel listing the selected services. Opened by the
+ * cart button (#cartPill) via cart.ts. Compact editorial styling: mono eyebrow
+ * header, hairline item rows, red CTA footer. Empty state is CSS-only (:empty).
+ *
+ * cart.ts contract:
+ *   #cartBackdrop / #cartDrawer          → WR-01 open/close (.active + [hidden])
+ *   .cart-drawer__items (ul)             → item rows injected here
+ *   .cart-drawer__item{,-name,-qty,-price,-remove} → JS-created row classes
+ *   [data-cart-close] / [data-cart-ticket] / [data-cart-total]
+ */
 interface Props {
   lang: 'es' | 'en';
 }
 const { lang } = Astro.props;
 ---
 
-<!-- Backdrop -->
-<div class="cart-backdrop" id="cartBackdrop" aria-hidden="true" hidden></div>
+<!-- Backdrop (data-lenis-prevent: let native scroll win here so Lenis doesn't scroll
+     the page behind the open drawer) -->
+<div class="cart-backdrop" id="cartBackdrop" aria-hidden="true" hidden data-lenis-prevent></div>
 
-<!-- Drawer -->
+<!-- Drawer (data-lenis-prevent so the item list scrolls natively instead of Lenis
+     scrolling the background page under the cursor) -->
 <aside
   class="cart-drawer"
   id="cartDrawer"
@@ -16,12 +29,21 @@ const { lang } = Astro.props;
   aria-modal="true"
   aria-labelledby="cartDrawerTitle"
   hidden
+  data-lenis-prevent
 >
-  <!-- Header -->
   <div class="cart-drawer__header">
-    <span class="cart-drawer__title" id="cartDrawerTitle">
-      {lang === 'es' ? 'Tu selección' : 'Your selection'}
+    <span class="cart-drawer__icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M6 3h9l3 3v13.5a.5.5 0 01-.76.43L15.5 18.6l-1.9 1.2a.6.6 0 01-.64 0l-1.96-1.2-1.9 1.2a.6.6 0 01-.64 0L6.5 18.6l-1.74 1.06A.5.5 0 014 19.23V4a1 1 0 011-1h1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+        <path d="M8 8.5h6M8 11.5h6M8 14.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
     </span>
+    <div class="cart-drawer__heading">
+      <span class="cart-drawer__eyebrow">{lang === 'es' ? 'Cotización' : 'Quote'}</span>
+      <span class="cart-drawer__title" id="cartDrawerTitle">
+        {lang === 'es' ? 'Tu cotización' : 'Your quote'}
+      </span>
+    </div>
     <button
       class="cart-drawer__close"
       type="button"
@@ -29,57 +51,62 @@ const { lang } = Astro.props;
       aria-label={lang === 'es' ? 'Cerrar panel' : 'Close panel'}
     >
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path
-          d="M5 5L15 15M15 5L5 15"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-        />
+        <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
       </svg>
     </button>
   </div>
 
-  <!-- Item list — populated by cart.ts syncCartUI() -->
+  <!-- Item list — populated by cart.ts; empty-state text via CSS :empty -->
   <ul
     class="cart-drawer__items"
-    aria-label={lang === 'es' ? 'Servicios seleccionados' : 'Selected services'}
+    data-empty-label={lang === 'es' ? 'Aún no has agregado servicios a tu cotización.' : 'You haven’t added any services to your quote yet.'}
+    aria-label={lang === 'es' ? 'Servicios cotizados' : 'Quoted services'}
   >
-    <!-- Populated by cart.ts syncCartUI() — do not add static items -->
   </ul>
 
-  <!-- Footer: total + CTA -->
   <div class="cart-drawer__footer">
     <div class="cart-drawer__total">
       <span class="cart-drawer__total-label">
         {lang === 'es' ? 'Total estimado' : 'Estimated total'}
       </span>
-      <span class="cart-drawer__total-value">
-        $<span data-cart-total>0</span> USD
-      </span>
+      <span class="cart-drawer__total-value" data-cart-total>$0 USD</span>
     </div>
     <button class="cart-drawer__cta" type="button" data-cart-ticket>
-      {lang === 'es' ? 'Abrir Ticket' : 'Open Ticket'}
+      {lang === 'es' ? 'Continuar en Discord' : 'Continue on Discord'}
     </button>
+    <p class="cart-drawer__note">
+      {lang === 'es'
+        ? 'Precios estimados, sujetos a cotización final.'
+        : 'Estimated prices, subject to final quote.'}
+    </p>
   </div>
 </aside>
 
-<style>
+<!--
+  is:global is REQUIRED: the drawer's item + category rows are created at runtime by
+  cart.ts (createElement), so they never receive Astro's scoped [data-astro-cid]
+  attribute. Scoped rules would not match them. All selectors are cart-* namespaced,
+  so global scope is collision-safe.
+-->
+<style is:global>
   /* ── Backdrop ── */
   .cart-backdrop {
     position: fixed;
     inset: 0;
-    z-index: 950;
+    /* Above the navbar (z 1000) and lang menu (z 1100) so nothing shows through the
+       dim; still below the Discord/summary modal overlay (dc-overlay z 10000). */
+    z-index: 8000;
     background: rgba(4, 5, 10, 0.82);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
   }
-
   .cart-backdrop.active {
     opacity: 1;
     pointer-events: all;
   }
-
   .cart-backdrop[hidden] {
     display: none;
   }
@@ -90,20 +117,19 @@ const { lang } = Astro.props;
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: 960;
-    width: min(420px, 92vw);
-    background: var(--color-ink-raised); /* #10131e */
+    z-index: 8001;
+    width: min(430px, 92vw);
+    background: var(--color-ink-raised);
     border-left: 1px solid var(--color-border);
+    box-shadow: -24px 0 60px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     transform: translateX(100%);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
-
   .cart-drawer.active {
     transform: translateX(0);
   }
-
   .cart-drawer[hidden] {
     display: none;
   }
@@ -112,39 +138,64 @@ const { lang } = Astro.props;
   .cart-drawer__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: var(--space-sm) var(--space-sm);
-    background: var(--color-ink); /* #0a0c14 */
+    gap: var(--space-sm);
+    padding: var(--space-lg) var(--space-lg) var(--space-md);
     border-bottom: 1px solid var(--color-border);
     flex-shrink: 0;
   }
-
-  .cart-drawer__title {
+  /* Round icon badge — same register as the summary modal / cart button */
+  .cart-drawer__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: var(--color-red-soft);
+    border: 1px solid var(--color-red);
+    color: var(--color-red-on-ink);
+  }
+  .cart-drawer__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+  .cart-drawer__eyebrow {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 0.24em;
     text-transform: uppercase;
-    color: var(--color-white-dim);
+    color: var(--color-red-on-ink);
   }
-
+  .cart-drawer__title {
+    font-family: var(--font-display);
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-white);
+  }
   .cart-drawer__close {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 32px;
-    min-height: 32px;
+    min-width: 34px;
+    min-height: 34px;
     background: transparent;
-    border: none;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
     color: var(--color-white-dim);
     cursor: pointer;
-    transition: color 0.2s ease;
+    flex-shrink: 0;
+    transition: color 0.2s ease, border-color 0.2s ease;
   }
-
   .cart-drawer__close:hover,
   .cart-drawer__close:focus-visible {
     color: var(--color-white);
+    border-color: var(--color-white-dim);
   }
-
   .cart-drawer__close:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 2px;
@@ -160,64 +211,116 @@ const { lang } = Astro.props;
     padding: 0;
   }
 
-  /* Item rows — generated by cart.ts */
-  .cart-drawer__item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2xs);
-    padding: var(--space-sm) var(--space-sm);
-    border-bottom: 1px solid var(--color-border);
-    transition: background 0.2s ease;
-  }
-
-  .cart-drawer__item:hover {
-    background: color-mix(in srgb, var(--color-paper-on-ink) 4%, transparent);
-  }
-
-  .cart-drawer__item-name {
-    font-family: var(--font-body);
-    font-size: 16px;
-    font-weight: 400;
-    color: var(--color-paper-on-ink);
-    flex: 1;
-  }
-
-  .cart-drawer__item-qty {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--color-white-dim);
-    flex-shrink: 0;
-  }
-
-  .cart-drawer__item-price {
-    font-family: var(--font-mono);
-    font-size: 16px;
-    font-weight: 400;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.04em;
-    color: var(--color-paper-on-ink);
-    flex-shrink: 0;
-  }
-
-  .cart-drawer__item-remove {
-    background: transparent;
-    border: none;
-    color: var(--color-white-dim);
-    font-size: 16px;
-    cursor: pointer;
-    min-width: 32px;
-    min-height: 32px;
+  /* Empty state (CSS-only, bilingual label from data attribute) */
+  .cart-drawer__items:empty {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color 0.2s ease;
+  }
+  .cart-drawer__items:empty::after {
+    content: attr(data-empty-label);
+    max-width: 22ch;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-white-dim);
+    padding: var(--space-xl) var(--space-lg);
   }
 
+  /* Category header inside the drawer: [glyph] NAME ————(rule), mirrors the catalog */
+  .cart-drawer__cat {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-md) var(--space-lg) var(--space-2xs);
+  }
+  .cart-drawer__cat:first-child {
+    padding-top: var(--space-sm);
+  }
+  .cart-drawer__cat-glyph {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-red-on-ink);
+    flex-shrink: 0;
+  }
+  .cart-drawer__cat-glyph svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    color: var(--color-red-on-ink);
+  }
+  .cart-drawer__cat-name {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-white-dim);
+    flex-shrink: 0;
+  }
+  /* Decoration rule that fills the remaining width (like the catalog separator) */
+  .cart-drawer__cat::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: color-mix(in srgb, var(--color-paper-on-ink) 16%, transparent);
+  }
+
+  /* Item rows — generated by cart.ts: [name (×qty)] .... [price] [remove] */
+  .cart-drawer__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 7px var(--space-lg);
+    transition: background 0.2s ease;
+  }
+  .cart-drawer__item:hover {
+    background: color-mix(in srgb, var(--color-paper-on-ink) 4%, transparent);
+  }
+  .cart-drawer__item-name {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.35;
+    color: var(--color-paper-on-ink);
+    overflow-wrap: break-word;
+  }
+  .cart-drawer__item-qty {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-red-on-ink);
+  }
+  .cart-drawer__item-price {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-white);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .cart-drawer__item-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    color: var(--color-white-dim);
+    font-size: 19px;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.18s ease, transform 0.18s ease;
+  }
   .cart-drawer__item-remove:hover {
-    color: var(--color-red-on-paper);
+    color: var(--color-red-on-ink);
+    transform: scale(1.15);
   }
-
   .cart-drawer__item-remove:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 2px;
@@ -226,26 +329,25 @@ const { lang } = Astro.props;
   /* ── Footer ── */
   .cart-drawer__footer {
     flex-shrink: 0;
-    padding: var(--space-lg) var(--space-sm);
+    padding: var(--space-lg);
     background: var(--color-ink);
     border-top: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
   }
-
   .cart-drawer__total {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
   }
-
   .cart-drawer__total-label {
     font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--color-white-dim);
   }
-
   .cart-drawer__total-value {
     font-family: var(--font-mono);
     font-size: 20px;
@@ -253,32 +355,38 @@ const { lang } = Astro.props;
     font-variant-numeric: tabular-nums;
     color: var(--color-white);
   }
-
-  /* ── Drawer CTA ── */
   .cart-drawer__cta {
     display: block;
     width: 100%;
-    min-height: 44px;
+    min-height: 46px;
     padding: var(--space-sm);
     background: var(--color-red);
     color: var(--color-white);
     border: none;
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0.08em;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 20px rgba(192, 25, 44, 0.3);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.25s ease;
   }
-
   .cart-drawer__cta:hover {
     background: var(--color-red-dark);
     transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(192, 25, 44, 0.42);
   }
-
   .cart-drawer__cta:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 3px;
+  }
+  .cart-drawer__note {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--color-white-dim);
   }
 </style>

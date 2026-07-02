@@ -83,8 +83,18 @@
   }
 }
 @media (hover: hover) {
-  .hero-cta--outline:hover,
-  .btn-primary:hover {
+  /* Applied to every text action button site-wide for a consistent hover accent.
+     (Icon-only circles and the FloatingCTA keep their own scale/pulse identities.) */
+  .hero-cta:hover,
+  .btn-primary:hover,
+  .btn-outline:hover,
+  .nav-cta:hover,
+  .card-cta:hover,
+  .dc-open-btn:hover,
+  .cart-drawer__cta:hover,
+  .cart-modal__copy:hover,
+  .cart-modal__join:hover,
+  .lang-trigger:hover {
     animation: nocturna-glitch-flicker 0.4s steps(2, end) 1;
   }
 }
@@ -160,8 +170,14 @@
   }
   .hero-cta:hover,
   .btn-primary:hover,
+  .btn-outline:hover,
   .nav-cta:hover,
   .card-cta:hover,
+  .dc-open-btn:hover,
+  .cart-drawer__cta:hover,
+  .cart-modal__copy:hover,
+  .cart-modal__join:hover,
+  .lang-trigger:hover,
   .card:hover {
     transform: none;
     animation: none;

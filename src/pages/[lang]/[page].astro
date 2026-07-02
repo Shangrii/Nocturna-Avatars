@@ -17,6 +17,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ServicesPage from '../../components/sections/ServicesPage.astro';
 import GalleryPage from '../../components/sections/GalleryPage.astro';
 import TermsPage from '../../components/sections/TermsPage.astro';
+import CartDrawer from '../../components/CartDrawer.astro';
+import CartPill from '../../components/CartPill.astro';
+import CartSummaryModal from '../../components/CartSummaryModal.astro';
 import { toLang, useTranslations } from '../../i18n/ui';
 import { staticPathsForConcept, conceptForSlug } from '../../i18n/routes';
 import '../../styles/sections.css';
@@ -51,4 +54,15 @@ if (concept === 'gallery') {
   {concept === 'gallery' && <GalleryPage lang={lang} />}
   {concept === 'terms' && <TermsPage lang={lang} />}
   {concept === 'services' && <ServicesPage lang={lang} />}
+
+  {/* Cart/quote overlays live in the body-level chrome-bottom slot (OUTSIDE <main>)
+      so the drawer + backdrop escape main's view-transition stacking context and
+      layer above the fixed nav + FloatingCTA — same placement as DiscordModal. */}
+  {concept === 'services' && (
+    <Fragment slot="chrome-bottom">
+      <CartDrawer lang={lang} />
+      <CartPill lang={lang} />
+      <CartSummaryModal lang={lang} />
+    </Fragment>
+  )}
 </BaseLayout>

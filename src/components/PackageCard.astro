@@ -31,9 +31,12 @@ interface Props {
   popularBadge: string;
   ctaLabel: string;
   condensed?: boolean;
+  /** When true, the CTA opens the shared quote popup (join Discord + copy quote &
+   *  open ticket) instead of the generic Discord modal. Used on the services page. */
+  quoteTicket?: boolean;
 }
 
-const { tier, usd, advanceNote, popularBadge, ctaLabel, condensed = false } =
+const { tier, usd, advanceNote, popularBadge, ctaLabel, condensed = false, quoteTicket = false } =
   Astro.props;
 ---
 
@@ -62,5 +65,15 @@ const { tier, usd, advanceNote, popularBadge, ctaLabel, condensed = false } =
     </>
   )}
 
-  <button type="button" class="card-cta dc-trigger">{ctaLabel}</button>
+  {quoteTicket ? (
+    <button
+      type="button"
+      class="card-cta"
+      data-package-ticket
+      data-package-name={tier.name}
+      data-package-price={tier.price}
+    >{ctaLabel}</button>
+  ) : (
+    <button type="button" class="card-cta dc-trigger">{ctaLabel}</button>
+  )}
 </div>

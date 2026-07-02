@@ -53,8 +53,8 @@
         "subtitle": { "es": "El paquete completo", "en": "The complete package" },
         "price": "$90",
         "oneLiner": {
-          "es": "4 outfits, sesión fotográfica y prioridad en cola.",
-          "en": "4 outfits, a photo session, and priority in the queue."
+          "es": "4 outfits, rostro personalizado y texturas completamente personalizadas.",
+          "en": "4 outfits, a custom face, and fully custom textures."
         },
         "featured": true,
         "features": [
@@ -65,22 +65,10 @@
           { "text": { "es": "Texturas completamente personalizadas", "en": "Fully custom textures" }, "highlight": false },
           { "text": { "es": "Toggles de outfits incluidos", "en": "Outfit toggles included" }, "highlight": false },
           { "text": { "es": "Ajustes de fitting avanzados (blender)", "en": "Advanced fitting adjustments (Blender)" }, "highlight": false },
-          { "text": { "es": "Sesión fotográfica", "en": "Photo session" }, "highlight": true },
-          { "text": { "es": "Prioridad en cola de trabajo", "en": "Priority in the work queue" }, "highlight": true },
           { "text": { "es": "Entrega a partir de 3 semanas", "en": "Delivery from 3 weeks" }, "highlight": false },
           { "text": { "es": "3 Ajustes de ropa post-entrega", "en": "3 post-delivery clothing adjustments" }, "highlight": false }
         ]
       }
-    ],
-    "addons": [
-      { "name": { "es": "Outfit adicional", "en": "Additional outfit" }, "price": "+$5 USD" },
-      { "name": { "es": "Accesorio extra", "en": "Extra accessory" }, "price": "+$5 USD" },
-      { "name": { "es": "Cabello adicional", "en": "Additional hair" }, "price": "+$5 USD" },
-      { "name": { "es": "Expresiones personalizadas", "en": "Custom expressions" }, "price": "+$15 USD" },
-      { "name": { "es": "Sesión fotográfica", "en": "Photo session" }, "price": "+$5 USD" },
-      { "name": { "es": "Revisión extra", "en": "Extra revision" }, "price": "+$5 USD" },
-      { "name": { "es": "Entrega urgente", "en": "Rush delivery" }, "price": "+$15 USD" },
-      { "name": { "es": "NSFW", "en": "NSFW" }, "price": "+$15 USD" }
     ],
     "addonsNote": {
       "es": "¿Tu avatar necesita ajustes de malla (quimeras, mezcla de cabellos, etc), blendshapes nuevos o requiere algún tipo de trabajo en 3D? Contáctanos y cotizamos según el contenido.",
@@ -90,52 +78,173 @@
   "catalog": [
     {
       "id": "unity",
-      "category": { "es": "Unity & Configuración", "en": "Unity & Configuration" },
+      "category": { "es": "Unity", "en": "Unity" },
       "items": [
-        { "id": "physbones", "name": { "es": "PhysBones", "en": "PhysBones" }, "price": "99" },
-        { "id": "face-tracking", "name": { "es": "Face Tracking", "en": "Face Tracking" }, "price": "99" },
-        { "id": "expresiones-personalizadas", "name": { "es": "Expresiones personalizadas", "en": "Custom expressions" }, "price": "99" },
-        { "id": "parametros-menus", "name": { "es": "Optimización de parámetros y menús", "en": "Parameter & menu optimization" }, "price": "99" },
-        { "id": "animacion-afk", "name": { "es": "Animación AFK personalizada", "en": "Custom AFK animation" }, "price": "99" },
-        { "id": "rostro-blendshapes", "name": { "es": "Rostro personalizado (Face Blendshapes)", "en": "Custom face (Face Blendshapes)" }, "price": "99" }
+        {
+          "id": "outfit",
+          "name": { "es": "Outfit", "en": "Outfit" },
+          "tooltip": { "es": "Añadir un conjunto de ropa.", "en": "Add a clothing outfit." },
+          "price": "5",
+          "repeatable": true
+        },
+        {
+          "id": "hair",
+          "name": { "es": "Cabello", "en": "Hair" },
+          "tooltip": { "es": "Añadir un estilo de cabello.", "en": "Add a hairstyle." },
+          "price": "5",
+          "repeatable": true
+        },
+        {
+          "id": "accessories",
+          "name": { "es": "Accesorios (props, toys y VFX)", "en": "Accessories (props, toys & VFX)" },
+          "tooltip": { "es": "Añadir accesorios o efectos visuales.", "en": "Add accessories or visual effects." },
+          "price": "5",
+          "repeatable": true
+        },
+        {
+          "id": "lighting-shader-fix",
+          "name": { "es": "Corrección de iluminación y shaders", "en": "Lighting & shader correction" },
+          "tooltip": { "es": "Corrección de errores de iluminación y shaders.", "en": "Fixing lighting and shader errors." },
+          "price": "10",
+          "repeatable": false
+        }
       ]
     },
     {
       "id": "blender",
-      "category": { "es": "Blender & Malla", "en": "Blender & Mesh" },
+      "category": { "es": "Blender y Malla", "en": "Blender & Mesh" },
       "items": [
-        { "id": "fitting-rigging", "name": { "es": "Ajuste de Fitting & Rigging de ropa", "en": "Clothing fitting & rigging adjustment" }, "price": "99" },
-        { "id": "blendshapes-ropa", "name": { "es": "Adaptación de blendshapes en ropa externa", "en": "External clothing blendshape adaptation" }, "price": "99" },
-        { "id": "fusion-modelos", "name": { "es": "Fusión de modelos (quimeras)", "en": "Model fusion (chimeras)" }, "price": "99" },
-        { "id": "blendshapes-personalizadas", "name": { "es": "Creación de blendshapes personalizadas", "en": "Custom blendshapes creation" }, "price": "99" },
-        { "id": "cabello-estilismo", "name": { "es": "Aplicación y estilismo de cabello", "en": "Hair application and styling" }, "price": "99" },
-        { "id": "outfit-adicional", "name": { "es": "Outfit adicional", "en": "Additional outfit" }, "price": "99", "repeatable": true },
-        { "id": "cabello-adicional", "name": { "es": "Cabello adicional", "en": "Additional hair" }, "price": "99", "repeatable": true }
+        {
+          "id": "clothing-fitting",
+          "name": { "es": "Ajuste y rigging de ropa", "en": "Clothing fitting & rigging adjustment" },
+          "tooltip": { "es": "Ajuste a la medida y rigging de prendas.", "en": "Tailored fitting and rigging of garments." },
+          "price": "10-35",
+          "repeatable": true
+        },
+        {
+          "id": "custom-blendshape",
+          "name": { "es": "Creación de blendshapes", "en": "Custom blendshape creation" },
+          "tooltip": { "es": "Creación de blendshapes completamente nuevos.", "en": "Creation of entirely new blendshapes." },
+          "price": "10",
+          "repeatable": true
+        },
+        {
+          "id": "physbones",
+          "name": { "es": "PhysBones", "en": "PhysBones" },
+          "tooltip": { "es": "Adición de físicas a componentes o accesorios.", "en": "Adding physics to components or accessories." },
+          "price": "15",
+          "repeatable": true
+        },
+        {
+          "id": "chimera",
+          "name": { "es": "Chimera", "en": "Chimera" },
+          "tooltip": { "es": "Fusión de modelos diferentes (intercambio de cabeza o cuerpo con otro modelo).", "en": "Merging different models (swapping head or body with another model)." },
+          "price": "20",
+          "repeatable": false
+        }
       ]
     },
     {
       "id": "textures",
-      "category": { "es": "Texturas & Visual", "en": "Textures & Visual" },
+      "category": { "es": "Texturas y Visual", "en": "Textures & Visual" },
       "items": [
-        { "id": "texturizado-personalizado", "name": { "es": "Texturizado personalizado", "en": "Custom texturing" }, "price": "99" },
-        { "id": "tatuajes", "name": { "es": "Tatuajes personalizados", "en": "Custom tattoos" }, "price": "99" },
-        { "id": "maquillaje", "name": { "es": "Maquillaje personalizado", "en": "Custom makeup" }, "price": "99" },
-        { "id": "diseno-ojos", "name": { "es": "Diseño de ojos personalizados", "en": "Custom eye design" }, "price": "99" },
-        { "id": "iluminacion-shaders", "name": { "es": "Corrección de iluminación y shaders", "en": "Lighting and shader correction" }, "price": "99" }
+        {
+          "id": "custom-tattoos",
+          "name": { "es": "Tatuajes personalizados", "en": "Custom tattoos" },
+          "tooltip": { "es": "Diseño e integración de tatuajes personalizados.", "en": "Design and integration of custom tattoos." },
+          "price": "20",
+          "repeatable": true
+        },
+        {
+          "id": "edit-texturing",
+          "name": { "es": "Edición de texturas por outfit", "en": "Edit texturing per outfit" },
+          "tooltip": { "es": "Edición de texturas existentes por outfit (cambio de color, logos, etc.).", "en": "Editing existing textures per outfit (color changes, logos, etc.)." },
+          "price": "5-15",
+          "repeatable": true
+        },
+        {
+          "id": "custom-outfit-texture",
+          "name": { "es": "Textura de outfit personalizada", "en": "Custom outfit texture" },
+          "tooltip": { "es": "Creación de texturas completamente nuevas por outfit.", "en": "Creation of entirely new textures per outfit." },
+          "price": "20-35",
+          "repeatable": true
+        },
+        {
+          "id": "custom-makeup",
+          "name": { "es": "Maquillaje personalizado", "en": "Custom makeup" },
+          "tooltip": { "es": "Diseño de maquillaje personalizado para el rostro.", "en": "Custom makeup design for the face." },
+          "price": "20",
+          "repeatable": false
+        },
+        {
+          "id": "custom-eye-design",
+          "name": { "es": "Diseño de ojos personalizado", "en": "Custom eye design" },
+          "tooltip": { "es": "Diseño de textura personalizada para los ojos.", "en": "Custom texture design for the eyes." },
+          "price": "20",
+          "repeatable": false
+        },
+        {
+          "id": "masks",
+          "name": { "es": "Máscaras", "en": "Masks" },
+          "tooltip": { "es": "Creación de máscaras para las texturas.", "en": "Creation of masks for the textures." },
+          "price": "5",
+          "repeatable": false
+        }
       ]
     },
     {
       "id": "extras",
       "category": { "es": "Extras", "en": "Extras" },
       "items": [
-        { "id": "integracion-accesorios", "name": { "es": "Integración de accesorios (props, toys & VFX)", "en": "Accessory integration (props, toys & VFX)" }, "price": "99" },
-        { "id": "configuracion-nsfw", "name": { "es": "Configuración NSFW", "en": "NSFW configuration" }, "price": "99" },
-        { "id": "fotografia-render", "name": { "es": "Fotografía y render de presentación", "en": "Presentation photography and render" }, "price": "99" },
-        { "id": "accesorio-extra", "name": { "es": "Accesorio extra", "en": "Extra accessory" }, "price": "99", "repeatable": true },
-        { "id": "revision-extra", "name": { "es": "Revisión extra", "en": "Extra revision" }, "price": "99", "repeatable": true },
-        { "id": "entrega-urgente", "name": { "es": "Entrega urgente", "en": "Rush delivery" }, "price": "99" },
-        { "id": "sesion-fotografica", "name": { "es": "Sesión fotográfica", "en": "Photo session" }, "price": "99" },
-        { "id": "nsfw", "name": { "es": "NSFW", "en": "NSFW" }, "price": "99" }
+        {
+          "id": "extra-revision",
+          "name": { "es": "Revisión extra post-entrega", "en": "Extra post-delivery revision" },
+          "tooltip": { "es": "Revisión y modificación adicional post-entrega.", "en": "Additional post-delivery revision and modification." },
+          "price": "5",
+          "repeatable": true
+        },
+        {
+          "id": "nsfw",
+          "name": { "es": "NSFW (+18)", "en": "NSFW" },
+          "tooltip": { "es": "Integración y configuración de contenido +18.", "en": "Integration and setup of +18 content." },
+          "price": "20",
+          "repeatable": false
+        },
+        {
+          "id": "face-tracking",
+          "name": { "es": "Face Tracking (existente)", "en": "Face Tracking (existing)" },
+          "tooltip": { "es": "Configuración de seguimiento facial utilizando las opciones base del modelo.", "en": "Setup of face tracking using the model's base options." },
+          "price": "10",
+          "repeatable": false
+        },
+        {
+          "id": "custom-face",
+          "name": { "es": "Rostro personalizado (blendshapes existentes)", "en": "Custom face (existing blendshapes)" },
+          "tooltip": { "es": "Personalización de facciones del rostro utilizando los blendshapes base del modelo.", "en": "Customizing facial features using the model's base blendshapes." },
+          "price": "10",
+          "repeatable": false
+        },
+        {
+          "id": "custom-expressions",
+          "name": { "es": "Expresiones personalizadas (5)", "en": "Custom expressions (5)" },
+          "tooltip": { "es": "Creación y configuración de 5 gestos personalizados.", "en": "Creation and setup of 5 custom expressions." },
+          "price": "15",
+          "repeatable": false
+        },
+        {
+          "id": "custom-afk",
+          "name": { "es": "Animación AFK personalizada", "en": "Custom AFK animation" },
+          "tooltip": { "es": "Configuración de animación de inactividad (AFK).", "en": "Setup of an idle (AFK) animation." },
+          "price": "5",
+          "repeatable": false
+        },
+        {
+          "id": "param-menu-optimization",
+          "name": { "es": "Optimización de parámetros y menú (FIX)", "en": "Parameter & menu optimization (FIX)" },
+          "tooltip": { "es": "Corrección y optimización de los menús y parámetros del avatar.", "en": "Fixing and optimizing the avatar's menus and parameters." },
+          "price": "5-30",
+          "repeatable": false
+        }
       ]
     }
   ]

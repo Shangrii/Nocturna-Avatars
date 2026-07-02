@@ -1,28 +1,34 @@
 ---
 /**
- * CartSummaryModal — cart summary overlay opened by cart.ts when the user
- * clicks "Abrir Ticket / Open Ticket" inside the CartDrawer.
+ * CartSummaryModal — Discord popup shown when the user finishes their quotation
+ * (opened by cart.ts from the drawer's "Continuar en Discord" CTA).
  *
- * Reuses dc-overlay / dc-modal / dc-body / dc-title / dc-dismiss from chrome.css
- * for the entrance animation and base modal sizing.
+ * Two-step conversion path:
+ *   1. "Unirse a Discord"  → join the server (must be a member before opening a ticket).
+ *   2. "Copiar cotización y abrir ticket" → copies the quote template to the clipboard
+ *      and opens Discord so the user pastes it into their ticket.
  *
- * CRITICAL: The Discord link uses ONLY class="cart-modal__discord" — do not add
- * the chrome.css open-button class; it inherits white-background styles that conflict
- * with the red fill required by the UI-SPEC.
+ * INTERIM: step 2 is clipboard + open-Discord today. When the nocturna-bot ticket
+ * flow lands (later phase), the same [data-cart-copy] button is what gets rewired so
+ * the bot auto-creates the ticket with the quote already inside.
  *
- * cart.ts populates .cart-modal__list and .cart-modal__total at runtime via
- * textContent (never innerHTML) to prevent XSS (T-03.1-03).
+ * Reuses dc-overlay / dc-modal / dc-body / dc-dismiss from chrome.css for the entrance
+ * animation and base sizing. cart.ts populates .cart-modal__list and .cart-modal__total
+ * at runtime via textContent only (never innerHTML) — T-03.1-03. The primary button's
+ * label lives in [data-copy-label] so cart.ts can swap the text without wiping its icon.
  *
- * data-* attributes for cart.ts targeting:
- *   data-cart-modal-overlay  → overlay div (querySelector hook)
- *   data-cart-copy           → copy button
+ * data-* hooks for cart.ts:
+ *   data-cart-modal-overlay  → overlay (querySelector hook)
+ *   data-cart-copy           → copy-&-open-ticket button (also carries data-ticket-url)
+ *   data-copy-label          → span cart.ts updates with the copy/copied label
  *   data-cart-modal-dismiss  → close button
  */
 interface Props {
   lang: 'es' | 'en';
 }
-
 const { lang } = Astro.props;
+
+const DISCORD_URL = 'https://discord.gg/DSMmwU35cs';
 ---
 
 <div
@@ -34,50 +40,66 @@ const { lang } = Astro.props;
   role="dialog"
   aria-modal="true"
   aria-labelledby="cartModalTitle"
+  data-lenis-prevent
 >
   <div class="dc-modal cart-modal">
     <div class="dc-body cart-modal__body">
 
-      <h3 class="dc-title cart-modal__title" id="cartModalTitle">
-        {lang === 'es' ? 'Tu selección de servicios' : 'Your service selection'}
-      </h3>
-
-      <!-- Item list: populated by cart.ts openCartModal() via textContent only -->
-      <div
-        class="cart-modal__list"
-        aria-label={lang === 'es' ? 'Selección' : 'Selection'}
-      >
+      <div class="cart-modal__head">
+        <span class="cart-modal__icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M6 3h9l3 3v13.5a.5.5 0 01-.76.43L15.5 18.6l-1.9 1.2a.6.6 0 01-.64 0l-1.96-1.2-1.9 1.2a.6.6 0 01-.64 0L6.5 18.6l-1.74 1.06A.5.5 0 014 19.23V4a1 1 0 011-1h1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+            <path d="M8 8.5h6M8 11.5h6M8 14.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </span>
+        <div class="cart-modal__headings">
+          <span class="cart-modal__eyebrow">{lang === 'es' ? 'Cotización' : 'Quote'}</span>
+          <h3 class="dc-title cart-modal__title" id="cartModalTitle">
+            {lang === 'es' ? 'Tu cotización' : 'Your quote'}
+          </h3>
+        </div>
       </div>
 
-      <!-- Total line: populated by cart.ts -->
-      <div class="cart-modal__total">
-      </div>
+      <!-- Item list + total: populated by cart.ts via textContent -->
+      <div class="cart-modal__list" aria-label={lang === 'es' ? 'Cotización' : 'Quote'}></div>
+      <div class="cart-modal__total"></div>
 
-      <!-- Disclaimer -->
       <p class="cart-modal__disclaimer">
         {lang === 'es'
-          ? '(Precios sujetos a cotización final)'
-          : '(Prices subject to final quote)'}
+          ? 'Precios estimados, sujetos a cotización final.'
+          : 'Estimated prices, subject to final quote.'}
       </p>
 
-      <!-- Action buttons -->
+      <!-- Two-step reminder: you must be in the server before opening a ticket -->
+      <ol class="cart-modal__steps">
+        <li>{lang === 'es' ? 'Únete a nuestro servidor de Discord.' : 'Join our Discord server.'}</li>
+        <li>
+          {lang === 'es'
+            ? 'Abre tu ticket y pega la cotización copiada.'
+            : 'Open your ticket and paste the copied quote.'}
+        </li>
+      </ol>
+
       <div class="cart-modal__actions">
-        <button class="cart-modal__copy" type="button" data-cart-copy>
-          {lang === 'es' ? 'Copiar selección' : 'Copy selection'}
-        </button>
-        <!-- Discord CTA: class="cart-modal__discord" ONLY — no chrome.css open-button class -->
-        <a
-          class="cart-modal__discord"
-          href="https://discord.gg/DSMmwU35cs"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {lang === 'es' ? 'Ir a Discord' : 'Go to Discord'}
+        <a class="cart-modal__join" href={DISCORD_URL} target="_blank" rel="noopener noreferrer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.317 4.37a19.8 19.8 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.74 19.74 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.227-1.994a.076.076 0 00-.041-.106 13.11 13.11 0 01-1.872-.892.077.077 0 01-.008-.127c.126-.094.252-.192.372-.291a.074.074 0 01.078-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.009c.12.099.246.198.373.292a.077.077 0 01-.006.127 12.3 12.3 0 01-1.873.891.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.029 19.84 19.84 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 00-.031-.03z" />
+          </svg>
+          <span>{lang === 'es' ? 'Unirse a Discord' : 'Join Discord'}</span>
         </a>
+        <!-- Copies the quote + opens Discord. Label lives in [data-copy-label]. -->
+        <button class="cart-modal__copy" type="button" data-cart-copy data-ticket-url={DISCORD_URL}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="9" y="9" width="11" height="11" rx="1.6" stroke="currentColor" stroke-width="1.7" />
+            <path d="M5 15V5a1 1 0 011-1h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+          </svg>
+          <span data-copy-label>
+            {lang === 'es' ? 'Copiar cotización y abrir ticket' : 'Copy quote & open ticket'}
+          </span>
+        </button>
       </div>
 
-      <!-- Close button — reuses dc-dismiss styles from chrome.css -->
-      <button class="dc-dismiss" type="button" data-cart-modal-dismiss>
+      <button class="dc-dismiss cart-modal__dismiss" type="button" data-cart-modal-dismiss>
         {lang === 'es' ? 'Cerrar' : 'Close'}
       </button>
 
@@ -85,116 +107,226 @@ const { lang } = Astro.props;
   </div>
 </div>
 
-<style>
-  /* Width override — wider than the 380px Discord modal */
+<!--
+  is:global: the item list (<p> rows) inside .cart-modal__list is created at runtime by
+  cart.ts, so scoped rules would not reach it. All selectors are cart-modal-* namespaced.
+-->
+<style is:global>
   .cart-modal {
     width: 480px;
     max-width: 94vw;
   }
-
-  /* Body layout override — flex column instead of dc-body centered */
+  /* Override dc-body's 0 top-padding so the title never kisses the top edge. */
   .cart-modal__body {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
+    gap: var(--space-md);
+    padding: var(--space-xl) var(--space-lg) var(--space-lg);
+    text-align: left;
   }
 
-  /* Title — left aligned, display font */
+  /* Header: circular icon badge + eyebrow/title */
+  .cart-modal__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .cart-modal__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: var(--color-red-soft);
+    border: 1px solid var(--color-red);
+    color: var(--color-red-on-ink);
+  }
+  .cart-modal__headings {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cart-modal__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-red-on-ink);
+  }
   .cart-modal__title {
     font-family: var(--font-display);
     font-size: var(--type-card-title);
     font-weight: 700;
     color: var(--color-white);
     text-align: left;
-    margin-bottom: var(--space-2xs);
+    line-height: 1.1;
+    margin: 0;
   }
 
-  /* Item list area */
+  /* Item list (populated by cart.ts) */
   .cart-modal__list {
     font-family: var(--font-body);
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.75;
     color: var(--color-paper-on-ink);
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
-    padding: var(--space-sm) 0;
-    text-align: left;
+    padding: var(--space-md) 0;
+    max-height: 32vh;
+    overflow-y: auto;
+  }
+  .cart-modal__list p {
+    margin: 0;
+  }
+  .cart-modal__empty {
+    color: var(--color-white-dim);
+    font-style: italic;
   }
 
-  /* Total line */
   .cart-modal__total {
     font-family: var(--font-mono);
-    font-size: 16px;
+    font-size: 17px;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: var(--color-white);
-    text-align: left;
   }
 
-  /* Disclaimer */
   .cart-modal__disclaimer {
+    margin: 0;
     font-family: var(--font-body);
     font-size: 12px;
     color: var(--color-white-dim);
     line-height: 1.5;
-    text-align: left;
   }
 
-  /* Actions row */
+  /* Two-step reminder */
+  .cart-modal__steps {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+  .cart-modal__steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 32px;
+    min-height: 22px;
+    display: flex;
+    align-items: center;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-paper-on-ink);
+  }
+  .cart-modal__steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: var(--color-red-soft);
+    color: var(--color-red-on-ink);
+    border: 1px solid var(--color-red);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* Actions */
   .cart-modal__actions {
     display: flex;
     gap: var(--space-sm);
     flex-wrap: wrap;
+    margin-top: var(--space-3xs);
   }
 
-  /* Copy button */
-  .cart-modal__copy {
-    flex: 1;
-    min-height: 44px;
+  /* Join button — secondary outline pill */
+  .cart-modal__join {
+    flex: 1 1 150px;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
     padding: var(--space-sm) var(--space-md);
     background: transparent;
     border: 1px solid var(--color-border);
-    color: var(--color-white-dim);
-    font-family: var(--font-body);
-    font-size: 14px;
+    border-radius: 999px;
+    color: var(--color-paper-on-ink);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     cursor: pointer;
     transition: border-color 0.2s ease, color 0.2s ease;
   }
-  .cart-modal__copy:hover,
-  .cart-modal__copy:focus-visible {
+  .cart-modal__join:hover {
     border-color: var(--color-paper-on-ink);
-    color: var(--color-paper-on-ink);
-  }
-  .cart-modal__copy:focus-visible {
-    outline: 2px solid var(--color-white);
-    outline-offset: 2px;
-  }
-  /* ¡Copiado! transient state */
-  .cart-modal__copy--copied {
-    border-color: var(--color-red-on-paper);
-    color: var(--color-red-on-paper);
-  }
-
-  /* Discord CTA — red fill (standalone class only, no chrome.css open-button inheritance) */
-  .cart-modal__discord {
-    flex: 1;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-sm) var(--space-md);
-    background: var(--color-red);
     color: var(--color-white);
-    text-decoration: none;
-    font-family: var(--font-body);
-    font-size: 14px;
-    cursor: pointer;
-    transition: background 0.2s ease;
   }
-  .cart-modal__discord:hover {
-    background: var(--color-red-dark);
-  }
-  .cart-modal__discord:focus-visible {
+  .cart-modal__join:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 3px;
+  }
+
+  /* Primary — copy quote & open ticket (red fill pill) */
+  .cart-modal__copy {
+    flex: 2 1 210px;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-red);
+    border: none;
+    border-radius: 999px;
+    color: var(--color-white);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(192, 25, 44, 0.3);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  }
+  .cart-modal__copy svg {
+    flex-shrink: 0;
+  }
+  .cart-modal__copy:hover {
+    background: var(--color-red-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(192, 25, 44, 0.42);
+  }
+  .cart-modal__copy:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+  }
+  .cart-modal__copy--copied {
+    background: var(--color-red-dark);
+  }
+
+  .cart-modal__dismiss {
+    align-self: center;
+  }
+
+  @media (max-width: 420px) {
+    .cart-modal__actions {
+      flex-direction: column;
+    }
   }
 </style>

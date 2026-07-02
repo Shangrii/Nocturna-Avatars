@@ -2,79 +2,134 @@
 /**
  * CatalogSection — modular service catalog rendered from services.json catalog[].
  *
- * Loops each category in the catalog array and renders:
- * - A section-tag + heading (uses global .section-header / .section-tag from sections.css)
- * - If category has items: editorial row list (<ul>/<li>) — name left, price right, 1px hairlines.
- *   Price sentinel "cotizar" (case-insensitive) renders as "Cotizar" in --color-red-on-paper.
- * - If category is empty: EmptyState with bilingual "Próximamente" / "Coming Soon" copy.
+ * This is a QUOTATION builder (cotización), not a shopping cart. Each row shows the
+ * service name, an (i) tooltip revealed on hover/focus, the price (single or range),
+ * and — when enableCart=true — a select control that adds it to the running quote.
  *
- * All content is staff-edited JSON; Astro auto-escapes all rendered strings — T-03-04.
- * reveal class on animated containers picked up by existing GSAP ScrollTrigger (Phase 2 motion).
+ * JS class / attribute contracts (must stay stable for cart.ts):
+ *   .catalog-row                 — on each <li>; btn.closest('.catalog-row')
+ *   data-item-id                 — item slug (on the <li>)
+ *   data-price                   — RAW price string ("5" | "10-35" | "cotizar"); cart.ts parses this
+ *   .catalog-row__name           — name text node; cart.ts reads .textContent
+ *   .cart-add-trigger            — add/remove toggle (icon-only, glyph via CSS)
+ *   .catalog-row__cart-btn{,--added}
+ *   .catalog-row__qty / .qty-btn--dec / .qty-btn--inc / .qty-count
+ *
+ * Content is staff-edited JSON; Astro auto-escapes rendered strings — T-03-04.
+ * set:html is used ONLY for the trusted static category glyphs (no user data).
  */
 import EmptyState from './EmptyState.astro';
 
+interface Bilingual { es: string; en: string; }
 interface CatalogItem {
-  name: { es: string; en: string };
-  price: string;
-  id: string;           // required — unique slug from services.json
-  repeatable?: boolean; // optional — omitted = false (toggle behavior)
+  id: string;
+  name: Bilingual;
+  tooltip?: Bilingual;
+  price: string;        // "5" | "10-35" | "cotizar"
+  repeatable?: boolean;
 }
 interface CatalogCategory {
   id: string;
-  category: { es: string; en: string };
+  category: Bilingual;
   items: CatalogItem[];
 }
 interface Props {
   catalog: CatalogCategory[];
   lang: 'es' | 'en';
-  /** Bilingual copy for EmptyState fallback (per-category). */
   emptyHeading: string;
   emptyBody: string;
   emptyTicketLabel: string;
-  enableCart?: boolean; // when true, renders cart controls in each row
+  enableCart?: boolean;
 }
 
 const { catalog, lang, emptyHeading, emptyBody, emptyTicketLabel, enableCart = false } = Astro.props;
+
+/** Render a raw price string as display text. "10-35" → "$10–$35", "cotizar" → "Cotizar". */
+function formatPrice(raw: string): { text: string; cotizar: boolean } {
+  const s = raw.toLowerCase().trim();
+  if (s === 'cotizar' || s === '') return { text: 'Cotizar', cotizar: true };
+  if (s.includes('-')) {
+    const [a, b] = s.split('-').map((x) => x.trim());
+    return { text: `$${a}–$${b}`, cotizar: false };
+  }
+  return { text: `$${raw}`, cotizar: false };
+}
+
+// Trusted static SVG inner markup per category (viewBox 0 0 24 24, stroke icons).
+const categoryIcons: Record<string, string> = {
+  unity: `<circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M5.5 19c0-3.3 2.9-5.6 6.5-5.6S18.5 15.7 18.5 19" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>`,
+  blender: `<path d="M12 3.2l7.2 4.1v8.2L12 19.6 4.8 15.5V7.3L12 3.2z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/><path d="M4.8 7.3L12 11.4l7.2-4.1M12 11.4v8.2" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.55"/>`,
+  textures: `<rect x="3.5" y="3.5" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="13.5" y="3.5" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="3.5" y="13.5" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="13.5" y="13.5" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>`,
+  extras: `<path d="M12 3l2.2 5.4L20 9.3l-4 3.9 1 5.8-5-3-5 3 1-5.8-4-3.9 5.8-.9L12 3z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/>`,
+};
+
+// Trusted static "i in a circle" info glyph.
+const infoGlyph = `<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="12" cy="8" r="1.05" fill="currentColor"/><path d="M12 11v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>`;
 ---
 
 {catalog.map((category) => (
-  <div class="catalog-category" data-category={category.id}>
-    <div class="section-header reveal">
-      <span class="section-tag">{(category.category as { es: string; en: string })[lang]}</span>
-      <h2 class="section-title">{(category.category as { es: string; en: string })[lang]}</h2>
+  <div class="catalog-cat reveal" data-category={category.id}>
+    <div class="catalog-cat__head">
+      <span class="catalog-cat__glyph" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" set:html={categoryIcons[category.id] ?? categoryIcons.extras} />
+      </span>
+      <h3 class="catalog-cat__name">{(category.category as Bilingual)[lang]}</h3>
+      <span class="catalog-cat__rule" aria-hidden="true"></span>
     </div>
 
     {category.items.length === 0 ? (
-      <div class="reveal">
-        <EmptyState
-          heading={emptyHeading}
-          body={emptyBody}
-          ticketLabel={emptyTicketLabel}
-        />
-      </div>
+      <EmptyState heading={emptyHeading} body={emptyBody} ticketLabel={emptyTicketLabel} />
     ) : (
-      <ul class="catalog-rows reveal" aria-label={(category.category as { es: string; en: string })[lang]}>
+      <ul class="catalog-list" aria-label={(category.category as Bilingual)[lang]}>
         {category.items.map((item) => {
-          const isCotizar = item.price.toLowerCase() === 'cotizar';
+          const itemName = (item.name as Bilingual)[lang];
+          const tip = item.tooltip ? (item.tooltip as Bilingual)[lang] : '';
+          const price = formatPrice(item.price);
           return (
-            <li class={`catalog-row${enableCart ? ' catalog-row--interactive' : ''}`}
-                data-item-id={enableCart ? item.id : undefined}>
-              <span class="catalog-row__name">{(item.name as { es: string; en: string })[lang]}</span>
-              <span class={`catalog-row__price${isCotizar ? ' catalog-row__price--cotizar' : ''}`}>
-                {isCotizar ? 'Cotizar' : (enableCart ? `$${item.price}` : item.price)}
+            <li
+              class={`catalog-row${enableCart ? ' catalog-row--interactive' : ''}`}
+              data-item-id={enableCart ? item.id : undefined}
+              data-price={enableCart ? item.price : undefined}
+            >
+              <span class="catalog-row__label">
+                {tip && (
+                  <span class="svc-tip">
+                    <button
+                      class="svc-tip__btn"
+                      type="button"
+                      aria-label={lang === 'es' ? `Info: ${itemName}` : `Info: ${itemName}`}
+                    >
+                      <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" set:html={infoGlyph} />
+                    </button>
+                    <span class="svc-tip__bubble" role="tooltip">{tip}</span>
+                  </span>
+                )}
+                <span class="catalog-row__name">{itemName}</span>
               </span>
+
+              <span class={`catalog-row__price${price.cotizar ? ' catalog-row__price--cotizar' : ''}`}>
+                {price.text}
+              </span>
+
               {enableCart && (
                 item.repeatable
-                  ? <div class="catalog-row__qty" role="group" aria-label={lang === 'es' ? `Cantidad: ${(item.name as { es: string; en: string })[lang]}` : `Quantity: ${(item.name as { es: string; en: string })[lang]}`}>
-                      <button class="qty-btn qty-btn--dec" type="button" data-item-id={item.id} aria-label={lang === 'es' ? `Reducir cantidad de ${(item.name as { es: string; en: string })[lang]}` : `Decrease quantity of ${(item.name as { es: string; en: string })[lang]}`}>−</button>
+                  ? <div
+                      class="catalog-row__qty"
+                      role="group"
+                      aria-label={lang === 'es' ? `Cantidad: ${itemName}` : `Quantity: ${itemName}`}
+                    >
+                      <button class="qty-btn qty-btn--dec" type="button" data-item-id={item.id}
+                        aria-label={lang === 'es' ? `Reducir ${itemName}` : `Decrease ${itemName}`}>−</button>
                       <span class="qty-count" aria-live="polite">0</span>
-                      <button class="qty-btn qty-btn--inc" type="button" data-item-id={item.id} aria-label={lang === 'es' ? `Aumentar cantidad de ${(item.name as { es: string; en: string })[lang]}` : `Increase quantity of ${(item.name as { es: string; en: string })[lang]}`}>+</button>
+                      <button class="qty-btn qty-btn--inc" type="button" data-item-id={item.id}
+                        aria-label={lang === 'es' ? `Aumentar ${itemName}` : `Increase ${itemName}`}>+</button>
                     </div>
-                  : <button class="catalog-row__cart-btn cart-add-trigger" type="button"
-                            data-item-id={item.id}
-                            aria-label={lang === 'es' ? `Agregar ${(item.name as { es: string; en: string })[lang]}` : `Add ${(item.name as { es: string; en: string })[lang]}`}>
-                      {lang === 'es' ? 'Agregar' : 'Add'}
-                    </button>
+                  : <button
+                      class="catalog-row__cart-btn cart-add-trigger"
+                      type="button"
+                      data-item-id={item.id}
+                      aria-label={lang === 'es' ? `Agregar ${itemName}` : `Add ${itemName}`}
+                    ></button>
               )}
             </li>
           );
@@ -85,156 +140,266 @@ const { catalog, lang, emptyHeading, emptyBody, emptyTicketLabel, enableCart = f
 ))}
 
 <style>
-  /* Category wrapper — space between categories */
-  .catalog-category {
-    margin-bottom: var(--space-lg);
-  }
-  .catalog-category:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Row list container — centred, page-guttered, max-width editorial column */
-  .catalog-rows {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  /* ── Category block ── */
+  .catalog-cat {
     max-width: 1000px;
     margin-inline: auto;
     padding-inline: var(--page-gutter);
+    margin-bottom: var(--space-xl);
+  }
+  .catalog-cat:last-child {
+    margin-bottom: 0;
+  }
+  .catalog-cat__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    margin-bottom: var(--space-xs);
+  }
+  .catalog-cat__glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-red-on-ink);
+    flex-shrink: 0;
+  }
+  .catalog-cat__name {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-ink-on-paper);
+    flex-shrink: 0;
+  }
+  .catalog-cat__rule {
+    flex: 1;
+    height: 1px;
+    background: color-mix(in srgb, var(--color-ink-on-paper) 16%, transparent);
   }
 
-  /* Individual row — flex, touch target, hairline separators */
+  /* ── 2-column row list ── */
+  .catalog-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    /* Columns are capped so name↔price never drift far apart inside a row, and the
+       pair is centred so the two columns stay clearly separated by the gap. */
+    grid-template-columns: repeat(2, minmax(0, 400px));
+    justify-content: center;
+    column-gap: clamp(40px, 6vw, 80px);
+  }
+  @media (max-width: 640px) {
+    .catalog-list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* ── Row ── */
   .catalog-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    min-height: var(--touch-min);
-    padding: var(--space-sm) 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-ink-on-paper) 14%, transparent);
-    transition: background 0.2s ease;
-  }
-  .catalog-row:first-child {
-    border-top: 1px solid color-mix(in srgb, var(--color-ink-on-paper) 14%, transparent);
+    gap: var(--space-sm);
+    min-height: 46px;
+    padding: 9px 2px;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-ink-on-paper) 10%, transparent);
+    transition: background 0.18s ease;
   }
   .catalog-row:hover {
     background: color-mix(in srgb, var(--color-ink-on-paper) 4%, transparent);
   }
 
-  /* Name column — Inter body */
+  /* Tooltip trigger + name group ((i) sits to the LEFT of the name) */
+  .catalog-row__label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex: 1;
+    min-width: 0;
+  }
   .catalog-row__name {
+    flex: 1;
+    min-width: 0;
     font-family: var(--font-body);
     font-size: 16px;
     font-weight: 400;
+    line-height: 1.3;
     color: var(--color-ink-on-paper);
+    /* Long names wrap onto a second line instead of being clipped. */
+    white-space: normal;
+    overflow-wrap: break-word;
   }
 
-  /* Price column — Space Mono, tabular, no-shrink */
   .catalog-row__price {
     font-family: var(--font-mono);
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     font-variant-numeric: tabular-nums;
-    letter-spacing: 0.04em;
-    color: var(--color-ink-on-paper);
+    letter-spacing: 0.02em;
+    color: var(--color-white-dim);
     flex-shrink: 0;
+    white-space: nowrap;
   }
-
-  /* Cotizar sentinel — brand red, signals "contact us for pricing" */
   .catalog-row__price--cotizar {
     color: var(--color-red-on-paper);
   }
 
-  /* Interactive row variant — cart controls present */
-  .catalog-row--interactive {
-    gap: var(--space-sm);
-  }
-  /* Name: flex:1, truncate on mobile */
-  .catalog-row--interactive .catalog-row__name {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  /* Price: no-shrink */
-  .catalog-row--interactive .catalog-row__price {
+  /* ── (i) Tooltip ── */
+  .svc-tip {
+    position: relative;
+    display: inline-flex;
     flex-shrink: 0;
   }
-  /* Hide price on very narrow mobile — still visible in drawer */
-  @media (max-width: 480px) {
-    .catalog-row--interactive .catalog-row__price {
-      display: none;
-    }
-  }
-  /* Agregar / Quitar toggle button */
-  .catalog-row__cart-btn {
-    flex-shrink: 0;
-    min-width: 80px;
-    min-height: 32px;
-    padding: 0 var(--space-xs);
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    border: 1px solid var(--color-border);
+  .svc-tip__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border: none;
     background: transparent;
     color: var(--color-white-dim);
-    cursor: pointer;
-    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    cursor: help;
+    border-radius: 999px;
+    transition: color 0.18s ease;
   }
-  .catalog-row__cart-btn:hover,
-  .catalog-row__cart-btn:focus-visible {
-    border-color: var(--color-paper-on-ink);
+  .svc-tip__btn:hover,
+  .svc-tip__btn:focus-visible {
+    color: var(--color-red-on-ink);
+  }
+  .svc-tip__btn:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+  .svc-tip__bubble {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    /* Left-anchored so it opens rightward from the icon and never clips off-screen. */
+    left: -8px;
+    transform: translateY(4px);
+    width: max-content;
+    max-width: 240px;
+    padding: 8px 10px;
+    background: var(--color-ink);
+    border: 1px solid var(--color-border);
     color: var(--color-paper-on-ink);
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: left;
+    white-space: normal;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 30;
+  }
+  .svc-tip__bubble::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 16px;
+    border: 5px solid transparent;
+    border-top-color: var(--color-ink);
+  }
+  .svc-tip:hover .svc-tip__bubble,
+  .svc-tip:focus-within .svc-tip__bubble {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Borderless add/remove glyph (no circle; glyph via CSS so cart.ts never clobbers it) ── */
+  .catalog-row__cart-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    border-radius: 999px; /* only used to shape the focus ring */
+    background: transparent;
+    color: var(--color-white-dim);
+    font-family: var(--font-mono);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.18s ease, transform 0.18s ease;
+  }
+  .catalog-row__cart-btn::before {
+    content: "+";
+  }
+  .catalog-row__cart-btn:hover {
+    color: var(--color-red-on-ink);
+    transform: scale(1.15);
   }
   .catalog-row__cart-btn:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 2px;
   }
-  /* Added state — item in cart */
   .catalog-row__cart-btn--added {
-    border-color: var(--color-red-on-paper);
-    color: var(--color-red-on-paper);
+    color: var(--color-red-on-ink);
   }
-  .catalog-row__cart-btn--added:hover,
-  .catalog-row__cart-btn--added:focus-visible {
-    background: var(--color-red-soft);
+  .catalog-row__cart-btn--added::before {
+    content: "✓";
+    font-size: 19px;
   }
-  /* Qty control group */
+  .catalog-row__cart-btn--added:hover::before {
+    content: "×";
+    font-size: 22px;
+  }
+
+  /* ── Qty control group (repeatable items) — borderless glyphs, bigger count ── */
   .catalog-row__qty {
     display: flex;
     align-items: center;
-    gap: var(--space-3xs);
+    gap: 2px;
     flex-shrink: 0;
   }
   .qty-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 32px;
-    min-height: 32px;
-    font-family: var(--font-mono);
-    font-size: 14px;
-    border: 1px solid var(--color-border);
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
     background: transparent;
     color: var(--color-white-dim);
+    font-family: var(--font-mono);
+    font-size: 20px;
+    line-height: 1;
     cursor: pointer;
-    transition: border-color 0.2s ease, color 0.2s ease;
+    transition: color 0.18s ease, transform 0.18s ease;
   }
-  .qty-btn:hover, .qty-btn:focus-visible {
-    border-color: var(--color-paper-on-ink);
-    color: var(--color-paper-on-ink);
+  .qty-btn:hover,
+  .qty-btn:focus-visible {
+    color: var(--color-red-on-ink);
+    transform: scale(1.15);
   }
   .qty-btn:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 2px;
   }
   .qty-count {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--color-ink-on-paper);
-    min-width: 20px;
+    min-width: 24px;
     text-align: center;
+    font-family: var(--font-mono);
+    font-size: 17px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink-on-paper);
+  }
+
+  @media (max-width: 380px) {
+    .catalog-row--interactive .catalog-row__price {
+      display: none;
+    }
   }
 </style>

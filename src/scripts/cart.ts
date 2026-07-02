@@ -17,9 +17,11 @@
 // ---------------------------------------------------------------------------
 
 interface CartEntry {
-  name: string;  // item display name (resolved at add time from DOM)
-  price: string; // raw price string: "99" or "cotizar"
+  name: string;         // item display name (resolved at add time from DOM)
+  price: string;        // raw price string: "5" | "10-35" | "cotizar"
   qty: number;
+  categoryId: string;   // catalog category slug (for grouping the drawer list)
+  categoryName: string; // localized category label
 }
 
 // Module-level cart state — intentionally persists across astro:page-load (D-06)
@@ -27,6 +29,11 @@ const cart = new Map<string, CartEntry>();
 
 // Module-level guard — document-level listeners bound only once per page lifetime
 let cartDocListenersBound = false;
+
+// Per-load guard — prevents double-init when both astro:page-load and the
+// readyState fallback fire in the same page load (cart.ts is page-specific so
+// astro:page-load may have already fired before this module executes on first load)
+let initCartRanThisLoad = false;
 
 // Module-level modal/drawer focus trap state (Plan 03.1-06)
 let lastFocusBeforeModal: HTMLElement | null = null;
@@ -37,11 +44,18 @@ let modalTrapHandler: ((e: KeyboardEvent) => void) | null = null;
 // SECTION 2 — Cart state functions (pure, no DOM)
 // ---------------------------------------------------------------------------
 
-function addItem(id: string, name: string, price: string, repeatable: boolean): void {
+function addItem(
+  id: string,
+  name: string,
+  price: string,
+  repeatable: boolean,
+  categoryId = '',
+  categoryName = '',
+): void {
   if (!repeatable) {
     // Non-repeatable: idempotent — already added = no-op
     if (!cart.has(id)) {
-      cart.set(id, { name, price, qty: 1 });
+      cart.set(id, { name, price, qty: 1, categoryId, categoryName });
     }
   } else {
     // Repeatable: increment qty or add with qty=1
@@ -49,7 +63,7 @@ function addItem(id: string, name: string, price: string, repeatable: boolean): 
     if (existing) {
       cart.set(id, { ...existing, qty: existing.qty + 1 });
     } else {
-      cart.set(id, { name, price, qty: 1 });
+      cart.set(id, { name, price, qty: 1, categoryId, categoryName });
     }
   }
 }
@@ -75,15 +89,55 @@ function getCount(): number {
   return total;
 }
 
-function getTotal(): number {
-  let total = 0;
-  cart.forEach((entry) => {
-    const parsed = parseInt(entry.price, 10);
-    if (!isNaN(parsed)) {
-      total += parsed * entry.qty;
+interface PriceParts { min: number; max: number; quote: boolean; }
+
+/** Parse a raw price string ("5" | "10-35" | "cotizar") into numeric min/max. */
+function parsePrice(raw: string): PriceParts {
+  const s = (raw ?? '').toLowerCase().trim();
+  if (s === 'cotizar' || s === '') return { min: 0, max: 0, quote: true };
+  const nums = s.split('-').map((p) => parseInt(p.replace(/[^0-9]/g, ''), 10));
+  if (nums.length >= 2 && !isNaN(nums[0]) && !isNaN(nums[1])) {
+    return { min: nums[0], max: nums[1], quote: false };
+  }
+  const n = parseInt(s.replace(/[^0-9]/g, ''), 10);
+  if (isNaN(n)) return { min: 0, max: 0, quote: true };
+  return { min: n, max: n, quote: false };
+}
+
+/** Format one entry's price with qty applied: "$25", "$20–$70", or "Cotizar". */
+function formatEntryPrice(raw: string, qty: number): string {
+  const p = parsePrice(raw);
+  if (p.quote) return 'Cotizar';
+  if (p.min === p.max) return `$${p.min * qty}`;
+  return `$${p.min * qty}–$${p.max * qty}`;
+}
+
+/** Sum a list of entries (default: the whole cart) into a min/max range + quote flag. */
+function getTotalRange(
+  entries: CartEntry[] = [...cart.values()],
+): { min: number; max: number; hasQuote: boolean } {
+  let min = 0;
+  let max = 0;
+  let hasQuote = false;
+  entries.forEach((entry) => {
+    const p = parsePrice(entry.price);
+    if (p.quote) {
+      hasQuote = true;
+    } else {
+      min += p.min * entry.qty;
+      max += p.max * entry.qty;
     }
   });
-  return total;
+  return { min, max, hasQuote };
+}
+
+/** Format the quote total for display: "$45 USD", "$60–$120 USD", "$45 USD + a cotizar". */
+function formatTotal(lang: string, entries?: CartEntry[]): string {
+  const { min, max, hasQuote } = getTotalRange(entries);
+  let text = min === max ? `$${min}` : `$${min}–$${max}`;
+  text += ' USD';
+  if (hasQuote) text += lang === 'es' ? ' + a cotizar' : ' + to be quoted';
+  return text;
 }
 
 // ---------------------------------------------------------------------------
@@ -113,90 +167,102 @@ function syncCartUI(): void {
     pill.setAttribute(
       'aria-label',
       lang === 'es'
-        ? `Ver selección: ${count} servicios`
-        : `View selection: ${count} services`,
+        ? `Ver mi cotización: ${count} servicios`
+        : `View my quote: ${count} services`,
     );
   }
 
-  // 7. Show/hide pill (prefers-reduced-motion guard on both show and hide paths)
-  if (pill) {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // 7. The cart button is a persistent circle on the services page — it stays
+  //    visible at all times; only the count badge appears once items are added.
+  if (badge) {
     if (count > 0) {
-      pill.removeAttribute('hidden');
-      if (!prefersReduced) {
-        pill.classList.remove('cart-pill--hiding');
-        pill.classList.add('cart-pill--visible');
-      }
+      badge.removeAttribute('hidden');
     } else {
-      pill.classList.remove('cart-pill--visible');
-      if (prefersReduced) {
-        pill.classList.remove('cart-pill--hiding');
-        pill.setAttribute('hidden', '');
-      } else {
-        pill.classList.add('cart-pill--hiding');
-        pill.addEventListener(
-          'animationend',
-          () => {
-            pill.classList.remove('cart-pill--hiding');
-            pill.setAttribute('hidden', '');
-          },
-          { once: true },
-        );
-      }
+      badge.setAttribute('hidden', '');
     }
   }
 
-  // 8. Rebuild drawerList using DOM node creation (textContent safe — T-03.1-05)
+  // 8. Rebuild drawerList grouped by category (textContent safe — T-03.1-05).
+  //    Mirrors the catalog: a category header (icon + name) then its rows.
   if (drawerList) {
-    // Clear existing children safely
     while (drawerList.firstChild) {
       drawerList.removeChild(drawerList.firstChild);
     }
+
+    // Group entries by category, preserving insertion order within each group.
+    const groups = new Map<string, { name: string; items: Array<[string, CartEntry]> }>();
     cart.forEach((entry, id) => {
-      const li = document.createElement('li');
-      li.className = 'cart-drawer__item';
+      const key = entry.categoryId || 'other';
+      if (!groups.has(key)) groups.set(key, { name: entry.categoryName, items: [] });
+      groups.get(key)!.items.push([id, entry]);
+    });
 
-      // Name span
-      const nameSpan = document.createElement('span');
-      nameSpan.className = 'cart-drawer__item-name';
-      nameSpan.textContent = entry.name; // textContent — T-03.1-05 XSS guard
+    // Render known categories in catalog order, then any leftovers.
+    const CATEGORY_ORDER = ['unity', 'blender', 'textures', 'extras'];
+    const orderedKeys = [
+      ...CATEGORY_ORDER.filter((k) => groups.has(k)),
+      ...[...groups.keys()].filter((k) => !CATEGORY_ORDER.includes(k)),
+    ];
 
-      // Qty span (only show if qty > 1)
-      const qtySpan = document.createElement('span');
-      qtySpan.className = 'cart-drawer__item-qty';
-      if (entry.qty > 1) {
-        qtySpan.textContent = `×${entry.qty}`;
+    orderedKeys.forEach((key) => {
+      const group = groups.get(key)!;
+
+      // Category header — clone the exact glyph from the catalog header (no innerHTML).
+      const header = document.createElement('li');
+      header.className = 'cart-drawer__cat';
+      const catGlyph = document.querySelector(
+        `.catalog-cat[data-category="${key}"] .catalog-cat__glyph svg`,
+      );
+      if (catGlyph) {
+        const glyphWrap = document.createElement('span');
+        glyphWrap.className = 'cart-drawer__cat-glyph';
+        glyphWrap.appendChild(catGlyph.cloneNode(true));
+        header.appendChild(glyphWrap);
       }
+      const catName = document.createElement('span');
+      catName.className = 'cart-drawer__cat-name';
+      catName.textContent = group.name;
+      header.appendChild(catName);
+      drawerList.appendChild(header);
 
-      // Price span
-      const priceSpan = document.createElement('span');
-      priceSpan.className = 'cart-drawer__item-price';
-      const parsed = parseInt(entry.price, 10);
-      if (!isNaN(parsed)) {
-        priceSpan.textContent = `$${parsed * entry.qty} USD`;
-      } else {
-        priceSpan.textContent = 'Cotizar';
-      }
+      // Item rows: [name (×qty)] ......... [price] [remove ×]
+      group.items.forEach(([id, entry]) => {
+        const li = document.createElement('li');
+        li.className = 'cart-drawer__item';
 
-      // Remove button
-      const removeBtn = document.createElement('button');
-      removeBtn.className = 'cart-drawer__item-remove';
-      removeBtn.type = 'button';
-      removeBtn.textContent = '×';
-      removeBtn.dataset.removeId = id;
-      removeBtn.setAttribute('aria-label', `Eliminar ${entry.name}`);
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'cart-drawer__item-name';
+        nameSpan.textContent = entry.name; // textContent — T-03.1-05 XSS guard
+        if (entry.qty > 1) {
+          const qtySpan = document.createElement('span');
+          qtySpan.className = 'cart-drawer__item-qty';
+          qtySpan.textContent = ` ×${entry.qty}`;
+          nameSpan.appendChild(qtySpan);
+        }
 
-      li.appendChild(nameSpan);
-      li.appendChild(qtySpan);
-      li.appendChild(priceSpan);
-      li.appendChild(removeBtn);
-      drawerList.appendChild(li);
+        const priceSpan = document.createElement('span');
+        priceSpan.className = 'cart-drawer__item-price';
+        priceSpan.textContent = formatEntryPrice(entry.price, entry.qty);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'cart-drawer__item-remove';
+        removeBtn.type = 'button';
+        removeBtn.textContent = '×';
+        removeBtn.dataset.removeId = id;
+        removeBtn.setAttribute('aria-label', `Eliminar ${entry.name}`);
+
+        li.appendChild(nameSpan);
+        li.appendChild(priceSpan);
+        li.appendChild(removeBtn);
+        drawerList.appendChild(li);
+      });
     });
   }
 
-  // 9. Update total
+  // 9. Update total (range-aware; may include a "+ a cotizar" suffix)
   if (totalSpan) {
-    totalSpan.textContent = String(getTotal());
+    const lang = document.documentElement.lang || 'en';
+    totalSpan.textContent = formatTotal(lang);
   }
 
   // 10. Sync catalog row button states
@@ -207,15 +273,17 @@ function syncCartUI(): void {
     const entry = cart.get(id);
     const lang = document.documentElement.lang || 'en';
 
-    // Sync Agregar/Quitar button
+    // Sync add/remove circle. The +/✓ glyph is CSS-driven (::before), so we only
+    // toggle the --added class and update the aria-label — never textContent.
     const addBtn = li.querySelector<HTMLButtonElement>('.cart-add-trigger');
     if (addBtn) {
+      const itemName = li.querySelector<HTMLElement>('.catalog-row__name')?.textContent?.trim() ?? '';
       if (inCart) {
         addBtn.classList.add('catalog-row__cart-btn--added');
-        addBtn.textContent = lang === 'es' ? 'Quitar' : 'Remove';
+        addBtn.setAttribute('aria-label', lang === 'es' ? `Quitar ${itemName}` : `Remove ${itemName}`);
       } else {
         addBtn.classList.remove('catalog-row__cart-btn--added');
-        addBtn.textContent = lang === 'es' ? 'Agregar' : 'Add';
+        addBtn.setAttribute('aria-label', lang === 'es' ? `Agregar ${itemName}` : `Add ${itemName}`);
       }
     }
 
@@ -236,19 +304,19 @@ function bindCartRowControls(): void {
   document.querySelectorAll<HTMLButtonElement>('.cart-add-trigger').forEach((btn) => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.itemId!;
-      const li = btn.closest<HTMLElement>('[data-item-id]')!;
-      const nameEl = li.querySelector<HTMLElement>('.catalog-row__name')!;
-      const priceEl = li.querySelector<HTMLElement>('.catalog-row__price')!;
-      const name = nameEl.textContent?.trim() ?? '';
-      // Extract raw price: strip '$' prefix and ' USD' suffix, or use 'cotizar'
-      const rawPrice = priceEl.classList.contains('catalog-row__price--cotizar')
-        ? 'cotizar'
-        : (priceEl.textContent?.trim().replace(/^\$/, '').replace(/\s*USD$/, '') ?? '0');
+      // Read from the row: name via textContent, RAW price via data-price
+      // (the button itself also carries data-item-id, so closest targets .catalog-row).
+      const li = btn.closest<HTMLElement>('.catalog-row')!;
+      const name = li.querySelector<HTMLElement>('.catalog-row__name')?.textContent?.trim() ?? '';
+      const rawPrice = li.dataset.price ?? 'cotizar';
+      const catEl = li.closest<HTMLElement>('.catalog-cat');
+      const categoryId = catEl?.dataset.category ?? '';
+      const categoryName = catEl?.querySelector<HTMLElement>('.catalog-cat__name')?.textContent?.trim() ?? '';
 
       if (cart.has(id)) {
         removeItem(id);
       } else {
-        addItem(id, name, rawPrice, false);
+        addItem(id, name, rawPrice, false, categoryId, categoryName);
       }
       syncCartUI();
     });
@@ -272,18 +340,17 @@ function bindCartRowControls(): void {
   document.querySelectorAll<HTMLButtonElement>('.qty-btn--inc').forEach((btn) => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.itemId!;
-      const li = btn.closest<HTMLElement>('[data-item-id]')!;
-      const nameEl = li.querySelector<HTMLElement>('.catalog-row__name')!;
-      const priceEl = li.querySelector<HTMLElement>('.catalog-row__price')!;
-      const name = nameEl.textContent?.trim() ?? '';
-      const rawPrice = priceEl.classList.contains('catalog-row__price--cotizar')
-        ? 'cotizar'
-        : (priceEl.textContent?.trim().replace(/^\$/, '').replace(/\s*USD$/, '') ?? '0');
+      const li = btn.closest<HTMLElement>('.catalog-row')!;
+      const name = li.querySelector<HTMLElement>('.catalog-row__name')?.textContent?.trim() ?? '';
+      const rawPrice = li.dataset.price ?? 'cotizar';
+      const catEl = li.closest<HTMLElement>('.catalog-cat');
+      const categoryId = catEl?.dataset.category ?? '';
+      const categoryName = catEl?.querySelector<HTMLElement>('.catalog-cat__name')?.textContent?.trim() ?? '';
 
       if (cart.has(id)) {
         setQty(id, (cart.get(id)?.qty ?? 0) + 1);
       } else {
-        addItem(id, name, rawPrice, true);
+        addItem(id, name, rawPrice, true, categoryId, categoryName);
       }
       syncCartUI();
     });
@@ -309,7 +376,9 @@ function bindCartRowControls(): void {
 function openDrawer(): void {
   const drawer = document.querySelector<HTMLElement>('#cartDrawer');
   const backdrop = document.querySelector<HTMLElement>('#cartBackdrop');
-  if (!drawer || !backdrop || getCount() === 0) return;
+  // The cart button is always available, so the drawer opens even when empty
+  // (it renders its own empty-state message via CSS).
+  if (!drawer || !backdrop) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -465,27 +534,21 @@ function trapFocus(container: HTMLElement): (e: KeyboardEvent) => void {
  * buildClipboardText — constructs the plain-text cart summary for clipboard copy (D-13).
  * Uses textContent from cart Map entries (set at add time from DOM — T-03.1-08).
  */
-function buildClipboardText(lang: 'es' | 'en'): string {
+function buildClipboardText(lang: 'es' | 'en', entries: CartEntry[] = [...cart.values()]): string {
   const lines: string[] = [];
   lines.push(lang === 'es' ? 'Mi selección de servicios:' : 'My service selection:');
 
-  cart.forEach((entry) => {
-    const parsed = parseInt(entry.price, 10);
-    if (entry.qty === 1) {
-      const priceStr = isNaN(parsed) ? 'Cotizar' : `$${parsed} USD`;
-      lines.push(`• ${entry.name} — ${priceStr}`);
-    } else {
-      const priceStr = isNaN(parsed) ? 'Cotizar' : `$${parsed * entry.qty} USD`;
-      lines.push(`• ${entry.name} x${entry.qty} — ${priceStr}`);
-    }
+  entries.forEach((entry) => {
+    const priceStr = formatEntryPrice(entry.price, entry.qty);
+    const qtyStr = entry.qty > 1 ? ` x${entry.qty}` : '';
+    lines.push(`• ${entry.name}${qtyStr} — ${priceStr}`);
   });
 
   lines.push('');
-  const total = getTotal();
   lines.push(
     lang === 'es'
-      ? `Total estimado: $${total} USD`
-      : `Estimated total: $${total} USD`,
+      ? `Total estimado: ${formatTotal(lang, entries)}`
+      : `Estimated total: ${formatTotal(lang, entries)}`,
   );
   lines.push(
     lang === 'es'
@@ -496,31 +559,42 @@ function buildClipboardText(lang: 'es' | 'en'): string {
   return lines.join('\n');
 }
 
-function openCartModal(): void {
+// `entries` overrides the source list — used by the package CTAs to quote a single
+// package instead of the modular cart. Defaults to the whole cart.
+function openCartModal(entries?: CartEntry[]): void {
   const overlay = document.querySelector<HTMLElement>('[data-cart-modal-overlay]');
   if (!overlay) return;
   const lang = (document.documentElement.lang || 'en') as 'es' | 'en';
+  const quote = entries ?? [...cart.values()];
 
   // Populate modal list — createElement + textContent (T-03.1-08 XSS guard)
   const listEl = overlay.querySelector<HTMLElement>('.cart-modal__list');
   const totalEl = overlay.querySelector<HTMLElement>('.cart-modal__total');
   if (listEl) {
     while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
-    cart.forEach((entry) => {
+    quote.forEach((entry) => {
       const p = document.createElement('p');
-      const parsed = parseInt(entry.price, 10);
-      const lineTotal = isNaN(parsed) ? 'Cotizar' : `$${parsed * entry.qty} USD`;
+      const lineTotal = formatEntryPrice(entry.price, entry.qty);
       const qtyStr = entry.qty > 1 ? ` ×${entry.qty}` : '';
       p.textContent = `• ${entry.name}${qtyStr} — ${lineTotal}`;
       listEl.appendChild(p);
     });
+    // Empty-quote hint (the modal can be reached with nothing selected)
+    if (quote.length === 0) {
+      const p = document.createElement('p');
+      p.className = 'cart-modal__empty';
+      p.textContent =
+        lang === 'es'
+          ? 'Aún no has agregado servicios a tu cotización.'
+          : 'You haven’t added any services to your quote yet.';
+      listEl.appendChild(p);
+    }
   }
   if (totalEl) {
-    const totalNum = getTotal();
     totalEl.textContent =
       lang === 'es'
-        ? `Total estimado: $${totalNum} USD`
-        : `Estimated total: $${totalNum} USD`;
+        ? `Total estimado: ${formatTotal(lang, quote)}`
+        : `Estimated total: ${formatTotal(lang, quote)}`;
   }
 
   // Store focus origin so closeCartModal can return focus (a11y)
@@ -557,21 +631,29 @@ function openCartModal(): void {
     { once: true },
   );
 
-  // Wire copy button (once — re-wired each open)
+  // Wire the "copy quote & open ticket" button (once — re-wired each open).
+  // INTERIM behaviour: copy the quote template to the clipboard, then open Discord
+  // so the user can paste it into their ticket. When the bot's ticket-creation flow
+  // lands (nocturna-bot, later phase), this handler is what gets swapped.
   const copyBtn = overlay.querySelector<HTMLButtonElement>('[data-cart-copy]');
   if (copyBtn) {
+    // Update the label span (keeps the button's icon intact); fall back to the button.
+    const labelEl = copyBtn.querySelector<HTMLElement>('[data-copy-label]') ?? copyBtn;
+    const defaultLabel = lang === 'es' ? 'Copiar cotización y abrir ticket' : 'Copy quote & open ticket';
+    const ticketUrl = copyBtn.dataset.ticketUrl;
     copyBtn.addEventListener(
       'click',
       () => {
-        const text = buildClipboardText(lang);
+        const text = buildClipboardText(lang, quote);
         navigator.clipboard.writeText(text).then(() => {
-          // Success: show ¡Copiado! state for 1500ms then revert
+          // Success: show copied state, open Discord, then revert the label
           copyBtn.classList.add('cart-modal__copy--copied');
-          copyBtn.textContent = lang === 'es' ? '¡Copiado!' : 'Copied!';
+          labelEl.textContent = lang === 'es' ? '¡Copiado! Abriendo Discord…' : 'Copied! Opening Discord…';
+          if (ticketUrl) window.open(ticketUrl, '_blank', 'noopener,noreferrer');
           setTimeout(() => {
             copyBtn.classList.remove('cart-modal__copy--copied');
-            copyBtn.textContent = lang === 'es' ? 'Copiar selección' : 'Copy selection';
-          }, 1500);
+            labelEl.textContent = defaultLabel;
+          }, 1800);
         }).catch(() => {
           // Failure: insert a pre element for manual copy (no alert())
           const existingPre = overlay.querySelector('.cart-modal__copy-fallback');
@@ -624,14 +706,41 @@ function closeCartModal(): void {
 }
 
 // ---------------------------------------------------------------------------
-// SECTION 10 — initCart() and astro:page-load registration (mirrors chrome.ts exactly)
+// SECTION 10 — package CTAs + initCart() and astro:page-load registration
 // ---------------------------------------------------------------------------
 
+/**
+ * Package cards (Penumbra/Umbra/Eclipse) route their "Abrir Ticket" through the SAME
+ * two-button quote popup as the modular cotización — quoting just that package — so the
+ * whole conversion path (and the future bot ticket flow) is unified. Packages stay out
+ * of the modular cart (D: "paquetes aparte").
+ */
+function bindPackageTickets(): void {
+  document.querySelectorAll<HTMLButtonElement>('[data-package-ticket]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const name = btn.dataset.packageName?.trim() ?? '';
+      const rawPrice = (btn.dataset.packagePrice ?? '').replace(/[^0-9.\-]/g, '') || 'cotizar';
+      const entry: CartEntry = {
+        name,
+        price: rawPrice,
+        qty: 1,
+        categoryId: 'package',
+        categoryName: '',
+      };
+      openCartModal([entry]);
+    });
+  });
+}
+
 function initCart(): void {
+  if (initCartRanThisLoad) return;
+  initCartRanThisLoad = true;
+
   bindCartRowControls();
   bindPillClick();
   bindDrawerClose();
   bindDrawerTicket();
+  bindPackageTickets();
   syncCartUI(); // re-render from persisted module state on each navigation
 
   if (!cartDocListenersBound) {
@@ -641,4 +750,18 @@ function initCart(): void {
   }
 }
 
+// Reset per-load flag on every navigation start so next page can re-init
+document.addEventListener('astro:before-swap', () => {
+  initCartRanThisLoad = false;
+});
+
+// Register for every astro:page-load (View Transitions navigations + initial load
+// when the module executes BEFORE the event fires)
 document.addEventListener('astro:page-load', initCart);
+
+// Fallback: cart.ts is page-specific, so on a hard navigation astro:page-load
+// may fire before this module finishes loading. If readyState is already past
+// 'loading', the event already fired — run initCart immediately.
+if (document.readyState !== 'loading') {
+  initCart();
+}
