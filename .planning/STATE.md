@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 03.1 Plan 05 complete — cart.ts full engine implemented; Wave 4 (03.1-06 CartSummaryModal + clipboard) next
-last_updated: "2026-07-01T09:38:12.258Z"
+stopped_at: Phase 4 context gathered
+last_updated: "2026-07-02T11:58:17.687Z"
 last_activity: 2026-07-01
 progress:
-  total_phases: 7
+  total_phases: 8
   completed_phases: 4
   total_plans: 21
   completed_plans: 20
-  percent: 57
+  percent: 50
 ---
 
 # Project State
@@ -70,6 +70,7 @@ Progress: [██████████] 95%
 ### Roadmap Evolution
 
 - Phase 02.1 inserted after Phase 2: Visual Redesign — Refined Street Editorial (re-skin on Phase 2 motion base, before catalog/gallery) (URGENT)
+- Phase 6 added (2026-07-02): Asset Store — sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine (the /servicios flow was reframed as a non-purchase "cotización"; the real cart is reserved for this store). Depends on 3.1 + 2.1; independent of Phases 4/5.
 
 ### Decisions
 
@@ -130,6 +131,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-01T09:38:12.247Z
-Stopped at: Phase 03.1 Plan 05 complete — cart.ts full engine implemented; Wave 4 (03.1-06 CartSummaryModal + clipboard) next
-Resume file: None
+Last session: 2026-07-02T11:58:17.672Z
+Stopped at: Phase 4 context gathered
+Resume file: .planning/phases/04-gallery-data-layer/04-CONTEXT.md
