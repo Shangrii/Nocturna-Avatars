@@ -1,0 +1,9 @@
+# Nocturna gallery image store — Phase 5 bot commit target.
+#
+# The Discord photo bot (nocturna-bot repo) commits web-ready images here as
+# `public/gallery/<file>` alongside entries in `src/data/gallery.json`
+# (schema: { file, caption?, width, height, date }). GitHub Pages serves these
+# files as-is — no Astro import wiring, format-agnostic (WebP/JPEG).
+#
+# This .gitkeep keeps the empty directory in git so the site builds with zero
+# photos. Do NOT delete — the bot writes real images next to it.
