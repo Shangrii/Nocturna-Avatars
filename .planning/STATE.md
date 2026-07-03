@@ -119,7 +119,7 @@ Recent decisions affecting current work:
 
 [From .planning/todos/pending/ — ideas captured during sessions]
 
-None yet.
+- `2026-07-03-reviews-channel-to-website-publishing-system.md` — Reviews channel → website publishing (staff-reaction model mirroring Phase-5 gallery cog; user prefers reaction flow over command+button)
 
 ### Blockers/Concerns
 
