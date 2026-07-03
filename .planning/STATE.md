@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 4 UI-SPEC approved
-last_updated: "2026-07-02T18:17:25.070Z"
-last_activity: 2026-07-02
+stopped_at: Phase 4 plan 04-02 complete (pin-wall redesign approved)
+last_updated: "2026-07-03T00:30:00.000Z"
+last_activity: 2026-07-03
 progress:
   total_phases: 8
   completed_phases: 4
   total_plans: 24
-  completed_plans: 21
-  percent: 50
+  completed_plans: 22
+  percent: 54
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 04 (gallery-data-layer) — EXECUTING
-Plan: 2 of 3
-Status: Ready to execute
-Last activity: 2026-07-02
+Plan: 3 of 3 — Plans 01, 02 complete (GAL-01/02/03 done; GAL-04 remains)
+Status: Executing plan 04-03
+Last activity: 2026-07-03
 
 Progress: [█████████░] 88%
 
@@ -102,6 +102,10 @@ Recent decisions affecting current work:
 - [Phase ?]: [03.1-05] transitionend drawer close filtered by e.propertyName === 'transform' to prevent early [hidden] from opacity firing first
 - [Phase ?]: [03.1-05] openCartModal/closeCartModal stubs — full implementation in Plan 03.1-06
 - [Phase ?]: [03.1-05] createElement + textContent for drawer list items — T-03.1-05 XSS guard
+- [Phase 04]: [04-02] DESIGN PIVOT (user, 5 feedback rounds): /galeria is a "night evidence board" pin-wall — supersedes the 04-UI-SPEC masonry contract. Masonry.js uninstalled; custom seeded scatter engine in gallery.ts (varied sizes, continuous random positions, deterministic, 0 overlaps)
+- [Phase 04]: [04-02] Lightbox mount contract for 04-03: render [data-lightbox-overlay] + data-gallery-tile hooks anywhere; gallery.ts derives entries from live DOM per page-load
+- [Phase 04]: [04-02] Sky lives on a dedicated compositor-layer child (.gallery-sky, translateZ(0)) — Chromium raster cache dropped section-background paint on hard reload
+- [Phase 04]: [04-02] Sample gallery content (29 user photos) committed in isolated chore commit d49fdec — user deletes + resets gallery.json to [] at production cutover (supersedes 04-01 ship-empty until then)
 - [Phase ?]: [04-01] gallery.json schema { file, caption?, width, height, date } locked as an empty top-level array [] — the exact Phase 5 bot write-target; images live in public/gallery/<file> served as-is by GitHub Pages (D-01/D-06/D-07)
 - [Phase ?]: [04-01] masonry-layout@4.2.2 + imagesloaded@5.0.0 exact-pinned (+ @types), npm audit clean (T-04-SC); GalleryPage renders data-gallery-wall/data-gallery-tile CLS-free aspect boxes, caption-or-fallback alt, eager-first-row/lazy-rest, EmptyState fallback when empty (D-04/D-09/D-12)
 
