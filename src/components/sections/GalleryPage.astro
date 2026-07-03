@@ -2,14 +2,14 @@
 /**
  * GalleryPage — body of the /galeria (es) · /gallery (en) page.
  *
- * Data-driven masonry wall read from src/data/gallery.json (Phase 5 bot write
+ * Data-driven pin-wall read from src/data/gallery.json (Phase 5 bot write
  * target). Entries render newest-first by `date` (D-05) as a wall of squared,
  * CLS-free aspect-ratio tiles (D-04) — each a focusable <button> the Plan 02
  * lightbox opens at its index. When gallery.json is empty the page keeps the
  * branded EmptyState so it never looks broken and the Discord CTA stays
  * reachable (D-12).
  *
- * Masonry.js layout + the lightbox are wired in Plan 02 (src/scripts/gallery.ts);
+ * The scatter layout + the lightbox are wired in Plan 02 (src/scripts/gallery.ts);
  * this ships the static markup + data hooks + CSS the wall needs. Without JS the
  * tiles still render as a valid flowed grid so the build and content verify now.
  *
@@ -38,6 +38,7 @@ const { lang } = Astro.props;
 const page = useTranslations(lang, 'pages').galeria;
 const empty = useTranslations(lang, 'pages').emptyState;
 const altFallback = useTranslations(lang, 'pages').gallery.altFallback;
+const newBadge = useTranslations(lang, 'pages').gallery.newBadge;
 const lightbox = useTranslations(lang, 'pages').lightbox;
 
 // Newest-first by `date` (D-05). Copy before sorting so the imported module
@@ -49,9 +50,63 @@ const entries = ([...(galleryData as GalleryEntry[])]).sort(
 // Desktop column count (UI-SPEC Layout Contract) — the first row loads eagerly
 // to fill the fold fast; everything after defers via native lazy-loading (D-09).
 const EAGER_COUNT = 4;
+
+// Deterministic FNV-1a hash — drives every "random-looking" per-photo choice so
+// the wall is identical on every build (no reshuffle) yet looks unpatterned.
+// Sizes and positions are now computed by the scatter engine in gallery.ts;
+// only the hang angle stays here (it's static markup, works without JS too).
+function hashStr(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}
+
+// Pin-wall tilt — each polaroid hangs at a small, stable angle (−4°..+4°).
+function tiltFor(entry: GalleryEntry): number {
+  return ((hashStr(entry.file) >>> 8) % 9) - 4; // unsigned shift → stable −4°..+4°
+}
+
+// Fastening mix — most photos get a push-pin, ~38% get translucent tape corners
+// instead, so the wall reads like a real hand-built collage. Deterministic.
+// (The red thread only connects PINNED photos — gallery.ts queries .pin — which
+// keeps the thread organic rather than exhaustive.)
+function holdFor(entry: GalleryEntry): 'pin' | 'tape' {
+  return (hashStr(entry.file) >>> 5) % 100 < 38 ? 'tape' : 'pin';
+}
+
+// Fireflies — seeded drifting warm particles for the night sky around the board.
+const FIREFLIES = Array.from({ length: 26 }, (_, i) => {
+  const h = hashStr(`ff${i}`);
+  return {
+    x: h % 100, // left %
+    y: 10 + ((h >>> 7) % 76), // top %
+    d: 14 + ((h >>> 13) % 12), // drift duration s
+    del: -(((h >>> 19) % 140) / 10), // negative delay → desynced mid-cycle
+    s: (70 + ((h >>> 24) % 75)) / 100, // scale 0.7–1.45
+    dx: ((h >>> 16) % 2 ? 1 : -1) * (22 + ((h >>> 17) % 26)), // drift ±22..47px
+  };
+});
 ---
 
-<section class="section section-page-top section--rule">
+<section class="section section-page-top section--rule gallery-night">
+  {/* Night sky — a real child element (not section background) on its own
+      compositor layer: huge multi-layer backgrounds + masked pseudos on the
+      section itself intermittently dropped out of Chromium's raster cache on
+      hard reload (bug: sky vanished after F5). Carries stars, washes and the
+      nav blend; its ::after carries the twinkle layer. */}
+  <span class="gallery-sky" aria-hidden="true"></span>
+
+  {/* Fireflies — drifting warm particles in the night sky around the board.
+      Behind all section content (z −1); static faint dots under reduced motion. */}
+  <span class="gallery-fireflies" aria-hidden="true">
+    {FIREFLIES.map((f) => (
+      <i style={`--fx:${f.x}%; --fy:${f.y}%; --fd:${f.d}s; --fdel:${f.del}s; --fs:${f.s}; --fdx:${f.dx}px`}></i>
+    ))}
+  </span>
+
   <div class="section-header reveal">
     <span class="section-tag">{page.tag}</span>
     <h2 class="section-title">{page.title}</h2>
@@ -60,7 +115,20 @@ const EAGER_COUNT = 4;
 
   {entries.length ? (
     <div class="gallery-wall" data-gallery-wall>
-      {entries.map((entry, i) => (
+      {/* Signature decor layer — gallery.ts draws the red thread (pin-to-pin,
+          sagging curves), the fairy-light garland (draped along the top) and the
+          sparse warm board lamps into this SVG after the scatter layout settles,
+          and redraws on every relayout. It sits behind the polaroids so pins
+          appear to hold the thread. Empty until JS. */}
+      <svg class="gallery-thread" data-gallery-thread aria-hidden="true" preserveAspectRatio="none"></svg>
+
+      {/* Torch — a warm light halo that follows the cursor across the board
+          (desktop pointer only; gallery.ts drives --tx/--ty; off under
+          prefers-reduced-motion). Sits above the cards like light falling on them. */}
+      <span class="gallery-torch" data-gallery-torch aria-hidden="true"></span>
+
+      {entries.map((entry, i) => {
+        return (
         <button
           type="button"
           class="gallery-tile"
@@ -68,18 +136,39 @@ const EAGER_COUNT = 4;
           data-index={i}
           data-file={entry.file}
           data-caption={entry.caption ?? ''}
-          style={`aspect-ratio:${entry.width}/${entry.height}`}
+          style={`--tilt:${tiltFor(entry)}deg`}
         >
-          <img
-            src={`/gallery/${entry.file}`}
-            width={entry.width}
-            height={entry.height}
-            alt={entry.caption ?? altFallback}
-            loading={i < EAGER_COUNT ? 'eager' : 'lazy'}
-            decoding="async"
-          />
+          <span class="polaroid">
+            {holdFor(entry) === 'pin' ? (
+              <span class="pin" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path class="pin__needle" d="M11.5 13 L12.3 22 L13 13 Z" />
+                  <circle class="pin__head" cx="12" cy="8" r="6.4" />
+                  <circle class="pin__shine" cx="9.7" cy="5.9" r="1.9" />
+                </svg>
+              </span>
+            ) : (
+              <>
+                <span class="tape tape--l" aria-hidden="true"></span>
+                <span class="tape tape--r" aria-hidden="true"></span>
+              </>
+            )}
+            {i === 0 && <span class="scribble-new" aria-hidden="true">{newBadge}</span>}
+            <span class="polaroid__photo" style={`aspect-ratio:${entry.width}/${entry.height}`}>
+              <img
+                src={`/gallery/${entry.file}`}
+                width={entry.width}
+                height={entry.height}
+                alt={entry.caption ?? altFallback}
+                loading={i < EAGER_COUNT ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            </span>
+            {entry.caption && <span class="polaroid__cap">{entry.caption}</span>}
+          </span>
         </button>
-      ))}
+        );
+      })}
     </div>
   ) : (
     <div class="reveal">
@@ -154,7 +243,7 @@ const EAGER_COUNT = 4;
   </div>
 ) : null}
 
-<!-- Masonry wall init + hand-rolled lightbox controller (swap-safe, Plan 02). -->
+<!-- Pin-wall scatter init + hand-rolled lightbox controller (swap-safe, Plan 02). -->
 <script>
   import '../../scripts/gallery.ts';
 </script>

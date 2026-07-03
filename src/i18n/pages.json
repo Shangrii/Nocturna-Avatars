@@ -48,7 +48,8 @@
     },
     "gallery": {
       "altFallback": "Nocturna Avatars — edición de avatar VRChat",
-      "viewAll": "Ver galería completa"
+      "viewAll": "Ver galería completa",
+      "newBadge": "¡nuevo!"
     },
     "lightbox": {
       "close": "Cerrar",
@@ -146,7 +147,8 @@
     },
     "gallery": {
       "altFallback": "Nocturna Avatars — VRChat avatar edit",
-      "viewAll": "View full gallery"
+      "viewAll": "View full gallery",
+      "newBadge": "new!"
     },
     "lightbox": {
       "close": "Close",

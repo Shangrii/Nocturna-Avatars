@@ -18,13 +18,38 @@
    applied by the section wrapper). Static fallback = a fluid grid; Masonry.js
    (Plan 02) will absolutely-position the tiles for true row balancing. */
 .gallery-wall {
+  /* Scoped pin-wall palette — derived from brand tokens; warm amber is the one new
+     accent (the nocturnal glow of the fairy lights). */
   --gallery-gutter: var(--space-xs); /* mobile (< 768) */
+  --pin-body: var(--color-red);
+  --pin-shine: color-mix(in srgb, var(--color-white) 72%, var(--color-red));
+  --pin-needle: rgba(0, 0, 0, 0.55);
+  --thread: var(--color-red);
+  --bulb: #ffd6a0;
+  --bulb-glow: #ffb44d;
+
+  position: relative;
+  isolation: isolate; /* scope thread / lights / photo z-index layering */
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* mobile: 2 columns */
   gap: var(--gallery-gutter);
   max-width: 1440px;
   margin-inline: auto;
-  padding-inline: var(--page-gutter);
+  /* Extra top pad leaves room for the draped light garland above the first row. */
+  padding: clamp(44px, 6vw, 68px) var(--page-gutter) clamp(24px, 4vw, 40px);
+  /* The dark "wall" photos are pinned to — one step off the section field so it
+     reads as a physical board: subtle top glow, hairline frame, inset edge shade. */
+  background:
+    radial-gradient(120% 78% at 50% 0%, color-mix(in srgb, var(--color-ink-raised) 55%, transparent), transparent 62%),
+    var(--color-ink);
+  /* Physical frame: hairline inner edge, a raised navy frame band, a hairline
+     outer edge, and a drop shadow onto the sky — the board floats off the night. */
+  border: 1px solid color-mix(in srgb, var(--color-white) 16%, transparent);
+  box-shadow:
+    0 0 0 6px var(--color-ink-raised),
+    0 0 0 7px color-mix(in srgb, var(--color-white) 9%, transparent),
+    0 30px 70px -28px rgba(0, 0, 0, 0.85),
+    inset 0 2px 44px rgba(0, 0, 0, 0.55);
 }
 
 @media (min-width: 768px) {
@@ -41,105 +66,490 @@
   }
 }
 
-/* Once Masonry.js (Plan 02) takes over it absolutely-positions the tiles; the
-   static grid above is only the no-JS / pre-init fallback. */
+/* Once the scatter engine (gallery.ts) takes over it absolutely-positions the
+   tiles with seeded random sizes/positions; the static grid above is only the
+   no-JS / pre-init fallback. (Class name kept from the Masonry era.) */
 .gallery-wall.is-masonry {
   display: block;
 }
+.gallery-wall.is-masonry .gallery-tile {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
-/* Tile — a real, keyboard-focusable <button>. Squared editorial surface with no
-   decorative framing so the photo defines its own edge. The aspect-ratio is set
-   inline per-entry (style="aspect-ratio:W/H") from the stored width/height so the
-   box reserves its space before the image paints — no CLS, no reflow (D-04). */
+/* Tile — the real, keyboard-focusable <button> Masonry positions. It is now just a
+   transparent positioning box; the visible card is the inner .polaroid (so the
+   card's tilt/hover transforms never fight Masonry's layout transform on the tile). */
 .gallery-tile {
   display: block;
   width: 100%;
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 0; /* editorial: squared surfaces */
-  background: var(--color-ink-raised); /* placeholder until the image decodes */
-  overflow: hidden;
+  background: transparent;
   cursor: zoom-in;
   -webkit-appearance: none;
   appearance: none;
+  z-index: 1; /* above the thread + lights layers (z 0) */
+}
+.gallery-tile:hover {
+  z-index: 5; /* a hovered card lifts above its neighbours */
 }
 
-/* Under Masonry each tile is percent-width so columns stay fluid (percentPosition).
-   These widths mirror the 2/3/4-column breakpoints; Masonry's gutter handles gaps. */
-.gallery-wall.is-masonry .gallery-tile {
-  width: calc((100% - var(--gallery-gutter)) / 2);
-}
-@media (min-width: 768px) {
-  .gallery-wall.is-masonry .gallery-tile {
-    width: calc((100% - 2 * var(--gallery-gutter)) / 3);
-  }
-}
-@media (min-width: 1024px) {
-  .gallery-wall.is-masonry .gallery-tile {
-    width: calc((100% - 3 * var(--gallery-gutter)) / 4);
-  }
-}
+/* Tile sizes/positions in the JS state are set inline (px) by the scatter engine
+   in gallery.ts — seeded size classes + continuous random placement, so nothing
+   ever lines up into columns. No breakpoint width rules needed here. */
 
-/* Reveal — driven by gallery.ts (data-revealed) AFTER Masonry positions the tiles,
-   so the fade never fights the absolute layout (UI-SPEC ordering caveat). The gallery
-   owns its own reveal (NOT the global .reveal/GSAP system) precisely for this reason.
-   Tiles start hidden only once JS has taken over (.is-masonry) so no-JS still shows
-   the full wall. */
-.gallery-wall.is-masonry .gallery-tile {
-  opacity: 0;
-  transform: translateY(var(--space-md));
+/* ═══════════════════════════════════════════════
+   Pinned polaroid — the photo's physical card. Off-white frame lifted off the board
+   with a soft shadow, hung at its per-tile --tilt. Masonry transforms the .gallery-tile
+   button (it owns that), so the tilt/hover transforms live here on the inner .polaroid
+   and never fight the layout engine. Opacity-only reveal for the same reason.
+   ═══════════════════════════════════════════════ */
+.polaroid {
+  position: relative;
+  display: block;
+  padding: 8px 8px 0; /* photo frame; the caption row forms the heavier bottom lip */
+  background: var(--color-white);
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 10px 22px -8px rgba(0, 0, 0, 0.6);
+  transform: rotate(var(--tilt, 0deg));
+  transform-origin: 50% 0;
   transition:
-    opacity 0.5s ease,
-    transform 0.5s ease;
+    opacity 0.5s ease var(--reveal-delay, 0ms),
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.28s ease;
 }
-.gallery-wall.is-masonry .gallery-tile[data-revealed] {
-  opacity: 1;
-  transform: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .gallery-wall.is-masonry .gallery-tile {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
+/* Uncaptioned cards get an even frame all round instead of the caption lip. */
+.polaroid:not(:has(.polaroid__cap)) {
+  padding-bottom: 8px;
 }
 
-.gallery-tile > img {
+/* The photo window. aspect-ratio (inline, per entry) reserves the box before the
+   image paints so the wall lays out CLS-free (D-04). */
+.polaroid__photo {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--color-ink-raised); /* placeholder until the image decodes */
+}
+.polaroid__photo > img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Red focus ring — mirrors .dc-open-btn:focus-visible (chrome.css:504-508). */
-.gallery-tile:focus-visible {
-  outline: 2px solid var(--color-red);
-  outline-offset: 2px;
+/* Caption on the bottom lip — typewritten archival label (Space Mono), dark on
+   paper. Swapped from the graffiti face per user feedback: readability first;
+   the graffiti face stays for pure decoration (badge, doodles). */
+.polaroid__cap {
+  display: block;
+  padding: 8px 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--color-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Subtle hover lift on pointer-capable devices only. Neutralized under
-   prefers-reduced-motion (UI-SPEC Motion section). */
+/* Push-pin poking through the top of the card (SVG head + shine + needle). */
+.pin {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  z-index: 2;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.5));
+  pointer-events: none;
+}
+.pin svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.pin__head { fill: var(--pin-body); }
+.pin__shine { fill: var(--pin-shine); }
+.pin__needle { fill: var(--pin-needle); }
+
+/* Tape variant — ~38% of the photos (deterministic) hang from translucent tape
+   corners instead of a pin, so the wall reads hand-built rather than uniform. */
+.tape {
+  position: absolute;
+  width: 54px;
+  height: 17px;
+  z-index: 2;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--color-white) 30%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-white) 12%, transparent),
+    0 1px 2px rgba(0, 0, 0, 0.22);
+}
+.tape--l {
+  top: -8px;
+  left: -14px;
+  transform: rotate(-38deg);
+}
+.tape--r {
+  top: -8px;
+  right: -14px;
+  transform: rotate(38deg);
+}
+
+/* "¡nuevo!" scribble — a red hand-drawn note on the newest photo. The uneven
+   border-radius fakes a wobbly marker ellipse without any SVG. Bottom corner so
+   it never collides with the pin (top-center) or tape (top corners). */
+.scribble-new {
+  position: absolute;
+  bottom: -12px;
+  right: -14px;
+  z-index: 3;
+  padding: 5px 10px;
+  font-family: var(--font-tag);
+  font-size: 16px;
+  line-height: 1;
+  color: var(--color-red-on-ink);
+  border: 2px solid var(--color-red-on-ink);
+  border-radius: 64% 36% 58% 42% / 48% 62% 38% 52%;
+  background: color-mix(in srgb, var(--color-ink) 60%, transparent);
+  transform: rotate(-7deg);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* Reveal — gallery.ts toggles data-revealed on the tile and sets a per-tile
+   --reveal-delay for the stagger. Only the JS (is-masonry) state hides first, so
+   no-JS shows the full wall. */
+.gallery-wall.is-masonry .gallery-tile .polaroid {
+  opacity: 0;
+}
+.gallery-wall.is-masonry .gallery-tile[data-revealed] .polaroid {
+  opacity: 1;
+}
+
+/* Red focus ring on the button — mirrors .dc-open-btn:focus-visible (chrome.css). */
+.gallery-tile:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 3px;
+}
+
+/* Hover — the card straightens and lifts, like picking a photo off the wall
+   (pointer devices only; neutralized under prefers-reduced-motion below). */
 @media (hover: hover) {
-  .gallery-tile {
-    transition:
-      transform 0.3s ease,
-      filter 0.3s ease;
-  }
-  .gallery-tile:hover {
-    transform: scale(1.02);
-    filter: brightness(1.05);
+  .gallery-tile:hover .polaroid {
+    transform: rotate(0deg) scale(1.04);
+    box-shadow:
+      0 2px 3px rgba(0, 0, 0, 0.35),
+      0 18px 34px -10px rgba(0, 0, 0, 0.72);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gallery-tile {
+  .gallery-wall.is-masonry .gallery-tile .polaroid {
+    opacity: 1;
+  }
+  .polaroid {
     transition: none;
   }
-  .gallery-tile:hover {
-    transform: none;
-    filter: none;
+  .gallery-tile:hover .polaroid {
+    transform: rotate(var(--tilt, 0deg)); /* keep the tilt, drop the animation */
   }
+}
+
+/* ═══════════════════════════════════════════════
+   Decoration layers — red thread (drawn by gallery.ts) and fairy lights, both
+   absolutely positioned behind the polaroids (z 0) so pins sit on top.
+   ═══════════════════════════════════════════════ */
+.gallery-thread {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.gallery-thread__line {
+  fill: none;
+  stroke: var(--thread);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0.72;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+/* Fairy-light garland — drawn by gallery.ts into the decor SVG as a real draped
+   wire (sagging catenary curves) with warm bulbs hanging along it, so it follows
+   the wall edge-to-edge and never clips like a tiled background. Two alternating
+   twinkle phases (--b offsets) keep the flicker organic. */
+.gallery-lights__wire {
+  fill: none;
+  stroke: color-mix(in srgb, var(--color-white) 22%, transparent);
+  stroke-width: 1.2;
+}
+.gallery-lights__glow {
+  fill: color-mix(in srgb, var(--bulb-glow) 55%, transparent);
+  filter: blur(3px);
+}
+.gallery-lights__bulb {
+  fill: var(--bulb);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .gallery-lights__glow,
+  .gallery-lights__bulb {
+    animation: gallery-twinkle 3.8s ease-in-out infinite alternate;
+  }
+  .gallery-lights__glow--b,
+  .gallery-lights__bulb--b {
+    animation-delay: 1.9s;
+    animation-duration: 4.6s;
+  }
+}
+@keyframes gallery-twinkle {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+/* Board lamps — sparse warm lights pinned across the board itself (drawn by
+   gallery.ts into gaps between cards): a wide blurred halo + tight glow + hot
+   core so the light reads warm and physical. Slow alternating breathe. */
+.gallery-boardlight__halo {
+  fill: color-mix(in srgb, var(--bulb-glow) 22%, transparent);
+  filter: blur(8px);
+}
+.gallery-boardlight__glow {
+  fill: color-mix(in srgb, var(--bulb-glow) 55%, transparent);
+  filter: blur(3px);
+}
+.gallery-boardlight__bulb {
+  fill: var(--bulb);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .gallery-boardlight__halo,
+  .gallery-boardlight__glow,
+  .gallery-boardlight__bulb {
+    animation: gallery-boardlight-pulse 5.2s ease-in-out infinite alternate;
+  }
+  .gallery-boardlight--b {
+    animation-delay: 2.6s;
+    animation-duration: 6.4s;
+  }
+}
+@keyframes gallery-boardlight-pulse {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+
+/* Graffiti doodles — red marker scribbles gallery.ts seeds into gaps between
+   cards (arrow squiggle, crosses, a little "nctrn" tag in the graffiti face). */
+.gallery-doodle {
+  fill: none;
+  stroke: var(--color-red-on-ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.5;
+}
+.gallery-doodle__tag {
+  fill: var(--color-red-on-ink);
+  stroke: none;
+  font-family: var(--font-tag);
+  font-size: 22px;
+  opacity: 0.55;
+}
+
+/* Torch — a warm cursor-following light: an additive glow at the cursor plus a
+   soft cursor-anchored vignette so the rest of the board falls away slightly.
+   Driven by --tx/--ty from gallery.ts; desktop pointers only. */
+.gallery-torch {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  background:
+    radial-gradient(340px circle at var(--tx, 50%) var(--ty, 30%), rgba(255, 190, 110, 0.16), transparent 72%),
+    radial-gradient(560px circle at var(--tx, 50%) var(--ty, 30%), transparent 46%, rgba(4, 5, 10, 0.22) 100%);
+}
+.gallery-torch.is-on {
+  opacity: 1;
+}
+@media (hover: none) {
+  .gallery-torch {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-torch {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   Night sky — the section field around the board. Sparse multi-layer star dots
+   (prime-ish tile sizes so no visible repeat pattern) + a faint cool moonlight
+   wash from above; one extra star layer twinkles. Stars sit behind everything
+   in the section (::after at z -1 under a z-0 stacking context).
+   ═══════════════════════════════════════════════ */
+.gallery-night {
+  --bulb: #ffd6a0;
+  --bulb-glow: #ffb44d;
+  position: relative;
+  z-index: 0;
+}
+
+/* The sky itself — a dedicated child on its OWN compositor layer (translateZ).
+   Rationale: as a 12-layer background on the ~3000px section (plus a masked
+   ::after) Chromium's raster cache intermittently dropped the whole paint after
+   a hard reload (bug: sky vanished on F5); a layerized real element repaints
+   reliably.
+   Layers, first = painted on top:
+     1  nav blend — solid ink held for 120px then melting down to 560px so the
+        section meets the fixed navbar with no visible seam
+     2-5  star fields (prime-ish tiles, no visible repeat)
+     6  milky-way band — diagonal lavender ribbon
+     7  cool indigo wash (upper-left)
+     8  violet nebula (lower-left)
+     9  warm brand ember (lower-right)
+     10 teal whisper (mid-right)
+     11 corner vignette
+     12 moonlight glow from above
+   Washes sit at ~0.10–0.22 alpha — present, but still a dark night. */
+.gallery-sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transform: translateZ(0);
+  background-image:
+    linear-gradient(180deg, var(--color-ink) 0px, var(--color-ink) 120px, rgba(10, 12, 20, 0) 560px),
+    radial-gradient(circle at 21% 33%, rgba(240, 234, 228, 0.7) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 68% 71%, rgba(240, 234, 228, 0.5) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 84% 18%, rgba(240, 234, 228, 0.6) 0 1.3px, transparent 2px),
+    radial-gradient(circle at 44% 86%, rgba(255, 214, 160, 0.45) 0 1px, transparent 1.6px),
+    linear-gradient(115deg, transparent 30%, rgba(158, 178, 220, 0.08) 43%, rgba(205, 185, 235, 0.1) 50%, rgba(158, 178, 220, 0.08) 57%, transparent 70%),
+    linear-gradient(160deg, rgba(64, 84, 140, 0.22), transparent 46%),
+    radial-gradient(70% 55% at 12% 88%, rgba(122, 82, 180, 0.16), transparent 64%),
+    radial-gradient(90% 70% at 82% 96%, rgba(192, 25, 44, 0.18), transparent 60%),
+    radial-gradient(50% 40% at 94% 46%, rgba(70, 140, 160, 0.11), transparent 62%),
+    radial-gradient(130% 110% at 50% 38%, transparent 58%, rgba(3, 4, 10, 0.42) 100%),
+    radial-gradient(120% 60% at 50% -8%, rgba(158, 178, 220, 0.1), transparent 68%);
+  background-size:
+    100% 100%,
+    173px 211px,
+    257px 229px,
+    331px 307px,
+    389px 353px,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  background-repeat:
+    no-repeat, repeat, repeat, repeat, repeat,
+    no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  /* Depth parallax — gallery.ts drives --sky-shift on scroll (inherited from the
+     section); only the 4 star tiles drift, everything else stays anchored. */
+  background-position:
+    0 0,
+    0 var(--sky-shift, 0px),
+    0 var(--sky-shift, 0px),
+    0 var(--sky-shift, 0px),
+    0 var(--sky-shift, 0px),
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0;
+}
+.gallery-sky::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 31% 57%, rgba(240, 234, 228, 0.85) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 76% 24%, rgba(240, 234, 228, 0.75) 0 1px, transparent 1.6px);
+  background-size:
+    293px 271px,
+    359px 313px;
+  /* Twinkle layer drifts a touch faster than the base stars → depth. */
+  background-position:
+    0 calc(var(--sky-shift, 0px) * 1.35),
+    0 calc(var(--sky-shift, 0px) * 1.35);
+  opacity: 0.6;
+  /* Fade out near the top so twinkles never poke through the navbar blend. */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0px, #000 340px);
+  mask-image: linear-gradient(180deg, transparent 0px, #000 340px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .gallery-sky::after {
+    animation: gallery-star-twinkle 5.5s ease-in-out infinite alternate;
+  }
+}
+
+/* Fireflies — small warm particles drifting through the sky. Rendered as server-
+   side <i> dots with seeded position/duration/delay/scale vars; z −1 keeps them
+   behind the board and the section content (sky only). */
+.gallery-fireflies {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  /* Mid-depth parallax layer — between the stars (slow) and the board (page speed). */
+  translate: 0 calc(var(--sky-shift, 0px) * 0.7);
+  /* Same top fade as the twinkle layer — no fireflies over the navbar blend. */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0px, #000 340px);
+  mask-image: linear-gradient(180deg, transparent 0px, #000 340px);
+}
+.gallery-fireflies i {
+  position: absolute;
+  left: var(--fx, 50%);
+  top: var(--fy, 50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--bulb);
+  box-shadow: 0 0 12px 4px rgba(255, 180, 77, 0.7);
+  transform: scale(var(--fs, 1));
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .gallery-fireflies i {
+    animation:
+      gallery-firefly-drift var(--fd, 16s) ease-in-out var(--fdel, 0s) infinite alternate,
+      gallery-firefly-glow calc(var(--fd, 16s) * 0.37) ease-in-out var(--fdel, 0s) infinite alternate;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-fireflies i {
+    opacity: 0.35; /* static faint fireflies — no drift, no pulse */
+  }
+}
+@keyframes gallery-firefly-drift {
+  from { translate: 0 0; }
+  to { translate: var(--fdx, 34px) -46px; }
+}
+@keyframes gallery-firefly-glow {
+  from { opacity: 0.08; }
+  to { opacity: 1; }
+}
+@keyframes gallery-star-twinkle {
+  from { opacity: 0.2; }
+  to { opacity: 0.9; }
 }
 
 /* ═══════════════════════════════════════════════
