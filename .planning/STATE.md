@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-07-03T17:50:11.132Z"
+stopped_at: Completed 05-04-PLAN.md
+last_updated: "2026-07-03T23:08:28.624Z"
 last_activity: 2026-07-03
 progress:
   total_phases: 8
   completed_phases: 5
   total_plans: 29
-  completed_plans: 26
+  completed_plans: 27
   percent: 63
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 05 (photo-publishing-bot-cog) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-07-03
 
-Progress: [█████████░] 90%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -69,6 +69,7 @@ Progress: [█████████░] 90%
 | Phase 05 P01 | 10min | 2 tasks tasks | 6 files files |
 | Phase 05 P02 | 7min | 2 tasks | 2 files |
 | Phase 05 P03 | 10min | 3 tasks | 4 files |
+| Phase 05 P04 | 13min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -121,6 +122,10 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-03] cogs/gallery.py GalleryCog wires the two cores to Discord: on_message adds ✅ only to staff image posts in PHOTO_CHANNEL (BOT-01/D-03); on_raw_reaction_add is role-gated (payload.member.roles ∩ GALLERY_STAFF_ROLE_IDS, skip bots, self-approval OK) and idempotent via the bot's own 🟢 marker (r.me, D-05). Pure helpers (_image_attachments/_is_staff/_build_filename/_caption) extracted as module-level fns → unit-tested with SimpleNamespace + asyncio.run (14 tests, no pytest-asyncio).
 - [Phase 05]: [05-03] Entry date emitted as ISO 8601 .000Z shape (created_at.astimezone(utc).isoformat(timespec='milliseconds').replace('+00:00','Z') → 2026-07-03T14:05:09.000Z) to byte-match Phase-4 shipped gallery.json. Filenames are D-14 numerics-only {YYYYMMDD}-{msgID}-{index}.webp (UTC day). Success reply (Spanish, delete_after=60): "📸 Publiqué N foto(s) en la galería — la web tarda un par de minutos en actualizarse."
 - [Phase 05]: [05-03] bot.py fail-fast: sys.exit(1) on missing GITHUB_PAT/WEBSITE_REPO/GALLERY_STAFF_ROLE_IDS (T-05-SC) — the live bot won't start until 05-05 captures these in .env. gallery_state 1-row cursor table scaffolded in core/db.py (backfill read/write lands in 05-04).
+- [Phase 05]: [05-04] Removal completes the cog (BOT-05): a staff 🌙 on a published message calls github_publish.remove_message + clears 🟢 + posts a mirrored delete_after=60 reply (returns it to pending so a later ✅ republishes, D-09); a 🌙 on a pending message dismisses it (clears the ✅ prompt, commits nothing, D-07). on_raw_message_delete auto-unpublishes any delete in PHOTO_CHANNEL_ID (D-10, accepted risk T-05-11 — an accidental delete removes live photos; channel is source of truth). 🌙 uses the SAME staff gate as ✅ (D-08).
+- [Phase 05]: [05-04] Published-state stays DB-free (D-14): _is_published derives it from the bot's 🟢 marker OR (during reconcile) an exact split('-')[1] {msgID} match against a live gallery.json entry — never a substring, so a prefix-sharing snowflake can't collide. The entry-match guards against a duplicate publish if the bot crashed after committing but before adding 🟢.
+- [Phase 05]: [05-04] D-19 persistent-error UX: _publish/_unpublish catch github_publish.GitHubPublishError (retries already exhausted, D-18) and leave a NON-auto-deleting Spanish reply + a ⚠️ retry-to-do reaction; the 🟢 marker is never added on failure (unpublish failure keeps 🟢 — photos still live); _clear_warning drops a stale ⚠️ on a later success. PAT never logged (T-05-04).
+- [Phase 05]: [05-04] D-20 backfill: core/db.get_cursor/set_cursor on the 1-row gallery_state; on_ready (run-once guard) scans channel.history(after=cursor, oldest_first=True), advancing the cursor per message (T-05-17 — never re-scans the whole channel). _reconcile dispatch: staff 🌙 → unpublish; staff ✅ on an unpublished msg → publish; missing ✅ prompt → add it; already-published → left alone. _reaction_by_staff role-gates history reactors via reaction.users() + guild.get_member so a non-staff ✅/🌙 during downtime can't trigger anything (D-08). Bot suite: 54 passed (was 36).
 
 ### Pending Todos
 
@@ -151,6 +156,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-03T17:50:11.132Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-07-03T23:04:18.710Z
+Stopped at: Completed 05-04-PLAN.md
 Resume file: None

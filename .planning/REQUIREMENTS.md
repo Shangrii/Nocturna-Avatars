@@ -53,7 +53,7 @@
 - [x] **BOT-02**: When a staff member confirms with ✅, the bot publishes all attachments of that message (1 or many)
 - [x] **BOT-03**: The bot optimizes images (resize/compress) before publishing
 - [x] **BOT-04**: The bot commits images + a `gallery.json` entry to the website repo cross-repo
-- [ ] **BOT-05**: A 🗑️ reaction removes the published photos from the site
+- [x] **BOT-05**: A 🗑️ reaction removes the published photos from the site
 - [x] **BOT-06**: The message text is captured as the optional caption
 
 ## v2 Requirements
@@ -111,7 +111,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | BOT-02 | Phase 5 | Complete |
 | BOT-03 | Phase 5 | Complete |
 | BOT-04 | Phase 5 | Complete |
-| BOT-05 | Phase 5 | Pending |
+| BOT-05 | Phase 5 | Complete |
 | BOT-06 | Phase 5 | Complete |
 
 **Coverage:**

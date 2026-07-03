@@ -244,7 +244,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3 — shares `cogs/gallery.py`)*
 
-- [ ] 05-04-PLAN.md — Removal + auto-unpublish (🌙 + message-delete) + persistent error surfacing + startup backfill cursor/reconcile (BOT-05/D-10/D-19/D-20)
+- [x] 05-04-PLAN.md — Removal + auto-unpublish (🌙 + message-delete) + persistent error surfacing + startup backfill cursor/reconcile (BOT-05/D-10/D-19/D-20)
 
 **Wave 5** *(blocked on Wave 4 — live secrets + acceptance)*
 
@@ -267,7 +267,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
-| 5. Photo-Publishing Bot Cog | 3/5 | In Progress|  |
+| 5. Photo-Publishing Bot Cog | 4/5 | In Progress|  |
 | 6. Asset Store | 0/TBD | Not started | - |
 
 ### Phase 6: Asset Store
