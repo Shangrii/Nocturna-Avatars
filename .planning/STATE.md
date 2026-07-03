@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-07-03T17:13:09.429Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-07-03T17:34:36.406Z"
 last_activity: 2026-07-03
 progress:
   total_phases: 8
   completed_phases: 5
   total_plans: 29
-  completed_plans: 24
+  completed_plans: 25
   percent: 63
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 05 (photo-publishing-bot-cog) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-07-03
 
-Progress: [████████░░] 83%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
@@ -67,6 +67,7 @@ Progress: [████████░░] 83%
 | Phase 04 P01 | 12min | 2 tasks | 7 files |
 | Phase 04 P03 | 8min | 3 tasks | 5 files |
 | Phase 05 P01 | 10min | 2 tasks tasks | 6 files files |
+| Phase 05 P02 | 7min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -114,6 +115,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [04-03] gallery.ts unchanged — Plan 02 already wires the lightbox on all [data-gallery-tile] document-wide and no-ops scatter/sky/torch without a [data-gallery-wall]; landing reuses the pin-wall polaroid language as a static square grid (no scatter engine) for conversion-path performance
 - [Phase 05]: [05-01] optimize_to_webp: downscale-only 1920px WebP (q82, method=6); EXIF/GPS stripped by omitting exif= on save — verified Pillow 12.3 does NOT auto-carry im.info['exif'] (T-05-02). Pure module (io+PIL only); cog owns to_thread.
 - [Phase 05]: [05-01] Phase-5 bot config defaults locked: WEBSITE_REPO=Shangrii/Nocturna-Avatars, WEBSITE_BRANCH=revamp (D-15 — branch flips at cutover with zero code changes); GALLERY_STAFF_ROLE_IDS is a comma-split list[int].
+- [Phase 05]: [05-02] core/github_publish.py — atomic cross-repo transport via GitHub Git Data API (blobs->tree->commit->ref): publish commits image blobs (by sha) + gallery.json (by content) in ONE commit (D-16); removal is stateless, deriving files from the exact split('-')[1] {msgID} filename segment and deleting them with sha:null tree entries (D-14). gallery.json kept in Phase-4 shape (caption-key omission, ensure_ascii=False, 2-space indent).
+- [Phase 05]: [05-02] Publish resilience: module-level asyncio.Lock serializes read-modify-commit; ref-PATCH 409/422 retried 4x with exponential backoff (0.5/1.0/2.0s), then raises typed GitHubPublishError (the cog catches it for the D-19 persistent-error UX, D-18). PAT lives only in the Authorization header, never logged (T-05-04); async API dispatches blocking requests via asyncio.to_thread; module imports only stdlib+requests+config (no discord).
 
 ### Pending Todos
 
@@ -144,6 +147,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-03T17:13:09.418Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-07-03T17:34:36.391Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None

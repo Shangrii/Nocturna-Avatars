@@ -236,7 +236,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 — needs config + test harness)*
 
-- [ ] 05-02-PLAN.md — Atomic cross-repo commit transport `core/github_publish.py` via GitHub Git Data API (blobs→tree→commit→ref), publish + removal, lock + retry (test-first) (BOT-04)
+- [x] 05-02-PLAN.md — Atomic cross-repo commit transport `core/github_publish.py` via GitHub Git Data API (blobs→tree→commit→ref), publish + removal, lock + retry (test-first) (BOT-04)
 
 **Wave 3** *(blocked on Waves 1+2 — the cog wires both cores)*
 
@@ -267,7 +267,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
-| 5. Photo-Publishing Bot Cog | 1/5 | In Progress|  |
+| 5. Photo-Publishing Bot Cog | 2/5 | In Progress|  |
 | 6. Asset Store | 0/TBD | Not started | - |
 
 ### Phase 6: Asset Store
