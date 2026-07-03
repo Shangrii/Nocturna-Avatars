@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-07-03T17:34:36.406Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-07-03T17:50:11.132Z"
 last_activity: 2026-07-03
 progress:
   total_phases: 8
   completed_phases: 5
   total_plans: 29
-  completed_plans: 25
+  completed_plans: 26
   percent: 63
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 05 (photo-publishing-bot-cog) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 Status: Ready to execute
 Last activity: 2026-07-03
 
-Progress: [█████████░] 86%
+Progress: [█████████░] 90%
 
 ## Performance Metrics
 
@@ -68,6 +68,7 @@ Progress: [█████████░] 86%
 | Phase 04 P03 | 8min | 3 tasks | 5 files |
 | Phase 05 P01 | 10min | 2 tasks tasks | 6 files files |
 | Phase 05 P02 | 7min | 2 tasks | 2 files |
+| Phase 05 P03 | 10min | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,9 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-01] Phase-5 bot config defaults locked: WEBSITE_REPO=Shangrii/Nocturna-Avatars, WEBSITE_BRANCH=revamp (D-15 — branch flips at cutover with zero code changes); GALLERY_STAFF_ROLE_IDS is a comma-split list[int].
 - [Phase 05]: [05-02] core/github_publish.py — atomic cross-repo transport via GitHub Git Data API (blobs->tree->commit->ref): publish commits image blobs (by sha) + gallery.json (by content) in ONE commit (D-16); removal is stateless, deriving files from the exact split('-')[1] {msgID} filename segment and deleting them with sha:null tree entries (D-14). gallery.json kept in Phase-4 shape (caption-key omission, ensure_ascii=False, 2-space indent).
 - [Phase 05]: [05-02] Publish resilience: module-level asyncio.Lock serializes read-modify-commit; ref-PATCH 409/422 retried 4x with exponential backoff (0.5/1.0/2.0s), then raises typed GitHubPublishError (the cog catches it for the D-19 persistent-error UX, D-18). PAT lives only in the Authorization header, never logged (T-05-04); async API dispatches blocking requests via asyncio.to_thread; module imports only stdlib+requests+config (no discord).
+- [Phase 05]: [05-03] cogs/gallery.py GalleryCog wires the two cores to Discord: on_message adds ✅ only to staff image posts in PHOTO_CHANNEL (BOT-01/D-03); on_raw_reaction_add is role-gated (payload.member.roles ∩ GALLERY_STAFF_ROLE_IDS, skip bots, self-approval OK) and idempotent via the bot's own 🟢 marker (r.me, D-05). Pure helpers (_image_attachments/_is_staff/_build_filename/_caption) extracted as module-level fns → unit-tested with SimpleNamespace + asyncio.run (14 tests, no pytest-asyncio).
+- [Phase 05]: [05-03] Entry date emitted as ISO 8601 .000Z shape (created_at.astimezone(utc).isoformat(timespec='milliseconds').replace('+00:00','Z') → 2026-07-03T14:05:09.000Z) to byte-match Phase-4 shipped gallery.json. Filenames are D-14 numerics-only {YYYYMMDD}-{msgID}-{index}.webp (UTC day). Success reply (Spanish, delete_after=60): "📸 Publiqué N foto(s) en la galería — la web tarda un par de minutos en actualizarse."
+- [Phase 05]: [05-03] bot.py fail-fast: sys.exit(1) on missing GITHUB_PAT/WEBSITE_REPO/GALLERY_STAFF_ROLE_IDS (T-05-SC) — the live bot won't start until 05-05 captures these in .env. gallery_state 1-row cursor table scaffolded in core/db.py (backfill read/write lands in 05-04).
 
 ### Pending Todos
 
@@ -147,6 +151,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-03T17:34:36.391Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-07-03T17:50:11.132Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None

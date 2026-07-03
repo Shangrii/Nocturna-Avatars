@@ -240,7 +240,7 @@ Plans:
 
 **Wave 3** *(blocked on Waves 1+2 — the cog wires both cores)*
 
-- [ ] 05-03-PLAN.md — `cogs/gallery.py` publish slice: staff-post detection + ✅ approve + publish orchestration + bot.py loader + config validation (BOT-01/BOT-02/BOT-06)
+- [x] 05-03-PLAN.md — `cogs/gallery.py` publish slice: staff-post detection + ✅ approve + publish orchestration + bot.py loader + config validation (BOT-01/BOT-02/BOT-06)
 
 **Wave 4** *(blocked on Wave 3 — shares `cogs/gallery.py`)*
 
@@ -267,7 +267,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
-| 5. Photo-Publishing Bot Cog | 2/5 | In Progress|  |
+| 5. Photo-Publishing Bot Cog | 3/5 | In Progress|  |
 | 6. Asset Store | 0/TBD | Not started | - |
 
 ### Phase 6: Asset Store
