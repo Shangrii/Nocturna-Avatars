@@ -14,10 +14,10 @@ Rebuild the Nocturna Avatars portfolio as an Astro static site that ships live t
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Bilingual Shell** - Astro + design system + i18n + structure + deploy; the live, branded, convertible shell (completed 2026-06-28)
-- [x] **Phase 2: Experimental Motion Layer** - WebGL hero, smooth scroll, scroll reveals, animated page transitions, cursor effects (completed 2026-06-30)
-- [x] **Phase 3: Service Catalog** - Data-driven packages + modular catalog from `services.json` (ES/EN, "Cotizar") (completed 2026-07-01)
+- [x] **Phase 2: Experimental Motion Layer** - WebGL hero, smooth scroll, scroll reveals, animated page transitions, cursor effects (completed 2026-06-30)
+- [x] **Phase 3: Service Catalog** - Data-driven packages + modular catalog from `services.json` (ES/EN, "Cotizar") (completed 2026-07-01)
 - [ ] **Phase 3.1: Catalog Configurator** - Interactive "arma tu paquete" cart: individual services selectable 1-by-1 with prices and running total, "Open Ticket" with cart summary (INSERTED)
-- [x] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized (completed 2026-07-03)
+- [x] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized (completed 2026-07-03)
 - [ ] **Phase 5: Photo-Publishing Bot Cog** - Discord cog in `nocturna-bot` (✅ approve / 🗑️ remove / Pillow optimize / cross-repo commit)
 - [ ] **Phase 6: Asset Store** - Dedicated store to sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine
 
@@ -215,7 +215,7 @@ Plans:
 
 ### Phase 5: Photo-Publishing Bot Cog
 
-**Goal**: Staff publish gallery photos straight from Discord — a ✅ approves a message's attachments, the bot optimizes and commits them cross-repo to the website, and a 🗑️ removes them — with zero code changes to keep the gallery current.
+**Goal**: Staff publish gallery photos straight from Discord — a ✅ approves a message's attachments, the bot optimizes and commits them cross-repo to the website, and a 🌙 removes them — with zero code changes to keep the gallery current.
 **Mode:** mvp
 **Depends on**: Phase 4 (finalized `gallery.json` schema + image storage path)
 **Requirements**: BOT-01, BOT-02, BOT-03, BOT-04, BOT-05, BOT-06
@@ -225,11 +225,32 @@ Plans:
   2. When a staff member confirms with ✅, the bot publishes all attachments of that message (1 or many)
   3. The bot optimizes images (resize/compress via Pillow) before publishing, with unique filenames
   4. The bot commits images + a `gallery.json` entry to the website repo cross-repo (via PAT/deploy key), triggering a GitHub Pages rebuild so photos go live
-  5. A 🗑️ reaction removes the published photos (and their `gallery.json` entries) from the site
+  5. A 🌙 reaction removes the published photos (and their `gallery.json` entries) from the site (supersedes the 🗑️ literal per D-06 — behavior unchanged)
   6. The message text is captured as the optional caption on published entries
 
-**Plans**: TBD
-**Notes**: **Cross-repo:** this cog lives 100% inside the separate `nocturna-bot` repo (https://github.com/Shangrii/nocturna-bot), following its existing cogs structure (encoding.py, forum.py). No bot code in the website repo, no site code in the bot. It pushes to the website repo via a GitHub PAT/deploy key in the bot's `.env`. Hard dependency on Phase 4's finalized `gallery.json` schema and image storage path. Existing cogs (encoding/forum) are not reworked.
+**Plans**: 5 plans
+Plans:
+**Wave 1**
+
+- [ ] 05-01-PLAN.md — Config surface + deps (Pillow/pytest) + Pillow image-optimization pipeline (test-first); WebP downscale-only + EXIF strip (BOT-03)
+
+**Wave 2** *(blocked on Wave 1 — needs config + test harness)*
+
+- [ ] 05-02-PLAN.md — Atomic cross-repo commit transport `core/github_publish.py` via GitHub Git Data API (blobs→tree→commit→ref), publish + removal, lock + retry (test-first) (BOT-04)
+
+**Wave 3** *(blocked on Waves 1+2 — the cog wires both cores)*
+
+- [ ] 05-03-PLAN.md — `cogs/gallery.py` publish slice: staff-post detection + ✅ approve + publish orchestration + bot.py loader + config validation (BOT-01/BOT-02/BOT-06)
+
+**Wave 4** *(blocked on Wave 3 — shares `cogs/gallery.py`)*
+
+- [ ] 05-04-PLAN.md — Removal + auto-unpublish (🌙 + message-delete) + persistent error surfacing + startup backfill cursor/reconcile (BOT-05/D-10/D-19/D-20)
+
+**Wave 5** *(blocked on Wave 4 — live secrets + acceptance)*
+
+- [ ] 05-05-PLAN.md — Live setup (fine-grained PAT + staff role IDs + deploy) + end-to-end human verification of all 6 criteria
+
+**Notes**: **Cross-repo:** this cog lives 100% inside the separate `nocturna-bot` repo (https://github.com/Shangrii/nocturna-bot), following its existing cogs structure (encoding.py, forum.py). No bot code in the website repo, no site code in the bot. It pushes to the website repo (`Shangrii/Nocturna-Avatars` @ `revamp`) via a GitHub PAT/deploy key in the bot's `.env`. Hard dependency on Phase 4's finalized `gallery.json` schema and image storage path. Existing cogs (encoding/forum) are not reworked. The 5 plans serialize (Waves 1→5): plans 03/04 share the single `cogs/gallery.py` file, mirroring Phase 2's motion-controller serialization; each wave is independently shippable-and-tested (unit tests) with live end-to-end proof gated to plan 05-05.
 
 ## Progress
 
@@ -246,7 +267,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
-| 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
+| 5. Photo-Publishing Bot Cog | 0/5 | Not started | - |
 | 6. Asset Store | 0/TBD | Not started | - |
 
 ### Phase 6: Asset Store
