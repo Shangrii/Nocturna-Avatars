@@ -485,19 +485,19 @@ WEBSITE_IMAGE_DIR      = os.getenv("WEBSITE_IMAGE_DIR", "public/gallery")
 
 **Note:** A1 and A6 are the two items that genuinely need user confirmation before execution (repo slug + staff role IDs). Everything else is verified or low-risk.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Website repo `owner/name` slug for the PAT target**
+1. **Website repo `owner/name` slug for the PAT target** — RESOLVED: `05-01-PLAN.md` sets the `WEBSITE_REPO` default to `Shangrii/Nocturna-Avatars`, verified against this repo's actual `git remote -v` during planning.
    - What we know: this working dir IS the website repo; deploy branch is `revamp`; path is `src/data/gallery.json`.
    - What's unclear: the exact `owner/name` GitHub slug to put in `WEBSITE_REPO` (planning docs don't record the remote).
    - Recommendation: planner adds a `checkpoint:human-verify` to capture the slug (+ confirm the PAT has Contents:write on it).
 
-2. **Which staff role(s) gate the gallery (D-01/D-08)?**
+2. **Which staff role(s) gate the gallery (D-01/D-08)?** — RESOLVED: deferred by design to the blocking `checkpoint:decision` in `05-05-PLAN.md` Task 1, which captures the confirmed `GALLERY_STAFF_ROLE_IDS` list from the user before live setup.
    - What we know: the bot already has `ROLE_MODERATOR_ID=1418724526308593834`.
    - What's unclear: whether the gallery uses that same role or a distinct list.
    - Recommendation: default to a configurable `GALLERY_STAFF_ROLE_IDS` list; confirm the actual IDs with the user.
 
-3. **PAT type — classic vs fine-grained, and rotation**
+3. **PAT type — classic vs fine-grained, and rotation** — RESOLVED: deferred by design to the `05-05-PLAN.md` Task 1 checkpoint; fine-grained PAT (website repo only, Contents: Read and write) is the recommended choice captured there.
    - What we know: must trigger `on: push` (⇒ a PAT, not `GITHUB_TOKEN`) with Contents write.
    - Recommendation: **fine-grained PAT** scoped to only the website repo, **Contents: Read and write**; store in the bot's `.env` (already git-ignored); plan for expiry/rotation.
 
