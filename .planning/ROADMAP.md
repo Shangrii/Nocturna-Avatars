@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Experimental Motion Layer** - WebGL hero, smooth scroll, scroll reveals, animated page transitions, cursor effects (completed 2026-06-30)
 - [x] **Phase 3: Service Catalog** - Data-driven packages + modular catalog from `services.json` (ES/EN, "Cotizar") (completed 2026-07-01)
 - [ ] **Phase 3.1: Catalog Configurator** - Interactive "arma tu paquete" cart: individual services selectable 1-by-1 with prices and running total, "Open Ticket" with cart summary (INSERTED)
-- [ ] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized
+- [x] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized (completed 2026-07-03)
 - [ ] **Phase 5: Photo-Publishing Bot Cog** - Discord cog in `nocturna-bot` (✅ approve / 🗑️ remove / Pillow optimize / cross-repo commit)
 - [ ] **Phase 6: Asset Store** - Dedicated store to sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine
 
@@ -245,7 +245,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2.1 Visual Redesign — Refined Street Editorial | 4/4 | Complete   | 2026-06-30 |
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
-| 4. Gallery & Data Layer | 2/3 | In Progress|  |
+| 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
 | 5. Photo-Publishing Bot Cog | 0/TBD | Not started | - |
 | 6. Asset Store | 0/TBD | Not started | - |
 

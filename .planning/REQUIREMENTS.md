@@ -45,7 +45,7 @@
 - [x] **GAL-01**: The gallery page renders all entries from `gallery.json` as a masonry wall
 - [x] **GAL-02**: A visitor can open any photo in a lightbox
 - [x] **GAL-03**: A photo can show an optional caption / alt text
-- [ ] **GAL-04**: The landing shows a featured subset of the gallery
+- [x] **GAL-04**: The landing shows a featured subset of the gallery
 
 ### Bot Automation (nocturna-bot repo)
 
@@ -106,7 +106,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | GAL-01 | Phase 4 | Complete |
 | GAL-02 | Phase 4 | Complete |
 | GAL-03 | Phase 4 | Complete |
-| GAL-04 | Phase 4 | Pending |
+| GAL-04 | Phase 4 | Complete |
 | BOT-01 | Phase 5 | Pending |
 | BOT-02 | Phase 5 | Pending |
 | BOT-03 | Phase 5 | Pending |
