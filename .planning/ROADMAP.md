@@ -232,7 +232,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 05-01-PLAN.md — Config surface + deps (Pillow/pytest) + Pillow image-optimization pipeline (test-first); WebP downscale-only + EXIF strip (BOT-03)
+- [x] 05-01-PLAN.md — Config surface + deps (Pillow/pytest) + Pillow image-optimization pipeline (test-first); WebP downscale-only + EXIF strip (BOT-03)
 
 **Wave 2** *(blocked on Wave 1 — needs config + test harness)*
 
@@ -267,7 +267,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
-| 5. Photo-Publishing Bot Cog | 0/5 | Not started | - |
+| 5. Photo-Publishing Bot Cog | 1/5 | In Progress|  |
 | 6. Asset Store | 0/TBD | Not started | - |
 
 ### Phase 6: Asset Store

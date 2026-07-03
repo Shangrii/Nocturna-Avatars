@@ -51,7 +51,7 @@
 
 - [ ] **BOT-01**: The cog detects staff photo posts in the configured channel and marks the message with a ✅ approve control
 - [ ] **BOT-02**: When a staff member confirms with ✅, the bot publishes all attachments of that message (1 or many)
-- [ ] **BOT-03**: The bot optimizes images (resize/compress) before publishing
+- [x] **BOT-03**: The bot optimizes images (resize/compress) before publishing
 - [ ] **BOT-04**: The bot commits images + a `gallery.json` entry to the website repo cross-repo
 - [ ] **BOT-05**: A 🗑️ reaction removes the published photos from the site
 - [ ] **BOT-06**: The message text is captured as the optional caption
@@ -109,7 +109,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | GAL-04 | Phase 4 | Complete |
 | BOT-01 | Phase 5 | Pending |
 | BOT-02 | Phase 5 | Pending |
-| BOT-03 | Phase 5 | Pending |
+| BOT-03 | Phase 5 | Complete |
 | BOT-04 | Phase 5 | Pending |
 | BOT-05 | Phase 5 | Pending |
 | BOT-06 | Phase 5 | Pending |

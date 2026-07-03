@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 5 context gathered
-last_updated: "2026-07-03T12:33:43.459Z"
-last_activity: 2026-07-03 -- Phase 5 planning complete
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-07-03T17:13:09.429Z"
+last_activity: 2026-07-03
 progress:
   total_phases: 8
   completed_phases: 5
   total_plans: 29
-  completed_plans: 23
+  completed_plans: 24
   percent: 63
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** A visitor is visually impressed and reaches "Abrir Ticket" on Discord, while staff keep gallery/catalog current without touching code.
-**Current focus:** Phase 04 — gallery-data-layer
+**Current focus:** Phase 05 — photo-publishing-bot-cog
 
 ## Current Position
 
-Phase: 04 (gallery-data-layer) — COMPLETE ✓ (next: Phase 5, photo bot)
-Plan: 3 of 3 complete — GAL-01/02/03/04 all verified
+Phase: 05 (photo-publishing-bot-cog) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-07-03 -- Phase 5 planning complete
+Last activity: 2026-07-03
 
-Progress: [██████████] 96%
+Progress: [████████░░] 83%
 
 ## Performance Metrics
 
@@ -66,6 +66,7 @@ Progress: [██████████] 96%
 | Phase 03.1 P05 | 10min | 1 tasks | 1 files |
 | Phase 04 P01 | 12min | 2 tasks | 7 files |
 | Phase 04 P03 | 8min | 3 tasks | 5 files |
+| Phase 05 P01 | 10min | 2 tasks tasks | 6 files files |
 
 ## Accumulated Context
 
@@ -111,6 +112,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [04-01] masonry-layout@4.2.2 + imagesloaded@5.0.0 exact-pinned (+ @types), npm audit clean (T-04-SC); GalleryPage renders data-gallery-wall/data-gallery-tile CLS-free aspect boxes, caption-or-fallback alt, eager-first-row/lazy-rest, EmptyState fallback when empty (D-04/D-09/D-12)
 - [Phase ?]: [04-03] Landing featured subset (GAL-04): newest-6 auto-curated pin-wall polaroid grid (sort by date + slice 0..6, no featured flag) replaces the featured Teaser; opens the Plan 02 lightbox in place via a shared LightboxOverlay.astro rendered on both pages
 - [Phase ?]: [04-03] gallery.ts unchanged — Plan 02 already wires the lightbox on all [data-gallery-tile] document-wide and no-ops scatter/sky/torch without a [data-gallery-wall]; landing reuses the pin-wall polaroid language as a static square grid (no scatter engine) for conversion-path performance
+- [Phase 05]: [05-01] optimize_to_webp: downscale-only 1920px WebP (q82, method=6); EXIF/GPS stripped by omitting exif= on save — verified Pillow 12.3 does NOT auto-carry im.info['exif'] (T-05-02). Pure module (io+PIL only); cog owns to_thread.
+- [Phase 05]: [05-01] Phase-5 bot config defaults locked: WEBSITE_REPO=Shangrii/Nocturna-Avatars, WEBSITE_BRANCH=revamp (D-15 — branch flips at cutover with zero code changes); GALLERY_STAFF_ROLE_IDS is a comma-split list[int].
 
 ### Pending Todos
 
@@ -141,6 +144,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-03T08:58:12.361Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-photo-publishing-bot-cog/05-CONTEXT.md
+Last session: 2026-07-03T17:13:09.418Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None
