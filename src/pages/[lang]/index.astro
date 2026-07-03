@@ -10,6 +10,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { langCodes, toLang, useTranslations } from '../../i18n/ui';
 import About from '../../components/sections/About.astro';
 import Teaser from '../../components/sections/Teaser.astro';
+import FeaturedGallery from '../../components/sections/FeaturedGallery.astro';
 import PackagesSummary from '../../components/sections/PackagesSummary.astro';
 import { localizedPath } from '../../i18n/routes';
 import '../../styles/sections.css';
@@ -84,7 +85,7 @@ const empty = useTranslations(lang, 'pages').emptyState;
        packages so its data-teaser="gallery" marquee choreography hook survives.
        Ink/paper rhythm alternates: featured(ink) → about(paper) → packages(ink)
        → gallery(paper) → closing(ink). -->
-  <Teaser lang={lang} variant="featured" />
+  <FeaturedGallery lang={lang} />
   <About lang={lang} surface />
   <PackagesSummary lang={lang} />
   <Teaser lang={lang} variant="gallery" />

@@ -1,0 +1,152 @@
+---
+/**
+ * FeaturedGallery — the landing's featured subset (GAL-04, D-15/D-16).
+ *
+ * Renders the NEWEST 6 gallery.json entries (auto-curated by `date` — no per-entry
+ * `featured` flag, no manual list, so staff keep the landing current just by the
+ * bot appending entries) as a responsive grid of pinned polaroid cards, replacing
+ * the old `featured` Teaser placeholder. It inherits the /galeria pin-wall visual
+ * language (reuses .gallery-tile / .polaroid / .pin / .tape from gallery.css) but
+ * NOT the full night-board (no scatter engine, no sky, no thread) — the landing
+ * stays fast and conversion-focused: a simple static CSS grid of tilted polaroids.
+ *
+ * Each tile is a focusable <button> carrying the data-gallery-tile / data-file /
+ * data-caption / data-index hooks the Plan 02 lightbox derives its entries from at
+ * page-load — so clicking (or Enter/Space on) a featured photo opens the SAME
+ * hand-rolled lightbox IN PLACE on the landing (keeping the visitor near the CTA),
+ * navigating just the featured 6. A `.link-arrow` "View full gallery" link routes
+ * to /galeria · /gallery for the full board.
+ *
+ * All caption/alt text is rendered through Astro auto-escaping — raw HTML injection
+ * is never used. Captions originate from Discord (untrusted) but are only ever an
+ * `alt` attribute here, so a malicious caption cannot execute (T-04-07).
+ */
+import EmptyState from '../EmptyState.astro';
+import LightboxOverlay from '../LightboxOverlay.astro';
+import { useTranslations, type Lang } from '../../i18n/ui';
+import { localizedPath } from '../../i18n/routes';
+import galleryData from '../../data/gallery.json';
+import '../../styles/gallery.css';
+
+interface GalleryEntry {
+  file: string;
+  caption?: string;
+  width: number;
+  height: number;
+  date: string;
+}
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const head = useTranslations(lang, 'pages').teaser.featured;
+const altFallback = useTranslations(lang, 'pages').gallery.altFallback;
+const viewAll = useTranslations(lang, 'pages').gallery.viewAll;
+const newBadge = useTranslations(lang, 'pages').gallery.newBadge;
+const empty = useTranslations(lang, 'pages').emptyState;
+
+// Newest-first by `date` (D-05, mirrors GalleryPage), then take the newest N=6 —
+// auto-curated, no per-entry flag, no manual list (D-15). Copy before sorting so
+// the imported module array is never mutated.
+const featured = ([...(galleryData as GalleryEntry[])])
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 6);
+
+// Deterministic FNV-1a — drives the per-card tilt + pin/tape choice so the landing
+// grid is identical on every build yet reads hand-built (matches the /galeria wall).
+function hashStr(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}
+// Small stable hang angle (−4°..+4°).
+function tiltFor(entry: GalleryEntry): number {
+  return ((hashStr(entry.file) >>> 8) % 9) - 4;
+}
+// ~38% tape corners, else a push-pin — deterministic, mirrors GalleryPage.
+function holdFor(entry: GalleryEntry): 'pin' | 'tape' {
+  return (hashStr(entry.file) >>> 5) % 100 < 38 ? 'tape' : 'pin';
+}
+---
+
+<section class="section section--rule" data-featured-gallery>
+  <div class="section-header reveal">
+    <span class="section-tag">{head.tag}</span>
+    <h2 class="section-title">{head.title}</h2>
+  </div>
+
+  {featured.length >= 1 ? (
+    <>
+      <div class="featured-grid reveal">
+        {featured.map((entry, i) => (
+          <button
+            type="button"
+            class="gallery-tile featured-tile"
+            data-gallery-tile
+            data-index={i}
+            data-file={entry.file}
+            data-caption={entry.caption ?? ''}
+            style={`--tilt:${tiltFor(entry)}deg`}
+          >
+            <span class="polaroid">
+              {holdFor(entry) === 'pin' ? (
+                <span class="pin" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path class="pin__needle" d="M11.5 13 L12.3 22 L13 13 Z" />
+                    <circle class="pin__head" cx="12" cy="8" r="6.4" />
+                    <circle class="pin__shine" cx="9.7" cy="5.9" r="1.9" />
+                  </svg>
+                </span>
+              ) : (
+                <>
+                  <span class="tape tape--l" aria-hidden="true"></span>
+                  <span class="tape tape--r" aria-hidden="true"></span>
+                </>
+              )}
+              {i === 0 && <span class="scribble-new" aria-hidden="true">{newBadge}</span>}
+              <span class="polaroid__photo" style="aspect-ratio:1/1">
+                <img
+                  src={`/gallery/${entry.file}`}
+                  width={entry.width}
+                  height={entry.height}
+                  alt={entry.caption ?? altFallback}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+              {entry.caption && <span class="polaroid__cap">{entry.caption}</span>}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <div class="featured-action reveal">
+        <a href={localizedPath('gallery', lang)} class="link-arrow">{viewAll}</a>
+      </div>
+    </>
+  ) : (
+    <div class="reveal">
+      <EmptyState
+        heading={empty.heading}
+        body={empty.galleryBody}
+        ticketLabel={empty.ticketCta}
+      />
+    </div>
+  )}
+</section>
+
+{/* Shared lightbox overlay (Plan 04-03) — the same canonical [data-lightbox-overlay]
+    /galeria renders, so the Plan 02 controller opens the lightbox IN PLACE on the
+    landing over the featured 6. Only rendered when there are tiles to open. */}
+{featured.length >= 1 ? <LightboxOverlay lang={lang} /> : null}
+
+<!-- Pin-wall/lightbox controller (swap-safe, Plan 02). Its scatter/torch/sky init
+     no-ops without a [data-gallery-wall]; only the lightbox tile-wiring runs here. -->
+<script>
+  import '../../scripts/gallery.ts';
+</script>
