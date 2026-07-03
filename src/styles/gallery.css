@@ -553,6 +553,62 @@
 }
 
 /* ═══════════════════════════════════════════════
+   Featured grid — the landing's newest-6 subset (Plan 04-03, GAL-04/D-16).
+   A simple STATIC CSS grid of tilted polaroid cards (2-up mobile / 3-up desktop).
+   It REUSES the pin-wall tile primitives above (.gallery-tile / .polaroid / .pin /
+   .tape — incl. their red focus-visible ring, hover straighten+lift and z-index
+   bump) but NOT the scatter engine, sky, thread or torch, so the landing stays
+   fast and conversion-focused. Photo windows are squared (1/1) here for a tidy grid.
+   ═══════════════════════════════════════════════ */
+[data-featured-gallery] {
+  position: relative;
+  isolation: isolate; /* scope the hovered-card z-index lift to the section */
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* mobile: 2-up */
+  gap: var(--space-sm);
+  max-width: 1080px;
+  margin-inline: auto;
+  /* Breathing room so the push-pins / tape corners overhang above the first row
+     without colliding with the section header. */
+  margin-top: var(--space-lg);
+  padding-top: var(--space-xs);
+  align-items: start; /* top-align cards — collage-style bottom edge */
+}
+
+@media (min-width: 768px) {
+  .featured-grid {
+    grid-template-columns: repeat(3, 1fr); /* desktop: 3-up */
+    gap: var(--space-md);
+  }
+}
+
+/* Square photo window on the landing (the /galeria wall uses each photo's natural
+   aspect; here 1/1 keeps the featured grid tidy). object-fit:cover on the shared
+   .polaroid__photo > img crops to fill. */
+.featured-grid .polaroid__photo {
+  aspect-ratio: 1 / 1;
+}
+
+/* The tile inherits .gallery-tile's cursor:zoom-in, red focus-visible ring, the
+   @media (hover:hover) straighten+scale lift and the prefers-reduced-motion
+   neutralization from the pin-wall rules above — nothing to re-author. This just
+   pins the focus-ring offset the plan calls for. */
+.featured-tile:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 2px;
+}
+
+/* "View full gallery" — reuse the .link-arrow base (sections.css); place it
+   centered an --space-xl gap below the grid. */
+.featured-action {
+  margin-top: var(--space-xl);
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════
    Lightbox (D-13/D-14) — reuses .dc-overlay (chrome.css) for the backdrop +
    fade; this layers the stage, controls, counter and caption on top. All
    motion is neutralized under prefers-reduced-motion (kill list in chrome.css).
