@@ -1,7 +1,7 @@
 ---
 phase: 04-gallery-data-layer
 verified: 2026-07-03T01:30:00Z
-status: human_needed
+status: passed
 score: 5/5 must-haves verified
 overrides_applied: 0
 overrides:
@@ -19,7 +19,7 @@ human_verification:
 
 **Phase Goal:** A visitor browses a masonry photo wall with lightbox rendered from `gallery.json`, sees a featured subset on the landing, and the `gallery.json` schema is finalized so the bot can write to it.
 **Verified:** 2026-07-03T01:30:00Z
-**Status:** human_needed
+**Status:** passed (human gate approved by user 2026-07-03)
 **Re-verification:** No — initial verification
 
 ## Goal Achievement
@@ -113,7 +113,7 @@ None. Scanned `gallery.ts`, `GalleryPage.astro`, `FeaturedGallery.astro`, `Light
 
 No blocking gaps found. All 5 ROADMAP success criteria and all 4 requirements (GAL-01..04) are verified against actual code and build output — not just SUMMARY claims. The one apparent deviation (masonry → pin-wall) is a documented, user-approved design pivot that still delivers the underlying observable behavior (all `gallery.json` entries render, data-driven, on `/galeria`), so it is recorded as an accepted override rather than a failure, consistent with the critical_context guidance for this verification run.
 
-The only open item is a pending human visual/interaction QA pass on the landing's featured-gallery + lightbox, which the phase's own plan (`04-03-PLAN.md`) flags as a blocking checkpoint that has not yet been executed by the user. This routes the phase to `human_needed` rather than `passed` — automated verification found no gaps, but sign-off on the visual/interaction experience is still required before considering Phase 4 fully closed.
+The only open item is a pending human visual/interaction QA pass on the landing's featured-gallery + lightbox, which the phase's own plan (`04-03-PLAN.md`) flags as a blocking checkpoint that has not yet been executed by the user. UPDATE 2026-07-03: the user executed the visual QA pass on the landing (featured grid, in-place lightbox, view-all routing, conversion CTA) and approved. Phase 4 is fully closed — status upgraded to passed.
 
 ---
 
