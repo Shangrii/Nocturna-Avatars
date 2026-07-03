@@ -19,6 +19,7 @@
  * (T-04-01).
  */
 import EmptyState from '../EmptyState.astro';
+import LightboxOverlay from '../LightboxOverlay.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
 import galleryData from '../../data/gallery.json';
 import '../../styles/gallery.css';
@@ -39,7 +40,6 @@ const page = useTranslations(lang, 'pages').galeria;
 const empty = useTranslations(lang, 'pages').emptyState;
 const altFallback = useTranslations(lang, 'pages').gallery.altFallback;
 const newBadge = useTranslations(lang, 'pages').gallery.newBadge;
-const lightbox = useTranslations(lang, 'pages').lightbox;
 
 // Newest-first by `date` (D-05). Copy before sorting so the imported module
 // array is never mutated.
@@ -182,66 +182,12 @@ const FIREFLIES = Array.from({ length: 26 }, (_, i) => {
 </section>
 
 {/*
-  Hand-rolled lightbox overlay (D-13). Reuses the CartSummaryModal .dc-overlay
-  attribute set verbatim incl. data-lenis-prevent (pauses Lenis while open). The
-  img / caption / counter are populated by gallery.ts via textContent ONLY (never
-  innerHTML) since captions originate from Discord (T-04-04). Rendered only when
-  the wall has entries — Plan 03 will mount the same overlay from the landing.
+  Hand-rolled lightbox overlay (D-13). Now authored ONCE in the shared
+  LightboxOverlay.astro partial (Plan 04-03) and reused verbatim by both /galeria
+  and the landing featured grid, so gallery.ts binds one canonical
+  [data-lightbox-overlay] per page. Rendered only when the wall has entries.
 */}
-{entries.length ? (
-  <div
-    class="dc-overlay lightbox"
-    data-lightbox-overlay
-    hidden
-    aria-hidden="true"
-    role="dialog"
-    aria-modal="true"
-    aria-label={lightbox.dialogLabel}
-    data-counter-label={lightbox.counterLabel}
-    data-lenis-prevent
-  >
-    <button
-      type="button"
-      class="lightbox__ctrl lightbox__close"
-      data-lightbox-close
-      aria-label={lightbox.close}
-    >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-      </svg>
-    </button>
-
-    <button
-      type="button"
-      class="lightbox__ctrl lightbox__prev"
-      data-lightbox-prev
-      aria-label={lightbox.prev}
-    >
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-    </button>
-
-    <figure class="lightbox__stage" data-lightbox-stage>
-      <img class="lightbox__img" data-lightbox-img alt="" />
-      <figcaption class="lightbox__meta">
-        <span class="lightbox__counter" data-lightbox-counter aria-live="polite"></span>
-        <span class="lightbox__caption" data-lightbox-caption hidden></span>
-      </figcaption>
-    </figure>
-
-    <button
-      type="button"
-      class="lightbox__ctrl lightbox__next"
-      data-lightbox-next
-      aria-label={lightbox.next}
-    >
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-    </button>
-  </div>
-) : null}
+{entries.length ? <LightboxOverlay lang={lang} /> : null}
 
 <!-- Pin-wall scatter init + hand-rolled lightbox controller (swap-safe, Plan 02). -->
 <script>
