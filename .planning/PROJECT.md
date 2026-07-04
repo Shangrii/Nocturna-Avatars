@@ -19,6 +19,8 @@ A visitor lands, is visually impressed by the work, and reaches "Abrir Ticket" o
 - ✓ Brand identity: red/navy/off-white palette, graffiti font, film-grain overlay — existing
 - ✓ Full Terms & Conditions content (10 blocks) — existing
 - ✓ Responsive nav + gallery "show more" toggle — existing
+- ✓ **Photo-publishing bot cog** (`nocturna-bot` repo): ✅ approve-to-publish, 🌙 remove (supersedes 🗑️ per D-06), delete auto-unpublish, Pillow WebP optimization, atomic cross-repo commits, startup backfill — LIVE, all six BOT criteria verified on the production domain. Validated in Phase 5: photo-publishing-bot-cog (2026-07-04)
+- ✓ **Production beta cutover** (2026-07-04, user decision): the revamp now serves nocturna-avatars.site via a self-healing gh-pages deploy pipeline; old site archived on `main` (rollback = flip Pages source)
 
 ### Active
 
@@ -31,7 +33,6 @@ A visitor lands, is visually impressed by the work, and reaches "Abrir Ticket" o
 - [ ] Persistent, stylized **"Abrir Ticket" / Discord CTA** on every page
 - [ ] **Data-driven service catalog** (`services.json`): 3 packages (Penumbra/Umbra/Eclipse) + modular catalog by category (Unity, Blender/mesh, Textures, Accessories, Extras/NSFW); undecided prices show "Cotizar"
 - [ ] **Data-driven gallery** (`gallery.json`): masonry wall + lightbox, optional caption; featured subset on landing
-- [ ] **Photo-publishing bot cog** (lives in the separate `nocturna-bot` repo): watches the photos channel, ✅ approve-to-publish, 🗑️ to remove, optimizes via Pillow, commits images + gallery.json cross-repo to the website repo
 - [ ] Formalize the design system into reusable Astro components/tokens; bump the "A Another Tag" type scale (it renders small) and reserve it for display/accents
 
 ### Out of Scope
@@ -91,4 +92,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-28 after initialization*
+*Last updated: 2026-07-04 after Phase 5 completion (bot cog live + production beta cutover)*
