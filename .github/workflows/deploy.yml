@@ -46,11 +46,45 @@ jobs:
         run: |
           cd dist
           touch .nojekyll
+          echo "${GITHUB_SHA}" > build.txt
           git init -b gh-pages
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "deploy: ${GITHUB_SHA}"
           git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify live site + self-heal
+        # Pages' internal deployment finalizer intermittently rejects deploys
+        # that land while the previous one is still propagating ("Deployment
+        # failed, try again later" — hits removal commits that follow a publish
+        # within ~2 min). Every gh-pages push carries the FULL site state, so
+        # convergence is safe: poll the live build fingerprint; if Pages didn't
+        # pick this deploy up, push a fresh gh-pages commit to trigger a new
+        # internal build. Non-blocking: the next deploy or the scheduled healer
+        # (pages-heal.yml on main) converges any residual miss.
+        run: |
+          verify() {
+            for i in $(seq 1 8); do
+              sleep 15
+              LIVE=$(curl -fsSL "https://nocturna-avatars.site/build.txt?cb=${RANDOM}${RANDOM}" 2>/dev/null || echo none)
+              echo "live build: ${LIVE} (want ${GITHUB_SHA})"
+              [ "${LIVE}" = "${GITHUB_SHA}" ] && return 0
+            done
+            return 1
+          }
+          for attempt in 1 2 3; do
+            if verify; then echo "Live site is serving this deploy."; exit 0; fi
+            echo "Not converged — nudging Pages with a fresh gh-pages commit (attempt ${attempt})"
+            cd dist
+            date -u +%FT%TZ > .heal
+            git add -A
+            git commit -m "deploy: ${GITHUB_SHA} (heal ${attempt})"
+            git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+            cd ..
+          done
+          if verify; then echo "Live site is serving this deploy."; exit 0; fi
+          echo "::warning::Live site did not converge to ${GITHUB_SHA}; next deploy or pages-heal will retry"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
