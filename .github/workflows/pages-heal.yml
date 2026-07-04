@@ -1,0 +1,32 @@
+name: pages-heal
+
+# Scheduled convergence check for the beta site (lives on main because cron
+# only runs from the default branch; the site itself deploys from revamp).
+# GitHub Pages' deployment finalizer intermittently drops deploys that arrive
+# while a previous one is propagating. Every deploy pushes the FULL site state
+# with a build.txt fingerprint, so healing = re-dispatching the deploy
+# workflow whenever the live fingerprint differs from gh-pages HEAD's.
+# User-authorized addition to main (2026-07-04).
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  heal:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compare live fingerprint vs gh-pages and heal
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          WANT=$(curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/gh-pages/build.txt?cb=${RANDOM}" || echo unknown)
+          LIVE=$(curl -fsSL "https://nocturna-avatars.site/build.txt?cb=${RANDOM}${RANDOM}" || echo none)
+          echo "gh-pages build: ${WANT} | live build: ${LIVE}"
+          if [ "${WANT}" = "unknown" ]; then echo "cannot read gh-pages fingerprint — skipping"; exit 0; fi
+          if [ "${LIVE}" = "${WANT}" ]; then echo "converged — nothing to heal"; exit 0; fi
+          echo "MISMATCH — re-dispatching deploy workflow on revamp"
+          gh workflow run deploy.yml --repo "${GITHUB_REPOSITORY}" --ref revamp
