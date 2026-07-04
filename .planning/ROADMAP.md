@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Service Catalog** - Data-driven packages + modular catalog from `services.json` (ES/EN, "Cotizar") (completed 2026-07-01)
 - [ ] **Phase 3.1: Catalog Configurator** - Interactive "arma tu paquete" cart: individual services selectable 1-by-1 with prices and running total, "Open Ticket" with cart summary (INSERTED)
 - [x] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized (completed 2026-07-03)
-- [ ] **Phase 5: Photo-Publishing Bot Cog** - Discord cog in `nocturna-bot` (✅ approve / 🗑️ remove / Pillow optimize / cross-repo commit)
+- [x] **Phase 5: Photo-Publishing Bot Cog** - Discord cog in `nocturna-bot` (✅ approve / 🗑️ remove / Pillow optimize / cross-repo commit) (completed 2026-07-04)
 - [ ] **Phase 6: Asset Store** - Dedicated store to sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine
 
 ## Phase Details
@@ -248,7 +248,7 @@ Plans:
 
 **Wave 5** *(blocked on Wave 4 — live secrets + acceptance)*
 
-- [ ] 05-05-PLAN.md — Live setup (fine-grained PAT + staff role IDs + deploy) + end-to-end human verification of all 6 criteria
+- [x] 05-05-PLAN.md — Live setup (fine-grained PAT + staff role IDs + deploy) + end-to-end human verification of all 6 criteria
 
 **Notes**: **Cross-repo:** this cog lives 100% inside the separate `nocturna-bot` repo (https://github.com/Shangrii/nocturna-bot), following its existing cogs structure (encoding.py, forum.py). No bot code in the website repo, no site code in the bot. It pushes to the website repo (`Shangrii/Nocturna-Avatars` @ `revamp`) via a GitHub PAT/deploy key in the bot's `.env`. Hard dependency on Phase 4's finalized `gallery.json` schema and image storage path. Existing cogs (encoding/forum) are not reworked. The 5 plans serialize (Waves 1→5): plans 03/04 share the single `cogs/gallery.py` file, mirroring Phase 2's motion-controller serialization; each wave is independently shippable-and-tested (unit tests) with live end-to-end proof gated to plan 05-05.
 
@@ -267,7 +267,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Service Catalog | 3/3 | Complete   | 2026-07-01 |
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
-| 5. Photo-Publishing Bot Cog | 4/5 | In Progress|  |
+| 5. Photo-Publishing Bot Cog | 5/5 | Complete   | 2026-07-04 |
 | 6. Asset Store | 0/TBD | Not started | - |
 
 ### Phase 6: Asset Store
