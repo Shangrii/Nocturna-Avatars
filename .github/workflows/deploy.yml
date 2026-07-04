@@ -1,10 +1,11 @@
 name: deploy
 
 # Build the Astro revamp and deploy to GitHub Pages.
-# Triggers only on the revamp branch (production stays untouched until cutover, D-07/D-09).
+# MANUAL-ONLY until cutover: a repo has a single Pages environment, so any Actions
+# deploy replaces the production domain regardless of branch. The Phase-5 bot pushes
+# gallery commits to revamp continuously; an on:push trigger here would redeploy
+# production with every photo (incident 2026-07-04). Restore on:push at cutover.
 on:
-  push:
-    branches: [revamp]
   workflow_dispatch:
 
 # Least-privilege: only what deploy-pages needs (T-01-01).
