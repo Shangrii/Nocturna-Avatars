@@ -35,7 +35,11 @@ jobs:
           node-version: 22
           cache: npm
       - name: Install
-        run: npm ci
+        # npm install, not npm ci: the committed lockfile's bundled-optional
+        # accounting for @tailwindcss/oxide-wasm32-wasi differs between npm
+        # versions (EUSAGE "Missing: @emnapi/*"), and that wasm optional never
+        # installs on linux-x64 anyway. install still pins via the lockfile.
+        run: npm install --no-audit --no-fund
       - name: Build Astro site
         run: npm run build
       - name: Push dist to gh-pages
