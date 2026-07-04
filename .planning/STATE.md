@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 05-04-PLAN.md
-last_updated: "2026-07-03T23:08:28.624Z"
+status: ready_to_plan
+stopped_at: Phase 05 complete (5/5) — ready to discuss Phase 06
+last_updated: 2026-07-04T16:01:26.893Z
 last_activity: 2026-07-03
 progress:
   total_phases: 8
   completed_phases: 5
   total_plans: 29
-  completed_plans: 27
+  completed_plans: 28
   percent: 63
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** A visitor is visually impressed and reaches "Abrir Ticket" on Discord, while staff keep gallery/catalog current without touching code.
-**Current focus:** Phase 05 — photo-publishing-bot-cog
+**Current focus:** Phase 06 — asset store
 
 ## Current Position
 
-Phase: 05 (photo-publishing-bot-cog) — EXECUTING
-Plan: 5 of 5
-Status: Ready to execute
-Last activity: 2026-07-03
+Phase: 06
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-07-04
 
 Progress: [█████████░] 93%
 
@@ -36,7 +36,7 @@ Progress: [█████████░] 93%
 
 **Velocity:**
 
-- Total plans completed: 4
+- Total plans completed: 9
 - Average duration: — min
 - Total execution time: 0.0 hours
 
@@ -45,6 +45,7 @@ Progress: [█████████░] 93%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 4 | - | - |
+| 05 | 5 | - | - |
 
 **Recent Trend:**
 
