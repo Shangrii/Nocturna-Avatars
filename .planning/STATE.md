@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 Phase: 06
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-07-07 - Completed quick task 260707-0q0: 5 pre-phase-6 website todos
+Last activity: 2026-07-07 - Completed quick task 260707-1yi: footer fix + readability panels on Services/Terms
 
 Progress: [█████████░] 93%
 
@@ -161,6 +161,7 @@ Recent decisions affecting current work:
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260707-0q0 | 5 pre-phase-6 website todos: night background on Services+Terms, stronger hero searchlights/static, catalog items (Quest $15 / VTuber VRM $30 / Unitypackage $35), Terms ban disclaimer + block-04 reconcile, Discord popup store copy | 2026-07-07 | 9884c1a | [260707-0q0-ejecutar-5-todos-pendientes-del-sitio-we](./quick/260707-0q0-ejecutar-5-todos-pendientes-del-sitio-we/) |
+| 260707-1yi | Post-deploy fixes for 260707-0q0: footer buried by fixed night backdrop (stacking-context bug, footer z-index fix) + card-style readability panels behind Services catalog and Terms text | 2026-07-07 | 204bcc6 | [260707-1yi-fix-footer-invisible-panel-de-fondo-para](./quick/260707-1yi-fix-footer-invisible-panel-de-fondo-para/) |
 
 ## Deferred Items
 
