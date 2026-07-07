@@ -56,6 +56,16 @@
 - [x] **BOT-05**: A 🗑️ reaction removes the published photos from the site
 - [x] **BOT-06**: The message text is captured as the optional caption
 
+### Asset Store
+
+_Added 2026-07-07 during Phase 6 planning (per ROADMAP Phase 6 note). Wording derived from the Phase 6 success criteria + CONTEXT.md locked decisions D-01…D-20._
+
+- [ ] **STORE-01**: A visitor sees a dedicated store section (`/tienda` ES · `/en/store` EN) listing Nocturna's own VRChat assets rendered from `src/data/store.json`, in ES + EN
+- [ ] **STORE-02**: Each product shows price, preview image(s), and description; staff add/edit products by editing `store.json` only — no component/code changes — rendering in both ES and EN
+- [ ] **STORE-03**: A visitor can add/remove assets to a REAL purchase cart with a running total, reusing the Phase 3.1 cart patterns reframed for purchase — without breaking the /servicios cotización
+- [ ] **STORE-04**: A visitor can complete a purchase and receive their asset(s): checkout + payment + digital fulfillment on Jinxxy (hosted third-party, no self-hosted backend), preserving Astro static + GitHub Pages + CNAME
+- [ ] **STORE-05**: The store is reachable from the nav, keeps "Abrir Ticket" intact; responsive + AA contrast + `prefers-reduced-motion` respected, consistent with the Refined Street Editorial system
+
 ## v2 Requirements
 
 ### Experimental Extras
@@ -67,15 +77,22 @@
 
 - **GAL2-01**: Filter the gallery by category/tag (requires staff tagging)
 
+### Asset Store (v2)
+
+- **STORE2-01**: Category filters on the store grid (schema-ready via the `category` field; UI deferred until inventory grows)
+- **STORE2-02**: Discord bot × Jinxxy integration (Creator API/webhooks for sales pings + split accounting) — future bot phase
+- **STORE2-03**: Creator API price/product sync between Jinxxy and `store.json` (manual sync in v1)
+
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
 | Backend / database / CMS | Static site keeps hosting free and the bot-commit flow simple |
-| On-site checkout / payments | Sales happen via Discord tickets, not on the site |
+| On-site payment processing / self-hosted checkout | Payments, tax, chargebacks, and digital fulfillment are pushed to Jinxxy (merchant of record); the site is a bilingual catalog + link-out (Phase 6, D-01/D-05/D-06) |
 | Auto-translating gallery captions | Captions come from staff in one language, shown as written |
 | Reworking existing bot cogs (encoding/forum) | Only adding a new photo cog |
 | Real 3D viewer in v1 | High weight/time; deferred to v2 |
+| Explicit NSFW on Jinxxy listings | Jinxxy banned explicit content Mar 2026; explicit products use SFW listings with real content in the delivered file (Phase 6, D-04) — a staff/content constraint |
 
 ## Traceability
 
@@ -113,14 +130,19 @@ Which phases cover which requirements. Populated during roadmap creation.
 | BOT-04 | Phase 5 | Complete |
 | BOT-05 | Phase 5 | Complete |
 | BOT-06 | Phase 5 | Complete |
+| STORE-01 | Phase 6 | Planned (06-01) |
+| STORE-02 | Phase 6 | Planned (06-01) |
+| STORE-03 | Phase 6 | Planned (06-03) |
+| STORE-04 | Phase 6 | Planned (06-02, 06-03) |
+| STORE-05 | Phase 6 | Planned (06-01, 06-02, 06-03) |
 
 **Coverage:**
-- v1 requirements: 30 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6)
-- Mapped to phases: 30 ✓
+- v1 requirements: 35 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6 + STORE 5)
+- Mapped to phases: 35 ✓
 - Unmapped: 0 ✓
 
-> Note: an earlier draft footer counted "27 v1"; the actual enumerated v1 list contains 30 requirements. Count corrected here.
+> Note: an earlier draft footer counted "27 v1"; the enumerated v1 list contained 30, then 35 after the Phase 6 STORE-* requirements were added during planning (2026-07-07).
 
 ---
 *Requirements defined: 2026-06-28*
-*Last updated: 2026-06-28 after roadmap creation (traceability + coverage)*
+*Last updated: 2026-07-07 — added STORE-01…STORE-05 (Phase 6 Asset Store) + traceability + coverage*

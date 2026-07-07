@@ -268,7 +268,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
 | 5. Photo-Publishing Bot Cog | 5/5 | Complete   | 2026-07-04 |
-| 6. Asset Store | 0/TBD | Not started | - |
+| 6. Asset Store | 0/3 | Planned | - |
 
 ### Phase 6: Asset Store
 
@@ -287,6 +287,17 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 **UI hint**: yes
 **Notes**: **Static-site constraint** — no self-hosted payment/fulfillment backend. Payment provider is an in-phase decision: a static-site cart+checkout (e.g. Snipcart / Foxy.io) to keep OUR multi-item cart, OR per-product hosted links (Gumroad / Payhip / Lemon Squeezy / Ko-fi / Stripe Payment Links). Reuses the cart engine built in Phase 3.1 (the /servicios "cotización" is the same engine reframed as non-purchase). Product data, asset-file hosting, and preview-image storage path decided in-phase. STORE-* requirements to be added to REQUIREMENTS.md during discuss/plan.
 
-**Plans**: TBD (run `/gsd-plan-phase 6` to break down)
+**Plans**: 3 plans
 Plans:
-- [ ] TBD
+
+**Wave 1**
+
+- [ ] 06-01-PLAN.md — Browse slice: store.json data + bilingual product grid + route/nav/i18n wiring (a visitor can find & view products in ES+EN)
+
+**Wave 2** *(blocked on Wave 1 — shares [page].astro + store.ts)*
+
+- [ ] 06-02-PLAN.md — Quick-view modal + single-product "Comprar en Jinxxy" link-out (the first completed purchase path, D-18 NO branch)
+
+**Wave 3** *(blocked on Wave 2 — shares [page].astro + ProductCard/QuickView)*
+
+- [ ] 06-03-PLAN.md — Real purchase cart: StoreCartPill/Drawer + store-cart.ts (localStorage persist + reconcile, per-item Jinxxy links) — fully isolated from the /servicios cotización
