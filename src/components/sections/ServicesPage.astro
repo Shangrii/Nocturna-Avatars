@@ -71,23 +71,28 @@ const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
     <span class="section-tag">{page.catalogTag}</span>
     <h2 class="section-title">{page.catalogTitle}</h2>
   </div>
-  <CatalogSection
-    catalog={servicesData.catalog}
-    lang={lang}
-    emptyHeading={catalogEmptyHeading}
-    emptyBody={catalogEmptyBody}
-    emptyTicketLabel={catalogEmptyTicketLabel}
-    enableCart={true}
-  />
+  {/* Readability panel (1yi) — solid ink-raised surface matching the Level 1/2/3
+      cards so the catalog rows + contact note read cleanly over the night field.
+      Section header stays outside the panel (display type reads fine over night). */}
+  <div class="night-panel night-panel--catalog reveal">
+    <CatalogSection
+      catalog={servicesData.catalog}
+      lang={lang}
+      emptyHeading={catalogEmptyHeading}
+      emptyBody={catalogEmptyBody}
+      emptyTicketLabel={catalogEmptyTicketLabel}
+      enableCart={true}
+    />
 
-  <p class="catalog-contact-note reveal">
-    {lang === 'es'
-      ? '¿Necesitas una modificación que no aparece en las opciones? '
-      : 'Need a modification that isn’t listed in the options? '}
-    <button type="button" class="catalog-contact-note__link dc-trigger">
-      {lang === 'es' ? 'Contáctanos' : 'Contact us'}
-    </button>
-  </p>
+    <p class="catalog-contact-note">
+      {lang === 'es'
+        ? '¿Necesitas una modificación que no aparece en las opciones? '
+        : 'Need a modification that isn’t listed in the options? '}
+      <button type="button" class="catalog-contact-note__link dc-trigger">
+        {lang === 'es' ? 'Contáctanos' : 'Contact us'}
+      </button>
+    </p>
+  </div>
 </section>
 
 <!--
@@ -128,10 +133,17 @@ const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
 </style>
 
 <style>
+  /* Catalog readability panel (1yi): sized so the inner .catalog-cat column
+     (max-width 1000px, from CatalogSection.astro) keeps its measure once the
+     panel's own horizontal padding is added. Centered under the section header. */
+  .night-panel--catalog {
+    max-width: calc(1000px + var(--space-lg) * 2);
+    margin-inline: auto;
+  }
   .catalog-contact-note {
-    max-width: 1000px;
-    margin: var(--space-xl) auto 0;
-    padding-inline: var(--page-gutter);
+    /* Now inside .night-panel — drop the panel-duplicating page-gutter padding and
+       auto max-width; keep the top margin so it separates from the catalog rows. */
+    margin: var(--space-xl) 0 0;
     text-align: center;
     font-family: var(--font-body);
     font-size: 14px;

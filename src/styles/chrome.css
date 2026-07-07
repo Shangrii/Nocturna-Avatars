@@ -284,6 +284,14 @@
 
 /* ── Footer — editorial: hairline top rule, graffiti wordmark accent, mono links. ── */
 .footer {
+  /* Paint-order fix (quick 260707-1yi): <main> carries a view-transition-name, so it
+     forms a stacking context and paints atomically. The full-viewport .night-bg--fixed
+     (z-index:-1) mounted inside <main> on Services/Terms therefore paints above static,
+     non-positioned siblings — burying this footer. Positioning the footer at z-index:0
+     restores DOM-order painting (footer comes after </main>) so it draws above the
+     fixed night field. No-op on Home/Gallery (nothing full-viewport lives in <main>). */
+  position: relative;
+  z-index: 0;
   padding: 52px var(--page-gutter);
   /* Reserve clearance so the fixed floating CTA never covers footer links/copy. */
   padding-bottom: calc(52px + var(--touch-min) + clamp(16px, 4vw, 32px));
