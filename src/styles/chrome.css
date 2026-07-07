@@ -102,6 +102,14 @@
 .nav-link.active::after {
   transform: scaleX(1);
 }
+/* Hover/focus draws the same inset red underline (D-09 micro-interaction, owned
+   here so it can never collide with a generic ::after rule elsewhere). */
+@media (hover: hover) {
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+}
 .nav-link:focus-visible {
   outline: 2px solid var(--color-red);
   outline-offset: 2px;

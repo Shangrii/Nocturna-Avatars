@@ -32,12 +32,15 @@
   }
 }
 
-/* ── Micro-interaction: underline-draw (D-09) ── nav + arrow links draw an underline. */
-.nav-link,
+/* ── Micro-interaction: underline-draw (D-09) ── arrow links draw an underline.
+   NOTE: `.nav-link` is intentionally NOT part of this rule. chrome.css owns the
+   nav active/hover underline (inset red, text-width). Including `.nav-link` here
+   made this later-loaded rule override chrome's `::after` geometry (left:0 +
+   width:100% → full-cell overhang) and color (currentColor → white on the active
+   link), which is exactly the checkpoint regression. Keep it scoped to arrows. */
 .link-arrow {
   position: relative;
 }
-.nav-link::after,
 .link-arrow::after {
   content: '';
   position: absolute;
@@ -51,8 +54,6 @@
   transition: transform 0.28s ease;
 }
 @media (hover: hover) {
-  .nav-link:hover::after,
-  .nav-link:focus-visible::after,
   .link-arrow:hover::after,
   .link-arrow:focus-visible::after {
     transform: scaleX(1);
@@ -182,7 +183,6 @@
     transform: none;
     animation: none;
   }
-  .nav-link::after,
   .link-arrow::after {
     transition: none;
   }
