@@ -134,16 +134,25 @@ const islandJson = JSON.stringify(
 </style>
 
 <style>
+  /* Larger cards, explicit column counts (checkpoint fix): 1 col mobile,
+     2 col tablet (≥768), exactly 3 col desktop (≥1024) — mirrors the
+     06-UI-SPEC 768/1024 breakpoints. Fixed 3-up within the 1200px measure
+     yields ~378px cards, notably larger than the prior auto-fill (~260px). */
   .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: 1fr;
     gap: var(--space-lg);
     max-width: 1200px;
     margin-inline: auto;
   }
-  @media (max-width: 480px) {
+  @media (min-width: 768px) {
     .product-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .product-grid {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 </style>
