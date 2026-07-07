@@ -20,6 +20,7 @@
  */
 import EmptyState from '../EmptyState.astro';
 import LightboxOverlay from '../LightboxOverlay.astro';
+import NightBackground from '../NightBackground.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
 import galleryData from '../../data/gallery.json';
 import '../../styles/gallery.css';
@@ -76,36 +77,15 @@ function tiltFor(entry: GalleryEntry): number {
 function holdFor(entry: GalleryEntry): 'pin' | 'tape' {
   return (hashStr(entry.file) >>> 5) % 100 < 38 ? 'tape' : 'pin';
 }
-
-// Fireflies — seeded drifting warm particles for the night sky around the board.
-const FIREFLIES = Array.from({ length: 26 }, (_, i) => {
-  const h = hashStr(`ff${i}`);
-  return {
-    x: h % 100, // left %
-    y: 10 + ((h >>> 7) % 76), // top %
-    d: 14 + ((h >>> 13) % 12), // drift duration s
-    del: -(((h >>> 19) % 140) / 10), // negative delay → desynced mid-cycle
-    s: (70 + ((h >>> 24) % 75)) / 100, // scale 0.7–1.45
-    dx: ((h >>> 16) % 2 ? 1 : -1) * (22 + ((h >>> 17) % 26)), // drift ±22..47px
-  };
-});
 ---
 
 <section class="section section-page-top section--rule gallery-night">
-  {/* Night sky — a real child element (not section background) on its own
-      compositor layer: huge multi-layer backgrounds + masked pseudos on the
-      section itself intermittently dropped out of Chromium's raster cache on
-      hard reload (bug: sky vanished after F5). Carries stars, washes and the
-      nav blend; its ::after carries the twinkle layer. */}
-  <span class="gallery-sky" aria-hidden="true"></span>
-
-  {/* Fireflies — drifting warm particles in the night sky around the board.
-      Behind all section content (z −1); static faint dots under reduced motion. */}
-  <span class="gallery-fireflies" aria-hidden="true">
-    {FIREFLIES.map((f) => (
-      <i style={`--fx:${f.x}%; --fy:${f.y}%; --fd:${f.d}s; --fdel:${f.del}s; --fs:${f.s}; --fdx:${f.dx}px`}></i>
-    ))}
-  </span>
+  {/* Night sky + drifting fireflies — the shared <NightBackground /> backdrop
+      (extracted from this page in the 0q0 quick task). Fills the positioned
+      .gallery-night section; gallery.ts drives its --sky-shift parallax via the
+      inherited custom prop on the section. Carries stars, washes, the nav blend
+      and the fireflies. */}
+  <NightBackground />
 
   <div class="section-header reveal">
     <span class="section-tag">{page.tag}</span>

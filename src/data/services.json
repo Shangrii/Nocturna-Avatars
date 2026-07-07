@@ -244,6 +244,27 @@
           "tooltip": { "es": "Corrección y optimización de los menús y parámetros del avatar.", "en": "Fixing and optimizing the avatar's menus and parameters." },
           "price": "5-30",
           "repeatable": false
+        },
+        {
+          "id": "quest-version",
+          "name": { "es": "Versión de Quest", "en": "Quest version" },
+          "tooltip": { "es": "Versión compatible con Quest de tu avatar.", "en": "Quest-compatible version of your avatar." },
+          "price": "15",
+          "repeatable": false
+        },
+        {
+          "id": "vtuber-vrm",
+          "name": { "es": "VTuber (avatar en archivo VRM)", "en": "VTuber (avatar as a VRM file)" },
+          "tooltip": { "es": "Conversión de tu avatar a un archivo VRM para VTubing.", "en": "Conversion of your avatar to a VRM file for VTubing." },
+          "price": "30",
+          "repeatable": false
+        },
+        {
+          "id": "unitypackage",
+          "name": { "es": "Unitypackage", "en": "Unitypackage" },
+          "tooltip": { "es": "Entrega del proyecto empaquetado como .unitypackage.", "en": "Delivery of the project packaged as a .unitypackage." },
+          "price": "35",
+          "repeatable": false
         }
       ]
     }
