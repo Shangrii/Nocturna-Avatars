@@ -148,6 +148,20 @@ No code changes remain. The browse slice awaits human visual/functional verifica
 ## Self-Check: PASSED
 All 5 created source files + SUMMARY.md exist on disk; both task commits (b13f01e, 65c216d) are present in git history.
 
+## Checkpoint Fixes
+
+Task 3 human-verify returned two visual defects; both fixed on `revamp`.
+
+**Fix 1 — Product grid too small (commit e8c3e36).**
+`StorePage.astro` used `repeat(auto-fill, minmax(260px, 1fr))`, which produced up to 4 small (~260px) cards. Replaced with explicit column counts matching the 06-UI-SPEC breakpoints: 1 col mobile, 2 col at ≥768px, exactly 3 col at ≥1024px. Fixed 3-up within the 1200px measure yields ~378px cards — notably larger.
+
+**Fix 2 — Nav active-underline misaligned + wrong color (commit b00054d).**
+Root cause was a **cross-stylesheet `::after` collision**, not the added nav item. `choreography.css` (loaded after `chrome.css` in BaseLayout) redefined `.nav-link::after` for a generic D-09 hover underline-draw with `left: 0; width: 100%; background: currentColor`. Equal specificity + later load order meant it overrode chrome's editorial active indicator: the bar spanned the full cell (overhanging right instead of matching text width) and rendered white on the active link (whose text color is white) instead of red. The active `scaleX(1)` still came from chrome's `.nav-link.active::after`, so the break only showed on the active item; the 5th nav link merely made it obvious.
+- `choreography.css`: scoped the underline-draw rule to `.link-arrow` only (removed `.nav-link` from the base, hover, and reduced-motion selectors).
+- `chrome.css`: added a `.nav-link:hover/:focus-visible::after { transform: scaleX(1) }` trigger so the hover underline-draw is preserved — now using chrome's own inset red `::after`, so nav underline geometry + color live in exactly one place and cannot collide again.
+
+Verification: `npm run build` green (14 pages). Store grid resolves to 3 columns at ≥1024px; nav underline aligns to text width in original red for both hover and active. `/es/servicios` cotización chrome untouched. No scope creep (no quick-view / cart / auto-sync).
+
 ---
 *Phase: 06-asset-store*
 *Completed: 2026-07-07*
