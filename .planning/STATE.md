@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 Phase: 06
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-07-04
+Last activity: 2026-07-07 - Completed quick task 260707-0q0: 5 pre-phase-6 website todos
 
 Progress: [█████████░] 93%
 
@@ -155,6 +155,12 @@ Recent decisions affecting current work:
 - [Cutover] ~~deploy.yml is now workflow_dispatch-ONLY (05-05 incident fix) — must revert at cutover.~~ RESOLVED by the 2026-07-04 beta cutover: deploy.yml auto-deploys again via the gh-pages force-push topology; bot publishes rebuild the live site.
 - [Phase 5] Cinema host still runs pre-Fix-A/B code — user must `git pull` + restart the `nocturna-bot` systemd unit; then remaining UAT: (b) dismiss, (c) delete re-test with journal logs, (d) backfill + multi-image/idempotency, (e) non-staff gate. Note: the 683 orphan was already removed in the cutover cleanup, so the restart orphan-reconcile should log NOTHING to remove — that is the expected observation.
 - [Doc] REQUIREMENTS.md footer originally said "27 v1"; actual v1 count is 30 (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6). Coverage corrected to 30/30.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260707-0q0 | 5 pre-phase-6 website todos: night background on Services+Terms, stronger hero searchlights/static, catalog items (Quest $15 / VTuber VRM $30 / Unitypackage $35), Terms ban disclaimer + block-04 reconcile, Discord popup store copy | 2026-07-07 | 9884c1a | [260707-0q0-ejecutar-5-todos-pendientes-del-sitio-we](./quick/260707-0q0-ejecutar-5-todos-pendientes-del-sitio-we/) |
 
 ## Deferred Items
 
