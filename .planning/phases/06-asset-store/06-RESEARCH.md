@@ -223,7 +223,7 @@ src/
 - **XSS guard (T-03.1-08):** build every drawer/modal row with `createElement` + `textContent`, never `innerHTML`.
 
 **Differences store-cart.ts introduces:**
-- State entry = `{ id, name, price, image, checkoutUrl, qty }` (no category grouping; flat list).
+- State entry = `{ id, name, price, checkoutUrl, qty }` (no category grouping; flat list; rows are text-only, so no per-row image field).
 - **Persistence (D-20):** on every mutation, `localStorage.setItem('nocturna-store-cart', JSON.stringify([...cart]))`; on init, hydrate and **validate each stored id against the current `store.json` product set — drop unknown ids and refresh name/price/checkoutUrl from data** (guards against stale products / price drift, see Pitfall 2).
 - DOM contract namespaced: `#storeCartPill`, `.store-cart-pill__badge`, `#storeCartDrawer`, `#storeCartBackdrop`, `.store-cart-drawer__items`, `[data-store-cart-total]`, `[data-store-cart-checkout]`.
 - Footer CTA = "Pagar en Jinxxy" → renders per-product links (Pattern 2), not a Discord modal.
@@ -308,7 +308,7 @@ Astro auto-escapes `{p.name}` / `{p.description}` (T-03-04) — safe against a m
 ### Pitfall 2: Stale localStorage after a data edit
 **What goes wrong:** A visitor adds product X, staff later delete or reprice X in `store.json`, the visitor returns — the cart shows a phantom product or an outdated price, and its `checkoutUrl` may 404 on Jinxxy.
 **Why it happens:** localStorage snapshots data that then drifts from the source of truth.
-**How to avoid:** On hydration, **reconcile against the current `store.json`** — drop any stored id not in the current product set, and refresh `name`/`price`/`checkoutUrl`/`image` from data (treat store.json as canonical; localStorage stores only *which* ids + qty). This keeps price display honest and links valid.
+**How to avoid:** On hydration, **reconcile against the current `store.json`** — drop any stored id not in the current product set, and refresh `name`/`price`/`checkoutUrl` from data (treat store.json as canonical; localStorage stores only *which* ids + qty). This keeps price display honest and links valid.
 **Warning signs:** A cart row with a price that doesn't match the grid; a "Comprar" link that 404s.
 
 ### Pitfall 3: Broken hotlinked preview images (D-11 accepted risk)
@@ -398,16 +398,18 @@ function hydrate(products: Record<string, Product>) {
 
 **Note:** These are all LOW-risk and none block planning. A1 is fully neutralized by D-02 (URLs are data, not derived). No user confirmation required before execution.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Multi-item purchase UX wording (D-18 NO branch)**
    - What we know: the site cannot pre-fill Jinxxy's cart; each product links out individually.
    - What's unclear: whether the drawer should nudge buyers to assemble a Jinxxy-native cart ("add each to your Jinxxy cart to buy together") or just present N independent buy links.
    - Recommendation: present per-item "Comprar en Jinxxy" links with a one-line note that final payment is on Jinxxy; keep it simple for MVP. Copy is Claude's discretion — no blocker.
+   - **RESOLVED (2026-07-07):** per-item "Comprar en Jinxxy" links + a bilingual footer note that each product checks out separately on Jinxxy, no single buy-all button. Adopted by 06-03-PLAN (D-18 NO branch) and the UI-SPEC Copywriting Contract.
 
 2. **Store UI strings location**
    - What we know: meta can live in `pages.json`; richer store copy (buy labels, quick-view, cart, empty state) could too, or in a dedicated namespace.
    - Recommendation: put everything in `pages.json` under a `tienda` key to avoid a `ui.ts` edit and the `src/data/store.json` vs `src/i18n/store.json` naming clash. Discretion, non-blocking.
+   - **RESOLVED (2026-07-07):** all store UI strings live under the `pages.json` `tienda` key (no `ui.ts` edit, no data/i18n naming clash). Adopted by 06-01/06-02/06-03 plans.
 
 ## Environment Availability
 

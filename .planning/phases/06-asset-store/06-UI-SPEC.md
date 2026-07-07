@@ -172,7 +172,7 @@ Store-specific behavior the executor must implement. All reuse the verified Phas
 - **Store cart pill:** 52px red circle, `z-index` matching CartPill (~905), fixed bottom-right; count badge navy-on-red appears only once items are added; badge pop animation gated to `prefers-reduced-motion: no-preference` (copy CartPill exactly).
 - **Drawer:** slide-in right, `width: min(430px, 92vw)`, `--color-ink-raised` panel, `--color-border` left rule, backdrop `z 8000` / drawer `z 8001` (mirror CartDrawer). WR-01 open/close: unhide `[hidden]` BEFORE `.active`; on close re-add `[hidden]` only on `transitionend` filtered by `e.propertyName === 'transform'`. `data-lenis-prevent` on backdrop + drawer.
 - **Drawer rows (D-18 = NO branch):** each selected product row shows name + price + a per-item "Comprar en Jinxxy" link (`target="_blank" rel="noopener noreferrer"`). Footer = running total labeled "Total (referencia)" + the footer note (checkout happens per-item on Jinxxy). **No single "buy all" button** (popup-blocked; RESEARCH anti-pattern).
-- **Persistence (D-20):** `localStorage` key `nocturna-store-cart`; on hydrate, reconcile stored ids against the current `store.json` (drop unknown ids, refresh name/price/checkoutUrl/image from data — Pitfall 2). The cotización cart stays reset-on-refresh (do NOT add persistence to it).
+- **Persistence (D-20):** `localStorage` key `nocturna-store-cart`; on hydrate, reconcile stored ids against the current `store.json` (drop unknown ids, refresh name/price/checkoutUrl from data — Pitfall 2; the cart entry carries no image, so rows stay text-only). The cotización cart stays reset-on-refresh (do NOT add persistence to it).
 - View-Transitions safe: `astro:page-load` re-init with per-load guard + `astro:before-swap` reset (copy cart.ts:735-767).
 
 ### Image fallback (D-11 — Claude's discretion)
@@ -214,11 +214,11 @@ Store-specific behavior the executor must implement. All reuse the verified Phas
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** approved · 2026-07-07 · approved by user via discuss-phase/UI-phase session per STATE.md ("Phase 6 UI-SPEC approved").
