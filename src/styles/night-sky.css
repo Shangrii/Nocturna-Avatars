@@ -180,3 +180,33 @@
   from { opacity: 0.2; }
   to { opacity: 0.9; }
 }
+
+/* ── Readability panel (quick 260707-1yi) ──
+   A solid reading surface for long-form content sitting over the fixed night
+   backdrop (Services catalog, Terms legal column). Mirrors the Level 1/2/3
+   package-card treatment (.card / .cards in sections.css) per user request:
+   ink-raised fill + hairline border. Static panel — deliberately NO card hover
+   lift, hover red top-rule, or flex column. Ships only where NightBackground is
+   mounted (imported by NightBackground.astro), so it never affects Gallery/Home. */
+.night-panel {
+  background: var(--color-ink-raised);
+  border: 1px solid var(--color-border);
+  padding: var(--space-xl) var(--space-lg);
+  position: relative;
+}
+
+/* Terms reading column: .terms-wrap (terms.css) sets only horizontal padding, so
+   this more-specific combo restores vertical padding inside the panel while
+   preserving the 760px measure (terms.css owns max-width/margin). */
+.terms-wrap.night-panel {
+  padding: var(--space-xl) var(--page-gutter);
+}
+
+@media (max-width: 640px) {
+  .night-panel {
+    padding: var(--space-lg) var(--space-md);
+  }
+  .terms-wrap.night-panel {
+    padding: var(--space-lg) var(--page-gutter);
+  }
+}

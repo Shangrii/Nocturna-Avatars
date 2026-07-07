@@ -43,7 +43,7 @@ const banner = lang === 'en' ? (t as typeof t & { bannerTitle: string; bannerBod
     <p class="section-subtitle">{t.subtitle}</p>
   </div>
 
-  <div class="terms-wrap">
+  <div class="terms-wrap night-panel">
     {lang === 'en' && banner && (
       <ReviewerBanner title={banner.bannerTitle} body={banner.bannerBody} />
     )}
