@@ -18,6 +18,7 @@
  * (nav / footer / floating CTA / Discord modal) from BaseLayout.
  */
 import ReviewerBanner from '../ReviewerBanner.astro';
+import NightBackground from '../NightBackground.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
 
 interface Props {
@@ -28,6 +29,12 @@ const t = useTranslations(lang, 'terms');
 // Banner copy lives on the EN slice only.
 const banner = lang === 'en' ? (t as typeof t & { bannerTitle: string; bannerBody: string }) : null;
 ---
+
+{/* Reusable night-sky backdrop (0q0) — full-viewport fixed field behind the page.
+    The reading column's section is made transparent (scoped style below) so the
+    night shows through; the summary/block copy is already off-white on this dark
+    reskin, so AA holds over the night. */}
+<NightBackground fixed />
 
 <section class="section section--surface section-page-top section--rule">
   <div class="section-header reveal">
@@ -67,3 +74,23 @@ const banner = lang === 'en' ? (t as typeof t & { bannerTitle: string; bannerBod
     </div>
   </div>
 </section>
+
+<style is:global>
+  /* Night backdrop reveal (0q0) — drop the opaque paper section field on the Terms
+     page so the fixed <NightBackground /> shows through. The reskin's paper surface
+     is already dark navy (#11141f) with off-white text (#f0eae4), so the night is the
+     same dark family and the reading column stays AA. The summary box + reviewer
+     banner keep their own subtle fills for legibility. */
+  main .section--surface {
+    background: transparent;
+  }
+
+  /* Interior page (no hero): hold the nav in its solid dark state so the transparent
+     top-of-page nav never shows the night field through it. Mirrors ServicesPage. */
+  .nav {
+    background: rgba(10, 12, 20, 0.95);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 var(--color-border);
+  }
+</style>

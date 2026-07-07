@@ -395,161 +395,17 @@
 }
 
 /* ═══════════════════════════════════════════════
-   Night sky — the section field around the board. Sparse multi-layer star dots
-   (prime-ish tile sizes so no visible repeat pattern) + a faint cool moonlight
-   wash from above; one extra star layer twinkles. Stars sit behind everything
-   in the section (::after at z -1 under a z-0 stacking context).
+   Night sky — the section field around the board. The star-field + fireflies
+   backdrop was extracted into the reusable <NightBackground /> component
+   (night-sky.css) in the 0q0 quick task so it can be shared with other pages;
+   GalleryPage renders <NightBackground /> inside this .gallery-night wrapper.
+   This wrapper stays here to own the positioned stacking context the backdrop
+   sits behind (z −1) and to receive the --sky-shift parallax var that gallery.ts
+   sets on scroll (inherited down into the backdrop's star/firefly layers).
    ═══════════════════════════════════════════════ */
 .gallery-night {
-  --bulb: #ffd6a0;
-  --bulb-glow: #ffb44d;
   position: relative;
   z-index: 0;
-}
-
-/* The sky itself — a dedicated child on its OWN compositor layer (translateZ).
-   Rationale: as a 12-layer background on the ~3000px section (plus a masked
-   ::after) Chromium's raster cache intermittently dropped the whole paint after
-   a hard reload (bug: sky vanished on F5); a layerized real element repaints
-   reliably.
-   Layers, first = painted on top:
-     1  nav blend — solid ink held for 120px then melting down to 560px so the
-        section meets the fixed navbar with no visible seam
-     2-5  star fields (prime-ish tiles, no visible repeat)
-     6  milky-way band — diagonal lavender ribbon
-     7  cool indigo wash (upper-left)
-     8  violet nebula (lower-left)
-     9  warm brand ember (lower-right)
-     10 teal whisper (mid-right)
-     11 corner vignette
-     12 moonlight glow from above
-   Washes sit at ~0.10–0.22 alpha — present, but still a dark night. */
-.gallery-sky {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  transform: translateZ(0);
-  background-image:
-    linear-gradient(180deg, var(--color-ink) 0px, var(--color-ink) 120px, rgba(10, 12, 20, 0) 560px),
-    radial-gradient(circle at 21% 33%, rgba(240, 234, 228, 0.7) 0 1px, transparent 1.7px),
-    radial-gradient(circle at 68% 71%, rgba(240, 234, 228, 0.5) 0 1px, transparent 1.6px),
-    radial-gradient(circle at 84% 18%, rgba(240, 234, 228, 0.6) 0 1.3px, transparent 2px),
-    radial-gradient(circle at 44% 86%, rgba(255, 214, 160, 0.45) 0 1px, transparent 1.6px),
-    linear-gradient(115deg, transparent 30%, rgba(158, 178, 220, 0.08) 43%, rgba(205, 185, 235, 0.1) 50%, rgba(158, 178, 220, 0.08) 57%, transparent 70%),
-    linear-gradient(160deg, rgba(64, 84, 140, 0.22), transparent 46%),
-    radial-gradient(70% 55% at 12% 88%, rgba(122, 82, 180, 0.16), transparent 64%),
-    radial-gradient(90% 70% at 82% 96%, rgba(192, 25, 44, 0.18), transparent 60%),
-    radial-gradient(50% 40% at 94% 46%, rgba(70, 140, 160, 0.11), transparent 62%),
-    radial-gradient(130% 110% at 50% 38%, transparent 58%, rgba(3, 4, 10, 0.42) 100%),
-    radial-gradient(120% 60% at 50% -8%, rgba(158, 178, 220, 0.1), transparent 68%);
-  background-size:
-    100% 100%,
-    173px 211px,
-    257px 229px,
-    331px 307px,
-    389px 353px,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%;
-  background-repeat:
-    no-repeat, repeat, repeat, repeat, repeat,
-    no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-  /* Depth parallax — gallery.ts drives --sky-shift on scroll (inherited from the
-     section); only the 4 star tiles drift, everything else stays anchored. */
-  background-position:
-    0 0,
-    0 var(--sky-shift, 0px),
-    0 var(--sky-shift, 0px),
-    0 var(--sky-shift, 0px),
-    0 var(--sky-shift, 0px),
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0;
-}
-.gallery-sky::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle at 31% 57%, rgba(240, 234, 228, 0.85) 0 1.2px, transparent 1.9px),
-    radial-gradient(circle at 76% 24%, rgba(240, 234, 228, 0.75) 0 1px, transparent 1.6px);
-  background-size:
-    293px 271px,
-    359px 313px;
-  /* Twinkle layer drifts a touch faster than the base stars → depth. */
-  background-position:
-    0 calc(var(--sky-shift, 0px) * 1.35),
-    0 calc(var(--sky-shift, 0px) * 1.35);
-  opacity: 0.6;
-  /* Fade out near the top so twinkles never poke through the navbar blend. */
-  -webkit-mask-image: linear-gradient(180deg, transparent 0px, #000 340px);
-  mask-image: linear-gradient(180deg, transparent 0px, #000 340px);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .gallery-sky::after {
-    animation: gallery-star-twinkle 5.5s ease-in-out infinite alternate;
-  }
-}
-
-/* Fireflies — small warm particles drifting through the sky. Rendered as server-
-   side <i> dots with seeded position/duration/delay/scale vars; z −1 keeps them
-   behind the board and the section content (sky only). */
-.gallery-fireflies {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
-  /* Mid-depth parallax layer — between the stars (slow) and the board (page speed). */
-  translate: 0 calc(var(--sky-shift, 0px) * 0.7);
-  /* Same top fade as the twinkle layer — no fireflies over the navbar blend. */
-  -webkit-mask-image: linear-gradient(180deg, transparent 0px, #000 340px);
-  mask-image: linear-gradient(180deg, transparent 0px, #000 340px);
-}
-.gallery-fireflies i {
-  position: absolute;
-  left: var(--fx, 50%);
-  top: var(--fy, 50%);
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--bulb);
-  box-shadow: 0 0 12px 4px rgba(255, 180, 77, 0.7);
-  transform: scale(var(--fs, 1));
-  opacity: 0;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .gallery-fireflies i {
-    animation:
-      gallery-firefly-drift var(--fd, 16s) ease-in-out var(--fdel, 0s) infinite alternate,
-      gallery-firefly-glow calc(var(--fd, 16s) * 0.37) ease-in-out var(--fdel, 0s) infinite alternate;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .gallery-fireflies i {
-    opacity: 0.35; /* static faint fireflies — no drift, no pulse */
-  }
-}
-@keyframes gallery-firefly-drift {
-  from { translate: 0 0; }
-  to { translate: var(--fdx, 34px) -46px; }
-}
-@keyframes gallery-firefly-glow {
-  from { opacity: 0.08; }
-  to { opacity: 1; }
-}
-@keyframes gallery-star-twinkle {
-  from { opacity: 0.2; }
-  to { opacity: 0.9; }
 }
 
 /* ═══════════════════════════════════════════════

@@ -1,0 +1,60 @@
+---
+/**
+ * NightBackground — the reusable nocturnal star-field + drifting fireflies
+ * backdrop, extracted from the /galeria pin-wall (Phase 4) so the same field can
+ * sit behind other pages (Services + Terms). All styling lives in night-sky.css;
+ * this component only emits the markup + the deterministic firefly seeds.
+ *
+ * Usage:
+ *   <NightBackground />          → fills its positioned parent (gallery section)
+ *   <NightBackground fixed />    → full-viewport page backdrop (z −1)
+ *
+ * The 26 fireflies are generated server-side from a deterministic FNV-1a hash
+ * (verbatim from GalleryPage.astro) so the layout is identical on every build —
+ * no reshuffle, yet unpatterned. Everything is aria-hidden decoration.
+ */
+import '../styles/night-sky.css';
+
+interface Props {
+  /** Full-viewport fixed backdrop (default: fills the positioned parent). */
+  fixed?: boolean;
+}
+const { fixed = false } = Astro.props;
+
+// Deterministic FNV-1a hash — drives every "random-looking" per-particle choice
+// so the field is identical on every build (no reshuffle) yet looks unpatterned.
+function hashStr(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}
+
+// Fireflies — seeded drifting warm particles for the night sky.
+const FIREFLIES = Array.from({ length: 26 }, (_, i) => {
+  const h = hashStr(`ff${i}`);
+  return {
+    x: h % 100, // left %
+    y: 10 + ((h >>> 7) % 76), // top %
+    d: 14 + ((h >>> 13) % 12), // drift duration s
+    del: -(((h >>> 19) % 140) / 10), // negative delay → desynced mid-cycle
+    s: (70 + ((h >>> 24) % 75)) / 100, // scale 0.7–1.45
+    dx: ((h >>> 16) % 2 ? 1 : -1) * (22 + ((h >>> 17) % 26)), // drift ±22..47px
+  };
+});
+---
+
+<div class={`night-bg${fixed ? ' night-bg--fixed' : ''}`} aria-hidden="true">
+  {/* Night sky — stars, washes and the nav blend; its ::after carries the
+      twinkle layer. On its own compositor layer (see night-sky.css). */}
+  <span class="night-sky"></span>
+
+  {/* Fireflies — drifting warm particles; static faint dots under reduced motion. */}
+  <span class="night-fireflies">
+    {FIREFLIES.map((f) => (
+      <i style={`--fx:${f.x}%; --fy:${f.y}%; --fd:${f.d}s; --fdel:${f.del}s; --fs:${f.s}; --fdx:${f.dx}px`}></i>
+    ))}
+  </span>
+</div>

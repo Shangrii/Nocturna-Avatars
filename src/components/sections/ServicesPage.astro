@@ -9,6 +9,7 @@
  */
 import PackageCard from '../PackageCard.astro';
 import CatalogSection from '../CatalogSection.astro';
+import NightBackground from '../NightBackground.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
 import servicesData from '../../data/services.json';
 
@@ -36,6 +37,12 @@ const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
 }));
 
 ---
+
+{/* Reusable night-sky backdrop (0q0) — full-viewport fixed field behind the page.
+    The on-page sections are made transparent (scoped style block below) so the
+    night shows through; card/catalog surfaces keep their own dark fills so copy
+    stays readable (all page text is already off-white on this dark reskin). */}
+<NightBackground fixed />
 
 <section class="section section-page-top section--rule">
   <div class="section-header reveal">
@@ -107,6 +114,16 @@ const resolvedTiers = servicesData.packages.tiers.map((tier) => ({
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     box-shadow: 0 1px 0 var(--color-border);
+  }
+
+  /* Night backdrop reveal (0q0) — drop the opaque ink/paper section fields on this
+     page so the fixed <NightBackground /> shows through. Both surfaces are already
+     dark navy with off-white text on this reskin (--color-ink #0a0c14, --color-paper
+     #11141f, text #f0eae4), so the night is the same dark family and AA is preserved.
+     Card/catalog/nav surfaces keep their own fills (below), so copy stays readable. */
+  main .section,
+  main .section--surface {
+    background: transparent;
   }
 </style>
 
