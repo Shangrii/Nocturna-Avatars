@@ -89,13 +89,13 @@ void main() {
   // Roamer 1..4 — varied speeds / phases / path sizes so they wander organically and
   // never lock together. Smaller than the pointer light.
   vec2 l1 = vec2(cos(u_time * 0.17 + 0.0), sin(u_time * 0.13 + 1.7)) * vec2(0.66, 0.44) * aspect;
-  lightPoint(cen, l1, 0.0050, 0.060, 0.34, uv, glowAccum, aspect);
+  lightPoint(cen, l1, 0.0050, 0.098, 0.39, uv, glowAccum, aspect);
   vec2 l2 = vec2(cos(u_time * 0.11 + 2.6), sin(u_time * 0.19 + 4.1)) * vec2(0.54, 0.56) * aspect;
-  lightPoint(cen, l2, 0.0045, 0.055, 0.30, uv, glowAccum, aspect);
+  lightPoint(cen, l2, 0.0045, 0.090, 0.34, uv, glowAccum, aspect);
   vec2 l3 = vec2(cos(u_time * 0.23 + 5.0), sin(u_time * 0.09 + 0.6)) * vec2(0.70, 0.36) * aspect;
-  lightPoint(cen, l3, 0.0040, 0.050, 0.28, uv, glowAccum, aspect);
+  lightPoint(cen, l3, 0.0040, 0.082, 0.32, uv, glowAccum, aspect);
   vec2 l4 = vec2(cos(u_time * 0.08 + 3.3), sin(u_time * 0.15 + 2.2)) * vec2(0.46, 0.60) * aspect;
-  lightPoint(cen, l4, 0.0042, 0.052, 0.32, uv, glowAccum, aspect);
+  lightPoint(cen, l4, 0.0042, 0.085, 0.36, uv, glowAccum, aspect);
 
   // --- signal instability (persistent, scaled by malf) -----------------------
   // Constant block/scanline displacement + occasional harder tear spikes. Even when
@@ -132,8 +132,9 @@ void main() {
   float redLead = clamp(rN - gN, 0.0, 1.0);
   col += u_red * redLead * 0.18;
   // Light glow (red-glow) from the pointer + roamers; rides a touch higher during a
-  // tear so the malfunction flares red, but stays a minority accent.
-  col += u_redGlow * glowAccum * (0.85 + 0.6 * tearSpike * malf);
+  // tear so the malfunction flares red, but stays a minority accent. Base multiplier
+  // lifted slightly (0q0) so the searchlight beams read more clearly through the dark.
+  col += u_redGlow * glowAccum * (1.02 + 0.6 * tearSpike * malf);
 
   // grain + scanline
   col += (grain - 0.5) * grainAmt;
