@@ -9,7 +9,7 @@
     "summary": [
       { "lead": "50% de anticipo", "rest": " para iniciar el trabajo." },
       { "lead": "Pagos en USD", "rest": " y 48 horas para confirmar la cotización." },
-      { "lead": "No se entrega Unity Package", "rest": "; la entrega es el avatar listo para VRChat." },
+      { "lead": "Sin Unity Package por defecto", "rest": "; la entrega es el avatar listo para VRChat, salvo que contrates el extra Unitypackage." },
       { "lead": "Revisiones incluidas", "rest": ", cambios extra se cotizan por separado." }
     ],
     "blocks": [
@@ -44,8 +44,8 @@
         "num": "04",
         "title": "Entregas y archivos",
         "body": [
-          { "text": "No se entrega el proyecto de Unity (.unitypackage) bajo ninguna circunstancia.", "strong": true },
-          { "text": " La entrega consiste exclusivamente en el avatar subido a la cuenta del cliente, listo para su uso en VRChat. Esta política aplica para todos los clientes y paquetes, sin excepciones. El avatar entregado es para uso personal del cliente y no debe revenderse ni redistribuirse." }
+          { "text": "El proyecto de Unity (.unitypackage) no se entrega por defecto.", "strong": true },
+          { "text": " La entrega estándar consiste exclusivamente en el avatar subido a la cuenta del cliente, listo para su uso en VRChat. El .unitypackage solo se entrega si se contrata como extra del catálogo (Unitypackage, $35). El avatar entregado es para uso personal del cliente y no debe revenderse ni redistribuirse." }
         ]
       },
       {
@@ -101,6 +101,15 @@
         "body": [
           { "text": "Nocturna Avatars puede actualizar estos términos en cualquier momento. Los cambios aplicarán a tickets abiertos después de la fecha de actualización. Se recomienda revisar esta página periódicamente." }
         ]
+      },
+      {
+        "num": "11",
+        "title": "Baneos y pérdida de cuenta",
+        "body": [
+          { "text": "Nocturna Avatars no se hace responsable de baneos, suspensiones o restricciones aplicadas a la cuenta de VRChat del cliente (o de cualquier otra plataforma), estén o no relacionados con el avatar editado o subido. " },
+          { "text": "No existe obligación de recuperar, reconstruir ni volver a entregar avatares perdidos junto con una cuenta baneada o extraviada.", "strong": true },
+          { "text": " Recomendamos al cliente resguardar sus accesos y cumplir las normas de cada plataforma." }
+        ]
       }
     ]
   },
@@ -116,7 +125,7 @@
     "summary": [
       { "lead": "50% deposit", "rest": " to start the work." },
       { "lead": "Payments in USD", "rest": " and 48 hours to confirm the quote." },
-      { "lead": "No Unity Package is delivered", "rest": "; delivery is the avatar ready for VRChat." },
+      { "lead": "No Unity Package by default", "rest": "; delivery is the avatar ready for VRChat, unless you purchase the Unitypackage extra." },
       { "lead": "Revisions included", "rest": "; extra changes are quoted separately." }
     ],
     "blocks": [
@@ -151,8 +160,8 @@
         "num": "04",
         "title": "Deliveries and files",
         "body": [
-          { "text": "The Unity project (.unitypackage) is not delivered under any circumstances.", "strong": true },
-          { "text": " Delivery consists exclusively of the avatar uploaded to the client's account, ready for use in VRChat. This policy applies to all clients and packages, without exception. The delivered avatar is for the client's personal use and may not be resold or redistributed." }
+          { "text": "The Unity project (.unitypackage) is not delivered by default.", "strong": true },
+          { "text": " Standard delivery consists exclusively of the avatar uploaded to the client's account, ready for use in VRChat. The .unitypackage is only delivered if purchased as a catalog extra (Unitypackage, $35). The delivered avatar is for the client's personal use and may not be resold or redistributed." }
         ]
       },
       {
@@ -207,6 +216,15 @@
         "title": "Modifications",
         "body": [
           { "text": "Nocturna Avatars may update these terms at any time. Changes will apply to tickets opened after the update date. We recommend reviewing this page periodically." }
+        ]
+      },
+      {
+        "num": "11",
+        "title": "Account bans and loss of avatars",
+        "body": [
+          { "text": "Nocturna Avatars is not responsible for bans, suspensions, or restrictions applied to the client's VRChat account (or any other platform), whether or not related to the edited or uploaded avatar. " },
+          { "text": "There is no obligation to recover, rebuild, or re-deliver avatars lost together with a banned or lost account.", "strong": true },
+          { "text": " We recommend that clients safeguard their account access and follow each platform's rules." }
         ]
       }
     ]
