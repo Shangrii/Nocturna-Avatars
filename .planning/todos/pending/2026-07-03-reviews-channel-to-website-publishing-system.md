@@ -18,6 +18,8 @@ Two designs were compared (user's own proposal, 2026-07-03):
 
 **User prefers (b)** — less client friction; the client just writes a normal message. Optional add-on: a ticket-close invite embed pointing the client to the reviews channel.
 
+**Update 2026-07-07 (pre-Phase-6 feedback):** the user now describes the collection side as a **staff command that posts an embed with 2 buttons: one for an anonymous review, one for a normal (named) review**. This revises/extends the earlier design-(a)-vs-(b) discussion — the button flow is back, with anonymity as the new requirement. Reconcile in discuss-phase: whether the 2-button embed replaces the reaction-based collection or complements it (e.g. embed collects, staff reaction still gates publication to the site).
+
 ## Solution
 
 Candidate future phase (after current milestone work). Sketch:

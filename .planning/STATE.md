@@ -140,7 +140,14 @@ Recent decisions affecting current work:
 
 [From .planning/todos/pending/ — ideas captured during sessions]
 
-- `2026-07-03-reviews-channel-to-website-publishing-system.md` — Reviews channel → website publishing (staff-reaction model mirroring Phase-5 gallery cog; user prefers reaction flow over command+button)
+- `2026-07-03-reviews-channel-to-website-publishing-system.md` — Reviews channel → website publishing (staff-reaction model mirroring Phase-5 gallery cog; UPDATED 2026-07-07: collection via staff command posting embed with 2 buttons — anonymous / named review)
+- `2026-07-07-reuse-gallery-background-on-other-pages.md` — user loved the gallery background; make it reusable on other pages
+- `2026-07-07-strengthen-home-hero-searchlights-and-static.md` — stronger searchlights on landing/hero title; static effect slightly more noticeable
+- `2026-07-07-add-quest-vtuber-vrm-and-unitypackage-to-services-catalog.md` — catalog items: Quest version $15, VTuber VRM $30, Unitypackage (price TBD)
+- `2026-07-07-add-account-ban-disclaimer-to-terms.md` — Terms clause: not responsible for account bans / lost avatars
+- `2026-07-07-update-discord-popup-copy-for-store-focus.md` — popup copy must cover tickets/commissions AND the upcoming store
+- `2026-07-07-bot-reminders-command-weekly-monthly-custom-message.md` — cachorabot reminders command (weekly/monthly, custom message) — nocturna-bot repo
+- `2026-07-07-carrd-style-template-editor-for-nocturna-editors.md` — carrd/guns.lol-style template per editor, restricted to Nocturna editors (needs brainstorm)
 
 ### Blockers/Concerns
 
