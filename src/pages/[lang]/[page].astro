@@ -16,6 +16,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ServicesPage from '../../components/sections/ServicesPage.astro';
 import GalleryPage from '../../components/sections/GalleryPage.astro';
+import StorePage from '../../components/sections/StorePage.astro';
 import TermsPage from '../../components/sections/TermsPage.astro';
 import CartDrawer from '../../components/CartDrawer.astro';
 import CartPill from '../../components/CartPill.astro';
@@ -29,6 +30,7 @@ export function getStaticPaths() {
   return [
     ...staticPathsForConcept('services'),
     ...staticPathsForConcept('gallery'),
+    ...staticPathsForConcept('store'),
     ...staticPathsForConcept('terms'),
   ];
 }
@@ -43,6 +45,8 @@ const terms = useTranslations(lang, 'terms');
 let meta: { title: string; description: string };
 if (concept === 'gallery') {
   meta = { title: pages.galeria.metaTitle, description: pages.galeria.metaDescription };
+} else if (concept === 'store') {
+  meta = { title: pages.tienda.metaTitle, description: pages.tienda.metaDescription };
 } else if (concept === 'terms') {
   meta = { title: terms.metaTitle, description: terms.metaDescription };
 } else {
@@ -52,6 +56,7 @@ if (concept === 'gallery') {
 
 <BaseLayout lang={lang} title={meta.title} description={meta.description}>
   {concept === 'gallery' && <GalleryPage lang={lang} />}
+  {concept === 'store' && <StorePage lang={lang} />}
   {concept === 'terms' && <TermsPage lang={lang} />}
   {concept === 'services' && <ServicesPage lang={lang} />}
 

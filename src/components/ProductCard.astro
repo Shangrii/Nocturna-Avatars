@@ -1,0 +1,233 @@
+---
+/**
+ * ProductCard — a single asset-store product (browse slice, Plan 06-01).
+ *
+ * Renders image + name + `${price} USD` + "por/by {editor}" (D-08/D-16). The
+ * `featured` product gets the single red highlight border + badge (the only
+ * red-accented card, per UI-SPEC). `nsfw` cards render blurred behind a scrim
+ * with a keyboard-operable reveal button (D-10) — store.ts toggles the reveal
+ * class per-card, per-session (no global/persisted 18+ state).
+ *
+ * The thumbnail carries `data-store-img`; store.ts swaps a broken Jinxxy CDN
+ * hotlink to /store/placeholder.svg with no layout shift (D-11 / T-06-05).
+ *
+ * All copy renders through Astro `{...}` auto-escaping — raw-HTML injection is
+ * never used on store.json fields (T-06-01). Quick-view (Plan 02) + add-to-cart
+ * (Plan 03) wire onto this markup later; this slice only browses.
+ */
+interface ResolvedProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  images: string[];
+  checkoutUrl: string;
+  editor: string;
+  category: string;
+  nsfw: boolean;
+  featured: boolean;
+}
+
+interface Props {
+  product: ResolvedProduct;
+  usd: string;
+  featuredBadge: string;
+  editorCredit: string;
+  imgUnavailable: string;
+  nsfwReveal: string;
+  nsfwHide: string;
+}
+
+const { product, usd, featuredBadge, editorCredit, nsfwReveal, nsfwHide } = Astro.props;
+const thumb = product.images?.[0] ?? '/store/placeholder.svg';
+---
+
+<article
+  class:list={[
+    'product-card',
+    { 'product-card--featured': product.featured, 'product-card--nsfw': product.nsfw },
+  ]}
+  data-product-id={product.id}
+  data-nsfw={product.nsfw ? '' : undefined}
+>
+  {product.featured && <span class="product-card__badge">{featuredBadge}</span>}
+
+  <div class="product-card__thumb">
+    <img
+      src={thumb}
+      alt={product.name}
+      width="400"
+      height="400"
+      loading="lazy"
+      decoding="async"
+      data-store-img
+    />
+    {product.nsfw && (
+      <>
+        <span class="product-card__scrim" data-nsfw-scrim aria-hidden="true"></span>
+        <button
+          type="button"
+          class="product-card__nsfw-reveal"
+          data-nsfw-reveal
+          data-label-reveal={nsfwReveal}
+          data-label-hide={nsfwHide}
+          aria-pressed="false"
+        >
+          {nsfwReveal}
+        </button>
+      </>
+    )}
+  </div>
+
+  <div class="product-card__body">
+    <h3 class="product-card__name">{product.name}</h3>
+    <p class="product-card__price">${product.price} {usd}</p>
+    <p class="product-card__editor">{editorCredit} {product.editor}</p>
+  </div>
+</article>
+
+<style>
+  .product-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-ink-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .product-card:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, #ffffff 14%, transparent);
+  }
+
+  /* Featured: the single red-accented card (UI-SPEC reserved-red list). */
+  .product-card--featured {
+    border-color: var(--color-red);
+  }
+  .product-card__badge {
+    position: absolute;
+    top: var(--space-2xs);
+    left: var(--space-2xs);
+    z-index: 2;
+    padding: var(--space-3xs) var(--space-2xs);
+    background: var(--color-red);
+    color: var(--color-white);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+
+  /* Thumbnail — fixed aspect box prevents CLS while the hotlink loads/fails. */
+  .product-card__thumb {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--color-ink);
+    overflow: hidden;
+  }
+  .product-card__thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* NSFW blur + scrim (D-10). The blur filter stays under reduced motion; only
+     the unblur transition is gated (Pitfall 4). */
+  .product-card--nsfw .product-card__thumb img {
+    filter: blur(28px);
+    transform: scale(1.06); /* hide blurred edge bleed */
+    transition: filter 0.3s ease, transform 0.3s ease;
+  }
+  .product-card--nsfw.product-card--revealed .product-card__thumb img {
+    filter: none;
+    transform: none;
+  }
+  /* Dark scrim over the blurred image so nothing is legible pre-reveal. */
+  .product-card__scrim {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--color-ink) 72%, transparent);
+  }
+  .product-card--revealed .product-card__scrim {
+    display: none;
+  }
+  /* Reveal control stays operable after reveal (label toggles reveal <-> hide).
+     Centered while hidden; shrinks to a corner chip once revealed. */
+  .product-card__nsfw-reveal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-height: var(--touch-min);
+    padding: var(--space-2xs) var(--space-md);
+    background: color-mix(in srgb, var(--color-ink-raised) 88%, transparent);
+    color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .product-card--revealed .product-card__nsfw-reveal {
+    left: auto;
+    top: auto;
+    right: var(--space-2xs);
+    bottom: var(--space-2xs);
+    transform: none;
+    min-height: 32px;
+    padding: var(--space-3xs) var(--space-sm);
+    font-size: 11px;
+    background: color-mix(in srgb, var(--color-ink) 78%, transparent);
+  }
+  .product-card__nsfw-reveal:hover {
+    border-color: color-mix(in srgb, #ffffff 18%, transparent);
+  }
+  .product-card__nsfw-reveal:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+
+  .product-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    padding: var(--space-sm);
+  }
+  .product-card__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--type-card-title);
+    line-height: var(--lh-heading);
+    color: var(--color-white);
+  }
+  .product-card__price {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-white);
+  }
+  .product-card__editor {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    color: var(--color-white-dim);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .product-card,
+    .product-card--nsfw .product-card__thumb img {
+      transition: none;
+    }
+  }
+</style>

@@ -14,18 +14,19 @@
  */
 import { langCodes, type Lang } from './ui';
 
-export type PageConcept = 'home' | 'services' | 'gallery' | 'terms';
+export type PageConcept = 'home' | 'services' | 'gallery' | 'store' | 'terms';
 
 /** concept → { es slug, en slug }. Home is the empty slug (bare locale root). */
 export const routeSlugs: Record<PageConcept, Record<Lang, string>> = {
   home: { es: '', en: '' },
   services: { es: 'servicios', en: 'services' },
   gallery: { es: 'galeria', en: 'gallery' },
+  store: { es: 'tienda', en: 'store' },
   terms: { es: 'terminos', en: 'terms' },
 };
 
 /** Concepts that are real, navigable pages in the nav, in display order. */
-export const navConcepts: PageConcept[] = ['home', 'services', 'gallery', 'terms'];
+export const navConcepts: PageConcept[] = ['home', 'services', 'gallery', 'store', 'terms'];
 
 /** Build the localized path for a concept in a given locale, e.g. "/en/services". */
 export function localizedPath(concept: PageConcept, lang: Lang): string {
