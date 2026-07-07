@@ -268,7 +268,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
 | 5. Photo-Publishing Bot Cog | 5/5 | Complete   | 2026-07-04 |
-| 6. Asset Store | 0/3 | Planned | - |
+| 6. Asset Store | 1/3 | In Progress|  |
 
 ### Phase 6: Asset Store
 
@@ -292,7 +292,7 @@ Plans:
 
 **Wave 1**
 
-- [ ] 06-01-PLAN.md — Browse slice: store.json data + bilingual product grid + route/nav/i18n wiring (a visitor can find & view products in ES+EN)
+- [x] 06-01-PLAN.md — Browse slice: store.json data + bilingual product grid + route/nav/i18n wiring (a visitor can find & view products in ES+EN)
 
 **Wave 2** *(blocked on Wave 1 — shares [page].astro + store.ts)*
 
