@@ -87,6 +87,23 @@
       "summaryCtaAll": "Ver todos los servicios",
       "addonsTitle": "Add-ons disponibles"
     },
+    "tienda": {
+      "metaTitle": "Tienda — Nocturna Avatars",
+      "metaDescription": "Assets de VRChat creados por Nocturna: outfits, accesorios y texturas. Precios claros en USD, entrega vía Jinxxy.",
+      "tag": "Assets de Nocturna",
+      "title": "Tienda",
+      "subtitle": "Nuestros propios assets de VRChat — outfits, accesorios y texturas listos para usar.",
+      "usd": "USD",
+      "featuredBadge": "Destacado",
+      "editorCredit": "por",
+      "addToCart": "Agregar al carrito",
+      "nsfwReveal": "Mostrar contenido sensible",
+      "nsfwHide": "Ocultar",
+      "imgUnavailable": "Imagen no disponible",
+      "emptyHeading": "Tienda en camino",
+      "emptyBody": "Aún no hay assets publicados. Abre un ticket para pedidos personalizados.",
+      "emptyCta": "Abrir Ticket"
+    },
     "notFound": {
       "metaTitle": "Página no encontrada — Nocturna Avatars",
       "metaDescription": "La página que buscas no existe.",
@@ -185,6 +202,23 @@
       "ctaTicket": "Open a Ticket",
       "summaryCtaAll": "View all services",
       "addonsTitle": "Available add-ons"
+    },
+    "tienda": {
+      "metaTitle": "Store — Nocturna Avatars",
+      "metaDescription": "VRChat assets made by Nocturna: outfits, accessories, and textures. Clear USD pricing, delivered via Jinxxy.",
+      "tag": "Nocturna assets",
+      "title": "Store",
+      "subtitle": "Our own VRChat assets — outfits, accessories, and textures ready to use.",
+      "usd": "USD",
+      "featuredBadge": "Featured",
+      "editorCredit": "by",
+      "addToCart": "Add to cart",
+      "nsfwReveal": "Show sensitive content",
+      "nsfwHide": "Hide",
+      "imgUnavailable": "Image unavailable",
+      "emptyHeading": "Store coming soon",
+      "emptyBody": "No assets published yet. Open a ticket for custom requests.",
+      "emptyCta": "Open Ticket"
     },
     "notFound": {
       "metaTitle": "Page not found — Nocturna Avatars",

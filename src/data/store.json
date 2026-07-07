@@ -1,0 +1,90 @@
+{
+  "_comment": "Nocturna asset store catalog (D-13 locked schema). STAFF: add or edit products HERE — no code changes needed. Each product needs: id (unique), name{es,en}, description{es,en}, price (plain number string, NO $ — the site adds '$ … USD'), images[] (Jinxxy CDN URLs; images[0] is the card thumbnail), checkoutUrl (the Jinxxy listing — https:// only), editor (credited creator, plain text), category, nsfw (true blurs the card), featured (true pins it first + red badge), date (YYYY-MM-DD, newest shown first after featured). Replace the example jinxxy-cdn.com URLs below with real listing images + links.",
+  "products": [
+    {
+      "id": "neon-street-hoodie",
+      "name": {
+        "es": "Hoodie Neón Callejero",
+        "en": "Neon Street Hoodie"
+      },
+      "description": {
+        "es": "Hoodie oversize con parches emisivos y cordones animados. Incluye toggles de capucha y variantes de color. Optimizado para Quest y PC.",
+        "en": "Oversized hoodie with emissive patches and animated drawstrings. Includes hood toggles and color variants. Optimized for Quest and PC."
+      },
+      "price": "18",
+      "images": [
+        "https://jinxxy-c.jinxxy-cdn.com/nocturna/neon-street-hoodie/thumb.png",
+        "https://jinxxy-c.jinxxy-cdn.com/nocturna/neon-street-hoodie/back.png"
+      ],
+      "checkoutUrl": "https://jinxxy.com/nocturna/neon-street-hoodie",
+      "editor": "Kira",
+      "category": "outfit",
+      "nsfw": false,
+      "featured": true,
+      "date": "2026-06-30"
+    },
+    {
+      "id": "midnight-wings-accessory",
+      "name": {
+        "es": "Alas de Medianoche",
+        "en": "Midnight Wings"
+      },
+      "description": {
+        "es": "Accesorio de alas con física realista y partículas de humo. Toggle de despliegue con gesto. Textura PBR 4K.",
+        "en": "Wing accessory with realistic physbones and smoke particles. Gesture toggle to unfold. 4K PBR texture."
+      },
+      "price": "25",
+      "images": [
+        "https://jinxxy-c.jinxxy-cdn.com/nocturna/midnight-wings/thumb.png"
+      ],
+      "checkoutUrl": "https://jinxxy.com/nocturna/midnight-wings",
+      "editor": "Void",
+      "category": "accessory",
+      "nsfw": false,
+      "featured": false,
+      "date": "2026-07-05"
+    },
+    {
+      "id": "graffiti-texture-pack",
+      "name": {
+        "es": "Pack de Texturas Graffiti",
+        "en": "Graffiti Texture Pack"
+      },
+      "description": {
+        "es": "12 texturas de graffiti sin costuras para ropa y entornos. Formato PNG 2K con mapas normales incluidos.",
+        "en": "12 seamless graffiti textures for clothing and environments. 2K PNG format with normal maps included."
+      },
+      "price": "10",
+      "images": [
+        "https://jinxxy-c.jinxxy-cdn.com/nocturna/graffiti-texture-pack/thumb.png"
+      ],
+      "checkoutUrl": "https://jinxxy.com/nocturna/graffiti-texture-pack",
+      "editor": "Sombra",
+      "category": "texture",
+      "nsfw": false,
+      "featured": false,
+      "date": "2026-06-18"
+    },
+    {
+      "id": "nocturne-lingerie-set",
+      "name": {
+        "es": "Set Lencería Nocturne",
+        "en": "Nocturne Lingerie Set"
+      },
+      "description": {
+        "es": "Conjunto de lencería con encaje detallado y toggles modulares. Solo para avatares mayores de edad. Incluye variantes de material.",
+        "en": "Detailed lace lingerie set with modular toggles. For adult avatars only. Includes material variants."
+      },
+      "price": "22",
+      "images": [
+        "https://jinxxy-c.jinxxy-cdn.com/nocturna/nocturne-lingerie-set/thumb.png"
+      ],
+      "checkoutUrl": "https://jinxxy.com/nocturna/nocturne-lingerie-set",
+      "editor": "Luna",
+      "category": "outfit",
+      "nsfw": true,
+      "featured": false,
+      "date": "2026-07-02"
+    }
+  ]
+}

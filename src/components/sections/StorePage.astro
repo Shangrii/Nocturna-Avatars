@@ -1,0 +1,153 @@
+---
+/**
+ * StorePage — body of the /tienda (es) · /en/store (en) asset store.
+ *
+ * Data-driven grid read from src/data/store.json (staff write-target — no code
+ * change to add products, D-13). Products render featured-pinned then
+ * newest-first by `date` (D-09), each name/description resolved to the current
+ * locale (D-15 — the EN store never shows Spanish). Empty catalog falls back to
+ * the branded EmptyState so the Discord CTA stays reachable.
+ *
+ * All product copy renders through Astro `{...}` auto-escaping via ProductCard —
+ * raw-HTML injection is never used on store.json fields (T-06-01). The
+ * product-data JSON island (Plans 02/03 consume it) is emitted via the
+ * `data-store-products` ATTRIBUTE: Astro auto-escapes the attribute value and
+ * the browser losslessly decodes it, so a `</script>` sequence in staff data can
+ * never break out of the element (T-06-01) — no raw-HTML directive required.
+ * Consumers read `el.dataset.storeProducts` then JSON.parse.
+ */
+import ProductCard from '../ProductCard.astro';
+import EmptyState from '../EmptyState.astro';
+import NightBackground from '../NightBackground.astro';
+import { useTranslations, type Lang } from '../../i18n/ui';
+import storeData from '../../data/store.json';
+
+interface StoreProduct {
+  id: string;
+  name: { es: string; en: string };
+  description: { es: string; en: string };
+  price: string;
+  images: string[];
+  checkoutUrl: string;
+  editor: string;
+  category: string;
+  nsfw: boolean;
+  featured: boolean;
+  date: string;
+}
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const page = useTranslations(lang, 'pages').tienda;
+
+// Copy before sorting so the imported module array is never mutated
+// (GalleryPage guard). Featured pinned first, then newest-first by `date` (D-09).
+const products = ([...(storeData.products as StoreProduct[])])
+  .sort(
+    (a, b) =>
+      (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || b.date.localeCompare(a.date),
+  )
+  .map((p) => ({
+    id: p.id,
+    name: p.name[lang],
+    description: p.description[lang],
+    price: p.price,
+    images: p.images,
+    checkoutUrl: p.checkoutUrl,
+    editor: p.editor,
+    category: p.category,
+    nsfw: p.nsfw,
+    featured: p.featured,
+  }));
+
+// JSON island for Plans 02/03 (quick-view + purchase cart). Serialized to the
+// data-store-products attribute (see file header — XSS-safe, lossless).
+const islandJson = JSON.stringify(
+  products.map((p) => ({
+    id: p.id,
+    name: p.name,
+    description: p.description,
+    price: p.price,
+    images: p.images,
+    checkoutUrl: p.checkoutUrl,
+    editor: p.editor,
+    nsfw: p.nsfw,
+  })),
+);
+---
+
+{/* Reusable night-sky backdrop — full-viewport fixed field behind the store.
+    The on-page section is made transparent (is:global below) so the night shows
+    through; card surfaces keep their own dark fills so copy stays readable. */}
+<NightBackground fixed />
+
+<section class="section section-page-top section--rule">
+  <div class="section-header reveal">
+    <span class="section-tag">{page.tag}</span>
+    <h2 class="section-title">{page.title}</h2>
+    <p class="section-subtitle">{page.subtitle}</p>
+  </div>
+
+  {products.length ? (
+    <div class="product-grid">
+      {products.map((product) => (
+        <ProductCard
+          product={product}
+          usd={page.usd}
+          featuredBadge={page.featuredBadge}
+          editorCredit={page.editorCredit}
+          imgUnavailable={page.imgUnavailable}
+          nsfwReveal={page.nsfwReveal}
+          nsfwHide={page.nsfwHide}
+        />
+      ))}
+    </div>
+  ) : (
+    <div class="reveal">
+      <EmptyState
+        heading={page.emptyHeading}
+        body={page.emptyBody}
+        ticketLabel={page.emptyCta}
+      />
+    </div>
+  )}
+</section>
+
+{/* Product-data island — attribute channel keeps the JSON lossless + breakout-safe. */}
+<script type="application/json" data-store-products={islandJson}></script>
+
+<style is:global>
+  /* Interior page (no hero): keep the nav in its solid dark state at all times. */
+  .nav {
+    background: rgba(10, 12, 20, 0.95);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 var(--color-border);
+  }
+
+  /* Drop the opaque section field so the fixed <NightBackground /> shows through. */
+  main .section {
+    background: transparent;
+  }
+</style>
+
+<style>
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-lg);
+    max-width: 1200px;
+    margin-inline: auto;
+  }
+  @media (max-width: 480px) {
+    .product-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import '../../scripts/store.ts';
+</script>
