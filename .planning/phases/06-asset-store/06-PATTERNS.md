@@ -158,8 +158,8 @@ const products = storeData.products.slice()
 | Pill badge sync (count + aria-label + `[hidden]` toggle) | 147-184 | copy the `syncCartUI` badge logic (149-183) |
 
 **Differences store-cart.ts introduces (NOT in cart.ts):**
-- **State entry shape:** `{ id, name, price, image, checkoutUrl, qty }` — flat, no `categoryId`/`categoryName`. Drop cart.ts's category grouping (Section 3 lines 187-260 `groups`/`CATEGORY_ORDER`) — store rows are ungrouped.
-- **localStorage persistence (D-20):** on every mutation `localStorage.setItem('nocturna-store-cart', ...)`; on init, **hydrate + reconcile against current `store.json`** — drop unknown ids, refresh `name`/`price`/`checkoutUrl`/`image` from data (Pitfall 2). cart.ts has NO persistence — this is net-new (RESEARCH Code Examples § persistence).
+- **State entry shape:** `{ id, name, price, checkoutUrl, qty }` — flat, no `categoryId`/`categoryName`, no image (cart rows are text-only). Drop cart.ts's category grouping (Section 3 lines 187-260 `groups`/`CATEGORY_ORDER`) — store rows are ungrouped.
+- **localStorage persistence (D-20):** on every mutation `localStorage.setItem('nocturna-store-cart', ...)`; on init, **hydrate + reconcile against current `store.json`** — drop unknown ids, refresh `name`/`price`/`checkoutUrl` from data (Pitfall 2). cart.ts has NO persistence — this is net-new (RESEARCH Code Examples § persistence).
 - **Footer = per-product Jinxxy links** (D-18 NO): each row carries a `<a href={checkoutUrl} target="_blank" rel="noopener noreferrer">` built XSS-safe. Replace cart.ts's `openCartModal`/`buildClipboardText`/Discord-copy flow (Sections 8-9, lines 497-706) — **not** copied.
 - **No quantity stepper category logic / package CTAs** (cart.ts lines 302-370 catalog-row binding, 718-733 package tickets) — store binds add-to-cart from `ProductCard` `data-*` attrs instead.
 - **Price:** store prices are plain numbers → `$${price} USD`. cart.ts's `parsePrice`/`formatEntryPrice` (lines 95-141) handle ranges + "cotizar" — the store can use a **simplified** numeric formatter (no ranges, no quote), but copy the `formatTotal` USD-suffix shape (lines 135-141).
