@@ -1,6 +1,6 @@
 ---
 phase: "06"
-status: issues_found
+status: clean
 depth: standard
 reviewed: 2026-07-08
 files_reviewed: 16
@@ -31,7 +31,7 @@ info: 6
 **Reviewed:** 2026-07-08
 **Depth:** standard
 **Files Reviewed:** 16
-**Status:** issues_found
+**Status:** clean — all Critical + Warning findings fixed 2026-07-08 (Info findings deliberately left open; fix scope was critical_warning)
 
 ## Summary
 
@@ -50,6 +50,8 @@ Reviewed all 16 files changed in phase 06 (product grid, quick-view modal, purch
 ## Critical
 
 ### CR-01: Store cart is wiped (memory + localStorage) by soft-navigating to any non-store page
+
+**FIXED:** b1aa917 — `parseCanonical()` now returns false when the page carries no (or an unparsable) `[data-store-products]` island; `initStoreCart()` skips hydrate/reconcile/persist entirely in that case, so non-store navigations never touch cart state.
 
 **File:** `src/scripts/store-cart.ts:74-94, 149-164, 534-547`
 **Issue:** The site uses Astro's `ClientRouter` (BaseLayout.astro:60), so `store-cart.ts` stays loaded for the whole browsing session once the store page has been visited, and `initStoreCart()` re-runs on **every** `astro:page-load` (the `initRanThisLoad` guard is reset on `astro:before-swap`). On a non-store page there is no `[data-store-products]` island, so `parseCanonical()` leaves `canonical` empty, and `reconcileInMemory()` then treats every cart entry as an unknown id: it deletes all entries and calls `persist()`, writing an **empty** cart to `localStorage['nocturna-store-cart']`.
@@ -88,6 +90,8 @@ function initStoreCart(): void {
 
 ### WR-01: `transitionend { once: true }` + `propertyName` filter is self-contradictory — overlay/drawer can stay un-hidden, or a re-opened one can be force-hidden
 
+**FIXED:** 4522f3e — both close paths now use a named pending-hide handler (no `{once}`) that self-detaches only when the matching event arrives (target + propertyName checked); open paths cancel any pending handler so a stale close can never hide a re-opened panel.
+
 **File:** `src/scripts/store.ts:398-408` (closeQuickView), `src/scripts/store-cart.ts:447-461` (closeDrawer)
 **Issue:** Both close paths attach a `transitionend` listener with `{ once: true }` and then filter by `e.propertyName`. `once` removes the listener after the **first** event regardless of the filter, and `transitionend` **bubbles**, so two concrete failure modes exist:
 
@@ -113,6 +117,8 @@ if (pendingHide) { overlay.removeEventListener('transitionend', pendingHide); pe
 
 ### WR-02: Quick-view initial focus targets a hidden button for single-image products
 
+**FIXED:** f82b23e — first-focusable selection now applies the same `!disabled && !closest('[hidden]')` filter as `trapFocus`, so focus lands on the first visible control.
+
 **File:** `src/scripts/store.ts:374-375`
 **Issue:** `overlay.querySelector('button, [href]')` matches the gallery prev button first in DOM order, but prev/next carry `[hidden]` whenever the product has a single image (3 of the 4 seed products). `.focus()` on a `display:none` element is a no-op, so keyboard/SR focus stays on the card behind the modal — the dialog opens without focus moving into it (WCAG 2.4.3 failure for the majority of the catalog).
 **Fix:** apply the same visibility filter used by `trapFocus`:
@@ -125,11 +131,15 @@ const firstFocusable = Array.from(
 
 ### WR-03: `role="button"` product card contains nested interactive controls (invalid ARIA)
 
+**FIXED:** 28398c8 — dropped `role`/`tabindex`/`aria-label` from the article; the product name is now a native `<button data-card-open>` opener (Enter/Space native), whole-card click stays via the delegated JS handler, and close-focus returns to the open button.
+
 **File:** `src/components/ProductCard.astro:47-104`
 **Issue:** The `<article role="button" tabindex="0" aria-label={product.name}>` wraps two real `<button>`s (NSFW reveal, add-to-cart). Per the ARIA spec, descendants of a `button` role are treated as presentational, so assistive tech may not expose the reveal or add controls at all; the container's `aria-label` also replaces the card's name/price/editor content in the accessibility tree. Mouse/keyboard code paths work, but SR users can lose both the NSFW reveal (they get a blurred product with no operable reveal) and add-to-cart.
 **Fix:** drop `role="button"`/`tabindex` from the article; make the product name (`h3`) contain a `<button class="product-card__open">` that opens the quick-view (stretch its hit area with a pseudo-element if the whole-card click affordance should stay), keeping reveal/add as siblings, not descendants, of a button role.
 
 ### WR-04: One malformed staff edit to store.json crashes the whole site build (including gallery auto-publish deploys)
+
+**FIXED:** d1a070f — StorePage now filters out products missing the structural minimum (id + name/description objects) and falls back per-field everywhere else (`String(date ?? '')` sort, locale fallback es → en → '', typed-optional StoreProduct); a bad product can no longer throw at build time.
 
 **File:** `src/components/sections/StorePage.astro:55-63`
 **Issue:** `b.date.localeCompare(a.date)` throws `TypeError` at build time if any product omits `date`, and `p.name[lang]` / `p.description[lang]` render `undefined` (or throw on a missing object) if a locale key is missing. store.json is explicitly the staff write-target ("no code changes needed"), and the same repo build publishes the Discord-driven gallery — so a single typo'd product blocks **all** deploys, freezing the auto-updating gallery until a developer intervenes. This contradicts the phase's core "staff edit data, not code" value.
@@ -148,6 +158,8 @@ const products = ([...(storeData.products as StoreProduct[])])
 ```
 
 ### WR-05: Quick-view gallery image has no broken-image fallback
+
+**FIXED:** ff23dfc — `renderGalleryImage()` binds a guarded persistent `error` → `/store/placeholder.svg` handler (persistent because prev/next re-assigns src; `endsWith` guard prevents a placeholder loop), and `openQuickView()` sets `img.alt = product.name`.
 
 **File:** `src/scripts/store.ts:260-261`, `src/components/QuickViewModal.astro:68`
 **Issue:** Card thumbnails get the T-06-05 error→placeholder swap via `[data-store-img]`, but the modal's `[data-quickview-img]` gets `img.src = src` with no error handler — a dead Jinxxy CDN hotlink renders a raw broken-image glyph inside the flagship quick-view. The seed data URLs are documented placeholders ("Replace the example jinxxy-cdn.com URLs"), so this state is guaranteed until real links land, and remains likely afterwards (hotlinked CDN). Note the modal's doc comment also claims store.ts sets the img `alt` — it never does (alt stays `""`).
