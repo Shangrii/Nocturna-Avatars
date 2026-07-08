@@ -22,6 +22,8 @@ import CartDrawer from '../../components/CartDrawer.astro';
 import CartPill from '../../components/CartPill.astro';
 import CartSummaryModal from '../../components/CartSummaryModal.astro';
 import QuickViewModal from '../../components/QuickViewModal.astro';
+import StoreCartDrawer from '../../components/StoreCartDrawer.astro';
+import StoreCartPill from '../../components/StoreCartPill.astro';
 import { toLang, useTranslations } from '../../i18n/ui';
 import { staticPathsForConcept, conceptForSlug } from '../../i18n/routes';
 import '../../styles/sections.css';
@@ -78,6 +80,8 @@ if (concept === 'gallery') {
   {concept === 'store' && (
     <Fragment slot="chrome-bottom">
       <QuickViewModal lang={lang} />
+      <StoreCartDrawer lang={lang} />
+      <StoreCartPill lang={lang} />
     </Fragment>
   )}
 </BaseLayout>

@@ -1,0 +1,376 @@
+---
+/**
+ * StoreCartDrawer — slide-in side panel listing the products in the REAL purchase
+ * cart. Opened by the store cart button (#storeCartPill) via store-cart.ts. Same
+ * editorial register as CartDrawer, but a FLAT list (no category grouping — the
+ * store cart is not the /servicios cotización, D-19) and a per-item checkout model:
+ * each row carries its own "Comprar en Jinxxy" link (D-18 NO branch — there is NO
+ * single buy-all button). Empty state is CSS-only (:empty).
+ *
+ * store-cart.ts contract (all store-namespaced — never touches cart.ts's #cart*):
+ *   #storeCartBackdrop / #storeCartDrawer            → WR-01 open/close (.active + [hidden])
+ *   .store-cart-drawer__items (ul)                   → item rows injected here
+ *   .store-cart-drawer__item{,-name,-price,-buy,-remove} → JS-created row classes
+ *   [data-store-cart-close] / [data-store-cart-total]
+ * i18n the engine reads off this element's data-* attributes (XSS-safe, single-sourced):
+ *   data-i18n-pill-label / data-i18n-buy / data-i18n-remove / data-i18n-unavailable
+ */
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang, 'pages').tienda;
+---
+
+<!-- Backdrop (data-lenis-prevent: let native scroll win so Lenis doesn't scroll
+     the page behind the open drawer) -->
+<div class="store-cart-backdrop" id="storeCartBackdrop" aria-hidden="true" hidden data-lenis-prevent></div>
+
+<!-- Drawer (data-lenis-prevent so the item list scrolls natively instead of Lenis
+     scrolling the background page under the cursor). The i18n strings the engine
+     needs at runtime ride on data-i18n-* attributes (single-sourced from pages.json). -->
+<aside
+  class="store-cart-drawer"
+  id="storeCartDrawer"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="storeCartDrawerTitle"
+  hidden
+  data-lenis-prevent
+  data-i18n-pill-label={t.cartPillLabel}
+  data-i18n-buy={t.cartBuyItem}
+  data-i18n-remove={t.cartRemove}
+  data-i18n-unavailable={t.linkUnavailable}
+>
+  <div class="store-cart-drawer__header">
+    <span class="store-cart-drawer__icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M3 4h2l2.4 11.2a1 1 0 00.98.8h8.24a1 1 0 00.98-.78L20 8H6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="9.5" cy="20" r="1.4" stroke="currentColor" stroke-width="1.5" />
+        <circle cx="17" cy="20" r="1.4" stroke="currentColor" stroke-width="1.5" />
+      </svg>
+    </span>
+    <div class="store-cart-drawer__heading">
+      <span class="store-cart-drawer__eyebrow">{t.cartEyebrow}</span>
+      <span class="store-cart-drawer__title" id="storeCartDrawerTitle">{t.cartTitle}</span>
+    </div>
+    <button
+      class="store-cart-drawer__close"
+      type="button"
+      data-store-cart-close
+      aria-label={t.cartClose}
+    >
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Item list — populated by store-cart.ts as a FLAT list; empty-state via CSS :empty. -->
+  <ul
+    class="store-cart-drawer__items"
+    data-empty-label={t.cartEmpty}
+    data-empty-body={t.cartEmptyBody}
+    aria-label={t.cartTitle}
+  >
+  </ul>
+
+  <div class="store-cart-drawer__footer">
+    <div class="store-cart-drawer__total">
+      <span class="store-cart-drawer__total-label">{t.cartTotalLabel}</span>
+      <span class="store-cart-drawer__total-value" data-store-cart-total>$0 USD</span>
+    </div>
+    <p class="store-cart-drawer__note">{t.cartFooterNote}</p>
+  </div>
+</aside>
+
+<!--
+  is:global is REQUIRED: the drawer's item rows are created at runtime by
+  store-cart.ts (createElement), so they never receive Astro's scoped
+  [data-astro-cid] attribute. Scoped rules would not match them. All selectors are
+  store-cart-* namespaced, so global scope is collision-safe (and never collides
+  with cart.ts's .cart-* rules — D-19).
+-->
+<style is:global>
+  /* ── Backdrop ── */
+  .store-cart-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 8000;
+    background: rgba(4, 5, 10, 0.82);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .store-cart-backdrop.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .store-cart-backdrop[hidden] {
+    display: none;
+  }
+
+  /* ── Drawer panel ── */
+  .store-cart-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 8001;
+    width: min(430px, 92vw);
+    background: var(--color-ink-raised);
+    border-left: 1px solid var(--color-border);
+    box-shadow: -24px 0 60px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .store-cart-drawer.active {
+    transform: translateX(0);
+  }
+  .store-cart-drawer[hidden] {
+    display: none;
+  }
+
+  /* ── Header ── */
+  .store-cart-drawer__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-lg) var(--space-lg) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+  .store-cart-drawer__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: var(--color-red-soft);
+    border: 1px solid var(--color-red);
+    color: var(--color-red-on-ink);
+  }
+  .store-cart-drawer__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+  .store-cart-drawer__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-red-on-ink);
+  }
+  .store-cart-drawer__title {
+    font-family: var(--font-display);
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-white);
+  }
+  .store-cart-drawer__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    min-height: 34px;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    color: var(--color-white-dim);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .store-cart-drawer__close:hover,
+  .store-cart-drawer__close:focus-visible {
+    color: var(--color-white);
+    border-color: var(--color-white-dim);
+  }
+  .store-cart-drawer__close:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+
+  /* ── Item list (flat — no category machinery) ── */
+  .store-cart-drawer__items {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Empty state (CSS-only, bilingual heading + body from data attributes) */
+  .store-cart-drawer__items:empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding: var(--space-xl) var(--space-lg);
+  }
+  .store-cart-drawer__items:empty::before {
+    content: attr(data-empty-label);
+    max-width: 24ch;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-white);
+  }
+  .store-cart-drawer__items:empty::after {
+    content: attr(data-empty-body);
+    max-width: 26ch;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-white-dim);
+  }
+
+  /* Item rows — generated by store-cart.ts: [name / $price / Comprar en Jinxxy] [×] */
+  .store-cart-drawer__item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    column-gap: var(--space-sm);
+    row-gap: var(--space-3xs);
+    padding: var(--space-sm) var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.2s ease;
+  }
+  .store-cart-drawer__item:hover {
+    background: color-mix(in srgb, var(--color-paper-on-ink) 4%, transparent);
+  }
+  .store-cart-drawer__item-name {
+    grid-column: 1;
+    min-width: 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.35;
+    color: var(--color-paper-on-ink);
+    overflow-wrap: break-word;
+  }
+  .store-cart-drawer__item-price {
+    grid-column: 1;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-white);
+  }
+  /* Per-item Jinxxy checkout link (D-18 NO branch) — outline register, not red-fill. */
+  .store-cart-drawer__buy {
+    grid-column: 1;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    margin-top: var(--space-3xs);
+    min-height: 34px;
+    padding: 6px var(--space-sm);
+    background: transparent;
+    border: 1px solid var(--color-red);
+    border-radius: 999px;
+    color: var(--color-red-on-ink);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .store-cart-drawer__buy:hover {
+    background: var(--color-red);
+    color: var(--color-white);
+  }
+  .store-cart-drawer__buy:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+  /* Disabled state when a product's checkoutUrl is not a valid https link (T-06-02). */
+  .store-cart-drawer__buy--disabled {
+    border-color: var(--color-border);
+    color: var(--color-white-dim);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .store-cart-drawer__item-remove {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    color: var(--color-white-dim);
+    font-size: 19px;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.18s ease, transform 0.18s ease;
+  }
+  .store-cart-drawer__item-remove:hover {
+    color: var(--color-red-on-ink);
+    transform: scale(1.15);
+  }
+  .store-cart-drawer__item-remove:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+
+  /* ── Footer (reference total + note; NO buy-all button — RESEARCH anti-pattern) ── */
+  .store-cart-drawer__footer {
+    flex-shrink: 0;
+    padding: var(--space-lg);
+    background: var(--color-ink);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  .store-cart-drawer__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .store-cart-drawer__total-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-white-dim);
+  }
+  .store-cart-drawer__total-value {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-white);
+  }
+  .store-cart-drawer__note {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--color-white-dim);
+  }
+</style>
