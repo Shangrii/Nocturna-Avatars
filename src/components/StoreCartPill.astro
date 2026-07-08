@@ -1,0 +1,132 @@
+---
+/**
+ * StoreCartPill — persistent circular "ver mi carrito" button for the asset store,
+ * fixed bottom-right, sitting to the right of the "Abrir Ticket" FloatingCTA (this
+ * component ships an is:global shift that moves the CTA left to make room, mirroring
+ * ServicesPage). Same 52px red-fill / glow register as CartPill, but this drives a
+ * REAL purchase cart (not a cotización) — so the glyph is a shopping cart, and the
+ * IDs/classes are the store-cart.ts namespace, distinct from cart.ts (D-19):
+ *   #storeCartPill            → click opens the store cart drawer; syncCartUI updates aria-label
+ *   .store-cart-pill__badge   → count badge; store-cart.ts sets textContent + toggles [hidden]
+ *
+ * NEVER shares hooks with cart.ts's cotización pill/badge — the store cart and the
+ * /servicios cotización are fully separate sibling systems (D-19).
+ */
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang, 'pages').tienda;
+// Initial aria-label from the pill copy with a live count of 0 (store-cart.ts
+// rewrites this on every mutation).
+const initialLabel = t.cartPillLabel.replace('{n}', '0');
+---
+
+<button
+  class="store-cart-fab"
+  id="storeCartPill"
+  type="button"
+  aria-label={initialLabel}
+>
+  <svg viewBox="0 0 24 24" fill="none" width="22" height="22" aria-hidden="true">
+    <path
+      d="M3 4h2l2.4 11.2a1 1 0 00.98.8h8.24a1 1 0 00.98-.78L20 8H6"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <circle cx="9.5" cy="20" r="1.4" stroke="currentColor" stroke-width="1.5" />
+    <circle cx="17" cy="20" r="1.4" stroke="currentColor" stroke-width="1.5" />
+  </svg>
+  <span class="store-cart-pill__badge" aria-hidden="true" hidden>0</span>
+</button>
+
+<!--
+  is:global: the FloatingCTA shift below is a global rule; it ships only on pages
+  that render StoreCartPill (the store route), so it never moves the CTA elsewhere.
+-->
+<style is:global>
+  /* The store cart circle occupies the bottom-right corner on store pages, so
+     shift the global FloatingCTA left to sit beside it (mirrors ServicesPage). */
+  .floating-cta {
+    right: calc(clamp(16px, 4vw, 32px) + 52px + 12px);
+  }
+</style>
+
+<style>
+  .store-cart-fab {
+    position: fixed;
+    right: clamp(16px, 4vw, 32px);
+    bottom: clamp(16px, 4vw, 32px);
+    z-index: 905;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border: none;
+    border-radius: 999px;
+    background: var(--color-red);
+    color: var(--color-white);
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(192, 25, 44, 0.3);
+    transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  }
+
+  .store-cart-fab:hover {
+    background: var(--color-red-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(192, 25, 44, 0.42);
+  }
+
+  .store-cart-fab:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+  }
+
+  /* Count badge — navy chip on the red circle, off-white numerals */
+  .store-cart-pill__badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 21px;
+    height: 21px;
+    padding: 0 5px;
+    background: var(--color-ink);
+    color: var(--color-white);
+    border: 2px solid var(--color-paper);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .store-cart-pill__badge[hidden] {
+    display: none;
+  }
+
+  /* Subtle attention pulse when the badge first appears (skipped for reduced motion) */
+  @media (prefers-reduced-motion: no-preference) {
+    .store-cart-pill__badge:not([hidden]) {
+      animation: store-cart-badge-pop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes store-cart-badge-pop {
+      from {
+        transform: scale(0.4);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  }
+</style>
