@@ -87,6 +87,10 @@ interface QuickViewProduct {
   price: string;
   images: string[];
   checkoutUrl: string;
+  // Optional additional storefronts (booth, gumroad, …). checkoutUrl remains the
+  // primary Jinxxy buy button; these render as extra platform-labeled buttons.
+  // No product carries this yet — the render loop is prepared, renders nothing.
+  storefronts?: Array<{ platform: string; url: string }>;
   editor: string;
   nsfw: boolean;
   // Optional long-form quick-view sections (present only when staff data defines
@@ -150,6 +154,53 @@ function renderSections(overlay: HTMLElement, product: QuickViewProduct): void {
     p.textContent = body;
     section.append(h, p);
     container.append(section);
+  });
+}
+
+/**
+ * Render the OPTIONAL extra-storefront buttons in the right rail, below the
+ * primary buy/add controls. Each entry becomes a platform-labeled secondary
+ * outbound button ("Comprar en BOOTH" / "Buy on Gumroad"). Same guards as the
+ * primary buy CTA: the href is set ONLY when url passes an https:// check
+ * (T-06-02), every button carries rel="noopener noreferrer" (T-06-03), and the
+ * label is built via createElement/textContent only — no raw-HTML sink (T-06-01).
+ *
+ * The CTA template ("Comprar en {platform}") rides on data-label-cta and the
+ * platform → display-name map on data-platform-names (both single-sourced from
+ * pages.json), so ADDING a storefront later is a store.json-only edit: a staff
+ * member appends `{ "platform": "booth", "url": "https://…" }` to a product's
+ * `storefronts` array and the button appears with no code change. NO seed product
+ * carries `storefronts` today, so this loop renders nothing and the container
+ * stays collapsed (:empty { display: none }).
+ */
+function renderStorefronts(overlay: HTMLElement, product: QuickViewProduct): void {
+  const container = overlay.querySelector<HTMLElement>('[data-quickview-storefronts]');
+  if (!container) return;
+  container.replaceChildren();
+
+  const list = Array.isArray(product.storefronts) ? product.storefronts : [];
+  const ctaTpl = container.dataset.labelCta ?? '';
+  let names: Record<string, string> = {};
+  try {
+    names = JSON.parse(container.dataset.platformNames ?? '{}') as Record<string, string>;
+  } catch {
+    names = {};
+  }
+
+  list.forEach((sf) => {
+    if (!sf || typeof sf.url !== 'string' || !sf.url.startsWith('https://')) return;
+    const platform = typeof sf.platform === 'string' ? sf.platform : '';
+    const display =
+      names[platform] ??
+      (platform ? platform.charAt(0).toUpperCase() + platform.slice(1) : '');
+    if (!display) return;
+    const a = document.createElement('a');
+    a.className = 'quickview__storefront';
+    a.href = sf.url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = ctaTpl ? ctaTpl.replace('{platform}', display) : display;
+    container.append(a);
   });
 }
 
@@ -280,6 +331,10 @@ function openQuickView(id: string, card: HTMLElement | null): void {
       if (unavailLabel) buy.textContent = unavailLabel;
     }
   }
+
+  // Optional extra storefronts (booth/gumroad/…) below the primary buttons —
+  // renders nothing today (no seed product defines `storefronts`).
+  renderStorefronts(overlay, product);
 
   // Point the secondary add-to-cart control at the currently-viewed product so
   // store-cart.ts (which binds [data-store-add] by data-product-id) adds THIS item.

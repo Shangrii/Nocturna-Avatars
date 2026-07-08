@@ -113,6 +113,13 @@
       "nsfwHide": "Ocultar",
       "imgUnavailable": "Imagen no disponible",
       "buyCta": "Comprar en Jinxxy",
+      "storefrontCta": "Comprar en {platform}",
+      "storefrontNames": {
+        "jinxxy": "Jinxxy",
+        "booth": "BOOTH",
+        "gumroad": "Gumroad",
+        "payhip": "Payhip"
+      },
       "quickViewClose": "Cerrar",
       "linkUnavailable": "Enlace no disponible",
       "galleryPrev": "Anterior",
@@ -251,6 +258,13 @@
       "nsfwHide": "Hide",
       "imgUnavailable": "Image unavailable",
       "buyCta": "Buy on Jinxxy",
+      "storefrontCta": "Buy on {platform}",
+      "storefrontNames": {
+        "jinxxy": "Jinxxy",
+        "booth": "BOOTH",
+        "gumroad": "Gumroad",
+        "payhip": "Payhip"
+      },
       "quickViewClose": "Close",
       "linkUnavailable": "Link unavailable",
       "galleryPrev": "Previous",

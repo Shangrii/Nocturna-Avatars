@@ -125,6 +125,20 @@ const t = useTranslations(lang, 'pages').tienda;
             >{t.addToCart}</button>
           </span>
         </div>
+
+        {/* Extra storefronts (booth, gumroad, …) — RESERVED, currently EMPTY.
+            store.ts appends a platform-labeled outbound button per entry in a
+            product's optional `storefronts` array (https-guarded, textContent
+            only). No seed product defines `storefronts`, so this renders nothing;
+            `:empty { display: none }` keeps the rail from showing a void today.
+            The CTA template + platform display names ride on the data-* attrs so
+            adding a storefront later is a store.json-only edit (no code change). */}
+        <div
+          class="quickview__storefronts"
+          data-quickview-storefronts
+          data-label-cta={t.storefrontCta}
+          data-platform-names={JSON.stringify(t.storefrontNames)}
+        ></div>
       </div>
 
       {/* BELOW the photo (last on mobile): long-form written sections. store.ts
@@ -442,6 +456,48 @@ const t = useTranslations(lang, 'pages').tienda;
     border-color: var(--color-red);
     background: var(--color-red);
     color: var(--color-white);
+  }
+
+  /* Extra-storefront container — reserved, collapses when empty so today's rail
+     shows no void below the primary buttons. When staff add a storefront, the
+     buttons stack in an outline register below the buy/add row. */
+  .quickview__storefronts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    margin-top: var(--space-2xs);
+  }
+  .quickview__storefronts:empty {
+    display: none;
+  }
+  .quickview__storefront {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding: var(--space-xs) var(--space-md);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    color: var(--color-white);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .quickview__storefront:hover {
+    border-color: var(--color-red);
+    background: var(--color-red-soft);
+    color: var(--color-red-on-ink);
+  }
+  .quickview__storefront:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
   }
 
   .quickview__dismiss {

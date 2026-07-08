@@ -33,6 +33,10 @@ interface StoreProduct {
   price: string;
   images: string[];
   checkoutUrl: string;
+  // OPTIONAL additional storefronts (booth, gumroad, …). checkoutUrl stays the
+  // primary Jinxxy buy button; these render as extra platform-labeled buttons in
+  // the quick-view. Absent on every seed product today (schema prepared only).
+  storefronts?: Array<{ platform: string; url: string }>;
   editor: string;
   category: string;
   nsfw: boolean;
@@ -65,6 +69,9 @@ const products = ([...(storeData.products as StoreProduct[])])
     price: p.price,
     images: p.images,
     checkoutUrl: p.checkoutUrl,
+    // Optional extra storefronts — undefined when absent so JSON.stringify drops
+    // them from the island (no product carries them yet).
+    storefronts: p.storefronts,
     editor: p.editor,
     category: p.category,
     nsfw: p.nsfw,
@@ -85,6 +92,8 @@ const islandJson = JSON.stringify(
     price: p.price,
     images: p.images,
     checkoutUrl: p.checkoutUrl,
+    // Optional extra storefronts (booth/gumroad/…) — undefined dropped by stringify.
+    storefronts: p.storefronts,
     editor: p.editor,
     nsfw: p.nsfw,
   })),
