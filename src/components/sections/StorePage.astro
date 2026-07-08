@@ -26,6 +26,10 @@ interface StoreProduct {
   id: string;
   name: { es: string; en: string };
   description: { es: string; en: string };
+  // Optional long-form quick-view sections (per-locale; omitted when absent).
+  license?: { es: string; en: string };
+  details?: { es: string; en: string };
+  updates?: { es: string; en: string };
   price: string;
   images: string[];
   checkoutUrl: string;
@@ -53,6 +57,11 @@ const products = ([...(storeData.products as StoreProduct[])])
     id: p.id,
     name: p.name[lang],
     description: p.description[lang],
+    // Optional sections resolved to the current locale; undefined when absent
+    // so JSON.stringify drops them from the island (only present ones render).
+    license: p.license?.[lang],
+    details: p.details?.[lang],
+    updates: p.updates?.[lang],
     price: p.price,
     images: p.images,
     checkoutUrl: p.checkoutUrl,
@@ -69,6 +78,10 @@ const islandJson = JSON.stringify(
     id: p.id,
     name: p.name,
     description: p.description,
+    // Only serialized when the staff data defines them (undefined → dropped).
+    license: p.license,
+    details: p.details,
+    updates: p.updates,
     price: p.price,
     images: p.images,
     checkoutUrl: p.checkoutUrl,

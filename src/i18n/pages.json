@@ -106,6 +106,10 @@
       "galleryPrev": "Anterior",
       "galleryNext": "Siguiente",
       "galleryCounter": "Imagen {n} de {total}",
+      "sectionDescription": "Descripción",
+      "sectionLicense": "Licencia",
+      "sectionDetails": "Detalles",
+      "sectionUpdates": "Actualizaciones",
       "emptyHeading": "Tienda en camino",
       "emptyBody": "Aún no hay assets publicados. Abre un ticket para pedidos personalizados.",
       "emptyCta": "Abrir Ticket"
@@ -228,6 +232,10 @@
       "galleryPrev": "Previous",
       "galleryNext": "Next",
       "galleryCounter": "Image {n} of {total}",
+      "sectionDescription": "Description",
+      "sectionLicense": "License",
+      "sectionDetails": "Details",
+      "sectionUpdates": "Updates",
       "emptyHeading": "Store coming soon",
       "emptyBody": "No assets published yet. Open a ticket for custom requests.",
       "emptyCta": "Open Ticket"
