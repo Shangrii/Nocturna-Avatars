@@ -66,6 +66,12 @@ let hydrated = false;
 // Focus trap handler for the drawer.
 let drawerTrapHandler: ((e: KeyboardEvent) => void) | null = null;
 
+// WR-01: pending close-transition handler. A named (non-{once}) listener so a
+// bubbling child transitionend can't consume it before the drawer's own
+// transform transition ends; openDrawer cancels it so a stale close can never
+// slam [hidden] onto a re-opened drawer.
+let drawerPendingHide: ((e: TransitionEvent) => void) | null = null;
+
 // ---------------------------------------------------------------------------
 // SECTION 2 — Canonical island parse + persistence + reconcile
 // ---------------------------------------------------------------------------
@@ -412,6 +418,13 @@ function openDrawer(): void {
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // WR-01: cancel any still-pending close handler so a re-open within the close
+  // transition can't be force-hidden when the OPEN transition ends.
+  if (drawerPendingHide) {
+    drawer.removeEventListener('transitionend', drawerPendingHide);
+    drawerPendingHide = null;
+  }
+
   // WR-01: remove [hidden] BEFORE adding .active so the transition plays.
   backdrop.removeAttribute('hidden');
   drawer.removeAttribute('hidden');
@@ -456,22 +469,26 @@ function closeDrawer(): void {
   drawer.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
 
-  // WR-01: re-add [hidden] AFTER the transform transition completes (filtered by
-  // propertyName so an early opacity transition doesn't hide it prematurely).
+  // WR-01: re-add [hidden] AFTER the drawer's OWN transform transition ends.
+  // No { once: true } — a bubbling child transitionend (item-row/close-button
+  // 0.18–0.2s hover transitions) would consume a once-listener before the 0.3s
+  // drawer transform completes, leaving the drawer un-hidden at opacity 0 with
+  // its controls still in the Tab order. The named handler self-detaches only
+  // when the matching event (target === drawer, propertyName === 'transform')
+  // arrives; openDrawer cancels it on re-open.
   if (prefersReduced) {
     drawer.setAttribute('hidden', '');
     backdrop?.setAttribute('hidden', '');
   } else {
-    drawer.addEventListener(
-      'transitionend',
-      (e) => {
-        if (e.propertyName === 'transform') {
-          drawer.setAttribute('hidden', '');
-          backdrop?.setAttribute('hidden', '');
-        }
-      },
-      { once: true },
-    );
+    if (drawerPendingHide) drawer.removeEventListener('transitionend', drawerPendingHide);
+    drawerPendingHide = (e: TransitionEvent) => {
+      if (e.target !== drawer || e.propertyName !== 'transform') return;
+      drawer.removeEventListener('transitionend', drawerPendingHide!);
+      drawerPendingHide = null;
+      drawer.setAttribute('hidden', '');
+      backdrop?.setAttribute('hidden', '');
+    };
+    drawer.addEventListener('transitionend', drawerPendingHide);
   }
 
   document.querySelector<HTMLElement>('#storeCartPill')?.focus();

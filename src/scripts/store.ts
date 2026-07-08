@@ -110,6 +110,11 @@ let qvLastFocus: HTMLElement | null = null;
 let qvTrapHandler: ((e: KeyboardEvent) => void) | null = null;
 // Document-level listeners (Escape) bound exactly once per page lifetime.
 let qvDocListenersBound = false;
+// WR-01: pending close-transition handler. A named (non-{once}) listener so a
+// bubbling child transitionend (.dc-modal transform, button hover transitions)
+// can't consume it before the overlay's own opacity transition ends; open
+// cancels it so a stale close can never re-hide a re-opened overlay.
+let qvPendingHide: ((e: TransitionEvent) => void) | null = null;
 
 function getOverlay(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[data-quickview-overlay]');
@@ -357,6 +362,13 @@ function openQuickView(id: string, card: HTMLElement | null): void {
   // Focus origin (return focus here on close).
   qvLastFocus = card ?? (document.activeElement as HTMLElement | null);
 
+  // WR-01: cancel any still-pending close handler so a re-open within the close
+  // transition can't be force-hidden when the OPEN transition ends.
+  if (qvPendingHide) {
+    overlay.removeEventListener('transitionend', qvPendingHide);
+    qvPendingHide = null;
+  }
+
   // WR-01 open: remove [hidden] BEFORE adding .active so the transition plays.
   overlay.removeAttribute('hidden');
   document.body.style.overflow = 'hidden';
@@ -393,18 +405,24 @@ function closeQuickView(): void {
   overlay.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
 
-  // WR-01 close: re-add [hidden] AFTER the opacity transition completes, filtered
-  // by e.propertyName so an early inner transition doesn't hide it prematurely.
+  // WR-01 close: re-add [hidden] AFTER the overlay's OWN opacity transition ends.
+  // No { once: true } — a bubbling child transitionend (.dc-modal 0.35s transform,
+  // 0.2s button hover transitions) would consume a once-listener before the
+  // overlay's opacity completes, leaving it un-hidden at opacity 0 with its buy
+  // link/buttons still in the Tab order. The named handler self-detaches only
+  // when the matching event (target === overlay, propertyName === 'opacity')
+  // arrives; openQuickView cancels it on re-open.
   if (prefersReducedMotion()) {
     overlay.setAttribute('hidden', '');
   } else {
-    overlay.addEventListener(
-      'transitionend',
-      (e) => {
-        if (e.propertyName === 'opacity') overlay.setAttribute('hidden', '');
-      },
-      { once: true },
-    );
+    if (qvPendingHide) overlay.removeEventListener('transitionend', qvPendingHide);
+    qvPendingHide = (e: TransitionEvent) => {
+      if (e.target !== overlay || e.propertyName !== 'opacity') return;
+      overlay.removeEventListener('transitionend', qvPendingHide!);
+      qvPendingHide = null;
+      overlay.setAttribute('hidden', '');
+    };
+    overlay.addEventListener('transitionend', qvPendingHide);
   }
 
   // Return focus to the originating card.
