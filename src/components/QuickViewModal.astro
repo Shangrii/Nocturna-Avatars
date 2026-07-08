@@ -13,6 +13,12 @@
  * which pauses Lenis while open) and the LightboxOverlay gallery stage/prev-next
  * markup. z-index = dc-overlay 10000 (above the store cart drawer's 8001, Plan 03).
  *
+ * Booth.pm-style product layout: a LARGE photo (left column) with the long-form
+ * written sections stacked beneath it, and a right column holding the name,
+ * editor credit, price, and the primary buy CTA. The whole `.quickview__body`
+ * scrolls vertically (inner scroll) so the modal itself always stays inside the
+ * viewport; on narrow screens the columns stack image → name/price/buy → sections.
+ *
  * data-* hooks store.ts binds against:
  *   data-quickview-overlay   → overlay (querySelector hook)
  *   data-quickview-gallery   → gallery stage wrapper (toggles single-image state)
@@ -22,7 +28,11 @@
  *   data-quickview-name      → product title (also aria-labelledby target)
  *   data-quickview-editor    → "by {editor}" credit
  *   data-quickview-price     → "$N USD"
- *   data-quickview-desc      → full description
+ *   data-quickview-sections  → written-content container; store.ts appends a
+ *                              heading+body <section> per present field
+ *                              (description always; license/details/updates when
+ *                              non-empty), textContent only (T-06-01). The four
+ *                              section headings ride on data-heading-* attrs.
  *   data-quickview-buy       → primary "Comprar en Jinxxy" anchor (href validated https)
  *   data-quickview-actions   → placeholder slot; Plan 03 injects "Add to cart" here
  *   data-quickview-close     → close button
@@ -53,7 +63,7 @@ const t = useTranslations(lang, 'pages').tienda;
   <div class="dc-modal quickview">
     <div class="dc-body quickview__body">
 
-      {/* Image gallery stage — img + prev/next + counter, all JS-populated. */}
+      {/* LEFT (top on mobile): the large product photo — img + prev/next + counter, JS-populated. */}
       <div class="quickview__gallery" data-quickview-gallery>
         <img class="quickview__img" data-quickview-img alt="" />
 
@@ -84,12 +94,12 @@ const t = useTranslations(lang, 'pages').tienda;
         <span class="quickview__counter" data-quickview-counter aria-live="polite" hidden></span>
       </div>
 
-      {/* Detail column — title, editor, price, description (JS-populated). */}
-      <div class="quickview__detail">
+      {/* RIGHT (second on mobile): name, editor, price, buy CTA — JS-populated.
+          Sticky on desktop so the buy control stays in view while the left column scrolls. */}
+      <div class="quickview__aside">
         <h3 class="dc-title quickview__name" id="quickViewTitle" data-quickview-name></h3>
         <p class="quickview__editor" data-quickview-editor></p>
         <p class="quickview__price" data-quickview-price></p>
-        <p class="quickview__desc" data-quickview-desc></p>
 
         <div class="quickview__actions">
           {/* Primary buy CTA — href set from checkoutUrl ONLY after https validation. */}
@@ -106,6 +116,18 @@ const t = useTranslations(lang, 'pages').tienda;
         </div>
       </div>
 
+      {/* BELOW the photo (last on mobile): long-form written sections. store.ts
+          appends a heading+body <section> per present field; headings ride on
+          the data-heading-* attributes (single-sourced i18n, T-06-01 textContent). */}
+      <div
+        class="quickview__sections"
+        data-quickview-sections
+        data-heading-description={t.sectionDescription}
+        data-heading-license={t.sectionLicense}
+        data-heading-details={t.sectionDetails}
+        data-heading-updates={t.sectionUpdates}
+      ></div>
+
       <button class="dc-dismiss quickview__dismiss" type="button" data-quickview-close>
         {t.quickViewClose}
       </button>
@@ -121,21 +143,36 @@ const t = useTranslations(lang, 'pages').tienda;
 -->
 <style is:global>
   .quickview {
-    width: 720px;
-    max-width: 94vw;
+    width: min(960px, 94vw);
   }
+  /* Booth-style two-column layout with inner scroll. Grid areas let the same
+     three product regions reflow: desktop = photo top-left, written sections
+     under it, name/price/buy as a sticky right rail; mobile = single column
+     photo → name/price/buy → sections. The BODY is the scroll container
+     (max-height + overflow-y) so the modal shell always stays within the
+     viewport — the scroll lives INSIDE the modal, never on the page. */
   .quickview__body {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-lg);
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    grid-template-areas:
+      "media    aside"
+      "sections aside"
+      "dismiss  dismiss";
+    align-content: start;
+    gap: var(--space-md) var(--space-lg);
     padding: var(--space-lg);
     text-align: left;
+    max-height: min(88vh, 860px);
+    overflow-y: auto;
   }
 
-  /* Gallery stage — fixed aspect box (no CLS while the hotlink loads). */
+  /* Gallery stage — the large product photo. Fixed aspect box (no CLS while the
+     hotlink loads); capped so a tall square never dwarfs the scroll viewport. */
   .quickview__gallery {
+    grid-area: media;
     position: relative;
     aspect-ratio: 1 / 1;
+    max-height: 62vh;
     background: var(--color-ink);
     border: 1px solid var(--color-border);
     border-radius: 6px;
@@ -204,12 +241,17 @@ const t = useTranslations(lang, 'pages').tienda;
     display: none;
   }
 
-  /* Detail column */
-  .quickview__detail {
+  /* Right rail — name, editor, price, buy CTA. Sticky on desktop so the buy
+     control stays pinned while the long written column scrolls past it. */
+  .quickview__aside {
+    grid-area: aside;
     display: flex;
     flex-direction: column;
     gap: var(--space-2xs);
     min-width: 0;
+    position: sticky;
+    top: 0;
+    align-self: start;
   }
   .quickview__name {
     font-family: var(--font-display);
@@ -227,21 +269,45 @@ const t = useTranslations(lang, 'pages').tienda;
     color: var(--color-white-dim);
   }
   .quickview__price {
-    margin: 0;
+    margin: var(--space-3xs) 0 0;
     font-family: var(--font-mono);
-    font-size: 17px;
+    font-size: 22px;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: var(--color-white);
   }
-  .quickview__desc {
-    margin: var(--space-3xs) 0 0;
+
+  /* Written sections under the photo — description + optional license/details/
+     updates, each a heading + body. pre-line preserves staff-authored line
+     breaks (\n in store.json) without any raw-HTML sink (T-06-01). */
+  .quickview__sections {
+    grid-area: sections;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    min-width: 0;
+  }
+  .quickview__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+  .quickview__section-heading {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-red-on-ink);
+  }
+  .quickview__section-body {
+    margin: 0;
     font-family: var(--font-body);
     font-size: 16px;
     line-height: 1.7;
     color: var(--color-paper-on-ink);
-    overflow-y: auto;
-    max-height: 34vh;
+    white-space: pre-line;
   }
 
   .quickview__actions {
@@ -249,8 +315,7 @@ const t = useTranslations(lang, 'pages').tienda;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-sm);
-    margin-top: auto;
-    padding-top: var(--space-sm);
+    margin-top: var(--space-sm);
   }
   .quickview__actions-slot:empty {
     display: none;
@@ -299,14 +364,27 @@ const t = useTranslations(lang, 'pages').tienda;
   }
 
   .quickview__dismiss {
-    grid-column: 1 / -1;
+    grid-area: dismiss;
     justify-self: center;
+    margin-top: var(--space-2xs);
   }
 
+  /* Mobile: single column, stacked photo → name/price/buy → written sections.
+     The right rail drops its sticky behavior so it reads as a normal block. */
   @media (max-width: 640px) {
     .quickview__body {
       grid-template-columns: 1fr;
-      gap: var(--space-md);
+      grid-template-areas:
+        "media"
+        "aside"
+        "sections"
+        "dismiss";
+    }
+    .quickview__gallery {
+      max-height: none;
+    }
+    .quickview__aside {
+      position: static;
     }
   }
 </style>

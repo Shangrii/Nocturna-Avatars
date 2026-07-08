@@ -89,6 +89,11 @@ interface QuickViewProduct {
   checkoutUrl: string;
   editor: string;
   nsfw: boolean;
+  // Optional long-form quick-view sections (present only when staff data defines
+  // them; each rendered under the photo as a labeled section when non-empty).
+  license?: string;
+  details?: string;
+  updates?: string;
 }
 
 // Per-load: rebuilt from the [data-store-products] island each page.
@@ -110,6 +115,42 @@ function getOverlay(): HTMLElement | null {
 function setQvText(root: HTMLElement, selector: string, text: string): void {
   const el = root.querySelector<HTMLElement>(selector);
   if (el) el.textContent = text;
+}
+
+/**
+ * Render the written sections beneath the product photo. Description is always
+ * shown; license/details/updates render only when the field is present and
+ * non-empty. Section headings come from the container's data-heading-* attrs
+ * (single-sourced i18n). Every node is built with createElement/textContent —
+ * no raw-HTML sink (T-06-01). Line breaks are preserved by the .quickview__section-body
+ * `white-space: pre-line` rule, so \n in staff data needs no markup.
+ */
+function renderSections(overlay: HTMLElement, product: QuickViewProduct): void {
+  const container = overlay.querySelector<HTMLElement>('[data-quickview-sections]');
+  if (!container) return;
+  // Clear any prior product's sections (single shared modal, reused per open).
+  container.replaceChildren();
+
+  const sections: Array<{ heading: string; body: string | undefined }> = [
+    { heading: container.dataset.headingDescription ?? '', body: product.description },
+    { heading: container.dataset.headingLicense ?? '', body: product.license },
+    { heading: container.dataset.headingDetails ?? '', body: product.details },
+    { heading: container.dataset.headingUpdates ?? '', body: product.updates },
+  ];
+
+  sections.forEach(({ heading, body }) => {
+    if (typeof body !== 'string' || body.trim() === '') return;
+    const section = document.createElement('section');
+    section.className = 'quickview__section';
+    const h = document.createElement('h4');
+    h.className = 'quickview__section-heading';
+    h.textContent = heading;
+    const p = document.createElement('p');
+    p.className = 'quickview__section-body';
+    p.textContent = body;
+    section.append(h, p);
+    container.append(section);
+  });
 }
 
 /** Parse the product-data island (attribute channel) into a Map once per load. */
@@ -199,7 +240,10 @@ function openQuickView(id: string, card: HTMLElement | null): void {
   const credit = lang === 'es' ? 'por' : 'by';
   setQvText(overlay, '[data-quickview-editor]', `${credit} ${product.editor}`);
   setQvText(overlay, '[data-quickview-price]', `$${product.price} USD`);
-  setQvText(overlay, '[data-quickview-desc]', product.description);
+
+  // Written sections under the photo — description + optional license/details/
+  // updates, each rendered via createElement/textContent (T-06-01).
+  renderSections(overlay, product);
 
   // Gallery — fall back to the branded placeholder when a product has no images.
   qvImages = Array.isArray(product.images) && product.images.length
