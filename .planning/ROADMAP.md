@@ -268,7 +268,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
 | 5. Photo-Publishing Bot Cog | 5/5 | Complete   | 2026-07-04 |
-| 6. Asset Store | 1/3 | In Progress|  |
+| 6. Asset Store | 2/3 | In Progress|  |
 
 ### Phase 6: Asset Store
 
@@ -296,7 +296,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 — shares [page].astro + store.ts)*
 
-- [ ] 06-02-PLAN.md — Quick-view modal + single-product "Comprar en Jinxxy" link-out (the first completed purchase path, D-18 NO branch)
+- [x] 06-02-PLAN.md — Quick-view modal + single-product "Comprar en Jinxxy" link-out (the first completed purchase path, D-18 NO branch)
 
 **Wave 3** *(blocked on Wave 2 — shares [page].astro + ProductCard/QuickView)*
 
