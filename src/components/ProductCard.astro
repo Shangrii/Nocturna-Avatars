@@ -37,9 +37,10 @@ interface Props {
   nsfwReveal: string;
   nsfwHide: string;
   addToCart: string;
+  addedToCart: string;
 }
 
-const { product, usd, featuredBadge, editorCredit, nsfwReveal, nsfwHide, addToCart } = Astro.props;
+const { product, usd, featuredBadge, editorCredit, nsfwReveal, nsfwHide, addToCart, addedToCart } = Astro.props;
 const thumb = product.images?.[0] ?? '/store/placeholder.svg';
 ---
 
@@ -88,12 +89,16 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
     <p class="product-card__price">${product.price} {usd}</p>
     <p class="product-card__editor">{editorCredit} {product.editor}</p>
     {/* Secondary/outline add-to-cart control — store-cart.ts binds [data-store-add]
-        and stopPropagations the click so it never opens the quick-view. */}
+        and stopPropagations the click so it never opens the quick-view. On add,
+        store-cart.ts swaps the label to data-label-added for ~1.5s (textContent
+        only, T-06-01) then reverts to data-label-default. */}
     <button
       type="button"
       class="product-card__add"
       data-store-add
       data-product-id={product.id}
+      data-label-default={addToCart}
+      data-label-added={addedToCart}
     >{addToCart}</button>
   </div>
 </article>
@@ -268,6 +273,15 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
   .product-card__add:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 2px;
+  }
+  /* Transient "added" confirmation state (store-cart.ts toggles .is-added for
+     ~1.5s after a successful add). Persistent red accent — the checkmark label
+     rides in the swapped textContent. Purely a colour/label change (no keyframe),
+     so it is already reduced-motion safe. */
+  .product-card__add.is-added {
+    border-color: var(--color-red);
+    background: var(--color-red);
+    color: var(--color-white);
   }
 
   @media (prefers-reduced-motion: reduce) {

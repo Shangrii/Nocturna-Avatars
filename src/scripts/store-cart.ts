@@ -167,13 +167,14 @@ function reconcileInMemory(): void {
 // SECTION 3 — Cart state mutations
 // ---------------------------------------------------------------------------
 
-function addToCart(id: string): void {
+/** Add one unit of `id`. Returns true when the catalog knows the id (a real add). */
+function addToCart(id: string): boolean {
   const existing = cart.get(id);
   if (existing) {
     existing.qty += 1;
   } else {
     const product = canonical.get(id);
-    if (!product) return; // never add an id the catalog doesn't know
+    if (!product) return false; // never add an id the catalog doesn't know
     cart.set(id, {
       id: product.id,
       name: product.name,
@@ -184,6 +185,7 @@ function addToCart(id: string): void {
   }
   persist();
   syncCartUI();
+  return true;
 }
 
 function removeFromCart(id: string): void {
@@ -298,6 +300,75 @@ function syncCartUI(): void {
 }
 
 // ---------------------------------------------------------------------------
+// SECTION 4b — Add-to-cart feedback (button label swap + SR status + badge pulse)
+// ---------------------------------------------------------------------------
+
+const prefersReduced = (): boolean =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * Flash a transient success state on the clicked add control: swap its label to
+ * data-label-added (e.g. "✓ Añadido") + add .is-added for ~1.5s, then revert to
+ * data-label-default. textContent-only (T-06-01). A per-element timer id lives on
+ * the dataset so a rapid re-click (or a quick-view reopen) can cancel a pending
+ * revert. Purely a label/colour change — no keyframe — so it is reduced-motion
+ * safe by construction (the swap is instant either way).
+ */
+function flashAdded(btn: HTMLElement): void {
+  const added = btn.dataset.labelAdded;
+  if (!added) return;
+  const def = btn.dataset.labelDefault ?? btn.textContent ?? '';
+  const prev = btn.dataset.addedTimer;
+  if (prev) window.clearTimeout(Number(prev));
+  btn.textContent = added;
+  btn.classList.add('is-added');
+  const timer = window.setTimeout(() => {
+    btn.textContent = def;
+    btn.classList.remove('is-added');
+    delete btn.dataset.addedTimer;
+  }, 1500);
+  btn.dataset.addedTimer = String(timer);
+}
+
+/**
+ * Announce the add to assistive tech via the visually-hidden polite status region
+ * on the pill (see StoreCartPill). Cleared then re-set on the next frame so an
+ * identical message (adding the same product twice) still re-announces.
+ */
+function announceAdded(id: string): void {
+  const live = document.querySelector<HTMLElement>('[data-store-cart-live]');
+  const product = canonical.get(id);
+  if (!live || !product) return;
+  const tpl = live.dataset.i18nAdded ?? '';
+  const message = tpl ? tpl.replace('{name}', product.name) : product.name;
+  live.textContent = '';
+  requestAnimationFrame(() => {
+    live.textContent = message;
+  });
+}
+
+/**
+ * Pulse the pill badge when the count changes. Re-triggers the CSS animation by
+ * removing the class, forcing a reflow, then re-adding it; cleans up on
+ * animationend. Skipped entirely under reduced motion (instant count update).
+ */
+function pulseBadge(): void {
+  if (prefersReduced()) return;
+  const badge = document.querySelector<HTMLElement>(
+    '#storeCartPill .store-cart-pill__badge',
+  );
+  if (!badge || badge.hasAttribute('hidden')) return;
+  badge.classList.remove('store-cart-pill__badge--bump');
+  void badge.offsetWidth; // reflow so the animation restarts on re-add
+  badge.classList.add('store-cart-pill__badge--bump');
+  badge.addEventListener(
+    'animationend',
+    () => badge.classList.remove('store-cart-pill__badge--bump'),
+    { once: true },
+  );
+}
+
+// ---------------------------------------------------------------------------
 // SECTION 5 — Drawer open/close (WR-01 pattern — copied from cart.ts)
 // ---------------------------------------------------------------------------
 
@@ -405,7 +476,13 @@ function bindAddControls(): void {
       // Never let the add click bubble to the card's quick-view opener.
       e.stopPropagation();
       const id = btn.dataset.productId;
-      if (id) addToCart(id);
+      if (!id) return;
+      // Only surface feedback on a real add (a known catalog id).
+      if (addToCart(id)) {
+        flashAdded(btn);
+        announceAdded(id);
+        pulseBadge();
+      }
     });
   });
 }

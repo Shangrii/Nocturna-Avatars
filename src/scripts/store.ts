@@ -283,8 +283,21 @@ function openQuickView(id: string, card: HTMLElement | null): void {
 
   // Point the secondary add-to-cart control at the currently-viewed product so
   // store-cart.ts (which binds [data-store-add] by data-product-id) adds THIS item.
+  // Also clear any lingering "✓ Añadido" feedback from a previously-viewed product
+  // (the modal reuses one shared button): cancel a pending revert timer and restore
+  // the default label so the reopened rail never shows a stale success state.
   const addBtn = overlay.querySelector<HTMLElement>('[data-quickview-actions] [data-store-add]');
-  if (addBtn) addBtn.dataset.productId = product.id;
+  if (addBtn) {
+    addBtn.dataset.productId = product.id;
+    const pending = addBtn.dataset.addedTimer;
+    if (pending) {
+      window.clearTimeout(Number(pending));
+      delete addBtn.dataset.addedTimer;
+    }
+    const def = addBtn.dataset.labelDefault;
+    if (def !== undefined) addBtn.textContent = def;
+    addBtn.classList.remove('is-added');
+  }
 
   // Focus origin (return focus here on close).
   qvLastFocus = card ?? (document.activeElement as HTMLElement | null);

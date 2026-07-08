@@ -112,9 +112,17 @@ const t = useTranslations(lang, 'pages').tienda;
             rel="noopener noreferrer"
           >{t.buyCta}</a>
           {/* Secondary "Add to cart" — store.ts sets its data-product-id to the
-              currently-viewed product on open; store-cart.ts binds [data-store-add]. */}
+              currently-viewed product on open; store-cart.ts binds [data-store-add]
+              and swaps the label to data-label-added for ~1.5s after an add
+              (textContent only, T-06-01), reverting to data-label-default. */}
           <span class="quickview__actions-slot" data-quickview-actions>
-            <button type="button" class="quickview__add" data-store-add>{t.addToCart}</button>
+            <button
+              type="button"
+              class="quickview__add"
+              data-store-add
+              data-label-default={t.addToCart}
+              data-label-added={t.addedToCart}
+            >{t.addToCart}</button>
           </span>
         </div>
       </div>
@@ -425,6 +433,15 @@ const t = useTranslations(lang, 'pages').tienda;
   .quickview__add:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 3px;
+  }
+  /* Transient "added" confirmation state (store-cart.ts toggles .is-added for
+     ~1.5s after a successful add). Persistent red fill; the checkmark rides in
+     the swapped label textContent. Colour/label change only (no keyframe), so it
+     is reduced-motion safe by construction. */
+  .quickview__add.is-added {
+    border-color: var(--color-red);
+    background: var(--color-red);
+    color: var(--color-white);
   }
 
   .quickview__dismiss {
