@@ -281,6 +281,11 @@ function openQuickView(id: string, card: HTMLElement | null): void {
     }
   }
 
+  // Point the secondary add-to-cart control at the currently-viewed product so
+  // store-cart.ts (which binds [data-store-add] by data-product-id) adds THIS item.
+  const addBtn = overlay.querySelector<HTMLElement>('[data-quickview-actions] [data-store-add]');
+  if (addBtn) addBtn.dataset.productId = product.id;
+
   // Focus origin (return focus here on close).
   qvLastFocus = card ?? (document.activeElement as HTMLElement | null);
 

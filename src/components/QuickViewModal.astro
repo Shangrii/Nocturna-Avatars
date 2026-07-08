@@ -111,8 +111,11 @@ const t = useTranslations(lang, 'pages').tienda;
             target="_blank"
             rel="noopener noreferrer"
           >{t.buyCta}</a>
-          {/* Plan 03 injects the secondary "Add to cart" button into this slot. */}
-          <span class="quickview__actions-slot" data-quickview-actions></span>
+          {/* Secondary "Add to cart" — store.ts sets its data-product-id to the
+              currently-viewed product on open; store-cart.ts binds [data-store-add]. */}
+          <span class="quickview__actions-slot" data-quickview-actions>
+            <button type="button" class="quickview__add" data-store-add>{t.addToCart}</button>
+          </span>
         </div>
       </div>
 
@@ -386,6 +389,42 @@ const t = useTranslations(lang, 'pages').tienda;
     box-shadow: none;
     cursor: not-allowed;
     pointer-events: none;
+  }
+
+  /* Secondary add-to-cart in the right rail — outline register beside the red buy
+     CTA (the buy link keeps the reserved red-fill). */
+  .quickview__actions-slot {
+    display: inline-flex;
+    flex: 1 1 auto;
+  }
+  .quickview__add {
+    flex: 1 1 auto;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    color: var(--color-white);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .quickview__add:hover {
+    border-color: var(--color-red);
+    background: var(--color-red-soft);
+    color: var(--color-red-on-ink);
+  }
+  .quickview__add:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
   }
 
   .quickview__dismiss {

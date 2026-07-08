@@ -36,9 +36,10 @@ interface Props {
   imgUnavailable: string;
   nsfwReveal: string;
   nsfwHide: string;
+  addToCart: string;
 }
 
-const { product, usd, featuredBadge, editorCredit, nsfwReveal, nsfwHide } = Astro.props;
+const { product, usd, featuredBadge, editorCredit, nsfwReveal, nsfwHide, addToCart } = Astro.props;
 const thumb = product.images?.[0] ?? '/store/placeholder.svg';
 ---
 
@@ -86,6 +87,14 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
     <h3 class="product-card__name">{product.name}</h3>
     <p class="product-card__price">${product.price} {usd}</p>
     <p class="product-card__editor">{editorCredit} {product.editor}</p>
+    {/* Secondary/outline add-to-cart control — store-cart.ts binds [data-store-add]
+        and stopPropagations the click so it never opens the quick-view. */}
+    <button
+      type="button"
+      class="product-card__add"
+      data-store-add
+      data-product-id={product.id}
+    >{addToCart}</button>
   </div>
 </article>
 
@@ -231,6 +240,34 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
     font-family: var(--font-mono);
     font-size: var(--type-label);
     color: var(--color-white-dim);
+  }
+
+  /* Add-to-cart — secondary/outline control (NOT red-fill; the featured border +
+     the quick-view buy CTA own the reserved red). Full width under the meta. */
+  .product-card__add {
+    margin-top: var(--space-2xs);
+    min-height: var(--touch-min);
+    padding: var(--space-2xs) var(--space-sm);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    color: var(--color-white);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .product-card__add:hover {
+    border-color: var(--color-red);
+    background: var(--color-red-soft);
+    color: var(--color-red-on-ink);
+  }
+  .product-card__add:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
   }
 
   @media (prefers-reduced-motion: reduce) {
