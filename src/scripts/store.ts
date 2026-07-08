@@ -383,7 +383,13 @@ function openQuickView(id: string, card: HTMLElement | null): void {
   }
 
   // Move focus into the modal (setTimeout lets the rAF activation settle).
-  const firstFocusable = overlay.querySelector<HTMLElement>('button, [href]');
+  // WR-02: filter out [hidden]/disabled elements (same visibility rule as
+  // trapFocus) — for single-image products the gallery prev/next buttons are
+  // first in DOM order but [hidden], and .focus() on a display:none element is
+  // a no-op that would strand focus behind the dialog.
+  const firstFocusable = Array.from(
+    overlay.querySelectorAll<HTMLElement>('button, [href]'),
+  ).find((el) => !el.hasAttribute('disabled') && !el.closest('[hidden]'));
   setTimeout(() => firstFocusable?.focus(), 50);
 
   // Attach focus trap.
