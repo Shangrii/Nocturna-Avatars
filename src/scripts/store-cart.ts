@@ -70,12 +70,24 @@ let drawerTrapHandler: ((e: KeyboardEvent) => void) | null = null;
 // SECTION 2 — Canonical island parse + persistence + reconcile
 // ---------------------------------------------------------------------------
 
-/** Parse the [data-store-products] island into the canonical product Map. */
-function parseCanonical(): void {
+/**
+ * Parse the [data-store-products] island into the canonical product Map.
+ *
+ * Returns true ONLY when the current page carries a usable product island.
+ * CR-01: with ClientRouter, this module stays loaded for the whole session and
+ * initStoreCart() re-runs on every astro:page-load — including non-store pages,
+ * where there is NO island. "No island" must never be conflated with "island
+ * present, id unknown" (T-06-04): on non-store pages we return false and the
+ * caller skips hydrate/reconcile/persist entirely, leaving the in-memory cart
+ * and localStorage untouched. A present-but-unparsable island also returns
+ * false (fail-safe: never wipe the cart off a broken catalog).
+ */
+function parseCanonical(): boolean {
   canonical = new Map();
   const island = document.querySelector<HTMLElement>('[data-store-products]');
-  const raw = island?.dataset.storeProducts;
-  if (!raw) return;
+  if (!island) return false; // not a store page — leave the cart untouched (CR-01)
+  const raw = island.dataset.storeProducts;
+  if (!raw) return false;
   try {
     const list = JSON.parse(raw) as Array<Record<string, unknown>>;
     list.forEach((p) => {
@@ -90,7 +102,9 @@ function parseCanonical(): void {
     });
   } catch {
     canonical = new Map();
+    return false; // malformed island — do not reconcile against an empty catalog
   }
+  return true;
 }
 
 /** Write the current cart to localStorage as [id, qty] pairs (never full objects). */
@@ -535,9 +549,16 @@ function initStoreCart(): void {
   if (initRanThisLoad) return;
   initRanThisLoad = true;
 
-  parseCanonical();
-  hydrateFromStorage(); // once per lifetime
-  reconcileInMemory(); // refresh entries against the current island each load
+  // CR-01 guard: cart state (hydrate/reconcile/persist) is touched ONLY on pages
+  // that carry the product island. Soft-navigating to a non-store page must not
+  // reconcile against an empty canonical — that would delete every entry and
+  // persist an empty cart. Bindings + UI sync below are island-independent no-ops
+  // on non-store pages (the hooks simply don't exist there).
+  const hasIsland = parseCanonical();
+  if (hasIsland) {
+    hydrateFromStorage(); // once per lifetime (deferred until a store page)
+    reconcileInMemory(); // refresh entries against the current island each load
+  }
 
   bindAddControls();
   bindPillAndClose();
