@@ -15,8 +15,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Bilingual Shell** - Astro + design system + i18n + structure + deploy; the live, branded, convertible shell (completed 2026-06-28)
 - [x] **Phase 2: Experimental Motion Layer** - WebGL hero, smooth scroll, scroll reveals, animated page transitions, cursor effects (completed 2026-06-30)
+- [x] **Phase 2.1: Visual Redesign — Refined Street Editorial** - Re-skin on the Phase 2 motion base: graffiti as accent over a disciplined editorial base (INSERTED) (completed 2026-06-30)
 - [x] **Phase 3: Service Catalog** - Data-driven packages + modular catalog from `services.json` (ES/EN, "Cotizar") (completed 2026-07-01)
-- [ ] **Phase 3.1: Catalog Configurator** - Interactive "arma tu paquete" cart: individual services selectable 1-by-1 with prices and running total, "Open Ticket" with cart summary (INSERTED)
+- [x] **Phase 3.1: Catalog Configurator** - Interactive "arma tu paquete" cart: individual services selectable 1-by-1 with prices and running total, "Open Ticket" with cart summary (INSERTED) (completed 2026-07-08 — plan 06 scope absorbed by Phase 6, reconciled)
 - [x] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized (completed 2026-07-03)
 - [x] **Phase 5: Photo-Publishing Bot Cog** - Discord cog in `nocturna-bot` (✅ approve / 🗑️ remove / Pillow optimize / cross-repo commit) (completed 2026-07-04)
 - [x] **Phase 6: Asset Store** - Dedicated store to sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine (completed 2026-07-08)
@@ -190,7 +191,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3)*
 
-- [ ] 03.1-06-PLAN.md — Modal behavior + clipboard copy + focus traps + a11y + human verification
+- [x] 03.1-06-PLAN.md — Modal behavior + clipboard copy + focus traps + a11y + human verification (scope absorbed by Phase 6 cart work; reconciled 2026-07-08)
 
 **UI hint**: yes
 **Notes**: Pure client-side JS (no backend). Cart state lives in the page; prices in `services.json`. The "Open Ticket" flow cannot pre-fill a Discord ticket directly — a modal with cart summary + "Copiar selección" + Discord link is the UX. Builds directly on Phase 3's CatalogSection and services.json schema.
@@ -301,3 +302,43 @@ Plans:
 **Wave 3** *(blocked on Wave 2 — shares [page].astro + ProductCard/QuickView)*
 
 - [x] 06-03-PLAN.md — Real purchase cart: StoreCartPill/Drawer + store-cart.ts (localStorage persist + reconcile, per-item Jinxxy links) — fully isolated from the /servicios cotización
+
+### Phase 7: Reviews Publishing Pipeline — Discord reviews channel to website testimonials (reviews.json, mirrors gallery cog)
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 6
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 7 to break down)
+
+### Phase 8: Bot Reminders Command — weekly/monthly scheduled reminders with custom message in nocturna-bot
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 7
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 8 to break down)
+
+### Phase 9: Jinxxy Store Auto-Sync — new Jinxxy uploads appear in the asset store automatically
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 8
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 9 to break down)
+
+### Phase 10: Editor Profile Pages — carrd-style template editor for Nocturna editors, bot-driven
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 9
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 10 to break down)

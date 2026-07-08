@@ -79,6 +79,10 @@ Progress: [█████████░] 93%
 
 - Phase 02.1 inserted after Phase 2: Visual Redesign — Refined Street Editorial (re-skin on Phase 2 motion base, before catalog/gallery) (URGENT)
 - Phase 6 added (2026-07-02): Asset Store — sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine (the /servicios flow was reframed as a non-purchase "cotización"; the real cart is reserved for this store). Depends on 3.1 + 2.1; independent of Phases 4/5.
+- Phase 7 added (2026-07-08): Reviews Publishing Pipeline — Discord reviews channel → reviews.json → website testimonials, mirroring the Phase 5 gallery cog (from 2026-07-03 todo)
+- Phase 8 added (2026-07-08): Bot Reminders Command — weekly/monthly scheduled reminders with custom message, cog in nocturna-bot (from 2026-07-07 todo)
+- Phase 9 added (2026-07-08): Jinxxy Store Auto-Sync — new Jinxxy uploads appear in the asset store automatically (from 2026-07-07 todo)
+- Phase 10 added (2026-07-08): Editor Profile Pages — carrd-style template editor for Nocturna editors, bot-driven (from 2026-07-07 todo)
 
 ### Decisions
 
