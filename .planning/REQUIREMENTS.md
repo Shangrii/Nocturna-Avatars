@@ -66,6 +66,16 @@ _Added 2026-07-07 during Phase 6 planning (per ROADMAP Phase 6 note). Wording de
 - [x] **STORE-04**: A visitor can complete a purchase and receive their asset(s): checkout + payment + digital fulfillment on Jinxxy (hosted third-party, no self-hosted backend), preserving Astro static + GitHub Pages + CNAME
 - [x] **STORE-05**: The store is reachable from the nav, keeps "Abrir Ticket" intact; responsive + AA contrast + `prefers-reduced-motion` respected, consistent with the Refined Street Editorial system
 
+### Reviews Publishing (nocturna-bot repo + website)
+
+_Added 2026-07-08 during Phase 7 planning (phase captured post-milestone from the 2026-07-03 todo). Wording derived from the Phase 7 goal + CONTEXT.md decisions._
+
+- [ ] **REV-01**: The website landing renders published reviews from `src/data/reviews.json` as a bilingual testimonials section (verbatim text, localized chrome), and renders nothing when empty
+- [ ] **REV-02**: A `ReviewsCog` in `nocturna-bot` collects reviews via a 2-button embed (named / anonymous) + a 500-char modal, AND accepts plain typed client reviews in the reviews channel, marking each with a ✅ pending control
+- [ ] **REV-03**: A staff ✅ publishes a review to `reviews.json` cross-repo; a 🌙 or message delete unpublishes it — staff-role-gated, mirroring the gallery pipeline
+- [ ] **REV-04**: Anonymous reviews store `author: null` and never expose the submitter's identity in the repo or any public bot message
+- [ ] **REV-05**: The reviews commit transport reuses the existing cross-repo GitHub transport without regressing gallery publishing; a bot restart converges state via backfill + orphan reconcile
+
 ## v2 Requirements
 
 ### Experimental Extras
@@ -83,6 +93,11 @@ _Added 2026-07-07 during Phase 6 planning (per ROADMAP Phase 6 note). Wording de
 - **STORE2-02**: Discord bot × Jinxxy integration (Creator API/webhooks for sales pings + split accounting) — future bot phase
 - **STORE2-03**: Creator API price/product sync between Jinxxy and `store.json` (manual sync in v1)
 
+### Reviews (v2)
+
+- **REV2-01**: Ticket-close invite embed pointing clients to the reviews channel (design (a) companion) — deferred, own quick task later
+- **REV2-02**: Bot auto-ticket creation (deferred at milestone level per the services-quote-vs-store-cart decision)
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -90,7 +105,8 @@ _Added 2026-07-07 during Phase 6 planning (per ROADMAP Phase 6 note). Wording de
 | Backend / database / CMS | Static site keeps hosting free and the bot-commit flow simple |
 | On-site payment processing / self-hosted checkout | Payments, tax, chargebacks, and digital fulfillment are pushed to Jinxxy (merchant of record); the site is a bilingual catalog + link-out (Phase 6, D-01/D-05/D-06) |
 | Auto-translating gallery captions | Captions come from staff in one language, shown as written |
-| Reworking existing bot cogs (encoding/forum) | Only adding a new photo cog |
+| Auto-translating review text | Reviews are user-generated and rendered verbatim in their original language (Phase 7 CONTEXT) |
+| Reworking existing bot cogs (encoding/forum) | Only adding new cogs (photo cog Phase 5, reviews cog Phase 7) |
 | Real 3D viewer in v1 | High weight/time; deferred to v2 |
 | Explicit NSFW on Jinxxy listings | Jinxxy banned explicit content Mar 2026; explicit products use SFW listings with real content in the delivered file (Phase 6, D-04) — a staff/content constraint |
 
@@ -135,14 +151,19 @@ Which phases cover which requirements. Populated during roadmap creation.
 | STORE-03 | Phase 6 | Complete (06-03) |
 | STORE-04 | Phase 6 | Complete (06-02, 06-03) |
 | STORE-05 | Phase 6 | Complete (06-01, 06-02, 06-03) |
+| REV-01 | Phase 7 | Planned (07-01) |
+| REV-02 | Phase 7 | Planned (07-03, 07-04) |
+| REV-03 | Phase 7 | Planned (07-03) |
+| REV-04 | Phase 7 | Planned (07-01, 07-02, 07-04) |
+| REV-05 | Phase 7 | Planned (07-02, 07-03) |
 
 **Coverage:**
-- v1 requirements: 35 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6 + STORE 5)
-- Mapped to phases: 35 ✓
+- v1 requirements: 40 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6 + STORE 5 + REV 5)
+- Mapped to phases: 40 ✓
 - Unmapped: 0 ✓
 
-> Note: an earlier draft footer counted "27 v1"; the enumerated v1 list contained 30, then 35 after the Phase 6 STORE-* requirements were added during planning (2026-07-07).
+> Note: an earlier draft footer counted "27 v1"; the enumerated v1 list contained 30, then 35 after the Phase 6 STORE-* requirements were added (2026-07-07), then 40 after the Phase 7 REV-* requirements were added (2026-07-08).
 
 ---
 *Requirements defined: 2026-06-28*
-*Last updated: 2026-07-08 — STORE-01…STORE-05 verified complete (Phase 6 executed + verified)*
+*Last updated: 2026-07-08 — REV-01…REV-05 added during Phase 7 planning*

@@ -20,7 +20,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3.1: Catalog Configurator** - Interactive "arma tu paquete" cart: individual services selectable 1-by-1 with prices and running total, "Open Ticket" with cart summary (INSERTED) (completed 2026-07-08 — plan 06 scope absorbed by Phase 6, reconciled)
 - [x] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized (completed 2026-07-03)
 - [x] **Phase 5: Photo-Publishing Bot Cog** - Discord cog in `nocturna-bot` (✅ approve / 🗑️ remove / Pillow optimize / cross-repo commit) (completed 2026-07-04)
-- [x] **Phase 6: Asset Store** - Dedicated store to sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine (completed 2026-07-08)
+- [x] **Phase 6: Asset Store** - Dedicated store to sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine
+ (completed 2026-07-08)
 
 ## Phase Details
 
@@ -305,13 +306,27 @@ Plans:
 
 ### Phase 7: Reviews Publishing Pipeline — Discord reviews channel to website testimonials (reviews.json, mirrors gallery cog)
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** Client reviews written in the Discord reviews channel reach the public website as curated, bilingual-aware testimonials with zero code changes per review: a `ReviewsCog` in `nocturna-bot` collects (2-button named/anonymous embed + modal, plus plain typed reviews) and staff-✅-gates reviews, publishes them to `src/data/reviews.json` via the existing cross-repo transport, and the website renders a Refined Street Editorial testimonials section from that file — with anonymous submissions never leaking the submitter identity.
+**Requirements**: REV-01, REV-02, REV-03, REV-04, REV-05
 **Depends on:** Phase 6
-**Plans:** 0 plans
+**Plans:** 4 plans
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 7 to break down)
+
+**Wave 1**
+
+- [ ] 07-01-PLAN.md — Website testimonials section: reviews.json ([]) + reviews i18n key + Reviews.astro (verbatim, escaped, empty→nothing) wired into the landing (website repo)
+- [ ] 07-02-PLAN.md — Bot foundation: reviews config block + separate reviews cursor + publish_review/remove_review transport (parallel thin path, gallery untouched) + tests (nocturna-bot repo)
+
+**Wave 2** *(blocked on 07-02)*
+
+- [ ] 07-03-PLAN.md — ReviewsCog reaction pipeline: ✅ detection + staff-gated publish/unpublish + delete-unpublish + failure UX + startup backfill/reconcile + bot.py registration + tests (nocturna-bot repo)
+
+**Wave 3** *(blocked on 07-03 — shares cogs/reviews.py)*
+
+- [ ] 07-04-PLAN.md — Collection embed: persistent 2-button view (named/anonymous) + 500-char modal + review-embed anonymity contract + staff command + tests (nocturna-bot repo)
+
+**Notes**: Spans TWO repos — the testimonials section lives in the website repo (cwd); the ReviewsCog/transport/config live in `nocturna-bot` and are committed there. Reuses the Phase-5 gallery pipeline structure (staff ✅/🌙, 🟢 marker, failure ⚠️, backfill) and the live cross-repo GitHub transport. Deploying to the production `cinema` systemd host (git pull + restart) is a manual user step, not phase scope. No new npm/pip dependencies.
 
 ### Phase 8: Bot Reminders Command — weekly/monthly scheduled reminders with custom message in nocturna-bot
 
