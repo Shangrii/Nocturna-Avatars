@@ -138,5 +138,33 @@ None. `tienda.addToCart` (seeded but unrendered since Plan 01) and the `[data-qu
 All 3 created files (store-cart.ts, StoreCartPill.astro, StoreCartDrawer.astro) + the 6 modified files exist on disk in the worktree; both task commits (57c2376, 9bf4b60) are present in the worktree branch history.
 
 ---
+
+## Checkpoint Fixes (post human-verify, 2026-07-08)
+
+The Task 3 human-verify checkpoint returned two refinements. Both shipped on branch `revamp` as atomic commits.
+
+### Fix 1 — Add-to-cart success feedback + cart pill pulse — `1030e99` (fix)
+The add button previously gave no confirmation. Added:
+- **Button label swap:** clicking an add control (card **and** quick-view right rail) swaps the label to a bilingual `✓ Añadido` / `✓ Added` with a persistent red-fill `.is-added` state for ~1.5s, then reverts to the default label. textContent-only (T-06-01); the default + added labels ride on `data-label-default` / `data-label-added` (single-sourced from `pages.json` → `addedToCart`). A per-element timer id on the dataset cancels a pending revert on rapid re-click, and `store.ts` clears any stale success state when the shared quick-view button is re-pointed at a new product on open.
+- **Screen-reader announcement:** a visually-hidden `role="status" aria-live="polite"` region on the always-rendered `StoreCartPill` (kept OUT of the `[hidden]` drawer, which is `display:none` and would suppress announcements) is written `Añadido al carrito: {name}` / `Added to cart: {name}` (i18n `cartAddedAnnounce`) on each add — cleared then re-set next frame so adding the same product twice still re-announces.
+- **Badge pulse:** the pill badge bumps (`store-cart-pill__badge--bump`, scale 1→1.4→1) on every count change; the class is removed on `animationend` and re-triggered via forced reflow. The first-appearance `pop` is retained. Both animations sit inside `@media (prefers-reduced-motion: no-preference)`, and `pulseBadge()` early-returns under reduced motion — reduced-motion users get an instant, animation-free count update. The button feedback is a colour/label change only (no keyframe), so it is reduced-motion safe by construction.
+
+### Fix 2 — Multi-storefront schema prepared (data + quick-view) — `cee7c63` (feat)
+Prepared the data model + rendering for future stores (booth, gumroad, …) WITHOUT rendering anything today:
+- **Data model:** `store.json` `_comment` now documents an OPTIONAL per-product `storefronts` array of `{ "platform": "booth", "url": "https://…" }`. `checkoutUrl` is unchanged and stays the primary Jinxxy buy button (full backward compat). **No seed product carries `storefronts`.**
+- **Flow-through:** `storefronts` threads `store.json` → `StorePage.astro` island (both the resolved-product map and the `data-store-products` island JSON; `undefined` is dropped by `JSON.stringify`, so the island carries no `storefronts` key today) → `store.ts` `QuickViewProduct`.
+- **Prepared render loop:** `QuickViewModal.astro` gained a reserved, currently-empty `.quickview__storefronts` container in the right rail below the primary buttons. `store.ts` `renderStorefronts()` appends one platform-labeled outbound `<a>` per entry — same guards as the primary CTA (`https://` check before href — T-06-02; `rel="noopener noreferrer"` — T-06-03; `createElement`/`textContent` only — T-06-01). Because no product defines `storefronts`, the loop renders nothing and `:empty { display: none }` collapses the container so the rail shows no void.
+- **JSON-only future edits:** the CTA template `storefrontCta` (`Comprar en {platform}` / `Buy on {platform}`) and a `storefrontNames` display-name map (`jinxxy`/`booth`/`gumroad`/`payhip`, others title-cased) are single-sourced from `pages.json` and passed via `data-label-cta` / `data-platform-names`. **To add a storefront later, a staff member appends `{ "platform": "booth", "url": "https://…" }` to a product's `storefronts` array in `store.json` — no code change, and a labeled button appears in that product's quick-view.**
+
+### Checkpoint-fix verification (build green)
+- `npm run build` exits 0 (14 pages) after both fixes.
+- Cotización chrome intact + slot fix preserved: `id="cartPill"` = 1 on `/es/servicios` **and** `/en/services`; store cart does not leak (`store-cart-fab` = 0 on services). Store chrome intact: `id="storeCartPill"` = 1 on `/es/tienda` + `/en/store`.
+- 5 add controls carry `data-label-added` (4 cards + 1 quick-view); pill SR region `store-cart-sr-status` = 1 on store pages.
+- Storefronts prepared but invisible: `data-quickview-storefronts` container = 1 per store page, `data-platform-names` present, **zero** rendered `quickview__storefront` buttons in `dist`, and the product island carries no `storefronts` key (no seed data).
+- `grep -c innerHTML src/scripts/store.ts` = 0 (createElement + textContent only — T-06-01).
+
+*Checkpoint fixes completed: 2026-07-08*
+
+---
 *Phase: 06-asset-store*
 *Completed: 2026-07-07*
