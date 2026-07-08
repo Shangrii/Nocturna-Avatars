@@ -21,6 +21,7 @@ A visitor lands, is visually impressed by the work, and reaches "Abrir Ticket" o
 - ✓ Responsive nav + gallery "show more" toggle — existing
 - ✓ **Photo-publishing bot cog** (`nocturna-bot` repo): ✅ approve-to-publish, 🌙 remove (supersedes 🗑️ per D-06), delete auto-unpublish, Pillow WebP optimization, atomic cross-repo commits, startup backfill — LIVE, all six BOT criteria verified on the production domain. Validated in Phase 5: photo-publishing-bot-cog (2026-07-04)
 - ✓ **Production beta cutover** (2026-07-04, user decision): the revamp now serves nocturna-avatars.site via a self-healing gh-pages deploy pipeline; old site archived on `main` (rollback = flip Pages source)
+- ✓ **Asset Store** (`/es/tienda` · `/en/store`): staff-editable `store.json` catalog, Booth-style quick-view, Jinxxy checkout links (single + per-cart-item, D-18 NO buy-all), namespaced purchase cart isolated from the /servicios cotización, NSFW blur, multi-storefront schema prepared (Booth/Gumroad = JSON-only edit). STORE-01…05 verified. Validated in Phase 6: asset-store (2026-07-08)
 
 ### Active
 
@@ -92,4 +93,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-04 after Phase 5 completion (bot cog live + production beta cutover)*
+*Last updated: 2026-07-08 after Phase 6 completion (asset store live: catalog + quick-view + purchase cart)*
