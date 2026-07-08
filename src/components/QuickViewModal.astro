@@ -1,0 +1,312 @@
+---
+/**
+ * QuickViewModal — the asset-store product quick-view (Plan 06-02).
+ *
+ * A single hidden `dc-overlay` modal mounted once per store page (concept-gated
+ * in [lang]/[page].astro). Clicking/keyboard-activating a ProductCard opens it;
+ * store.ts populates EVERY dynamic node at open time via createElement/textContent
+ * only (T-06-01 — never innerHTML). The shell below is intentionally EMPTY of
+ * product data: image, name, editor, price, description, and the buy href are all
+ * set by the controller from the `[data-store-products]` island.
+ *
+ * Reuses the CartSummaryModal `dc-overlay` attribute set (incl. data-lenis-prevent
+ * which pauses Lenis while open) and the LightboxOverlay gallery stage/prev-next
+ * markup. z-index = dc-overlay 10000 (above the store cart drawer's 8001, Plan 03).
+ *
+ * data-* hooks store.ts binds against:
+ *   data-quickview-overlay   → overlay (querySelector hook)
+ *   data-quickview-gallery   → gallery stage wrapper (toggles single-image state)
+ *   data-quickview-img       → the <img> whose src/alt store.ts sets
+ *   data-quickview-prev/next → gallery controls (hidden when a single image)
+ *   data-quickview-counter   → "Image n of total" live region
+ *   data-quickview-name      → product title (also aria-labelledby target)
+ *   data-quickview-editor    → "by {editor}" credit
+ *   data-quickview-price     → "$N USD"
+ *   data-quickview-desc      → full description
+ *   data-quickview-buy       → primary "Comprar en Jinxxy" anchor (href validated https)
+ *   data-quickview-actions   → placeholder slot; Plan 03 injects "Add to cart" here
+ *   data-quickview-close     → close button
+ * The counter template ("Imagen {n} de {total}") is carried on
+ * data-counter-label so store.ts can interpolate it without hardcoding copy.
+ */
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang, 'pages').tienda;
+---
+
+<div
+  class="dc-overlay quickview-overlay"
+  id="quickViewOverlay"
+  data-quickview-overlay
+  hidden
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="quickViewTitle"
+  data-counter-label={t.galleryCounter}
+  data-lenis-prevent
+>
+  <div class="dc-modal quickview">
+    <div class="dc-body quickview__body">
+
+      {/* Image gallery stage — img + prev/next + counter, all JS-populated. */}
+      <div class="quickview__gallery" data-quickview-gallery>
+        <img class="quickview__img" data-quickview-img alt="" />
+
+        <button
+          type="button"
+          class="quickview__ctrl quickview__prev"
+          data-quickview-prev
+          aria-label={t.galleryPrev}
+          hidden
+        >
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          class="quickview__ctrl quickview__next"
+          data-quickview-next
+          aria-label={t.galleryNext}
+          hidden
+        >
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        <span class="quickview__counter" data-quickview-counter aria-live="polite" hidden></span>
+      </div>
+
+      {/* Detail column — title, editor, price, description (JS-populated). */}
+      <div class="quickview__detail">
+        <h3 class="dc-title quickview__name" id="quickViewTitle" data-quickview-name></h3>
+        <p class="quickview__editor" data-quickview-editor></p>
+        <p class="quickview__price" data-quickview-price></p>
+        <p class="quickview__desc" data-quickview-desc></p>
+
+        <div class="quickview__actions">
+          {/* Primary buy CTA — href set from checkoutUrl ONLY after https validation. */}
+          <a
+            class="quickview__buy"
+            data-quickview-buy
+            data-label-buy={t.buyCta}
+            data-label-unavailable={t.linkUnavailable}
+            target="_blank"
+            rel="noopener noreferrer"
+          >{t.buyCta}</a>
+          {/* Plan 03 injects the secondary "Add to cart" button into this slot. */}
+          <span class="quickview__actions-slot" data-quickview-actions></span>
+        </div>
+      </div>
+
+      <button class="dc-dismiss quickview__dismiss" type="button" data-quickview-close>
+        {t.quickViewClose}
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<!--
+  is:global: every product node inside the modal is created at runtime by store.ts,
+  so scoped [data-astro-cid] rules would not reach it. All selectors are
+  .quickview-* / .quickview__* namespaced to avoid colliding with the cart modal.
+-->
+<style is:global>
+  .quickview {
+    width: 720px;
+    max-width: 94vw;
+  }
+  .quickview__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    text-align: left;
+  }
+
+  /* Gallery stage — fixed aspect box (no CLS while the hotlink loads). */
+  .quickview__gallery {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--color-ink);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .quickview__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Blurred state inherited when an NSFW product's card is not revealed (D-10). */
+  .quickview__gallery--nsfw .quickview__img {
+    filter: blur(28px);
+    transform: scale(1.06);
+  }
+
+  .quickview__ctrl {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: color-mix(in srgb, var(--color-ink) 72%, transparent);
+    color: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .quickview__ctrl:hover {
+    border-color: color-mix(in srgb, #ffffff 22%, transparent);
+    background: color-mix(in srgb, var(--color-ink) 88%, transparent);
+  }
+  .quickview__ctrl:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+  .quickview__ctrl[hidden] {
+    display: none;
+  }
+  .quickview__prev {
+    left: var(--space-2xs);
+  }
+  .quickview__next {
+    right: var(--space-2xs);
+  }
+  .quickview__counter {
+    position: absolute;
+    left: 50%;
+    bottom: var(--space-2xs);
+    transform: translateX(-50%);
+    padding: 3px 10px;
+    background: color-mix(in srgb, var(--color-ink) 82%, transparent);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-paper-on-ink);
+  }
+  .quickview__counter[hidden] {
+    display: none;
+  }
+
+  /* Detail column */
+  .quickview__detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    min-width: 0;
+  }
+  .quickview__name {
+    font-family: var(--font-display);
+    font-size: var(--type-card-title);
+    font-weight: 700;
+    color: var(--color-white);
+    text-align: left;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .quickview__editor {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    color: var(--color-white-dim);
+  }
+  .quickview__price {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 17px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-white);
+  }
+  .quickview__desc {
+    margin: var(--space-3xs) 0 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--color-paper-on-ink);
+    overflow-y: auto;
+    max-height: 34vh;
+  }
+
+  .quickview__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: auto;
+    padding-top: var(--space-sm);
+  }
+  .quickview__actions-slot:empty {
+    display: none;
+  }
+
+  /* Primary buy CTA — the reserved red-fill register (copies .cart-modal__copy). */
+  .quickview__buy {
+    flex: 1 1 auto;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-red);
+    border: none;
+    border-radius: 999px;
+    color: var(--color-white);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(192, 25, 44, 0.3);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  }
+  .quickview__buy:hover {
+    background: var(--color-red-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(192, 25, 44, 0.42);
+  }
+  .quickview__buy:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+  }
+  /* Disabled state: invalid (non-https) checkoutUrl — "Enlace no disponible". */
+  .quickview__buy--disabled {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-white-dim);
+    box-shadow: none;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .quickview__dismiss {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+
+  @media (max-width: 640px) {
+    .quickview__body {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+  }
+</style>
