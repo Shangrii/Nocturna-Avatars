@@ -263,7 +263,19 @@ function renderGalleryImage(): void {
   const nextBtn = overlay.querySelector<HTMLButtonElement>('[data-quickview-next]');
 
   const src = qvImages[qvIndex] ?? PLACEHOLDER;
-  if (img) img.src = src;
+  if (img) {
+    // WR-05: same T-06-05 broken-hotlink fallback the cards get. Bound once
+    // (persistent, unlike the card's self-removing handler, because gallery
+    // prev/next re-assigns src and each image needs the swap); the endsWith
+    // guard stops a loop if the placeholder itself ever failed.
+    if (img.dataset.qvImgBound !== 'true') {
+      img.dataset.qvImgBound = 'true';
+      img.addEventListener('error', () => {
+        if (!img.src.endsWith(PLACEHOLDER)) img.src = PLACEHOLDER;
+      });
+    }
+    img.src = src;
+  }
 
   const multiple = qvImages.length > 1;
   [prevBtn, nextBtn].forEach((b) => {
@@ -315,6 +327,12 @@ function openQuickView(id: string, card: HTMLElement | null): void {
     gallery.classList.toggle('quickview__gallery--nsfw', product.nsfw && !cardRevealed);
   }
   renderGalleryImage();
+
+  // WR-05: give the gallery image an accessible name (the modal shell ships
+  // alt="" — the doc comment promises store.ts sets it, so actually set it).
+  // Attribute-value assignment, not markup — no raw-HTML sink (T-06-01).
+  const galleryImg = overlay.querySelector<HTMLImageElement>('[data-quickview-img]');
+  if (galleryImg) galleryImg.alt = product.name;
 
   // Buy CTA — validate https BEFORE assigning href (T-06-02). Otherwise render the
   // disabled "Enlace no disponible" / "Link unavailable" state.
