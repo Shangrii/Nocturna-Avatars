@@ -137,5 +137,53 @@ No code changes remain. The quick-view + single-product-buy slice awaits human v
 All 5 source files (1 created + 4 modified) exist on disk in the worktree; both task commits (c0c9eb1, a076623) are present in the worktree branch history.
 
 ---
+
+## Checkpoint Fixes
+
+The Task 3 human-verify checkpoint APPROVED the quick-view functionally but requested a
+**Booth.pm-style layout redesign** before closing the plan (verbatim: staff wanted a larger
+photo on the left, name + price on the right, and the written copy — description, license,
+details, updates — below the photo, with scroll when content overflows). Implemented on the
+main working tree, branch `revamp`.
+
+### What changed
+- **Booth two-column layout (`QuickViewModal.astro`).** The modal body is now a CSS
+  `grid-template-areas` grid: `media` (large product photo) top-left, `sections`
+  (long-form written copy) directly under it, and `aside` (name → editor → price →
+  buy CTA) as a **sticky right rail** spanning both left rows. A full-width `dismiss`
+  row closes it. Modal width grew 720px → `min(960px, 94vw)` to seat the bigger photo.
+- **Inner scroll.** `.quickview__body` is the scroll container
+  (`max-height: min(88vh, 860px); overflow-y: auto`), so overflow scrolls **inside**
+  the modal and the shell always stays within the viewport. The sticky right rail keeps
+  the buy button visible while the left column scrolls. The gallery is capped
+  (`max-height: 62vh`) so a tall square never dwarfs the scroll area.
+- **Mobile stacking (≤640px).** Grid areas collapse to a single column in the exact
+  order staff asked for: **photo → name/price/buy → written sections → close**. The
+  right rail drops its sticky/`position` on mobile and the gallery cap is removed.
+- **Optional written sections (data + render).** Added optional per-locale
+  `license` / `details` / `updates` fields to `store.json` (seeded on the featured
+  `neon-street-hoodie` so the layout is verifiable — the seed uses `\n` line breaks in
+  `details`/`updates` to exercise the changelog rendering). `StorePage.astro` resolves
+  them to the active locale and serializes them into the `data-store-products` island
+  **only when present** (undefined → JSON.stringify drops them). `store.ts`'s new
+  `renderSections()` appends a heading + body `<section>` per present field —
+  description always, the three optional ones only when non-empty — built with
+  `createElement`/`textContent` only (T-06-01, no raw-HTML sink). Bilingual section
+  headings live in `pages.json` (`sectionDescription/License/Details/Updates`) and ride
+  on `data-heading-*` attributes (single-sourced i18n). Staff-authored `\n` renders via
+  the `.quickview__section-body { white-space: pre-line }` rule — no markup needed.
+
+### Preserved (unchanged behavior)
+Focus trap, Escape + backdrop close, focus return to the originating card, keyboard
+activation, NSFW blur inheritance, the https-validated buy link with
+`rel="noopener noreferrer"` and its disabled "Enlace no disponible" fallback, and the
+store-pages-only mount — all intact. Nav indicator styles untouched (no
+`.nav-link::after` added). No cart / Plan 06-03 work introduced. Build green (14 pages).
+
+### Checkpoint-fix commits
+1. `4439e01` — feat(06-02): optional license/details/updates sections in store data (store.json, pages.json, StorePage.astro)
+2. `6ec14f1` — fix(06-02): restyle quick-view to booth-style product layout (QuickViewModal.astro, store.ts)
+
+---
 *Phase: 06-asset-store*
 *Completed: 2026-07-07*
