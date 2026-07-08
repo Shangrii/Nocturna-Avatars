@@ -21,6 +21,7 @@ import TermsPage from '../../components/sections/TermsPage.astro';
 import CartDrawer from '../../components/CartDrawer.astro';
 import CartPill from '../../components/CartPill.astro';
 import CartSummaryModal from '../../components/CartSummaryModal.astro';
+import QuickViewModal from '../../components/QuickViewModal.astro';
 import { toLang, useTranslations } from '../../i18n/ui';
 import { staticPathsForConcept, conceptForSlug } from '../../i18n/routes';
 import '../../styles/sections.css';
@@ -68,6 +69,15 @@ if (concept === 'gallery') {
       <CartDrawer lang={lang} />
       <CartPill lang={lang} />
       <CartSummaryModal lang={lang} />
+    </Fragment>
+  )}
+
+  {/* Store quick-view modal — mounted in the body-level chrome-bottom slot so the
+      dc-overlay escapes <main>'s view-transition stacking context (mirrors the
+      services cart placement). Store-only; the purchase cart arrives in Plan 03. */}
+  {concept === 'store' && (
+    <Fragment slot="chrome-bottom">
+      <QuickViewModal lang={lang} />
     </Fragment>
   )}
 </BaseLayout>

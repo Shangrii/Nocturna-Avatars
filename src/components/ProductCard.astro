@@ -49,6 +49,9 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
   ]}
   data-product-id={product.id}
   data-nsfw={product.nsfw ? '' : undefined}
+  role="button"
+  tabindex="0"
+  aria-label={product.name}
 >
   {product.featured && <span class="product-card__badge">{featuredBadge}</span>}
 
@@ -95,11 +98,17 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
     border: 1px solid var(--color-border);
     border-radius: 4px;
     overflow: hidden;
+    cursor: pointer;
     transition: border-color 0.2s ease, transform 0.2s ease;
   }
   .product-card:hover {
     transform: translateY(-2px);
     border-color: color-mix(in srgb, #ffffff 14%, transparent);
+  }
+  /* The whole card is a role="button" quick-view opener — visible focus ring. */
+  .product-card:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
   }
 
   /* Featured: the single red-accented card (UI-SPEC reserved-red list). */

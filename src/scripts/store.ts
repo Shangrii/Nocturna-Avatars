@@ -1,21 +1,33 @@
 /**
- * store.ts — asset-store display behaviors (browse slice, Plan 06-01).
+ * store.ts — asset-store display + quick-view behaviors.
  *
- * Two small, swap-safe behaviors bound on every astro:page-load (View
- * Transitions navigations + the initial hard load). NO cart logic — the
- * purchase cart is a sibling module in Plan 03.
+ * Swap-safe behaviors bound on every astro:page-load (View Transitions
+ * navigations + the initial hard load). NO cart logic — the purchase cart is a
+ * sibling module in Plan 03.
  *
  *   1. Broken Jinxxy CDN hotlink -> local branded placeholder, no layout shift
  *      (D-11 / T-06-05). The handler removes itself after firing so a broken
  *      placeholder can't loop.
  *   2. NSFW reveal button toggles a per-card, per-session `product-card--revealed`
  *      class and swaps its own label between the reveal/hide strings via
- *      textContent (XSS-safe — never innerHTML). No persisted 18+ state (D-10).
+ *      textContent (XSS-safe — no raw-HTML sink). No persisted 18+ state (D-10).
+ *   3. Quick-view (Plan 06-02): clicking / keyboard-activating a product card opens
+ *      the QuickViewModal (dc-overlay + focus trap) with the product's image
+ *      gallery, description, price, editor, and a validated "Comprar en Jinxxy"
+ *      outbound link. Every dynamic node is populated via createElement/textContent
+ *      only (T-06-01 — no raw-HTML sink); the buy href is assigned ONLY after the
+ *      checkoutUrl passes an https guard (T-06-02) else the disabled
+ *      "Enlace no disponible" state is shown.
  *
- * The live DOM is re-queried each load; no persisted module state is needed here.
+ * The live DOM is re-queried each load; per-page hooks (cards, overlay) are re-bound
+ * with element-level guards, while document-level listeners (Escape) bind once.
  */
 
 const PLACEHOLDER = '/store/placeholder.svg';
+
+// ---------------------------------------------------------------------------
+// Browse-slice behaviors (Plan 06-01)
+// ---------------------------------------------------------------------------
 
 let initRanThisLoad = false;
 
@@ -48,24 +60,318 @@ function bindNsfwReveals(): void {
     if (btn.dataset.nsfwRevealBound === 'true') return;
     btn.dataset.nsfwRevealBound = 'true';
 
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      // The reveal control lives inside the card; stop the activation from
+      // bubbling to the card's quick-view opener (it toggles blur, not the modal).
+      e.stopPropagation();
       const card = btn.closest<HTMLElement>('[data-product-id]');
       if (!card) return;
       const revealed = card.classList.toggle('product-card--revealed');
       const revealLabel = btn.dataset.labelReveal ?? '';
       const hideLabel = btn.dataset.labelHide ?? '';
-      // textContent (never innerHTML) — XSS-safe label swap.
+      // textContent (no raw-HTML sink) — XSS-safe label swap.
       btn.textContent = revealed ? hideLabel : revealLabel;
       btn.setAttribute('aria-pressed', revealed ? 'true' : 'false');
     });
   });
 }
 
+// ---------------------------------------------------------------------------
+// Quick-view controller (Plan 06-02)
+// ---------------------------------------------------------------------------
+
+interface QuickViewProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  images: string[];
+  checkoutUrl: string;
+  editor: string;
+  nsfw: boolean;
+}
+
+// Per-load: rebuilt from the [data-store-products] island each page.
+let qvProducts = new Map<string, QuickViewProduct>();
+// Current open product's gallery state.
+let qvImages: string[] = [];
+let qvIndex = 0;
+// Focus origin so closing returns focus to the originating card (a11y).
+let qvLastFocus: HTMLElement | null = null;
+let qvTrapHandler: ((e: KeyboardEvent) => void) | null = null;
+// Document-level listeners (Escape) bound exactly once per page lifetime.
+let qvDocListenersBound = false;
+
+function getOverlay(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('[data-quickview-overlay]');
+}
+
+/** Set an element's text via textContent only — no raw-HTML sink (T-06-01). */
+function setQvText(root: HTMLElement, selector: string, text: string): void {
+  const el = root.querySelector<HTMLElement>(selector);
+  if (el) el.textContent = text;
+}
+
+/** Parse the product-data island (attribute channel) into a Map once per load. */
+function parseProducts(): void {
+  qvProducts = new Map();
+  const island = document.querySelector<HTMLElement>('[data-store-products]');
+  const raw = island?.dataset.storeProducts;
+  if (!raw) return;
+  try {
+    const list = JSON.parse(raw) as QuickViewProduct[];
+    list.forEach((p) => {
+      if (p && typeof p.id === 'string') qvProducts.set(p.id, p);
+    });
+  } catch {
+    // Malformed island → no quick-view data (cards simply won't open a modal).
+    qvProducts = new Map();
+  }
+}
+
+const prefersReducedMotion = (): boolean =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * trapFocus — returns a keydown handler that cycles Tab/Shift+Tab within the
+ * container (mirrors cart.ts). Filters out disabled elements and any inside a
+ * [hidden] ancestor so hidden gallery controls are not focusable.
+ */
+function trapFocus(container: HTMLElement): (e: KeyboardEvent) => void {
+  return (e: KeyboardEvent) => {
+    if (e.key !== 'Tab') return;
+    const focusable = Array.from(
+      container.querySelectorAll<HTMLElement>(
+        'button, [href], input, [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter((el) => !el.hasAttribute('disabled') && !el.closest('[hidden]'));
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  };
+}
+
+/** Render the current gallery image + counter; hide prev/next when single image. */
+function renderGalleryImage(): void {
+  const overlay = getOverlay();
+  if (!overlay) return;
+  const img = overlay.querySelector<HTMLImageElement>('[data-quickview-img]');
+  const counter = overlay.querySelector<HTMLElement>('[data-quickview-counter]');
+  const prevBtn = overlay.querySelector<HTMLButtonElement>('[data-quickview-prev]');
+  const nextBtn = overlay.querySelector<HTMLButtonElement>('[data-quickview-next]');
+
+  const src = qvImages[qvIndex] ?? PLACEHOLDER;
+  if (img) img.src = src;
+
+  const multiple = qvImages.length > 1;
+  [prevBtn, nextBtn].forEach((b) => {
+    if (b) b.hidden = !multiple;
+  });
+  if (counter) {
+    if (multiple) {
+      const tpl = overlay.dataset.counterLabel ?? '';
+      counter.textContent = tpl
+        .replace('{n}', String(qvIndex + 1))
+        .replace('{total}', String(qvImages.length));
+      counter.hidden = false;
+    } else {
+      counter.textContent = '';
+      counter.hidden = true;
+    }
+  }
+}
+
+function openQuickView(id: string, card: HTMLElement | null): void {
+  const overlay = getOverlay();
+  if (!overlay) return;
+  const product = qvProducts.get(id);
+  if (!product) return;
+
+  const lang = document.documentElement.lang || 'en';
+
+  // Detail rows — textContent only (T-06-01).
+  setQvText(overlay, '[data-quickview-name]', product.name);
+  const credit = lang === 'es' ? 'por' : 'by';
+  setQvText(overlay, '[data-quickview-editor]', `${credit} ${product.editor}`);
+  setQvText(overlay, '[data-quickview-price]', `$${product.price} USD`);
+  setQvText(overlay, '[data-quickview-desc]', product.description);
+
+  // Gallery — fall back to the branded placeholder when a product has no images.
+  qvImages = Array.isArray(product.images) && product.images.length
+    ? product.images.slice()
+    : [PLACEHOLDER];
+  qvIndex = 0;
+
+  // NSFW: the quick-view inherits the card's reveal state (D-10). If the product
+  // is nsfw and its card was NOT revealed, open the gallery blurred.
+  const gallery = overlay.querySelector<HTMLElement>('[data-quickview-gallery]');
+  const cardRevealed = card?.classList.contains('product-card--revealed') ?? false;
+  if (gallery) {
+    gallery.classList.toggle('quickview__gallery--nsfw', product.nsfw && !cardRevealed);
+  }
+  renderGalleryImage();
+
+  // Buy CTA — validate https BEFORE assigning href (T-06-02). Otherwise render the
+  // disabled "Enlace no disponible" / "Link unavailable" state.
+  const buy = overlay.querySelector<HTMLAnchorElement>('[data-quickview-buy]');
+  if (buy) {
+    const buyLabel = buy.dataset.labelBuy ?? '';
+    const unavailLabel = buy.dataset.labelUnavailable ?? '';
+    const url = product.checkoutUrl;
+    const valid = typeof url === 'string' && url.startsWith('https://');
+    if (valid) {
+      buy.setAttribute('href', url);
+      buy.classList.remove('quickview__buy--disabled');
+      buy.removeAttribute('aria-disabled');
+      if (buyLabel) buy.textContent = buyLabel;
+    } else {
+      buy.removeAttribute('href');
+      buy.classList.add('quickview__buy--disabled');
+      buy.setAttribute('aria-disabled', 'true');
+      if (unavailLabel) buy.textContent = unavailLabel;
+    }
+  }
+
+  // Focus origin (return focus here on close).
+  qvLastFocus = card ?? (document.activeElement as HTMLElement | null);
+
+  // WR-01 open: remove [hidden] BEFORE adding .active so the transition plays.
+  overlay.removeAttribute('hidden');
+  document.body.style.overflow = 'hidden';
+  if (prefersReducedMotion()) {
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+  } else {
+    requestAnimationFrame(() => {
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden', 'false');
+    });
+  }
+
+  // Move focus into the modal (setTimeout lets the rAF activation settle).
+  const firstFocusable = overlay.querySelector<HTMLElement>('button, [href]');
+  setTimeout(() => firstFocusable?.focus(), 50);
+
+  // Attach focus trap.
+  if (qvTrapHandler) document.removeEventListener('keydown', qvTrapHandler);
+  qvTrapHandler = trapFocus(overlay);
+  document.addEventListener('keydown', qvTrapHandler);
+}
+
+function closeQuickView(): void {
+  const overlay = getOverlay();
+  if (!overlay) return;
+
+  if (qvTrapHandler) {
+    document.removeEventListener('keydown', qvTrapHandler);
+    qvTrapHandler = null;
+  }
+
+  overlay.classList.remove('active');
+  overlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+
+  // WR-01 close: re-add [hidden] AFTER the opacity transition completes, filtered
+  // by e.propertyName so an early inner transition doesn't hide it prematurely.
+  if (prefersReducedMotion()) {
+    overlay.setAttribute('hidden', '');
+  } else {
+    overlay.addEventListener(
+      'transitionend',
+      (e) => {
+        if (e.propertyName === 'opacity') overlay.setAttribute('hidden', '');
+      },
+      { once: true },
+    );
+  }
+
+  // Return focus to the originating card.
+  qvLastFocus?.focus();
+  qvLastFocus = null;
+}
+
+/** Bind card activation (click + Enter/Space) — per-card, guarded per load. */
+function bindCardActivation(): void {
+  document.querySelectorAll<HTMLElement>('.product-card').forEach((card) => {
+    if (card.dataset.qvBound === 'true') return;
+    card.dataset.qvBound = 'true';
+
+    card.addEventListener('click', (e) => {
+      // Ignore clicks on nested interactive controls (NSFW reveal, and the
+      // Plan-03 add-to-cart control) so they don't also open the quick-view.
+      const target = e.target as HTMLElement;
+      if (target.closest('[data-nsfw-reveal]') || target.closest('[data-store-add]')) return;
+      const id = card.dataset.productId;
+      if (id) openQuickView(id, card);
+    });
+
+    card.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+      // Only when the card itself is focused — let nested buttons handle their own keys.
+      if (e.target !== card) return;
+      e.preventDefault();
+      const id = card.dataset.productId;
+      if (id) openQuickView(id, card);
+    });
+  });
+}
+
+/** Bind the modal's own controls (close, backdrop, prev/next) — per overlay. */
+function bindQuickViewControls(): void {
+  const overlay = getOverlay();
+  if (!overlay || overlay.dataset.qvControlsBound === 'true') return;
+  overlay.dataset.qvControlsBound = 'true';
+
+  overlay.querySelector<HTMLButtonElement>('[data-quickview-close]')
+    ?.addEventListener('click', closeQuickView);
+
+  // Backdrop click (only when the overlay itself, not the inner modal, is clicked).
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeQuickView();
+  });
+
+  overlay.querySelector<HTMLButtonElement>('[data-quickview-prev]')
+    ?.addEventListener('click', () => {
+      if (qvImages.length < 2) return;
+      qvIndex = (qvIndex - 1 + qvImages.length) % qvImages.length;
+      renderGalleryImage();
+    });
+  overlay.querySelector<HTMLButtonElement>('[data-quickview-next]')
+    ?.addEventListener('click', () => {
+      if (qvImages.length < 2) return;
+      qvIndex = (qvIndex + 1) % qvImages.length;
+      renderGalleryImage();
+    });
+}
+
+function bindQuickViewDocListeners(): void {
+  if (qvDocListenersBound) return;
+  qvDocListenersBound = true;
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const overlay = getOverlay();
+    if (overlay?.classList.contains('active')) closeQuickView();
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Init + astro:page-load lifecycle
+// ---------------------------------------------------------------------------
+
 function initStore(): void {
   if (initRanThisLoad) return;
   initRanThisLoad = true;
   bindImageFallbacks();
   bindNsfwReveals();
+  parseProducts();
+  bindCardActivation();
+  bindQuickViewControls();
+  bindQuickViewDocListeners();
 }
 
 // Reset the per-load guard when a navigation starts so the next page re-inits.
