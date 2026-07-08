@@ -63,25 +63,30 @@ if (concept === 'gallery') {
   {concept === 'terms' && <TermsPage lang={lang} />}
   {concept === 'services' && <ServicesPage lang={lang} />}
 
-  {/* Cart/quote overlays live in the body-level chrome-bottom slot (OUTSIDE <main>)
-      so the drawer + backdrop escape main's view-transition stacking context and
-      layer above the fixed nav + FloatingCTA — same placement as DiscordModal. */}
-  {concept === 'services' && (
-    <Fragment slot="chrome-bottom">
-      <CartDrawer lang={lang} />
-      <CartPill lang={lang} />
-      <CartSummaryModal lang={lang} />
-    </Fragment>
-  )}
+  {/* Cart/quote + store overlays live in the body-level chrome-bottom slot
+      (OUTSIDE <main>) so drawers + backdrops escape main's view-transition
+      stacking context and layer above the fixed nav + FloatingCTA — same
+      placement as DiscordModal.
 
-  {/* Store quick-view modal — mounted in the body-level chrome-bottom slot so the
-      dc-overlay escapes <main>'s view-transition stacking context (mirrors the
-      services cart placement). Store-only; the purchase cart arrives in Plan 03. */}
-  {concept === 'store' && (
-    <Fragment slot="chrome-bottom">
-      <QuickViewModal lang={lang} />
-      <StoreCartDrawer lang={lang} />
-      <StoreCartPill lang={lang} />
-    </Fragment>
-  )}
+      NOTE: this must be a SINGLE <Fragment slot="chrome-bottom"> with the
+      per-concept conditionals INSIDE it. Two sibling `{cond && <Fragment
+      slot="chrome-bottom">}` expressions break Astro's named-slot resolution:
+      the later falsy expression clobbers the earlier truthy one, which
+      silently dropped the services cotización chrome. */}
+  <Fragment slot="chrome-bottom">
+    {concept === 'services' && (
+      <>
+        <CartDrawer lang={lang} />
+        <CartPill lang={lang} />
+        <CartSummaryModal lang={lang} />
+      </>
+    )}
+    {concept === 'store' && (
+      <>
+        <QuickViewModal lang={lang} />
+        <StoreCartDrawer lang={lang} />
+        <StoreCartPill lang={lang} />
+      </>
+    )}
+  </Fragment>
 </BaseLayout>

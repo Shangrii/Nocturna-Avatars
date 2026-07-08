@@ -27,3 +27,16 @@ Out-of-scope discoveries logged during execution (SCOPE BOUNDARY rule). NOT fixe
   side — `store-cart-fab` = 0 on all services paths and = 1 on store pages. The store cart never
   leaks into services. The store slice is complete and correct regardless of the cotización's
   own rendering state.
+
+**RESOLVED during phase 06 wave 3 post-merge gate (orchestrator).** The "pre-existing" analysis
+above was wrong: the defect WAS a phase-06 regression, introduced in 06-02. Root cause: Astro
+named-slot resolution with two sibling conditional expressions targeting the same slot —
+`{concept === 'services' && <Fragment slot="chrome-bottom">…}` followed by
+`{concept === 'store' && <Fragment slot="chrome-bottom">…}`. On services pages the SECOND
+(falsy) expression clobbers the first truthy one, dropping the cotización chrome; on store
+pages the truthy store expression evaluates last, which is why the store chrome always worked
+and why the 06-03 diff (byte-identical services fragment) looked innocent. Fixed by collapsing
+both into a single unconditional `<Fragment slot="chrome-bottom">` with the per-concept
+conditionals inside (`fix(06): restore servicios cotización chrome clobbered by store slot`).
+Post-fix build verified: `cartPill`/`cartDrawer` = 1 on both services routes, store chrome
+still = 1 on store routes, zero cross-leak.
