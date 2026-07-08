@@ -60,11 +60,11 @@
 
 _Added 2026-07-07 during Phase 6 planning (per ROADMAP Phase 6 note). Wording derived from the Phase 6 success criteria + CONTEXT.md locked decisions D-01…D-20._
 
-- [ ] **STORE-01**: A visitor sees a dedicated store section (`/tienda` ES · `/en/store` EN) listing Nocturna's own VRChat assets rendered from `src/data/store.json`, in ES + EN
-- [ ] **STORE-02**: Each product shows price, preview image(s), and description; staff add/edit products by editing `store.json` only — no component/code changes — rendering in both ES and EN
-- [ ] **STORE-03**: A visitor can add/remove assets to a REAL purchase cart with a running total, reusing the Phase 3.1 cart patterns reframed for purchase — without breaking the /servicios cotización
-- [ ] **STORE-04**: A visitor can complete a purchase and receive their asset(s): checkout + payment + digital fulfillment on Jinxxy (hosted third-party, no self-hosted backend), preserving Astro static + GitHub Pages + CNAME
-- [ ] **STORE-05**: The store is reachable from the nav, keeps "Abrir Ticket" intact; responsive + AA contrast + `prefers-reduced-motion` respected, consistent with the Refined Street Editorial system
+- [x] **STORE-01**: A visitor sees a dedicated store section (`/tienda` ES · `/en/store` EN) listing Nocturna's own VRChat assets rendered from `src/data/store.json`, in ES + EN
+- [x] **STORE-02**: Each product shows price, preview image(s), and description; staff add/edit products by editing `store.json` only — no component/code changes — rendering in both ES and EN
+- [x] **STORE-03**: A visitor can add/remove assets to a REAL purchase cart with a running total, reusing the Phase 3.1 cart patterns reframed for purchase — without breaking the /servicios cotización
+- [x] **STORE-04**: A visitor can complete a purchase and receive their asset(s): checkout + payment + digital fulfillment on Jinxxy (hosted third-party, no self-hosted backend), preserving Astro static + GitHub Pages + CNAME
+- [x] **STORE-05**: The store is reachable from the nav, keeps "Abrir Ticket" intact; responsive + AA contrast + `prefers-reduced-motion` respected, consistent with the Refined Street Editorial system
 
 ## v2 Requirements
 
@@ -130,11 +130,11 @@ Which phases cover which requirements. Populated during roadmap creation.
 | BOT-04 | Phase 5 | Complete |
 | BOT-05 | Phase 5 | Complete |
 | BOT-06 | Phase 5 | Complete |
-| STORE-01 | Phase 6 | Planned (06-01) |
-| STORE-02 | Phase 6 | Planned (06-01) |
-| STORE-03 | Phase 6 | Planned (06-03) |
-| STORE-04 | Phase 6 | Planned (06-02, 06-03) |
-| STORE-05 | Phase 6 | Planned (06-01, 06-02, 06-03) |
+| STORE-01 | Phase 6 | Complete (06-01) |
+| STORE-02 | Phase 6 | Complete (06-01) |
+| STORE-03 | Phase 6 | Complete (06-03) |
+| STORE-04 | Phase 6 | Complete (06-02, 06-03) |
+| STORE-05 | Phase 6 | Complete (06-01, 06-02, 06-03) |
 
 **Coverage:**
 - v1 requirements: 35 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6 + STORE 5)
@@ -145,4 +145,4 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 ---
 *Requirements defined: 2026-06-28*
-*Last updated: 2026-07-07 — added STORE-01…STORE-05 (Phase 6 Asset Store) + traceability + coverage*
+*Last updated: 2026-07-08 — STORE-01…STORE-05 verified complete (Phase 6 executed + verified)*
