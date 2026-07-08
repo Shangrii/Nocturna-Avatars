@@ -44,6 +44,10 @@ const { product, usd, featuredBadge, editorCredit, nsfwReveal, nsfwHide, addToCa
 const thumb = product.images?.[0] ?? '/store/placeholder.svg';
 ---
 
+{/* WR-03: the article carries NO button role — a role="button" container turns
+    descendant controls (NSFW reveal, add-to-cart) presentational for AT. The
+    semantic quick-view opener is the product-name <button> below; whole-card
+    click-anywhere stays as a JS convenience in store.ts (no ARIA involved). */}
 <article
   class:list={[
     'product-card',
@@ -51,9 +55,6 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
   ]}
   data-product-id={product.id}
   data-nsfw={product.nsfw ? '' : undefined}
-  role="button"
-  tabindex="0"
-  aria-label={product.name}
 >
   {product.featured && <span class="product-card__badge">{featuredBadge}</span>}
 
@@ -85,7 +86,14 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
   </div>
 
   <div class="product-card__body">
-    <h3 class="product-card__name">{product.name}</h3>
+    {/* The product name is the card's REAL quick-view opener (WR-03): a native
+        button, so Enter/Space work for free and its accessible name is the
+        product name. store.ts opens the modal on any card click (the button's
+        click bubbles to that same delegated handler) and returns focus here
+        on close. */}
+    <h3 class="product-card__name">
+      <button type="button" class="product-card__open" data-card-open>{product.name}</button>
+    </h3>
     <p class="product-card__price">${product.price} {usd}</p>
     <p class="product-card__editor">{editorCredit} {product.editor}</p>
     {/* Secondary/outline add-to-cart control — store-cart.ts binds [data-store-add]
@@ -119,8 +127,22 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
     transform: translateY(-2px);
     border-color: color-mix(in srgb, #ffffff 14%, transparent);
   }
-  /* The whole card is a role="button" quick-view opener — visible focus ring. */
-  .product-card:focus-visible {
+  /* Quick-view opener — the product-name button (WR-03). Chrome reset so it
+     renders exactly like the former plain <h3> text; visible focus ring on the
+     button itself for keyboard users. */
+  .product-card__open {
+    appearance: none;
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    letter-spacing: inherit;
+    cursor: pointer;
+  }
+  .product-card__open:focus-visible {
     outline: 2px solid var(--color-white);
     outline-offset: 2px;
   }

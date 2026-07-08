@@ -359,8 +359,12 @@ function openQuickView(id: string, card: HTMLElement | null): void {
     addBtn.classList.remove('is-added');
   }
 
-  // Focus origin (return focus here on close).
-  qvLastFocus = card ?? (document.activeElement as HTMLElement | null);
+  // Focus origin (return focus here on close). WR-03: the article itself is no
+  // longer focusable, so prefer the card's open button (the real tab stop).
+  qvLastFocus =
+    card?.querySelector<HTMLElement>('[data-card-open]') ??
+    card ??
+    (document.activeElement as HTMLElement | null);
 
   // WR-01: cancel any still-pending close handler so a re-open within the close
   // transition can't be force-hidden when the OPEN transition ends.
@@ -436,7 +440,15 @@ function closeQuickView(): void {
   qvLastFocus = null;
 }
 
-/** Bind card activation (click + Enter/Space) — per-card, guarded per load. */
+/**
+ * Bind card activation — per-card, guarded per load.
+ *
+ * WR-03: the card's SEMANTIC opener is the product-name <button data-card-open>
+ * (ProductCard.astro) — a native button, so Enter/Space activate it with no
+ * keydown shim here. This delegated click handler keeps the click-anywhere
+ * mouse affordance: the open button's click bubbles into it too (one open —
+ * a single listener fires once per click).
+ */
 function bindCardActivation(): void {
   document.querySelectorAll<HTMLElement>('.product-card').forEach((card) => {
     if (card.dataset.qvBound === 'true') return;
@@ -447,15 +459,6 @@ function bindCardActivation(): void {
       // Plan-03 add-to-cart control) so they don't also open the quick-view.
       const target = e.target as HTMLElement;
       if (target.closest('[data-nsfw-reveal]') || target.closest('[data-store-add]')) return;
-      const id = card.dataset.productId;
-      if (id) openQuickView(id, card);
-    });
-
-    card.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
-      // Only when the card itself is focused — let nested buttons handle their own keys.
-      if (e.target !== card) return;
-      e.preventDefault();
       const id = card.dataset.productId;
       if (id) openQuickView(id, card);
     });
