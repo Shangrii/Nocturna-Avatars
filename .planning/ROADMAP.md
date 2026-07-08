@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3.1: Catalog Configurator** - Interactive "arma tu paquete" cart: individual services selectable 1-by-1 with prices and running total, "Open Ticket" with cart summary (INSERTED)
 - [x] **Phase 4: Gallery & Data Layer** - Masonry gallery + lightbox from `gallery.json`, featured subset on landing, schema finalized (completed 2026-07-03)
 - [x] **Phase 5: Photo-Publishing Bot Cog** - Discord cog in `nocturna-bot` (✅ approve / 🗑️ remove / Pillow optimize / cross-repo commit) (completed 2026-07-04)
-- [ ] **Phase 6: Asset Store** - Dedicated store to sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine
+- [x] **Phase 6: Asset Store** - Dedicated store to sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine (completed 2026-07-08)
 
 ## Phase Details
 
@@ -268,7 +268,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3.1 Catalog Configurator | 5/6 | In Progress|  |
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
 | 5. Photo-Publishing Bot Cog | 5/5 | Complete   | 2026-07-04 |
-| 6. Asset Store | 2/3 | In Progress|  |
+| 6. Asset Store | 3/3 | Complete   | 2026-07-08 |
 
 ### Phase 6: Asset Store
 
@@ -300,4 +300,4 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 — shares [page].astro + ProductCard/QuickView)*
 
-- [ ] 06-03-PLAN.md — Real purchase cart: StoreCartPill/Drawer + store-cart.ts (localStorage persist + reconcile, per-item Jinxxy links) — fully isolated from the /servicios cotización
+- [x] 06-03-PLAN.md — Real purchase cart: StoreCartPill/Drawer + store-cart.ts (localStorage persist + reconcile, per-item Jinxxy links) — fully isolated from the /servicios cotización
