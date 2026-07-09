@@ -9,7 +9,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { langCodes, toLang, useTranslations } from '../../i18n/ui';
 import About from '../../components/sections/About.astro';
-import Teaser from '../../components/sections/Teaser.astro';
 import FeaturedGallery from '../../components/sections/FeaturedGallery.astro';
 import PackagesSummary from '../../components/sections/PackagesSummary.astro';
 import Reviews from '../../components/sections/Reviews.astro';
@@ -81,18 +80,14 @@ const empty = useTranslations(lang, 'pages').emptyState;
   </section>
 
   <!-- Visual-first landing order (D-12): hero → featured gallery → about+process
-       → packages summary → gallery teaser → reviews → closing. The featured teaser
-       is raised to #2 to impress before the about/process; the gallery teaser is
-       kept after packages so its data-teaser="gallery" marquee choreography hook
-       survives. Reviews (07-01) is social proof adjacent to the conversion path.
-       Ink/paper rhythm alternates: featured(ink) → about(paper) → packages(ink)
-       → gallery(paper) → reviews(paper, delineated from gallery by the .section--rule
-       hairline; renders NOTHING when reviews.json is empty, so at launch the rhythm
-       is gallery(paper) → closing(ink)) → closing(ink). -->
+       → packages summary → reviews → closing. The featured teaser is raised to #2
+       to impress before the about/process. Reviews (07-01) is social proof adjacent
+       to the conversion path. Ink/paper rhythm alternates: featured(ink) →
+       about(paper) → packages(ink) → reviews(paper, delineated by the .section--rule
+       hairline; renders NOTHING when reviews.json is empty) → closing(ink). -->
   <FeaturedGallery lang={lang} />
   <About lang={lang} surface />
   <PackagesSummary lang={lang} />
-  <Teaser lang={lang} variant="gallery" />
   <Reviews lang={lang} />
 
   <section class="section section--rule">
