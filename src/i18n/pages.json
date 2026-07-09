@@ -51,6 +51,11 @@
       "viewAll": "Ver galería completa",
       "newBadge": "¡nuevo!"
     },
+    "reviews": {
+      "tag": "Reseñas",
+      "title": "Lo que dicen nuestros clientes",
+      "anonymous": "Anónimo"
+    },
     "lightbox": {
       "close": "Cerrar",
       "prev": "Anterior",
@@ -195,6 +200,11 @@
       "altFallback": "Nocturna Avatars — VRChat avatar edit",
       "viewAll": "View full gallery",
       "newBadge": "new!"
+    },
+    "reviews": {
+      "tag": "Reviews",
+      "title": "What our clients say",
+      "anonymous": "Anonymous"
     },
     "lightbox": {
       "close": "Close",
