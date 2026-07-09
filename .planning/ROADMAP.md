@@ -271,7 +271,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
 | 5. Photo-Publishing Bot Cog | 5/5 | Complete   | 2026-07-04 |
 | 6. Asset Store | 3/3 | Complete   | 2026-07-08 |
-| 7. Reviews Publishing Pipeline | 3/4 | In Progress|  |
+| 7. Reviews Publishing Pipeline | 4/4 | Complete   | 2026-07-09 |
 
 ### Phase 6: Asset Store
 
@@ -310,14 +310,14 @@ Plans:
 **Goal:** Client reviews written in the Discord reviews channel reach the public website as curated, bilingual-aware testimonials with zero code changes per review: a `ReviewsCog` in `nocturna-bot` collects (2-button named/anonymous embed + modal, plus plain typed reviews) and staff-✅-gates reviews, publishes them to `src/data/reviews.json` via the existing cross-repo transport, and the website renders a Refined Street Editorial testimonials section from that file — with anonymous submissions never leaking the submitter identity.
 **Requirements**: REV-01, REV-02, REV-03, REV-04, REV-05
 **Depends on:** Phase 6
-**Plans:** 1/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 
 **Wave 1**
 
 - [x] 07-01-PLAN.md — Website testimonials section: reviews.json ([]) + reviews i18n key + Reviews.astro (verbatim, escaped, empty→nothing) wired into the landing (website repo)
-- [ ] 07-02-PLAN.md — Bot foundation: reviews config block + separate reviews cursor + publish_review/remove_review transport (parallel thin path, gallery untouched) + tests (nocturna-bot repo)
+- [x] 07-02-PLAN.md — Bot foundation: reviews config block + separate reviews cursor + publish_review/remove_review transport (parallel thin path, gallery untouched) + tests (nocturna-bot repo)
 
 **Wave 2** *(blocked on 07-02)*
 
@@ -325,7 +325,7 @@ Plans:
 
 **Wave 3** *(blocked on 07-03 — shares cogs/reviews.py)*
 
-- [ ] 07-04-PLAN.md — Collection embed: persistent 2-button view (named/anonymous) + 500-char modal + review-embed anonymity contract + staff command + tests (nocturna-bot repo)
+- [x] 07-04-PLAN.md — Collection embed: persistent 2-button view (named/anonymous) + 500-char modal + review-embed anonymity contract + staff command + tests (nocturna-bot repo)
 
 **Notes**: Spans TWO repos — the testimonials section lives in the website repo (cwd); the ReviewsCog/transport/config live in `nocturna-bot` and are committed there. Reuses the Phase-5 gallery pipeline structure (staff ✅/🌙, 🟢 marker, failure ⚠️, backfill) and the live cross-repo GitHub transport. Deploying to the production `cinema` systemd host (git pull + restart) is a manual user step, not phase scope. No new npm/pip dependencies.
 
