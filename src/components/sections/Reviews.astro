@@ -38,7 +38,14 @@ const t = useTranslations(lang, 'pages').reviews;
 // Newest-first by `date` (mirrors FeaturedGallery), then take the newest 9 for a
 // clean 3×3 desktop grid (UI-SPEC L106). Copy before sorting so the imported module
 // array is never mutated.
+// Defensive filter (WR-05): reviews.json is written by an automated cross-repo
+// pipeline — one malformed/missing `date` (or text) would otherwise throw at build
+// time (`Intl.DateTimeFormat.format` on an Invalid Date) and break EVERY deploy of
+// the whole site. Skip bad entries at the consumption boundary; valid data renders
+// identically.
 const reviews = ([...(reviewsData as ReviewEntry[])])
+  .filter((e) => e && typeof e.text === 'string' && e.text
+    && !Number.isNaN(new Date(e.date).getTime()))
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   .slice(0, 9);
 
