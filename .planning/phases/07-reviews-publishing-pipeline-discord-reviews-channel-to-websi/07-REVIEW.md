@@ -20,7 +20,11 @@ findings:
   warning: 5
   info: 8
   total: 13
-status: issues_found
+status: fixed
+fixed_at: 2026-07-09
+fix_commits:
+  nocturna-bot: [3ee13ba, 20d425d, e2771ba, e073f81]
+  website: [b92ef02]
 ---
 
 # Phase 7: Code Review Report
@@ -28,7 +32,7 @@ status: issues_found
 **Reviewed:** 2026-07-09T06:55:17Z
 **Depth:** standard
 **Files Reviewed:** 11
-**Status:** issues_found
+**Status:** fixed — all 5 warnings fixed (bot suite 164 passing, website build green); the 8 info findings remain open
 
 ## Summary
 
@@ -46,6 +50,7 @@ However, the cog has real correctness gaps: the live reaction path lacks the bot
 
 ### WR-01: Live reaction path publishes non-review bot messages (asymmetric with backfill)
 
+**Fixed:** `3ee13ba` (nocturna-bot, main) — mirrored the `_reconcile` bot-message guard at the top of both `_publish` and `_unpublish`; regression tests added (staff ✅ on the ⚠️ failure reply / foreign bot posts never publish).
 **File:** `C:\Users\Shangri\Pictures\Nocturna Avatars\Coding\nocturna-bot\cogs\reviews.py:273-300` (dispatch at 297-300)
 **Issue:** `_reconcile` (line 562) explicitly skips bot messages that are not the cog's own marked review embed: `if message.author.bot and not _is_own_review_embed(message): return`. The live `on_raw_reaction_add` → `_publish` path has **no such filter**. It gates the *reactor* (staff) but never the *target message author*. Any bot message with text content in the reviews channel becomes publishable by a single staff ✅. The worst instance is self-inflicted: `_surface_failure` (line 404) posts a **persistent, non-auto-deleting** reply ("⚠️ No pude publicar la reseña: GitHub falló…") and tells staff to interact with reactions right next to it — a mis-tapped ✅ on that reply publishes the bot's error text to the public website with `author` = the bot's display name. Foreign-bot/webhook posts in the channel are equally publishable. `_review_author_and_text` only guards against *empty* content, not bot authorship.
 **Fix:** Mirror the reconcile guard at the top of `_publish` (and `_unpublish`), so both entry points share one policy:
@@ -58,6 +63,7 @@ async def _publish(self, message: discord.Message):
 
 ### WR-02: Lost 🟢 marker makes 🌙 silently no-op the removal — review stays live while looking unpublished
 
+**Fixed:** `20d425d` (nocturna-bot, main) — the pending-dismiss branch now defensively calls `remove_review` (transport no-op guard: one GET, never an empty commit for a truly-pending message), healing a lost-🟢 desync; failures are logged and never abort the dismiss. Tests updated + failure-tolerance test added.
 **File:** `C:\Users\Shangri\Pictures\Nocturna Avatars\Coding\nocturna-bot\cogs\reviews.py:352, 375-379`
 **Issue:** `_unpublish` branches on `_is_published(message)` **without entries**, so during live operation it relies solely on the bot's 🟢 reaction. `_publish`'s own post-commit path (lines 337-342) documents that the 🟢 can be lost after a successful commit ("a lost 🟢 is harmless"). It is *not* harmless for unpublish: with the marker lost, a staff 🌙 takes the pending-dismiss branch, clears reactions, commits **nothing**, and gives no error — the review remains live on the website indefinitely while the Discord message looks fully unpublished. The startup orphan pass only heals *deleted* messages, so nothing ever reconciles this. The comment "a re-✅ is a clean republish" covers the publish side only.
 **Fix:** In the pending branch, still call the transport — `remove_review` already has a no-op guard, so a truly-pending message costs one GET and no commit:
@@ -75,12 +81,14 @@ else:
 
 ### WR-03: Backfill cursor cannot replay staff approvals/removals on already-scanned messages — contract violated
 
+**Fixed:** `e2771ba` (nocturna-bot, main) — dropped the creation-ordered cursor entirely (the review's endorsed option: no terminal state exists, the channel is low volume, `_reconcile` is idempotent); `_backfill` now full-scans the channel every startup, the dead `reviews_state` helpers were removed from `core/db.py` (gallery cursor untouched), and a regression test pins that a staff ✅ added during downtime to an already-scanned message is replayed.
 **File:** `C:\Users\Shangri\Pictures\Nocturna Avatars\Coding\nocturna-bot\cogs\reviews.py:463-491`
 **Issue:** The `_backfill` docstring promises to "replay anything the bot missed while down — missed ✅ prompts, staff approvals, and 🌙 removals." But the cursor is keyed by **message creation order** (`db.set_reviews_cursor(message.id)` advances unconditionally per message, line 489) while approvals are **reaction events on existing messages**. Sequence: a review is scanned during one startup (pending, cursor advances past it) → bot goes down later → staff ✅'s that older pending review during downtime → next startup scans only `after=cursor` and never sees the message → the approval is silently lost. Same for a missed 🌙 on an older published review (stays live). Pending reviews routinely linger for days, so this window is realistic. Staff get zero feedback; recovery requires knowing to remove/re-add ✅ while the bot is up.
 **Fix:** Don't advance the cursor past messages still in a non-terminal state, e.g. only `set_reviews_cursor` for messages that are published (🟢) or bot/skip messages; or additionally re-scan a bounded trailing window (e.g. last N days) of pre-cursor messages each startup; or drop the cursor for the reviews channel entirely (low volume — a full scan is cheap). At minimum correct the docstring so operators don't rely on a guarantee the code doesn't provide.
 
 ### WR-04: Non-typed transport exceptions bypass the ⚠️ failure UX — staff get zero feedback
 
+**Fixed:** `e073f81` (nocturna-bot, main) — `_fetch_json` now normalizes `json.loads` failures and non-array bodies into `GitHubPublishError` (gallery gains the same normalization; valid-data behavior unchanged); `_publish`/`_unpublish` gained the suggested `except Exception` last-resort backstop driving the same ⚠️ surface; `_reconcile_orphans` skips truthy non-dict entries via an `isinstance` guard. Transport + cog tests added.
 **File:** `C:\Users\Shangri\Pictures\Nocturna Avatars\Coding\nocturna-bot\cogs\reviews.py:320-327, 354-360` and `C:\Users\Shangri\Pictures\Nocturna Avatars\Coding\nocturna-bot\core\github_publish.py:177`
 **Issue:** `_publish`/`_unpublish` catch **only** `GitHubPublishError`. But the transport can raise other exception types that the retry/typed-error wrapper does not cover: `json.loads(text)` at `github_publish.py:177` raises `JSONDecodeError` if `reviews.json` is ever malformed (manual edit, partial write), and a non-array JSON body (e.g. someone commits `{}`) makes `build_tree`'s comprehension raise `AttributeError` on `e.get("id")` (`_publish_review_sync:419`). These propagate through `asyncio.to_thread` out of `_publish`, past the reaction listener, and die in discord.py's generic "Ignoring exception" log — no ⚠️, no reply, staff sees the ✅ apparently do nothing with no explanation. The same malformed-entry case (`"abc".get(...)`) aborts `_reconcile_orphans` mid-pass (`reviews.py:513` — `(entry or {}).get("id")` only guards falsy entries, not non-dict truthy ones).
 **Fix:** Convert JSON-shape failures into the typed error inside `_fetch_json` so the existing ⚠️ UX fires:
@@ -97,6 +105,7 @@ Optionally also broaden the cog's catch to `except Exception` with the same `_su
 
 ### WR-05: One malformed `date` in reviews.json crashes the entire site build
 
+**Fixed:** `b92ef02` (website, revamp) — applied the suggested filter (skip entries with unparseable dates or non-string/empty text) before sort/render; valid data renders identically. Verified: `npm run build` green with `[]`, AND with an injected malformed-date + missing-date entry (bad entries skipped, valid entry rendered), then `reviews.json` reverted to `[]`.
 **File:** `C:\Users\Shangri\Pictures\Nocturna Avatars\Coding\Website\src\components\sections\Reviews.astro:42, 47, 64`
 **Issue:** `dateFmt.format(new Date(entry.date))` throws `RangeError: Invalid time value` at build time when `date` is missing or unparseable, and the sort comparator (line 42) returns `NaN` for invalid dates (unstable ordering). Because this component renders on the landing page for both languages, a single bad entry — a manual edit, a future transport regression, or a hand-authored test entry — takes down **every** deploy of the whole site, not just one card. The data file is written by an automated cross-repo pipeline, so defensive parsing at the consumption boundary is warranted (FeaturedGallery has the bot-controlled-filename equivalent; dates here are the trust boundary).
 **Fix:** Filter/guard invalid dates before render:
