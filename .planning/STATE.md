@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 07 planned and verified (4 plans, 3 waves)
-last_updated: "2026-07-09T01:16:06.651Z"
+last_updated: "2026-07-09T01:34:33.922Z"
 last_activity: 2026-07-09
 progress:
   total_phases: 12
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 07 (reviews-publishing-pipeline) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-07-09
 
@@ -73,6 +73,7 @@ Progress: [█████████░] 92%
 | Phase 05 P03 | 10min | 3 tasks | 4 files |
 | Phase 05 P04 | 13min | 3 tasks | 3 files |
 | Phase 07 P01 | 14min | 2 tasks | 4 files |
+| Phase 07 P02 | 12min | 2 tasks tasks | 5 files files |
 
 ## Accumulated Context
 
@@ -142,6 +143,8 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-05] Deploy topology REPLACED (2nd deploy incident): actions/deploy-pages@v5 failed 3/4 deployments with an opaque backend "Deployment failed, try again later" (GitHub status green, domain/cert clean, environment branch policy allowed revamp). New topology: deploy.yml builds Astro → force-pushes dist/ to the `gh-pages` branch → Pages serves gh-pages via the legacy pipeline. Pages config now: build_type=legacy, source=gh-pages, cname nocturna-avatars.site, HTTPS enforced. Also fixed package-lock desync (@emnapi bundled optionals of @tailwindcss/oxide-wasm32-wasi): npm ci → npm install in CI. Website commits a129a0a / 9a71978 / 22db985 / 7d4923b (pushed). Rollback path: old site archived intact on main — flip Pages source back to main.
 - [Phase 05]: [05-05] LIVE VERIFICATION on the production domain: nocturna-avatars.site serves the revamp; /es/galeria returns 200 WITH bot photo 20260704-1522919244088741989-1.webp rendered — the full BOT-02 chain (Discord ✅ → atomic commit → auto build+deploy → live production site) verified end-to-end. Exceeds the original plan, which deferred live-domain verification to a later cutover.
 - [Phase 07]: [07-01] Reviews testimonials section (Reviews.astro) renders reviews.json at build time as figure/blockquote/figcaption cards; placed as .section--surface (paper) after the gallery Teaser, renders NOTHING when empty (deliberate divergence from the EmptyState pattern — an empty social-proof block weakens the conversion path). Review body via Astro auto-escaping ONLY (no set:html, T-07-01 XSS mitigation verified via escaped &lt;b&gt; build proof); author:null → localized Anonymous (T-07-02). reviews.json ships committed as [] (the 07-02 bot write-target) so builds never break. reviews i18n key added under es/en (no ui.ts change). Slice newest-9, localized month+year date via Intl.DateTimeFormat.
+- [Phase 07-02]: Reviews transport reuses the gallery Git Data API machinery via a parallel thin path (lowest regression risk): extracted generic _fetch_json(repo,branch,path) + _commit_with_retry gained an optional fetch= callable defaulting to gallery — gallery byte-for-byte unchanged, full test_github_publish.py suite still green (103 bot tests pass).
+- [Phase 07-02]: reviews.json keyed+deduped by Discord message id (entry['id']) — no filename parsing (reviews have no images); author:null preserved verbatim by the transport (anonymity enforced upstream in the cog); separate reviews_state cursor table in core/db.py, independent of gallery_state.
 
 ### Pending Todos
 
@@ -183,6 +186,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-09T01:16:06.637Z
+Last session: 2026-07-09T01:29:58.394Z
 Stopped at: Phase 07 planned and verified (4 plans, 3 waves)
 Resume file: None
