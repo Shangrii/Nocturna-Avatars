@@ -1,10 +1,15 @@
 /**
- * choreography — bespoke landing moments (D-14/15/16).
+ * choreography — bespoke landing moments (D-15).
  *
- *   D-14  Gallery teaser horizontal marquee — a scroll-driven translateX track.
  *   D-15  Package-card 3D tilt — pointer-driven rotateX/rotateY (finePointer only),
  *         on top of Plan 01's staggered reveal.
- *   D-16  Featured-work parallax — scrub translateY depth against the background.
+ *
+ * D-14 (gallery marquee) and D-16 (featured parallax) targeted the old placeholder
+ * `Teaser` component's `[data-teaser]`/`[data-teaser-body]` hooks. That component was
+ * removed (quick-260709-hm5) — D-16's target was already gone since FeaturedGallery.astro
+ * replaced it in Phase 4, and D-14's target went with it. Both effects were permanently
+ * inert (querySelector always null) and have been removed rather than re-wired, since no
+ * new motion design was requested.
  *
  * Everything gates on `!prefersReduced` (under reduced-motion the sections still reveal
  * via Plan 01's gentle fade — no marquee scrub, no tilt, no parallax, D-21) and runs
@@ -47,55 +52,6 @@ export function initChoreography(): void {
   if (prefersReduced() || !isLanding()) return;
 
   gsap.registerPlugin(ScrollTrigger);
-
-  // ── D-14 Gallery marquee ── the gallery teaser body slides horizontally as the user
-  // scrolls vertically past it. translateX only.
-  const galleryTrack = document.querySelector<HTMLElement>(
-    '[data-teaser="gallery"] [data-teaser-body]',
-  );
-  if (galleryTrack) {
-    const section = galleryTrack.closest<HTMLElement>('[data-teaser="gallery"]');
-    galleryTrack.classList.add('marquee-track');
-    gsap.fromTo(
-      galleryTrack,
-      { xPercent: 8 },
-      {
-        xPercent: -8,
-        ease: 'none',
-        scrollTrigger: {
-          id: `${ST_ID}-marquee`,
-          trigger: section ?? galleryTrack,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true,
-        },
-      },
-    );
-  }
-
-  // ── D-16 Featured parallax ── the featured teaser body drifts on translateY against
-  // the background as it scrolls through the viewport (depth). translateY only.
-  const featured = document.querySelector<HTMLElement>(
-    '[data-teaser="featured"] [data-teaser-body]',
-  );
-  if (featured) {
-    const section = featured.closest<HTMLElement>('[data-teaser="featured"]');
-    gsap.fromTo(
-      featured,
-      { yPercent: 12 },
-      {
-        yPercent: -12,
-        ease: 'none',
-        scrollTrigger: {
-          id: `${ST_ID}-parallax`,
-          trigger: section ?? featured,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true,
-        },
-      },
-    );
-  }
 
   // ── D-15 Package-card 3D tilt ── pointer-driven rotateX/rotateY on each summary card
   // (the staggered reveal is already Plan 01's). Touch (no finePointer) gets the reveal
