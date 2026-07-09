@@ -505,23 +505,27 @@ async def _on_error(self, exc):
 | A6 | Every API used exists in both discord.py 2.5.2 (dev) and 2.7.1 (prod) | Pitfall 7 / Env | Low — all are ≥2.0 APIs; recommend testing on the pinned 2.7.1 |
 | A7 | Blocking inline `sqlite3` is acceptable at this volume (matches gallery/reviews) | Pitfall 6 | Low — repo already does this |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Crash-time fire semantics (double-ping vs missed fire)**
+   - **RESOLVED:** locked in the 08-03-PLAN.md objective as the documented design choice (A3): advance-after-send — a rare missed advance beats a double ping; the D-13 grace window covers the miss. Scheduler ordering is test-asserted in 08-03 Task 2.
    - What we know: send + `next_fire` update aren't atomic; catch-up covers recent misses.
    - What's unclear: whether the user prefers "never double-ping" (advance-after-send + grace catch-up) or "never miss" (occurrence dedupe via `last_fired`).
    - Recommendation: default to advance-after-send (rare miss, covered by D-13); surface the trade-off in the plan as a one-line decision.
 
 2. **Mention input mechanism for D-10**
+   - **RESOLVED:** implemented per the recommendation in 08-03-PLAN.md Task 1 — `crear` takes an optional typed `mencion: discord.Role` slash param whose `.mention` is stored and rendered on the content line; freeform text in the modal body never pings.
    - What we know: mentions must be on the content line to ping; `AllowedMentions(everyone=False)` enforces D-11.
    - What's unclear: whether `crear` takes a typed `discord.Role`/`discord.Member` slash param (cleanest, type-safe) vs freeform mention text.
    - Recommendation: an optional `mencion: discord.Role` (and/or `discord.Member`) slash param rendered into the content line — type-safe and picker-driven; freeform mentions in the modal body render but never ping (which is exactly D-10's point).
 
 3. **Emoji validation + cap for D-14 (discretion)**
+   - **RESOLVED:** implemented per the recommendation in 08-02-PLAN.md — `parse_emojis` splits on space/comma, dedupes, caps at 6 (unit-tested); 08-03 Task 2 delivery seeds each emoji inside try/except `HTTPException` (skip + log).
    - What we know: unicode emoji strings work directly; custom emoji need `<:name:id>`; Discord allows ≤20 reactions/message.
    - Recommendation: accept a space/comma-separated list, validate each by attempting `add_reaction` (catch `HTTPException`, skip+log), cap at ~5–6 for a clean RSVP row.
 
 4. **discord.py runtime parity**
+   - **RESOLVED:** accepted risk per Assumptions Log A6 — every API used exists in both 2.5.2 (dev) and 2.7.1 (prod pin), so no task is needed; refreshing the dev/CI venv from `requirements.txt` before the human cinema deploy remains the recommendation.
    - What we know: dev is `2.5.2`, `requirements.txt` pins `2.7.1` (cinema).
    - Recommendation: refresh the dev/CI venv from `requirements.txt` so tests exercise `2.7.1` before the human deploy.
 
