@@ -154,8 +154,8 @@ Which phases cover which requirements. Populated during roadmap creation.
 | REV-01 | Phase 7 | Planned (07-01) |
 | REV-02 | Phase 7 | Planned (07-03, 07-04) |
 | REV-03 | Phase 7 | Planned (07-03) |
-| REV-04 | Phase 7 | Planned (07-01, 07-02, 07-04) |
-| REV-05 | Phase 7 | Planned (07-02, 07-03) |
+| REV-04 | Phase 7 | Planned (07-02, 07-04) |
+| REV-05 | Phase 7 | Planned (07-02, 07-03, 07-04) |
 
 **Coverage:**
 - v1 requirements: 40 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6 + STORE 5 + REV 5)
@@ -166,4 +166,4 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 ---
 *Requirements defined: 2026-06-28*
-*Last updated: 2026-07-08 — REV-01…REV-05 added during Phase 7 planning*
+*Last updated: 2026-07-08 — REV-01…REV-05 added during Phase 7 planning; REV-04/REV-05 traceability reconciled during 07 revision*
