@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 07 complete (verified human_needed 25/25 auto; review fixed WR-01..05; 164 bot tests green)
-last_updated: "2026-07-09T07:16:18.060Z"
-last_activity: 2026-07-09
+status: completed
+stopped_at: Phase 8 context gathered
+last_updated: "2026-07-09T22:49:50.706Z"
+last_activity: "2026-07-09 - Completed quick task 260709-hm5: Limpiar landing (galeria duplicada) y tienda a Coming Soon"
 progress:
   total_phases: 12
   completed_phases: 9
@@ -189,6 +189,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-09T07:16:18.046Z
-Stopped at: Phase 07 complete (verified human_needed 25/25 auto; review fixed WR-01..05; 164 bot tests green)
-Resume file: .planning/phases/07-reviews-publishing-pipeline-discord-reviews-channel-to-websi/07-VERIFICATION.md
+Last session: 2026-07-09T22:49:50.695Z
+Stopped at: Phase 8 context gathered
+Resume file: .planning/phases/08-bot-reminders-command-weekly-monthly-scheduled-reminders-wit/08-CONTEXT.md
