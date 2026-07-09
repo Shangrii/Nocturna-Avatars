@@ -271,6 +271,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 4. Gallery & Data Layer | 3/3 | Complete   | 2026-07-03 |
 | 5. Photo-Publishing Bot Cog | 5/5 | Complete   | 2026-07-04 |
 | 6. Asset Store | 3/3 | Complete   | 2026-07-08 |
+| 7. Reviews Publishing Pipeline | 3/4 | In Progress|  |
 
 ### Phase 6: Asset Store
 
@@ -320,7 +321,7 @@ Plans:
 
 **Wave 2** *(blocked on 07-02)*
 
-- [ ] 07-03-PLAN.md — ReviewsCog reaction pipeline: ✅ detection + staff-gated publish/unpublish + delete-unpublish + failure UX + startup backfill/reconcile + bot.py registration + tests (nocturna-bot repo)
+- [x] 07-03-PLAN.md — ReviewsCog reaction pipeline: ✅ detection + staff-gated publish/unpublish + delete-unpublish + failure UX + startup backfill/reconcile + bot.py registration + tests (nocturna-bot repo) (completed 2026-07-09)
 
 **Wave 3** *(blocked on 07-03 — shares cogs/reviews.py)*
 

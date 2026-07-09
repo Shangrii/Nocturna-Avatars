@@ -72,7 +72,7 @@ _Added 2026-07-08 during Phase 7 planning (phase captured post-milestone from th
 
 - [x] **REV-01**: The website landing renders published reviews from `src/data/reviews.json` as a bilingual testimonials section (verbatim text, localized chrome), and renders nothing when empty
 - [ ] **REV-02**: A `ReviewsCog` in `nocturna-bot` collects reviews via a 2-button embed (named / anonymous) + a 500-char modal, AND accepts plain typed client reviews in the reviews channel, marking each with a ✅ pending control
-- [ ] **REV-03**: A staff ✅ publishes a review to `reviews.json` cross-repo; a 🌙 or message delete unpublishes it — staff-role-gated, mirroring the gallery pipeline
+- [x] **REV-03**: A staff ✅ publishes a review to `reviews.json` cross-repo; a 🌙 or message delete unpublishes it — staff-role-gated, mirroring the gallery pipeline
 - [x] **REV-04**: Anonymous reviews store `author: null` and never expose the submitter's identity in the repo or any public bot message
 - [x] **REV-05**: The reviews commit transport reuses the existing cross-repo GitHub transport without regressing gallery publishing; a bot restart converges state via backfill + orphan reconcile
 
@@ -153,7 +153,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | STORE-05 | Phase 6 | Complete (06-01, 06-02, 06-03) |
 | REV-01 | Phase 7 | Planned (07-01) |
 | REV-02 | Phase 7 | Planned (07-03, 07-04) |
-| REV-03 | Phase 7 | Planned (07-03) |
+| REV-03 | Phase 7 | Complete (07-03) |
 | REV-04 | Phase 7 | Planned (07-02, 07-04) |
 | REV-05 | Phase 7 | Planned (07-02, 07-03, 07-04) |
 

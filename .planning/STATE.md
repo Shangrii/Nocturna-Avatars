@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 07 planned and verified (4 plans, 3 waves)
-last_updated: "2026-07-09T01:34:33.922Z"
+stopped_at: Completed 07-03-PLAN.md (ReviewsCog reaction pipeline + backfill + bot.py registration)
+last_updated: "2026-07-09T02:10:00.000Z"
 last_activity: 2026-07-09
 progress:
   total_phases: 12
   completed_phases: 8
   total_plans: 36
-  completed_plans: 33
-  percent: 67
+  completed_plans: 34
+  percent: 69
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 07 (reviews-publishing-pipeline) — EXECUTING
-Plan: 3 of 4
-Status: Ready to execute
+Plan: 4 of 4
+Status: 07-03 complete; 07-04 (collection embed) remaining
 Last activity: 2026-07-09
 
-Progress: [█████████░] 92%
+Progress: [█████████░] 94%
 
 ## Performance Metrics
 
@@ -74,6 +74,7 @@ Progress: [█████████░] 92%
 | Phase 05 P04 | 13min | 3 tasks | 3 files |
 | Phase 07 P01 | 14min | 2 tasks | 4 files |
 | Phase 07 P02 | 12min | 2 tasks tasks | 5 files files |
+| Phase 07 P03 | ~18min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -145,6 +146,7 @@ Recent decisions affecting current work:
 - [Phase 07]: [07-01] Reviews testimonials section (Reviews.astro) renders reviews.json at build time as figure/blockquote/figcaption cards; placed as .section--surface (paper) after the gallery Teaser, renders NOTHING when empty (deliberate divergence from the EmptyState pattern — an empty social-proof block weakens the conversion path). Review body via Astro auto-escaping ONLY (no set:html, T-07-01 XSS mitigation verified via escaped &lt;b&gt; build proof); author:null → localized Anonymous (T-07-02). reviews.json ships committed as [] (the 07-02 bot write-target) so builds never break. reviews i18n key added under es/en (no ui.ts change). Slice newest-9, localized month+year date via Intl.DateTimeFormat.
 - [Phase 07-02]: Reviews transport reuses the gallery Git Data API machinery via a parallel thin path (lowest regression risk): extracted generic _fetch_json(repo,branch,path) + _commit_with_retry gained an optional fetch= callable defaulting to gallery — gallery byte-for-byte unchanged, full test_github_publish.py suite still green (103 bot tests pass).
 - [Phase 07-02]: reviews.json keyed+deduped by Discord message id (entry['id']) — no filename parsing (reviews have no images); author:null preserved verbatim by the transport (anonymity enforced upstream in the cog); separate reviews_state cursor table in core/db.py, independent of gallery_state.
+- [Phase 07-03]: cogs/reviews.py ReviewsCog mirrors the gallery cog minus images (nocturna-bot 76fe5de + 34d9598). Divergence: reviews do NOT gate on staff AUTHOR (a review comes from a client) — only the ✅/🌙 REACTOR is staff-gated (REVIEWS_STAFF_ROLE_IDS). Author/text routed through ONE seam (_review_author_and_text → (display_name, text) | (None, "")) so 07-04 adds the anonymous 2-button embed without touching _publish. _is_published keys by exact message-id string (prefix non-collision). Orphan reconcile removes ONLY on discord.NotFound (T-07-06 mass-remove guard). bot.py loads cogs.reviews + fail-fasts on missing REVIEWS_CHANNEL_ID. Bot suite 143 passed (was 103; +40 cog tests). REV-03 complete; REV-02 still needs 07-04 (2-button embed).
 
 ### Pending Todos
 
@@ -186,6 +188,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-09T01:29:58.394Z
-Stopped at: Phase 07 planned and verified (4 plans, 3 waves)
+Last session: 2026-07-09T02:10:00.000Z
+Stopped at: Completed 07-03-PLAN.md (ReviewsCog reaction pipeline; nocturna-bot 76fe5de + 34d9598)
 Resume file: None
