@@ -1,0 +1,112 @@
+---
+/**
+ * Reviews — the landing's testimonials section (REV-01, Phase 07).
+ *
+ * Build-time render of `src/data/reviews.json` (the bot write-target published by
+ * the Discord ReviewsCog in 07-02) as Refined Street Editorial testimonial cards —
+ * the exact analog of FeaturedGallery.astro's gallery.json render, with three
+ * deliberate divergences documented in 07-UI-SPEC:
+ *   1. EMPTY → renders NOTHING (no EmptyState/placeholder). An empty social-proof
+ *      block weakens the conversion path, so absence is cleaner than a "coming soon".
+ *      reviews.json ships committed as [] so `npm run build` never breaks.
+ *   2. NO client <script> — this section is fully static (no lightbox/interaction).
+ *   3. <figure>/<blockquote>/<figcaption> semantics for correct testimonial markup.
+ *
+ * Section chrome (tag/title/anonymous fallback) is localized ES/EN from pages.json;
+ * the review BODY is user-generated, rendered VERBATIM in its original language and
+ * never translated. Review text is emitted ONLY through Astro auto-escaping
+ * (`<blockquote>{entry.text}</blockquote>`) — raw-HTML injection is forbidden here,
+ * so a review containing HTML/script is inert content, not markup (T-07-01, T-07-02).
+ */
+import { useTranslations, type Lang } from '../../i18n/ui';
+import reviewsData from '../../data/reviews.json';
+
+interface ReviewEntry {
+  id: string;
+  author: string | null;
+  text: string;
+  date: string;
+}
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const t = useTranslations(lang, 'pages').reviews;
+
+// Newest-first by `date` (mirrors FeaturedGallery), then take the newest 9 for a
+// clean 3×3 desktop grid (UI-SPEC L106). Copy before sorting so the imported module
+// array is never mutated.
+const reviews = ([...(reviewsData as ReviewEntry[])])
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 9);
+
+// Localized month + year only (privacy-light; avoids exposing the exact submission
+// day per UI-SPEC L96).
+const dateFmt = new Intl.DateTimeFormat(lang, { month: 'long', year: 'numeric' });
+---
+
+{reviews.length >= 1 ? (
+  <section class="section section--surface section--rule" data-reviews>
+    <div class="section-header reveal">
+      <span class="section-tag">{t.tag}</span>
+      <h2 class="section-title">{t.title}</h2>
+    </div>
+
+    <div class="cards reviews-cards reveal">
+      {reviews.map((entry) => (
+        <figure class="card review-card">
+          <span class="review-quote" aria-hidden="true">&ldquo;</span>
+          <blockquote class="review-body">{entry.text}</blockquote>
+          <div class="card-divider"></div>
+          <figcaption class="review-meta">
+            {`— ${entry.author ?? t.anonymous} · ${dateFmt.format(new Date(entry.date))}`}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+) : null}
+
+<style>
+  /* Testimonial cards reuse the shared .cards/.card hairline-grid idiom; only the
+     quote glyph, blockquote reset and mono meta are component-scoped. No hardcoded
+     hex/px — existing tokens only. This section is .section--surface (paper), so the
+     one red accent uses the on-paper AA-safe red. */
+  .review-card {
+    justify-content: flex-start;
+  }
+
+  /* The card's single red mark — a decorative quotation glyph (D-09 one accent). */
+  .review-quote {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 7vw, 72px);
+    line-height: 0.5;
+    color: var(--color-red-on-paper);
+    display: block;
+    margin-bottom: var(--space-xs);
+    user-select: none;
+  }
+
+  /* Verbatim review text — plain paragraph, never italicized or restyled. */
+  .review-body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--type-body);
+    line-height: var(--lh-body);
+    color: var(--color-ink-on-paper);
+    /* Preserve author line breaks; wrap long/unbroken strings gracefully (~500 char
+       cap enforced Discord-side, so no clamp/read-more needed — the card grows). */
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+
+  .review-meta {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+    color: color-mix(in srgb, var(--color-ink-on-paper) 66%, transparent);
+  }
+</style>
