@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: milestone_complete
-stopped_at: Milestone complete (Phase 06 was final phase)
-last_updated: 2026-07-08T08:41:08.753Z
-last_activity: 2026-07-07 -- Phase 06 execution started
+status: executing
+stopped_at: Phase 07 planned and verified (4 plans, 3 waves)
+last_updated: "2026-07-09T01:16:06.651Z"
+last_activity: 2026-07-09
 progress:
-  total_phases: 8
-  completed_phases: 6
-  total_plans: 32
-  completed_plans: 31
-  percent: 75
+  total_phases: 12
+  completed_phases: 8
+  total_plans: 36
+  completed_plans: 33
+  percent: 67
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** A visitor is visually impressed and reaches "Abrir Ticket" on Discord, while staff keep gallery/catalog current without touching code.
-**Current focus:** Milestone complete
+**Current focus:** Phase 07 — reviews-publishing-pipeline
 
 ## Current Position
 
-Phase: 06
-Plan: Not started
-Status: Milestone complete
-Last activity: 2026-07-08
+Phase: 07 (reviews-publishing-pipeline) — EXECUTING
+Plan: 2 of 4
+Status: Ready to execute
+Last activity: 2026-07-09
 
-Progress: [█████████░] 93%
+Progress: [█████████░] 92%
 
 ## Performance Metrics
 
@@ -72,6 +72,7 @@ Progress: [█████████░] 93%
 | Phase 05 P02 | 7min | 2 tasks | 2 files |
 | Phase 05 P03 | 10min | 3 tasks | 4 files |
 | Phase 05 P04 | 13min | 3 tasks | 3 files |
+| Phase 07 P01 | 14min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -140,6 +141,7 @@ Recent decisions affecting current work:
 - [Phase 05]: [05-05] PRODUCTION CUTOVER (user decision, 2026-07-04 — shipped as BETA, live during this plan): revamp is production NOW. Gallery reset to bot-published content ONLY (29 sample entries + the 1522761603005550683 orphan entry removed in a cleanup commit on revamp); no BETA badge.
 - [Phase 05]: [05-05] Deploy topology REPLACED (2nd deploy incident): actions/deploy-pages@v5 failed 3/4 deployments with an opaque backend "Deployment failed, try again later" (GitHub status green, domain/cert clean, environment branch policy allowed revamp). New topology: deploy.yml builds Astro → force-pushes dist/ to the `gh-pages` branch → Pages serves gh-pages via the legacy pipeline. Pages config now: build_type=legacy, source=gh-pages, cname nocturna-avatars.site, HTTPS enforced. Also fixed package-lock desync (@emnapi bundled optionals of @tailwindcss/oxide-wasm32-wasi): npm ci → npm install in CI. Website commits a129a0a / 9a71978 / 22db985 / 7d4923b (pushed). Rollback path: old site archived intact on main — flip Pages source back to main.
 - [Phase 05]: [05-05] LIVE VERIFICATION on the production domain: nocturna-avatars.site serves the revamp; /es/galeria returns 200 WITH bot photo 20260704-1522919244088741989-1.webp rendered — the full BOT-02 chain (Discord ✅ → atomic commit → auto build+deploy → live production site) verified end-to-end. Exceeds the original plan, which deferred live-domain verification to a later cutover.
+- [Phase 07]: [07-01] Reviews testimonials section (Reviews.astro) renders reviews.json at build time as figure/blockquote/figcaption cards; placed as .section--surface (paper) after the gallery Teaser, renders NOTHING when empty (deliberate divergence from the EmptyState pattern — an empty social-proof block weakens the conversion path). Review body via Astro auto-escaping ONLY (no set:html, T-07-01 XSS mitigation verified via escaped &lt;b&gt; build proof); author:null → localized Anonymous (T-07-02). reviews.json ships committed as [] (the 07-02 bot write-target) so builds never break. reviews i18n key added under es/en (no ui.ts change). Slice newest-9, localized month+year date via Intl.DateTimeFormat.
 
 ### Pending Todos
 
@@ -181,6 +183,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-07T16:14:05.546Z
-Stopped at: Phase 6 UI-SPEC approved
-Resume file: .planning/phases/06-asset-store/06-UI-SPEC.md
+Last session: 2026-07-09T01:16:06.637Z
+Stopped at: Phase 07 planned and verified (4 plans, 3 waves)
+Resume file: None

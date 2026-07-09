@@ -309,13 +309,13 @@ Plans:
 **Goal:** Client reviews written in the Discord reviews channel reach the public website as curated, bilingual-aware testimonials with zero code changes per review: a `ReviewsCog` in `nocturna-bot` collects (2-button named/anonymous embed + modal, plus plain typed reviews) and staff-✅-gates reviews, publishes them to `src/data/reviews.json` via the existing cross-repo transport, and the website renders a Refined Street Editorial testimonials section from that file — with anonymous submissions never leaking the submitter identity.
 **Requirements**: REV-01, REV-02, REV-03, REV-04, REV-05
 **Depends on:** Phase 6
-**Plans:** 4 plans
+**Plans:** 1/4 plans executed
 
 Plans:
 
 **Wave 1**
 
-- [ ] 07-01-PLAN.md — Website testimonials section: reviews.json ([]) + reviews i18n key + Reviews.astro (verbatim, escaped, empty→nothing) wired into the landing (website repo)
+- [x] 07-01-PLAN.md — Website testimonials section: reviews.json ([]) + reviews i18n key + Reviews.astro (verbatim, escaped, empty→nothing) wired into the landing (website repo)
 - [ ] 07-02-PLAN.md — Bot foundation: reviews config block + separate reviews cursor + publish_review/remove_review transport (parallel thin path, gallery untouched) + tests (nocturna-bot repo)
 
 **Wave 2** *(blocked on 07-02)*
