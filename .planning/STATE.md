@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 
 ## Current Position
 
-Phase: 07 (reviews-publishing-pipeline) — EXECUTING
+Phase: 07 (reviews-publishing-pipeline) — COMPLETE
 Plan: 4 of 4
-Status: Phase complete — ready for verification
-Last activity: 2026-07-09
+Status: Phase 07 complete; quick task 260709-hm5 completed
+Last activity: 2026-07-09 - Completed quick task 260709-hm5: Limpiar landing (galeria duplicada) y tienda a Coming Soon
 
 Progress: [█████████░] 94%
 
@@ -174,6 +174,7 @@ Recent decisions affecting current work:
 |---|-------------|------|--------|-----------|
 | 260707-0q0 | 5 pre-phase-6 website todos: night background on Services+Terms, stronger hero searchlights/static, catalog items (Quest $15 / VTuber VRM $30 / Unitypackage $35), Terms ban disclaimer + block-04 reconcile, Discord popup store copy | 2026-07-07 | 9884c1a | [260707-0q0-ejecutar-5-todos-pendientes-del-sitio-we](./quick/260707-0q0-ejecutar-5-todos-pendientes-del-sitio-we/) |
 | 260707-1yi | Post-deploy fixes for 260707-0q0: footer buried by fixed night backdrop (stacking-context bug, footer z-index fix) + card-style readability panels behind Services catalog and Terms text | 2026-07-07 | 204bcc6 | [260707-1yi-fix-footer-invisible-panel-de-fondo-para](./quick/260707-1yi-fix-footer-invisible-panel-de-fondo-para/) |
+| 260709-hm5 | Removed dead duplicate gallery Teaser from landing (superseded by FeaturedGallery since Phase 4, never cleaned up) + emptied store.json to trigger the existing Coming Soon empty state; code review also found and fixed dead D-14/D-16 scroll-choreography code (marquee/parallax) targeting the removed Teaser's DOM hooks | 2026-07-09 | be8ef22 | [260709-hm5-limpiar-landing-galeria-duplicada-y-tien](./quick/260709-hm5-limpiar-landing-galeria-duplicada-y-tien/) |
 
 ## Deferred Items
 
