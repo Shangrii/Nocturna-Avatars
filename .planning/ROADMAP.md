@@ -338,7 +338,7 @@ Plans:
 **Goal:** Staff schedule weekly/monthly/one-off reminders from Discord with a fully custom message: a staff-gated `/recordatorio` command group (crear/listar/borrar/editar with autocomplete + multi-line modal) in a new `cogs/reminders.py`, the bot's first background scheduler (`tasks.loop`) firing mention-line + branded-embed reminders with seeded RSVP reactions and `@everyone` suppressed, persisted in SQLite across restarts with a grace-window "⏰ atrasado" catch-up — 100% bot-side in `nocturna-bot`, no website changes.
 **Requirements**: D-01…D-16 (CONTEXT.md locked-decision set; no formal REQ-IDs mapped)
 **Depends on:** Phase 7
-**Plans:** 2/4 plans executed
+**Plans:** 3/4 plans executed
 
 Plans:
 
@@ -349,7 +349,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 — consumes CRUD + pure helpers)*
 
-- [ ] 08-03-PLAN.md — RemindersCog: staff-gated /recordatorio crear (params + modal), scheduler loop + delivery (mentions/embed/reactions/atrasado), bot.py wiring
+- [x] 08-03-PLAN.md — RemindersCog: staff-gated /recordatorio crear (params + modal), scheduler loop + delivery (mentions/embed/reactions/atrasado), bot.py wiring
 
 **Wave 3** *(blocked on 08-03 — shares cogs/reminders.py)*
 
