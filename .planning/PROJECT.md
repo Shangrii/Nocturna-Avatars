@@ -93,4 +93,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-08 after Phase 6 completion (asset store live: catalog + quick-view + purchase cart)*
+*Last updated: 2026-07-10 after Phase 8 completion (staff-gated /recordatorio reminders: weekly/monthly/one-off scheduler with custom messages, SQLite persistence, atrasado catch-up — verified 18/18 after gap closure)*
