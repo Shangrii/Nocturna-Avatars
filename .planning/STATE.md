@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 8 context gathered
-last_updated: "2026-07-10T04:35:11.340Z"
+last_updated: "2026-07-10T04:50:17.014Z"
 last_activity: 2026-07-10
 progress:
   total_phases: 12
   completed_phases: 9
   total_plans: 40
-  completed_plans: 37
+  completed_plans: 38
   percent: 75
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 8 (bot-reminders-command) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-07-10
 
-Progress: [█████████░] 93%
+Progress: [██████████] 95%
 
 ## Performance Metrics
 
@@ -76,6 +76,7 @@ Progress: [█████████░] 93%
 | Phase 07 P02 | 12min | 2 tasks tasks | 5 files files |
 | Phase 07 P03 | ~18min | 2 tasks | 3 files |
 | Phase 08 P01 | 12min | 2 tasks tasks | 4 files files |
+| Phase 08 P02 | 5min | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -148,6 +149,7 @@ Recent decisions affecting current work:
 - [Phase 07-02]: Reviews transport reuses the gallery Git Data API machinery via a parallel thin path (lowest regression risk): extracted generic _fetch_json(repo,branch,path) + _commit_with_retry gained an optional fetch= callable defaulting to gallery — gallery byte-for-byte unchanged, full test_github_publish.py suite still green (103 bot tests pass).
 - [Phase 07-02]: reviews.json keyed+deduped by Discord message id (entry['id']) — no filename parsing (reviews have no images); author:null preserved verbatim by the transport (anonymity enforced upstream in the cog); separate reviews_state cursor table in core/db.py, independent of gallery_state.
 - [Phase 07-03]: cogs/reviews.py ReviewsCog mirrors the gallery cog minus images (nocturna-bot 76fe5de + 34d9598). Divergence: reviews do NOT gate on staff AUTHOR (a review comes from a client) — only the ✅/🌙 REACTOR is staff-gated (REVIEWS_STAFF_ROLE_IDS). Author/text routed through ONE seam (_review_author_and_text → (display_name, text) | (None, "")) so 07-04 adds the anonymous 2-button embed without touching _publish. _is_published keys by exact message-id string (prefix non-collision). Orphan reconcile removes ONLY on discord.NotFound (T-07-06 mass-remove guard). bot.py loads cogs.reviews + fail-fasts on missing REVIEWS_CHANNEL_ID. Bot suite 143 passed (was 103; +40 cog tests). REV-03 complete; REV-02 still needs 07-04 (2-button embed).
+- [Phase 08]: [08-02] cogs/reminders.py ships the pure scheduler core (nocturna-bot 1c1b860 test -> 77471c4 feat, TDD): next_weekly/monthly/oneoff_fire build local wall times via zoneinfo.ZoneInfo then astimezone(UTC), never fixed offsets; next_monthly recomputes from (year,month)+calendar.monthrange clamp (Feb 28/29, Apr 30), never +30-day drift. classify_fire -> ontime/late/skip (D-13, grace 6h). compute_next('oneoff') returns stored next_fire UNCHANGED (scheduler deletes one-off after firing, D-16). No cog class/modal/tasks.loop/setup yet (deferred 08-03). 22 unit tests; full bot suite 186 passed (was 164).
 
 ### Pending Todos
 
@@ -190,6 +192,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-10T04:34:16.121Z
+Last session: 2026-07-10T04:45:10.358Z
 Stopped at: Phase 8 context gathered
 Resume file: None
