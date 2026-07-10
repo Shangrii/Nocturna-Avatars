@@ -95,6 +95,12 @@ None. All acceptance criteria met on first run: gate count 6, `autocomplete(None
 - Phase 8's single failed verification truth (D-02 autocomplete boundary) is closed; the /recordatorio surface honors one uniform trust level across every db-reading path.
 - No blockers introduced. Scope held strictly to the one gap — none of the 5 WARNING / 5 INFO 08-REVIEW findings were touched.
 
+## Self-Check: PASSED
+
+- FOUND: `.planning/phases/08-.../08-05-SUMMARY.md`
+- FOUND: bot commit `2207a69` (fix — Task 1)
+- FOUND: bot commit `813cc89` (test — Task 2)
+
 ---
 *Phase: 08-bot-reminders-command-weekly-monthly-scheduled-reminders-wit*
 *Completed: 2026-07-10*
