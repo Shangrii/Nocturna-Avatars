@@ -41,8 +41,16 @@ Out of scope: any change to the store UI/components (Phase 6 shipped them; the s
 - **D-12:** **Field ownership + snapshot merge**: the sync only writes fields it owns (price, images, checkoutUrl, nsfw, date …) and only when the Jinxxy value changed vs. the last-synced snapshot (stored in the bot's SQLite). Name/description become staff-owned once edited (three-way compare against the snapshot detects staff edits). `license`, `details`, `updates`, `storefronts`, and `featured` are **100% staff-owned — the sync never touches them**.
 - **D-13:** **First run imports the entire Jinxxy storefront**, linking products already present in `store.json` (match by `checkoutUrl`) so nothing duplicates and existing hand-edits survive. The web store is a complete mirror from day one.
 
+### Feasibility gate resolution (2026-07-10, live API probe during plan-phase)
+- **D-14:** The D-04 gate was resolved with a live authenticated probe against the real NocturnaAssets store: the Creator API **cannot** provide product `images` or `description` (absent from live responses; no sub-endpoints). User decision: **reduced sync + Discord attach** — the phase proceeds API-only with a reduced field set instead of pausing.
+- **D-15:** `images` and `description` are **staff-supplied via Discord**: the new-product announcement prompts staff to attach images/description through the bot, which writes them into `store.json` via the same cross-repo transport. Until supplied, the card uses a branded placeholder image and a placeholder/empty description. Both fields are 100% staff-owned (extends D-12); D-10's verbatim copy now applies to `name` only.
+- **D-16:** `nsfw` maps from the live-confirmed `restrictions` array: `nsfw = "CONTENT_MATURE" in restrictions` (D-08 resolved). `visibility` enum observed: `"PUBLISHED"`.
+- **D-17:** The API's `url` field is a **slug**, not a URL. `checkoutUrl` is constructed as `https://jinxxy.com/{store_username}/{slug}` (store_username from `/me`; format verified live). D-13 first-run matching compares against this constructed form.
+- **D-18:** Announcement channel (deploy-time env value, user-provided): `JINXXY_ANNOUNCE_CHANNEL_ID=1525202600738295818`.
+
 ### Claude's Discretion
 - `editor`/`category` field mapping and defaults (D-09).
+- Design of the Discord attach flow for images/description (D-15): reply-based vs command-based, validation, image hosting path (reuse the gallery photo pipeline conventions where sensible).
 - Exact poll interval within 6–12h, `/sync` command name/registration style (follow repo's Spanish app-command conventions).
 - Announcement embed design and copy (D-06).
 - Exact ownership boundary per field and snapshot/merge implementation (within D-12's guarantees), including how a "staff edited this field" state is detected/stored.

@@ -62,7 +62,24 @@ No REQUIREMENTS.md IDs were mapped to this phase in the ROADMAP (the phase descr
 
 > This is the single most important output of this research. Read it before planning.
 
-### Verdict: CONDITIONAL BLOCK
+### ✅ GATE RESOLVED (2026-07-10) — live probe executed during plan-phase
+
+The recommended authenticated probe was run against the real NocturnaAssets store (API key with `products_read` scope; test product `3938443562705749387` "Cahuama"). Results override the spec-based rows below where they conflict:
+
+- **CONFIRMED ABSENT:** `images` and `description` do not exist in the live `GET /products/{id}` response. Guessed sub-endpoints (`/products/{id}/images`, `/media`, `/files`, `/description`) all return 404. The spec-based gap is real.
+- **CONFIRMED PRESENT — D-08 resolved:** `restrictions: ["CONTENT_MATURE"]` — the mature flag exists. Map `nsfw = "CONTENT_MATURE" in restrictions`.
+- **`visibility` enum observed:** `"PUBLISHED"` on a live listing — drives D-11 add/remove.
+- **⚠ URL CORRECTION:** the live `url` field is a **slug** (`"cahuama"`), not a full URL. The public listing lives at `https://jinxxy.com/{store_username}/{slug}` (verified 200; `/{store_username}/products/{slug}` is 404). `checkoutUrl` must be **constructed** from the `/me` username + slug, and D-13 first-run matching must compare against that constructed form.
+- **Other live fields:** `base_price: 0` + `currency_code: "USD"`, `category: "avatar-props"`, `tags: ["vrchat"]`, `type[]`, `gender`, `platforms[]`, `versions[]`, `created_at`/`updated_at`. List endpoint pagination (`results`/`page`/`cursor_count`/`page_count`) works as documented.
+
+**USER DECISION (resolves the gate): Reduced sync + Discord attach.**
+1. The bot mirrors every API-available field (name, price, checkoutUrl, category, nsfw, date, add/remove by visibility/presence).
+2. `images` and `description` are **staff-supplied through Discord**: when a new product syncs, the announcement embed prompts staff to attach product images and description via the bot (reply/command flow — design at planner's discretion, consistent with existing cog conventions); the bot writes them into `store.json` through the same cross-repo transport. Until supplied, the card uses a branded placeholder image and empty/placeholder description.
+3. These two fields remain 100% staff-owned per D-12 — the sync never overwrites them.
+
+**Deploy-time value from the user:** `JINXXY_ANNOUNCE_CHANNEL_ID=1525202600738295818` (store-update announcements channel).
+
+### Original verdict (pre-probe): CONDITIONAL BLOCK
 
 The Creator API **can enumerate the storefront** and provides *most* required fields, but the **documented contract omits product images and product descriptions** — two fields the store card and quick-view cannot render without. Under strict D-04 ("API or nothing"), a missing image + missing description for every new product is a gate failure. The gate resolves one of three ways depending on a single authenticated probe (see recommendation).
 
