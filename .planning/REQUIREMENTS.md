@@ -76,6 +76,13 @@ _Added 2026-07-08 during Phase 7 planning (phase captured post-milestone from th
 - [x] **REV-04**: Anonymous reviews store `author: null` and never expose the submitter's identity in the repo or any public bot message
 - [x] **REV-05**: The reviews commit transport reuses the existing cross-repo GitHub transport without regressing gallery publishing; a bot restart converges state via backfill + orphan reconcile
 
+### Store Auto-Sync (nocturna-bot repo + website data)
+
+_Added 2026-07-10 during Phase 9 planning. Promotes v2 **STORE2-03** to active; scope reduced to API-available fields + a Discord attach flow per the live-probe decisions D-14/D-15 (the Creator API exposes no product images/descriptions)._
+
+- [ ] **STORE-SYNC-01**: A `JinxxyCog` in `nocturna-bot` keeps `src/data/store.json` mirrored to the Jinxxy storefront via the Creator API — on a 6–12h scheduled poll plus a staff-gated `/tienda sync` — adding newly-published products, propagating changes to the sync-owned fields (`name`, `price`, `checkoutUrl`, `category`, `nsfw`, `date`), and removing delisted products, using a three-way snapshot merge that never overwrites staff-edited fields and never mass-removes on an API failure; each change is committed cross-repo (preserving the `_comment` schema doc) and announced to `JINXXY_ANNOUNCE_CHANNEL_ID`, while errors go to logs only
+- [ ] **STORE-SYNC-02**: Staff supply the two non-API fields — product images and description — through a Discord attach flow (`/tienda medios`) that optimizes attachments to WebP, commits them under `public/store/`, and writes `images[]` / `description{es,en}` into the matching `store.json` product; until supplied the card renders the branded placeholder and an empty description. These two fields stay 100% staff-owned — the sync never overwrites them
+
 ## v2 Requirements
 
 ### Experimental Extras
@@ -91,7 +98,7 @@ _Added 2026-07-08 during Phase 7 planning (phase captured post-milestone from th
 
 - **STORE2-01**: Category filters on the store grid (schema-ready via the `category` field; UI deferred until inventory grows)
 - **STORE2-02**: Discord bot × Jinxxy integration (Creator API/webhooks for sales pings + split accounting) — future bot phase
-- **STORE2-03**: Creator API price/product sync between Jinxxy and `store.json` (manual sync in v1)
+- **STORE2-03**: Creator API price/product sync between Jinxxy and `store.json` (manual sync in v1) — _promoted to active in Phase 9 as STORE-SYNC-01/02 (reduced scope per D-14/D-15)._
 
 ### Reviews (v2)
 
@@ -106,7 +113,9 @@ _Added 2026-07-08 during Phase 7 planning (phase captured post-milestone from th
 | On-site payment processing / self-hosted checkout | Payments, tax, chargebacks, and digital fulfillment are pushed to Jinxxy (merchant of record); the site is a bilingual catalog + link-out (Phase 6, D-01/D-05/D-06) |
 | Auto-translating gallery captions | Captions come from staff in one language, shown as written |
 | Auto-translating review text | Reviews are user-generated and rendered verbatim in their original language (Phase 7 CONTEXT) |
-| Reworking existing bot cogs (encoding/forum) | Only adding new cogs (photo cog Phase 5, reviews cog Phase 7) |
+| Auto-translating store listings | Jinxxy names/descriptions are copied verbatim into both locales; staff hand-polish (Phase 9, D-10) |
+| Scraping the Jinxxy storefront | "API or nothing" — the Creator API is the only data source (Phase 9, D-04) |
+| Reworking existing bot cogs (encoding/forum) | Only adding new cogs (photo cog Phase 5, reviews cog Phase 7, jinxxy cog Phase 9) |
 | Real 3D viewer in v1 | High weight/time; deferred to v2 |
 | Explicit NSFW on Jinxxy listings | Jinxxy banned explicit content Mar 2026; explicit products use SFW listings with real content in the delivered file (Phase 6, D-04) — a staff/content constraint |
 
@@ -156,14 +165,16 @@ Which phases cover which requirements. Populated during roadmap creation.
 | REV-03 | Phase 7 | Complete (07-03) |
 | REV-04 | Phase 7 | Planned (07-02, 07-04) |
 | REV-05 | Phase 7 | Planned (07-02, 07-03, 07-04) |
+| STORE-SYNC-01 | Phase 9 | Planned (09-01, 09-02, 09-03, 09-04, 09-05) |
+| STORE-SYNC-02 | Phase 9 | Planned (09-06) |
 
 **Coverage:**
-- v1 requirements: 40 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6 + STORE 5 + REV 5)
-- Mapped to phases: 40 ✓
+- v1 requirements: 42 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6 + STORE 5 + REV 5 + STORE-SYNC 2)
+- Mapped to phases: 42 ✓
 - Unmapped: 0 ✓
 
-> Note: an earlier draft footer counted "27 v1"; the enumerated v1 list contained 30, then 35 after the Phase 6 STORE-* requirements were added (2026-07-07), then 40 after the Phase 7 REV-* requirements were added (2026-07-08).
+> Note: an earlier draft footer counted "27 v1"; the enumerated v1 list contained 30, then 35 after the Phase 6 STORE-* requirements were added (2026-07-07), then 40 after the Phase 7 REV-* requirements were added (2026-07-08), then 42 after the Phase 9 STORE-SYNC-* requirements were added (2026-07-10).
 
 ---
 *Requirements defined: 2026-06-28*
-*Last updated: 2026-07-08 — REV-01…REV-05 added during Phase 7 planning; REV-04/REV-05 traceability reconciled during 07 revision*
+*Last updated: 2026-07-10 — STORE-SYNC-01/02 added during Phase 9 planning (promotes v2 STORE2-03; reduced scope per D-14/D-15)*

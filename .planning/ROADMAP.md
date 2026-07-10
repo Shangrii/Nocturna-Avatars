@@ -277,6 +277,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 6. Asset Store | 3/3 | Complete   | 2026-07-08 |
 | 7. Reviews Publishing Pipeline | 4/4 | Complete   | 2026-07-09 |
 | 8. Bot Reminders Command | 5/5 | Complete   | 2026-07-10 |
+| 9. Jinxxy Store Auto-Sync | 0/6 | Planned   | 2026-07-10 |
 
 ### Phase 6: Asset Store
 
@@ -362,13 +363,40 @@ Plans:
 
 ### Phase 9: Jinxxy Store Auto-Sync — new Jinxxy uploads appear in the asset store automatically
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** New Jinxxy uploads appear in the website asset store automatically: a `JinxxyCog` in `nocturna-bot` reads the storefront via the Creator API (scheduled 6–12h poll + staff `/tienda sync`), maps each product, three-way-merges it against a durable snapshot + the live `store.json` so staff hand-edits are never clobbered, and commits `store.json` cross-repo (preserving `_comment`) — adding new products, propagating price/name/category/nsfw/date changes, and removing delisted ones. Because the Creator API exposes no images or descriptions (live probe D-14), those two staff-owned fields are supplied through a Discord attach flow (`/tienda medios`); until supplied the card shows the branded placeholder. Store updates are announced Spanish-first; errors go to logs only (D-05).
+**Requirements**: STORE-SYNC-01, STORE-SYNC-02
 **Depends on:** Phase 8
-**Plans:** 0 plans
+**Success Criteria** (what must be TRUE):
 
+  1. A product published on Jinxxy appears in `store.json` (name, price, checkoutUrl, category, nsfw, date) on the next scheduled sync or a staff `/tienda sync`
+  2. A price/name/category change on Jinxxy propagates without overwriting staff-polished translations or staff-added images/description (three-way merge, D-12)
+  3. A product delisted on Jinxxy is removed from `store.json`; a transient API failure never mass-removes the storefront
+  4. Store updates (added/updated/removed) are announced in `JINXXY_ANNOUNCE_CHANNEL_ID`; no-change syncs are silent; errors are never posted to Discord (D-05)
+  5. Staff attach images + a bilingual description to a synced product via `/tienda medios`, which appear on its store card; until then the card shows the branded placeholder + empty description
+  6. The `_comment` schema doc and all staff-owned fields survive every sync commit; a bot restart converges state (startup reconcile)
+
+**Plans**: 6 plans
 Plans:
-- [ ] TBD (run /gsd-plan-phase 9 to break down)
+
+**Wave 1**
+
+- [ ] 09-01-PLAN.md — Foundation: Jinxxy config block + `WEBSITE_STORE_JSON`/`WEBSITE_STORE_IMAGE_DIR` + `.env.example` docs + `core/db.py` `init_store_state()` snapshot table (nocturna-bot repo)
+- [ ] 09-02-PLAN.md — `core/jinxxy_api.py` Creator API read client (paginated list + detail + `/me` + 429 backoff + key-header-only) + HTTP-mocked tests (TDD)
+- [ ] 09-03-PLAN.md — `core/store_sync.py` pure `map_product` + three-way ownership merge (D-12) + whole-store reconcile + https guard + unit tests (TDD)
+
+**Wave 2** *(blocked on 09-01 — needs the store config paths)*
+
+- [ ] 09-04-PLAN.md — Extend `core/github_publish.py`: object-aware `_fetch_store`/`sync_store` (preserves `_comment`, no-op guard) + `attach_store_media` (image blobs + description) + HTTP-mocked tests (TDD)
+
+**Wave 3** *(blocked on 09-01/02/03/04 — the cog wires all cores)*
+
+- [ ] 09-05-PLAN.md — `cogs/jinxxy.py` JinxxyCog: `@tasks.loop` poll + staff-gated `/tienda sync` + `_run_sync` orchestration + announce embed (D-05/D-06) + startup reconcile + removal-safety + `bot.py` wiring/fail-fast
+
+**Wave 4** *(blocked on 09-04/09-05 — shares cogs/jinxxy.py + uses attach_store_media)*
+
+- [ ] 09-06-PLAN.md — D-15 attach flow: `/tienda medios` (product autocomplete + attachment/description params → Pillow optimize → `attach_store_media`) + `JINXXY_DEPLOY.md` cinema-host deploy notes + key-rotation reminder
+
+**Notes**: **Cross-repo, bot-side.** ~90% is reuse of Phases 5/7/8 (cross-repo transport, SQLite state idiom, `tasks.loop` scheduler, staff gate). Three genuinely-new mechanics get their own plans: the Jinxxy API client (09-02), the object-aware `store.json` transport (09-04 — `store.json` is an OBJECT, not an array like gallery/reviews), and the three-way ownership merge (09-03). Scope reduced by the live API probe (D-14/D-15): the API has no images/descriptions, so those two staff-owned fields are supplied via a Discord attach flow (09-06) instead of pausing the phase. Website repo gets **zero component changes** — only `store.json` is written, by the bot at runtime; the Phase-6 store UI already renders it and falls back to the placeholder when `images` is empty. Deploying to the `cinema` systemd host (git pull + restart) + creating the Creator API key are manual user steps, documented in `JINXXY_DEPLOY.md`, not automated phase scope. **Security:** the API key pasted during planning must be rotated after the phase ships (noted in the deploy doc).
 
 ### Phase 10: Editor Profile Pages — carrd-style template editor for Nocturna editors, bot-driven
 
