@@ -23,7 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Asset Store** - Dedicated store to sell Nocturna's own VRChat assets via a REAL shopping cart + hosted checkout, reusing the Phase 3.1 cart engine
  (completed 2026-07-08)
 - [x] **Phase 7: Reviews Publishing Pipeline** - Discord reviews channel → staff-gated `reviews.json` publishing (2-button anon/named embed + ✅/🌙 reactions) → landing testimonials section (completed 2026-07-09)
-- [ ] **Phase 8: Bot Reminders Command** - Weekly/monthly scheduled reminders with custom message — cog in `nocturna-bot`
+- [x] **Phase 8: Bot Reminders Command** - Weekly/monthly scheduled reminders with custom message — cog in `nocturna-bot` (completed 2026-07-10)
 - [ ] **Phase 9: Jinxxy Store Auto-Sync** - New Jinxxy uploads appear in the asset store (`store.json`) automatically
 - [ ] **Phase 10: Editor Profile Pages** - Carrd-style profile pages per Nocturna editor, bot-driven publishing
 
@@ -338,7 +338,7 @@ Plans:
 **Goal:** Staff schedule weekly/monthly/one-off reminders from Discord with a fully custom message: a staff-gated `/recordatorio` command group (crear/listar/borrar/editar with autocomplete + multi-line modal) in a new `cogs/reminders.py`, the bot's first background scheduler (`tasks.loop`) firing mention-line + branded-embed reminders with seeded RSVP reactions and `@everyone` suppressed, persisted in SQLite across restarts with a grace-window "⏰ atrasado" catch-up — 100% bot-side in `nocturna-bot`, no website changes.
 **Requirements**: D-01…D-16 (CONTEXT.md locked-decision set; no formal REQ-IDs mapped)
 **Depends on:** Phase 7
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 
@@ -353,7 +353,7 @@ Plans:
 
 **Wave 3** *(blocked on 08-03 — shares cogs/reminders.py)*
 
-- [ ] 08-04-PLAN.md — Management surface: listar + autocomplete-driven borrar + full editar (partial params + pre-filled modal)
+- [x] 08-04-PLAN.md — Management surface: listar + autocomplete-driven borrar + full editar (partial params + pre-filled modal)
 
 ### Phase 9: Jinxxy Store Auto-Sync — new Jinxxy uploads appear in the asset store automatically
 
