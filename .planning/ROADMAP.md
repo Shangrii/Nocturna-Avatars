@@ -276,6 +276,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 5. Photo-Publishing Bot Cog | 5/5 | Complete   | 2026-07-04 |
 | 6. Asset Store | 3/3 | Complete   | 2026-07-08 |
 | 7. Reviews Publishing Pipeline | 4/4 | Complete   | 2026-07-09 |
+| 8. Bot Reminders Command | 4/4 + 1 gap-closure (08-05) pending | Gap closure | 2026-07-10 |
 
 ### Phase 6: Asset Store
 
@@ -338,7 +339,7 @@ Plans:
 **Goal:** Staff schedule weekly/monthly/one-off reminders from Discord with a fully custom message: a staff-gated `/recordatorio` command group (crear/listar/borrar/editar with autocomplete + multi-line modal) in a new `cogs/reminders.py`, the bot's first background scheduler (`tasks.loop`) firing mention-line + branded-embed reminders with seeded RSVP reactions and `@everyone` suppressed, persisted in SQLite across restarts with a grace-window "⏰ atrasado" catch-up — 100% bot-side in `nocturna-bot`, no website changes.
 **Requirements**: D-01…D-16 (CONTEXT.md locked-decision set; no formal REQ-IDs mapped)
 **Depends on:** Phase 7
-**Plans:** 4/4 plans complete
+**Plans:** 4/4 complete + 1 gap-closure plan (08-05) pending
 
 Plans:
 
@@ -354,6 +355,10 @@ Plans:
 **Wave 3** *(blocked on 08-03 — shares cogs/reminders.py)*
 
 - [x] 08-04-PLAN.md — Management surface: listar + autocomplete-driven borrar + full editar (partial params + pre-filled modal)
+
+**Gap closure** *(from 08-VERIFICATION.md — closes failed D-02 truth / 08-REVIEW.md CR-01)*
+
+- [ ] 08-05-PLAN.md — Gate borrar/editar autocomplete on _is_staff (returns [] for non-staff, no db read) + tests; closes the autocomplete authorization-bypass / reminder-enumeration leak
 
 ### Phase 9: Jinxxy Store Auto-Sync — new Jinxxy uploads appear in the asset store automatically
 
