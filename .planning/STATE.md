@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-07-11T03:17:12.903Z"
+stopped_at: Completed 09-05-PLAN.md
+last_updated: "2026-07-11T07:29:40.058Z"
 last_activity: 2026-07-11
 progress:
   total_phases: 12
   completed_phases: 10
   total_plans: 47
-  completed_plans: 44
+  completed_plans: 46
   percent: 83
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 09 (jinxxy-store-auto-sync-new-jinxxy-uploads-appear-in-the-asse) — EXECUTING
-Plan: 5 of 6
+Plan: 6 of 6
 Status: Ready to execute
 Last activity: 2026-07-11
 
-Progress: [█████████░] 94%
+Progress: [██████████] 98%
 
 ## Performance Metrics
 
@@ -86,6 +86,7 @@ Progress: [█████████░] 94%
 | Phase 09 P09-02 | 15min | 2 tasks | 2 files |
 | Phase 09 P09-03 | 4min | 2 tasks | 2 files |
 | Phase 09 P09-04 | 5min | 2 tasks | 2 files |
+| Phase 09 P09-05 | 18min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -166,6 +167,7 @@ Recent decisions affecting current work:
 - [Phase 09]: [09-02] core/jinxxy_api.py Creator API read client (nocturna-bot 035f8c8 test -> 2c38d36 feat, TDD): get_me/list_all_products/get_product on api.creators.jinxxy.com/v1, mirroring github_publish.py — header-only x-api-key read at call time (never logged; error text names only exc.__class__.__name__), explicit (10,60)s timeout, one typed JinxxyAPIError. Pagination loops page 1..page_count (limit=100, sort created_at desc); bounded 429 backoff honors Retry-After/X-RateLimit-Reset then exponential, cap 4 retries. Any failure RAISES — never returns [] (T-09-05 removal-safety). No discord import. Bot suite 248 passed (was 234).
 - [Phase 09]: [09-03] core/store_sync.py pure sync core (nocturna-bot, TDD): map_product builds only sync-owned fields (D-09/10/16/17), checkoutUrl constructed from slug, nsfw from CONTENT_MATURE; three_way_merge implements D-12 (keep-current when Jinxxy unchanged / take-live when staff untouched / staff-wins-name on conflict), carries staff-owned keys from current NEVER live, seeds new products with a slug id + present-but-empty description {es:'',en:''} for StorePage.astro L71-78 filter; reconcile_store computes add/update/remove + changed flag, removes only when a snapshot existed (T-09-09), preserves current-only staff entries; editor carried from current (D-09). stdlib-only pure module. 24 tests; bot suite 272 (was 248).
 - [Phase 09]: [09-04] Object-aware store.json transport: _fetch_json_object/_fetch_store read the {_comment,products} dict; sync_store rewrites only products (preserving _comment + staff top-level keys, T-09-10) with a defensive no-op guard (T-09-12); attach_store_media writes staff images (public/store blobs -> /store/<f> paths) + description into the matched product by checkoutUrl in ONE commit (D-15). _fetch_json/gallery/reviews untouched.
+- [Phase 09]: [09-05] cogs/jinxxy.py JinxxyCog wires the 3 cores into one controller (nocturna-bot 347e1b7 test -> 1fab2fe/0023f54/2c58bd4 feat, Task 1 TDD): a @tasks.loop(JINXXY_POLL_HOURS) poll + staff-gated /tienda sync + on_ready run-once reconcile all delegate to one _run_sync (get_me -> list_all_products+get_product -> map_product https-guarded -> reconcile_store vs snapshot+live store.json -> sync_store only when changed -> snapshot upsert/delete). Removal-safety by ORDER: enumeration raises JinxxyAPIError before any commit/removal (T-09-15). D-05 errors-never-Discord: _run_sync propagates, poll @error logs+restarts, on_ready catches+logs, /tienda sync catches+ephemeral-reply-to-invoker; announce embed (0xC0192C) is store-news-only, silent on no-change (D-06). _snapshot_from_row re-expands the DB row to the live map_product shape so unchanged Jinxxy compares equal. bot.py loads cogs.jinxxy + JINXXY_API_KEY fail-fast; help.py untouched. Bot suite 303 passed (was 288).
 
 ### Pending Todos
 
@@ -208,6 +210,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-11T03:16:57.264Z
-Stopped at: Completed 09-01-PLAN.md
+Last session: 2026-07-11T07:29:40.045Z
+Stopped at: Completed 09-05-PLAN.md
 Resume file: None

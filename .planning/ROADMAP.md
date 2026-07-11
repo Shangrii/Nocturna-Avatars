@@ -277,7 +277,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 6. Asset Store | 3/3 | Complete   | 2026-07-08 |
 | 7. Reviews Publishing Pipeline | 4/4 | Complete   | 2026-07-09 |
 | 8. Bot Reminders Command | 5/5 | Complete   | 2026-07-10 |
-| 9. Jinxxy Store Auto-Sync | 3/6 | In Progress|  |
+| 9. Jinxxy Store Auto-Sync | 5/6 | In Progress|  |
 
 ### Phase 6: Asset Store
 
@@ -386,11 +386,11 @@ Plans:
 
 **Wave 2** *(blocked on 09-01 — needs the store config paths)*
 
-- [ ] 09-04-PLAN.md — Extend `core/github_publish.py`: object-aware `_fetch_store`/`sync_store` (preserves `_comment`, no-op guard) + `attach_store_media` (image blobs + description) + HTTP-mocked tests (TDD)
+- [x] 09-04-PLAN.md — Extend `core/github_publish.py`: object-aware `_fetch_store`/`sync_store` (preserves `_comment`, no-op guard) + `attach_store_media` (image blobs + description) + HTTP-mocked tests (TDD)
 
 **Wave 3** *(blocked on 09-01/02/03/04 — the cog wires all cores)*
 
-- [ ] 09-05-PLAN.md — `cogs/jinxxy.py` JinxxyCog: `@tasks.loop` poll + staff-gated `/tienda sync` + `_run_sync` orchestration + announce embed (D-05/D-06) + startup reconcile + removal-safety + `bot.py` wiring/fail-fast
+- [x] 09-05-PLAN.md — `cogs/jinxxy.py` JinxxyCog: `@tasks.loop` poll + staff-gated `/tienda sync` + `_run_sync` orchestration + announce embed (D-05/D-06) + startup reconcile + removal-safety + `bot.py` wiring/fail-fast
 
 **Wave 4** *(blocked on 09-04/09-05 — shares cogs/jinxxy.py + uses attach_store_media)*
 
