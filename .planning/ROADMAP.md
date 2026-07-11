@@ -277,7 +277,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 6. Asset Store | 3/3 | Complete   | 2026-07-08 |
 | 7. Reviews Publishing Pipeline | 4/4 | Complete   | 2026-07-09 |
 | 8. Bot Reminders Command | 5/5 | Complete   | 2026-07-10 |
-| 9. Jinxxy Store Auto-Sync | 2/6 | In Progress|  |
+| 9. Jinxxy Store Auto-Sync | 3/6 | In Progress|  |
 
 ### Phase 6: Asset Store
 
@@ -382,7 +382,7 @@ Plans:
 
 - [x] 09-01-PLAN.md — Foundation: Jinxxy config block + `WEBSITE_STORE_JSON`/`WEBSITE_STORE_IMAGE_DIR` + `.env.example` docs + `core/db.py` `init_store_state()` snapshot table (nocturna-bot repo)
 - [x] 09-02-PLAN.md — `core/jinxxy_api.py` Creator API read client (paginated list + detail + `/me` + 429 backoff + key-header-only) + HTTP-mocked tests (TDD)
-- [ ] 09-03-PLAN.md — `core/store_sync.py` pure `map_product` + three-way ownership merge (D-12) + whole-store reconcile + https guard + unit tests (TDD)
+- [x] 09-03-PLAN.md — `core/store_sync.py` pure `map_product` + three-way ownership merge (D-12) + whole-store reconcile + https guard + unit tests (TDD)
 
 **Wave 2** *(blocked on 09-01 — needs the store config paths)*
 
