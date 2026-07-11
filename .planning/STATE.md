@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 09-05-PLAN.md
-last_updated: "2026-07-11T19:23:46.620Z"
+status: executing
+stopped_at: Completed 09-09-PLAN.md
+last_updated: "2026-07-11T19:39:51.421Z"
 last_activity: 2026-07-11
 progress:
   total_phases: 12
-  completed_phases: 10
+  completed_phases: 11
   total_plans: 51
-  completed_plans: 50
-  percent: 83
+  completed_plans: 51
+  percent: 92
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 09 (jinxxy-store-auto-sync-new-jinxxy-uploads-appear-in-the-asse) — EXECUTING
-Plan: 09-09 complete (gap closure) of 10
-Status: Ready to execute 09-10
+Plan: 10-09 complete (gap closure) of 10
+Status: Ready to execute
 Last activity: 2026-07-11
 
-Progress: [██████████] 98%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -91,6 +91,7 @@ Progress: [██████████] 98%
 | Phase 09 P09-07 | 14min | 2 tasks | 4 files |
 | Phase 09 P09-08 | 12min | 1 tasks | 2 files |
 | Phase 09 P09-09 | 14min | 3 tasks | 2 files |
+| Phase 09 P09-10 | 11min | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -175,6 +176,7 @@ Recent decisions affecting current work:
 - [Phase 09]: [09-05] cogs/jinxxy.py JinxxyCog wires the 3 cores into one controller (nocturna-bot 347e1b7 test -> 1fab2fe/0023f54/2c58bd4 feat, Task 1 TDD): a @tasks.loop(JINXXY_POLL_HOURS) poll + staff-gated /tienda sync + on_ready run-once reconcile all delegate to one _run_sync (get_me -> list_all_products+get_product -> map_product https-guarded -> reconcile_store vs snapshot+live store.json -> sync_store only when changed -> snapshot upsert/delete). Removal-safety by ORDER: enumeration raises JinxxyAPIError before any commit/removal (T-09-15). D-05 errors-never-Discord: _run_sync propagates, poll @error logs+restarts, on_ready catches+logs, /tienda sync catches+ephemeral-reply-to-invoker; announce embed (0xC0192C) is store-news-only, silent on no-change (D-06). _snapshot_from_row re-expands the DB row to the live map_product shape so unchanged Jinxxy compares equal. bot.py loads cogs.jinxxy + JINXXY_API_KEY fail-fast; help.py untouched. Bot suite 303 passed (was 288).
 - [Phase 09]: [09-09] Gap closure (WR-03 BLOCKER + CR-01/WR-02/WR-04/WR-06, TDD, nocturna-bot 1f48cc4..eaad5ef): cogs/jinxxy.py::_run_sync hardened. (WR-03) the db.upsert_store_snapshot loop moved OUT of `if result["changed"]:` — the durable snapshot advances to live truth on EVERY successful sync, so a no-change cycle where Jinxxy already matches a staff value can't leave a stale snapshot that later misreads a staff edit as a both-changed conflict and reverts it (defends D-12); sync_store + delete_store_snapshot stay inside the changed branch (D-06). (WR-06) unkeyable current entries (non-dict / missing/falsy checkoutUrl / duplicate key) collected into `unkeyed` and re-appended to result["products"] verbatim so a hand-added/malformed staff product is never dropped. (CR-01) on_ready listener + _synced_once flag removed — the poll loop's own immediate first tick is the sole startup reconcile (no double sync/announce on boot). (WR-02) _POLL_RETRY_COOLDOWN_S=900 awaited in _on_poll_error before self._poll.restart() so a persistent outage can't tight-loop both APIs. (WR-04) _run_sync raises JinxxyAPIError when me.get("username") is falsy, before enumeration — prevents a malformed /me building jinxxy.com//slug keys and mass-rewriting every checkoutUrl (routes through T-09-15 removal-safety abort). +7 net tests; full bot suite 331 passed (was 324). Closes STORE-SYNC-01 defects from 09-REVIEW.
 - [Phase ?]: [09-08] Gap closure (CR-02, TDD, nocturna-bot ef7a89f test -> a96224a fix): core/jinxxy_api.py::_retry_delay rewritten into three _MAX_BACKOFF(=60s)-clamped branches — Retry-After as a delta, X-RateLimit-Reset as a unix epoch converted via - time.time() (was mis-read as a raw delta = ~56yr sleep), fallback exponential also clamped. A server-controlled 429 hint can no longer freeze the asyncio.to_thread sync/poll for decades (STORE-SYNC-01). +6 tests; full bot suite 324 passed (was 322).
+- [Phase 09-10]: Cog error-handling gap closure (WR-07/08/09): /tienda medios optimize wrapped in broad try/except (PIL bomb/non-image), /tienda sync guard broadened to except Exception (map_product KeyError/TypeError), _announce channel.send wrapped in except discord.HTTPException — every command failure now hits the D-05 ephemeral/log-only path. 337 bot tests pass (+6).
 
 ### Pending Todos
 
@@ -217,6 +219,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-11T19:11:17.758Z
+Last session: 2026-07-11T19:37:16.324Z
 Stopped at: Completed 09-09-PLAN.md
 Resume file: None
