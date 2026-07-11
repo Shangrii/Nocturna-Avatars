@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-07-11T02:55:48.994Z"
+last_updated: "2026-07-11T03:07:25.232Z"
 last_activity: 2026-07-11
 progress:
   total_phases: 12
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 09 (jinxxy-store-auto-sync-new-jinxxy-uploads-appear-in-the-asse) — EXECUTING
-Plan: 3 of 6
+Plan: 4 of 6
 Status: Ready to execute
 Last activity: 2026-07-11
 
@@ -84,6 +84,7 @@ Progress: [█████████░] 91%
 | Phase 08 P08-05 | 8min | 2 tasks | 2 files |
 | Phase 09 P01 | 9 | 2 tasks | 3 files |
 | Phase 09 P09-02 | 15min | 2 tasks | 2 files |
+| Phase 09 P09-03 | 4min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -162,6 +163,7 @@ Recent decisions affecting current work:
 - [Phase 08]: [08-05] D-02 staff boundary now enforced on the borrar/editar autocomplete channel: both callbacks gate on _is_staff and return [] for a non-staff caller (CR-01 fix, T-08-06) before any db.list_reminders() read — closing the reminder-enumeration gap. Autocomplete cannot send an ephemeral reply so the non-staff response is [] not 'Sin permisos.'. Bot suite 234 passed (was 232). nocturna-bot 2207a69 fix, 813cc89 test.
 - [Phase ?]: [09-01] Jinxxy config block + store_snapshot table (checkout_url PK, D-13) added to nocturna-bot config.py/core/db.py; JINXXY_STAFF_ROLE_IDS falls back to GALLERY_STAFF_ROLE_IDS; durable last-synced snapshot enables the D-12 three-way merge across restarts; all writes ?-placeholder (T-09-02); no cog wiring yet (deferred 09-05)
 - [Phase 09]: [09-02] core/jinxxy_api.py Creator API read client (nocturna-bot 035f8c8 test -> 2c38d36 feat, TDD): get_me/list_all_products/get_product on api.creators.jinxxy.com/v1, mirroring github_publish.py — header-only x-api-key read at call time (never logged; error text names only exc.__class__.__name__), explicit (10,60)s timeout, one typed JinxxyAPIError. Pagination loops page 1..page_count (limit=100, sort created_at desc); bounded 429 backoff honors Retry-After/X-RateLimit-Reset then exponential, cap 4 retries. Any failure RAISES — never returns [] (T-09-05 removal-safety). No discord import. Bot suite 248 passed (was 234).
+- [Phase 09]: [09-03] core/store_sync.py pure sync core (nocturna-bot, TDD): map_product builds only sync-owned fields (D-09/10/16/17), checkoutUrl constructed from slug, nsfw from CONTENT_MATURE; three_way_merge implements D-12 (keep-current when Jinxxy unchanged / take-live when staff untouched / staff-wins-name on conflict), carries staff-owned keys from current NEVER live, seeds new products with a slug id + present-but-empty description {es:'',en:''} for StorePage.astro L71-78 filter; reconcile_store computes add/update/remove + changed flag, removes only when a snapshot existed (T-09-09), preserves current-only staff entries; editor carried from current (D-09). stdlib-only pure module. 24 tests; bot suite 272 (was 248).
 
 ### Pending Todos
 
@@ -204,6 +206,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-11T02:55:26.260Z
+Last session: 2026-07-11T03:07:01.481Z
 Stopped at: Completed 09-01-PLAN.md
 Resume file: None
