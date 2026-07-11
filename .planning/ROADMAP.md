@@ -24,7 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
  (completed 2026-07-08)
 - [x] **Phase 7: Reviews Publishing Pipeline** - Discord reviews channel → staff-gated `reviews.json` publishing (2-button anon/named embed + ✅/🌙 reactions) → landing testimonials section (completed 2026-07-09)
 - [x] **Phase 8: Bot Reminders Command** - Weekly/monthly scheduled reminders with custom message — cog in `nocturna-bot` (completed 2026-07-10)
-- [ ] **Phase 9: Jinxxy Store Auto-Sync** - New Jinxxy uploads appear in the asset store (`store.json`) automatically
+- [x] **Phase 9: Jinxxy Store Auto-Sync** - New Jinxxy uploads appear in the asset store (`store.json`) automatically (completed 2026-07-11)
 - [ ] **Phase 10: Editor Profile Pages** - Carrd-style profile pages per Nocturna editor, bot-driven publishing
 
 ## Phase Details
@@ -277,7 +277,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 6. Asset Store | 3/3 | Complete   | 2026-07-08 |
 | 7. Reviews Publishing Pipeline | 4/4 | Complete   | 2026-07-09 |
 | 8. Bot Reminders Command | 5/5 | Complete   | 2026-07-10 |
-| 9. Jinxxy Store Auto-Sync | 5/6 | In Progress|  |
+| 9. Jinxxy Store Auto-Sync | 6/6 | Complete   | 2026-07-11 |
 
 ### Phase 6: Asset Store
 
@@ -394,7 +394,7 @@ Plans:
 
 **Wave 4** *(blocked on 09-04/09-05 — shares cogs/jinxxy.py + uses attach_store_media)*
 
-- [ ] 09-06-PLAN.md — D-15 attach flow: `/tienda medios` (product autocomplete + attachment/description params → Pillow optimize → `attach_store_media`) + `JINXXY_DEPLOY.md` cinema-host deploy notes + key-rotation reminder
+- [x] 09-06-PLAN.md — D-15 attach flow: `/tienda medios` (product autocomplete + attachment/description params → Pillow optimize → `attach_store_media`) + `JINXXY_DEPLOY.md` cinema-host deploy notes + key-rotation reminder
 
 **Notes**: **Cross-repo, bot-side.** ~90% is reuse of Phases 5/7/8 (cross-repo transport, SQLite state idiom, `tasks.loop` scheduler, staff gate). Three genuinely-new mechanics get their own plans: the Jinxxy API client (09-02), the object-aware `store.json` transport (09-04 — `store.json` is an OBJECT, not an array like gallery/reviews), and the three-way ownership merge (09-03). Scope reduced by the live API probe (D-14/D-15): the API has no images/descriptions, so those two staff-owned fields are supplied via a Discord attach flow (09-06) instead of pausing the phase. Website repo gets **zero component changes** — only `store.json` is written, by the bot at runtime; the Phase-6 store UI already renders it and falls back to the placeholder when `images` is empty. Deploying to the `cinema` systemd host (git pull + restart) + creating the Creator API key are manual user steps, documented in `JINXXY_DEPLOY.md`, not automated phase scope. **Security:** the API key pasted during planning must be rotated after the phase ships (noted in the deploy doc).
 
