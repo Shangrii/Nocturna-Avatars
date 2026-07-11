@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
+status: verifying
 stopped_at: Completed 09-05-PLAN.md
-last_updated: "2026-07-11T19:12:32.416Z"
+last_updated: "2026-07-11T19:23:46.620Z"
 last_activity: 2026-07-11
 progress:
   total_phases: 12
   completed_phases: 10
   total_plans: 51
-  completed_plans: 49
+  completed_plans: 50
   percent: 83
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 09 (jinxxy-store-auto-sync-new-jinxxy-uploads-appear-in-the-asse) — EXECUTING
-Plan: 10-07 complete (gap closure) of 10
-Status: Ready to execute
+Plan: 09-09 complete (gap closure) of 10
+Status: Ready to execute 09-10
 Last activity: 2026-07-11
 
-Progress: [██████████] 96%
+Progress: [██████████] 98%
 
 ## Performance Metrics
 
@@ -90,6 +90,7 @@ Progress: [██████████] 96%
 | Phase 09 P06 | 4 min | 2 tasks | 3 files |
 | Phase 09 P09-07 | 14min | 2 tasks | 4 files |
 | Phase 09 P09-08 | 12min | 1 tasks | 2 files |
+| Phase 09 P09-09 | 14min | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -172,6 +173,7 @@ Recent decisions affecting current work:
 - [Phase 09]: [09-04] Object-aware store.json transport: _fetch_json_object/_fetch_store read the {_comment,products} dict; sync_store rewrites only products (preserving _comment + staff top-level keys, T-09-10) with a defensive no-op guard (T-09-12); attach_store_media writes staff images (public/store blobs -> /store/<f> paths) + description into the matched product by checkoutUrl in ONE commit (D-15). _fetch_json/gallery/reviews untouched.
 - [Phase 09]: [09-07] Gap closure (WR-01 + WR-05, TDD, nocturna-bot 4ebdadb..39f89e0): (WR-01) core/github_publish.py::_sync_store_sync.build_tree now re-grafts the staff-owned key set (store_sync.STAFF_OWNED + editor) from the FRESHLY-fetched store, keyed by checkoutUrl, onto each pre-computed product before writing — a concurrent /tienda medios attach landing inside the commit window is never reverted; sync-owned fields still come from the merged list so Jinxxy changes propagate; new products absent from the fresh fetch written verbatim. Imported core.store_sync (stdlib-only, no cycle) for a single source of truth on STAFF_OWNED. (WR-05) core/store_sync.py::three_way_merge guard broadened from 'snapshot is None and current is None' to 'current is None' so a staff-deleted-but-still-live product resurrects a COMPLETE entry from live (mapped live + string id + present-but-empty description) instead of appending an empty/partial {}; reconcile still buckets it as updated not added. +5 tests; full bot suite 318 passed (was 313). Closes STORE-SYNC-01/02, T-09-07-01/02.
 - [Phase 09]: [09-05] cogs/jinxxy.py JinxxyCog wires the 3 cores into one controller (nocturna-bot 347e1b7 test -> 1fab2fe/0023f54/2c58bd4 feat, Task 1 TDD): a @tasks.loop(JINXXY_POLL_HOURS) poll + staff-gated /tienda sync + on_ready run-once reconcile all delegate to one _run_sync (get_me -> list_all_products+get_product -> map_product https-guarded -> reconcile_store vs snapshot+live store.json -> sync_store only when changed -> snapshot upsert/delete). Removal-safety by ORDER: enumeration raises JinxxyAPIError before any commit/removal (T-09-15). D-05 errors-never-Discord: _run_sync propagates, poll @error logs+restarts, on_ready catches+logs, /tienda sync catches+ephemeral-reply-to-invoker; announce embed (0xC0192C) is store-news-only, silent on no-change (D-06). _snapshot_from_row re-expands the DB row to the live map_product shape so unchanged Jinxxy compares equal. bot.py loads cogs.jinxxy + JINXXY_API_KEY fail-fast; help.py untouched. Bot suite 303 passed (was 288).
+- [Phase 09]: [09-09] Gap closure (WR-03 BLOCKER + CR-01/WR-02/WR-04/WR-06, TDD, nocturna-bot 1f48cc4..eaad5ef): cogs/jinxxy.py::_run_sync hardened. (WR-03) the db.upsert_store_snapshot loop moved OUT of `if result["changed"]:` — the durable snapshot advances to live truth on EVERY successful sync, so a no-change cycle where Jinxxy already matches a staff value can't leave a stale snapshot that later misreads a staff edit as a both-changed conflict and reverts it (defends D-12); sync_store + delete_store_snapshot stay inside the changed branch (D-06). (WR-06) unkeyable current entries (non-dict / missing/falsy checkoutUrl / duplicate key) collected into `unkeyed` and re-appended to result["products"] verbatim so a hand-added/malformed staff product is never dropped. (CR-01) on_ready listener + _synced_once flag removed — the poll loop's own immediate first tick is the sole startup reconcile (no double sync/announce on boot). (WR-02) _POLL_RETRY_COOLDOWN_S=900 awaited in _on_poll_error before self._poll.restart() so a persistent outage can't tight-loop both APIs. (WR-04) _run_sync raises JinxxyAPIError when me.get("username") is falsy, before enumeration — prevents a malformed /me building jinxxy.com//slug keys and mass-rewriting every checkoutUrl (routes through T-09-15 removal-safety abort). +7 net tests; full bot suite 331 passed (was 324). Closes STORE-SYNC-01 defects from 09-REVIEW.
 - [Phase ?]: [09-08] Gap closure (CR-02, TDD, nocturna-bot ef7a89f test -> a96224a fix): core/jinxxy_api.py::_retry_delay rewritten into three _MAX_BACKOFF(=60s)-clamped branches — Retry-After as a delta, X-RateLimit-Reset as a unix epoch converted via - time.time() (was mis-read as a raw delta = ~56yr sleep), fallback exponential also clamped. A server-controlled 429 hint can no longer freeze the asyncio.to_thread sync/poll for decades (STORE-SYNC-01). +6 tests; full bot suite 324 passed (was 322).
 
 ### Pending Todos
@@ -216,5 +218,5 @@ Items acknowledged and carried forward from previous milestone close:
 ## Session Continuity
 
 Last session: 2026-07-11T19:11:17.758Z
-Stopped at: Completed 09-05-PLAN.md
+Stopped at: Completed 09-09-PLAN.md
 Resume file: None
