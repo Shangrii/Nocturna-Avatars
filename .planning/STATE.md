@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 9 context gathered
-last_updated: "2026-07-11T02:10:21.767Z"
-last_activity: 2026-07-11 -- Phase 9 planning complete
+stopped_at: Completed 09-01-PLAN.md
+last_updated: "2026-07-11T02:41:33.700Z"
+last_activity: 2026-07-11
 progress:
   total_phases: 12
   completed_phases: 10
   total_plans: 47
-  completed_plans: 41
+  completed_plans: 42
   percent: 83
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** A visitor is visually impressed and reaches "Abrir Ticket" on Discord, while staff keep gallery/catalog current without touching code.
-**Current focus:** Phase 09 — jinxxy store auto sync new jinxxy uploads appear in the asse
+**Current focus:** Phase 09 — jinxxy-store-auto-sync-new-jinxxy-uploads-appear-in-the-asse
 
 ## Current Position
 
-Phase: 09
-Plan: Not started
+Phase: 09 (jinxxy-store-auto-sync-new-jinxxy-uploads-appear-in-the-asse) — EXECUTING
+Plan: 2 of 6
 Status: Ready to execute
-Last activity: 2026-07-11 -- Phase 9 planning complete
+Last activity: 2026-07-11
 
-Progress: [██████████] 100%
+Progress: [█████████░] 89%
 
 ## Performance Metrics
 
@@ -82,6 +82,7 @@ Progress: [██████████] 100%
 | Phase 08 P04 | 18 | 2 tasks | 2 files |
 | Phase 08 P04 | 18min | 2 tasks | 2 files |
 | Phase 08 P08-05 | 8min | 2 tasks | 2 files |
+| Phase 09 P01 | 9 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -158,6 +159,7 @@ Recent decisions affecting current work:
 - [Phase 08]: [08-03] cogs/reminders.py Discord layer (nocturna-bot 72bba89..f5f937c, TDD): RemindersCog(/recordatorio GroupCog) + staff-gated crear (validate-then-send_modal, no defer) + MensajeModal (add + edit_id branch) + the repo's FIRST background scheduler @tasks.loop(minutes=1). Loop body delegates to a plain _process_due(now) so the tick is unit-testable (fixture neutralizes db.init_reminders + tasks.Loop.start). advance-after-send locked (rare miss beats double ping; D-13 grace covers it); a one-off is deleted even on 'skip' (D-16). _deliver: mention line + brand embed + AllowedMentions(everyone=False,roles=True,users=True) + seeded reactions (bad emoji skipped). bot.py loads cogs.reminders + REMINDERS_TZ ZoneInfo fail-fast. Bot suite 212 passed (was 186). D-01/02/03/05/06/09/10/11/12/13/14/16 covered; listar/borrar/editar deferred to 08-04.
 - [Phase 08]: [08-04] /recordatorio surface complete (crear/listar/borrar/editar) in nocturna-bot (58756e6..f849187, TDD). _reminder_choices is the repo's FIRST @app_commands.autocomplete: live db.list_reminders -> case-insensitive name filter -> 'name — schedule_summary' Choices, capped at 25, label capped 100 (D-04/D-05). editar merges None-defaulted params over the stored row, RE-VALIDATES the merged schedule (T-08-04 — a partial edit can't persist an inconsistent schedule), recomputes next_fire_utc, and opens MensajeModal pre-filled with the stored body (D-15). MensajeModal edit_id branch finalized to persist all merged fields via db.update_reminder; borrar/editar id parse is int()-in-try/except + get_reminder existence check (T-08-10). Bot suite 232 passed (was 212).
 - [Phase 08]: [08-05] D-02 staff boundary now enforced on the borrar/editar autocomplete channel: both callbacks gate on _is_staff and return [] for a non-staff caller (CR-01 fix, T-08-06) before any db.list_reminders() read — closing the reminder-enumeration gap. Autocomplete cannot send an ephemeral reply so the non-staff response is [] not 'Sin permisos.'. Bot suite 234 passed (was 232). nocturna-bot 2207a69 fix, 813cc89 test.
+- [Phase ?]: [09-01] Jinxxy config block + store_snapshot table (checkout_url PK, D-13) added to nocturna-bot config.py/core/db.py; JINXXY_STAFF_ROLE_IDS falls back to GALLERY_STAFF_ROLE_IDS; durable last-synced snapshot enables the D-12 three-way merge across restarts; all writes ?-placeholder (T-09-02); no cog wiring yet (deferred 09-05)
 
 ### Pending Todos
 
@@ -200,6 +202,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-10T21:05:30.603Z
-Stopped at: Phase 9 context gathered
-Resume file: .planning/phases/09-jinxxy-store-auto-sync-new-jinxxy-uploads-appear-in-the-asse/09-CONTEXT.md
+Last session: 2026-07-11T02:41:33.157Z
+Stopped at: Completed 09-01-PLAN.md
+Resume file: None
