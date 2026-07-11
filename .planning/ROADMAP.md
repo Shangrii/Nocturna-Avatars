@@ -178,7 +178,7 @@ Plans:
   5. The tiers (Penumbra/Umbra/Eclipse) coexist with the configurator — quick picks vs. custom builds
   6. The configurator works in both ES and EN
 
-**Plans**: 6 plans
+**Plans**: 11 plans (6 original + 09-07..09-11 gap closure)
 Plans:
 **Wave 1**
 
@@ -375,7 +375,7 @@ Plans:
   5. Staff attach images + a bilingual description to a synced product via `/tienda medios`, which appear on its store card; until then the card shows the branded placeholder + empty description
   6. The `_comment` schema doc and all staff-owned fields survive every sync commit; a bot restart converges state (startup reconcile)
 
-**Plans**: 6 plans
+**Plans**: 11 plans (6 original + 09-07..09-11 gap closure)
 Plans:
 
 **Wave 1**
@@ -395,6 +395,10 @@ Plans:
 **Wave 4** *(blocked on 09-04/09-05 — shares cogs/jinxxy.py + uses attach_store_media)*
 
 - [x] 09-06-PLAN.md — D-15 attach flow: `/tienda medios` (product autocomplete + attachment/description params → Pillow optimize → `attach_store_media`) + `JINXXY_DEPLOY.md` cinema-host deploy notes + key-rotation reminder
+
+**Gap Closure** *(from re-verification — plans 09-07..09-10 executed; 09-11 closes the final blocker)*
+
+- [ ] 09-11-PLAN.md — Fix `_run_sync` snapshot-before-commit regression (CR-01 second-pass): reorder so the gated `github_publish.sync_store` commit runs BEFORE the unconditional snapshot upsert loop, so a `GitHubPublishError` skips the snapshot advance and the change is retried next cycle (WR-03 + removal-safety preserved) + regression test (nocturna-bot repo)
 
 **Notes**: **Cross-repo, bot-side.** ~90% is reuse of Phases 5/7/8 (cross-repo transport, SQLite state idiom, `tasks.loop` scheduler, staff gate). Three genuinely-new mechanics get their own plans: the Jinxxy API client (09-02), the object-aware `store.json` transport (09-04 — `store.json` is an OBJECT, not an array like gallery/reviews), and the three-way ownership merge (09-03). Scope reduced by the live API probe (D-14/D-15): the API has no images/descriptions, so those two staff-owned fields are supplied via a Discord attach flow (09-06) instead of pausing the phase. Website repo gets **zero component changes** — only `store.json` is written, by the bot at runtime; the Phase-6 store UI already renders it and falls back to the placeholder when `images` is empty. Deploying to the `cinema` systemd host (git pull + restart) + creating the Creator API key are manual user steps, documented in `JINXXY_DEPLOY.md`, not automated phase scope. **Security:** the API key pasted during planning must be rotated after the phase ships (noted in the deploy doc).
 
