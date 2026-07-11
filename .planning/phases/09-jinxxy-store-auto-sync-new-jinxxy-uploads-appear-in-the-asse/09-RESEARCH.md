@@ -412,17 +412,12 @@ def map_product(detail: dict, owner_name: str) -> dict:
 | A5 | `requests`-in-`to_thread` is the preferred client style (vs `aiohttp`) | Standard Stack | LOW — both work; consistency/testability argument only. |
 | A6 | Each sync commit to `revamp` triggers exactly one Pages rebuild | Architecture / Pitfall 2 | LOW — verified from deploy.yml `on:push branches:[revamp]`. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Does the live API return undocumented images/description?** (A1)
-   - What we know: OpenAPI 1.2.2 omits both; only `profile_image` and license `description` exist.
-   - What's unclear: whether the runtime response carries fields the hand-maintained spec dropped.
-   - Recommendation: authenticated probe (see Feasibility Gate) before planning — this is the gate.
-2. **What does `restrictions[]` contain, and does `visibility` gate storefront membership?** (A2)
-   - What we know: both fields exist; enums undocumented.
-   - Recommendation: capture real values in the same probe; use `visibility` for D-11 add/remove; map `nsfw` from `restrictions[]` only if a clear marker appears.
-3. **`editor` mapping:** `/me` gives the store owner, but individual products have no per-product seller/creator field. If Nocturna credits *different* editors per asset, the API can't distinguish them.
-   - Recommendation (D-09 discretion): default `editor` to the store owner from `/me`; leave it staff-editable. Acceptable since `editor` is display-only.
+1. **Does the live API return undocumented images/description?** (A1) — **RESOLVED 2026-07-10 by the live probe (see `### ✅ GATE RESOLVED` above): NO.** Both are absent from the live detail response; sub-endpoints 404. User re-scoped to reduced sync + Discord attach (D-14/D-15).
+   - What we knew: OpenAPI 1.2.2 omits both; only `profile_image` and license `description` exist.
+2. **What does `restrictions[]` contain, and does `visibility` gate storefront membership?** (A2) — **RESOLVED by the same probe:** `restrictions: ["CONTENT_MATURE"]` observed live → `nsfw = "CONTENT_MATURE" in restrictions` (D-16); `visibility: "PUBLISHED"` observed on a live listing → drives D-11 add/remove.
+3. **`editor` mapping** — **RESOLVED as Claude's Discretion per CONTEXT D-09:** default `editor` to the store owner from `/me`; leave it staff-editable. Acceptable since `editor` is display-only (no per-product creator field exists in the API).
 
 ## Environment Availability
 
