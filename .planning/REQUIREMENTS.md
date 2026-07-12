@@ -165,7 +165,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | REV-03 | Phase 7 | Complete (07-03) |
 | REV-04 | Phase 7 | Planned (07-02, 07-04) |
 | REV-05 | Phase 7 | Planned (07-02, 07-03, 07-04) |
-| STORE-SYNC-01 | Phase 9 | Complete (09-01..09-05, gap closure 09-07..09-12) |
+| STORE-SYNC-01 | Phase 9 | Complete (09-01..09-05, gap closure 09-07..09-13) |
 | STORE-SYNC-02 | Phase 9 | Complete (09-06, editor write path 09-12) |
 
 **Coverage:**
