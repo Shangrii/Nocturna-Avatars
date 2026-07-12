@@ -24,7 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
  (completed 2026-07-08)
 - [x] **Phase 7: Reviews Publishing Pipeline** - Discord reviews channel → staff-gated `reviews.json` publishing (2-button anon/named embed + ✅/🌙 reactions) → landing testimonials section (completed 2026-07-09)
 - [x] **Phase 8: Bot Reminders Command** - Weekly/monthly scheduled reminders with custom message — cog in `nocturna-bot` (completed 2026-07-10)
-- [x] **Phase 9: Jinxxy Store Auto-Sync** - New Jinxxy uploads appear in the asset store (`store.json`) automatically (completed 2026-07-11)
+- [ ] **Phase 9: Jinxxy Store Auto-Sync** - New Jinxxy uploads appear in the asset store (`store.json`) automatically (UAT gap closure in progress — 09-12/09-13)
 - [ ] **Phase 10: Editor Profile Pages** - Carrd-style profile pages per Nocturna editor, bot-driven publishing
 
 ## Phase Details
@@ -277,7 +277,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 6. Asset Store | 3/3 | Complete   | 2026-07-08 |
 | 7. Reviews Publishing Pipeline | 4/4 | Complete   | 2026-07-09 |
 | 8. Bot Reminders Command | 5/5 | Complete   | 2026-07-10 |
-| 9. Jinxxy Store Auto-Sync | 11/11 | Complete   | 2026-07-12 |
+| 9. Jinxxy Store Auto-Sync | 11/13 | In Progress |  |
 
 ### Phase 6: Asset Store
 
@@ -375,7 +375,7 @@ Plans:
   5. Staff attach images + a bilingual description to a synced product via `/tienda medios`, which appear on its store card; until then the card shows the branded placeholder + empty description
   6. The `_comment` schema doc and all staff-owned fields survive every sync commit; a bot restart converges state (startup reconcile)
 
-**Plans**: 11 plans (6 original + 09-07..09-11 gap closure)
+**Plans**: 13 plans (6 original + 09-07..09-11 gap closure + 09-12/09-13 UAT gap closure)
 Plans:
 
 **Wave 1**
@@ -400,7 +400,12 @@ Plans:
 
 - [x] 09-11-PLAN.md — Fix `_run_sync` snapshot-before-commit regression (CR-01 second-pass): reorder so the gated `github_publish.sync_store` commit runs BEFORE the unconditional snapshot upsert loop, so a `GitHubPublishError` skips the snapshot advance and the change is retried next cycle (WR-03 + removal-safety preserved) + regression test (nocturna-bot repo)
 
-**Notes**: **Cross-repo, bot-side.** ~90% is reuse of Phases 5/7/8 (cross-repo transport, SQLite state idiom, `tasks.loop` scheduler, staff gate). Three genuinely-new mechanics get their own plans: the Jinxxy API client (09-02), the object-aware `store.json` transport (09-04 — `store.json` is an OBJECT, not an array like gallery/reviews), and the three-way ownership merge (09-03). Scope reduced by the live API probe (D-14/D-15): the API has no images/descriptions, so those two staff-owned fields are supplied via a Discord attach flow (09-06) instead of pausing the phase. Website repo gets **zero component changes** — only `store.json` is written, by the bot at runtime; the Phase-6 store UI already renders it and falls back to the placeholder when `images` is empty. Deploying to the `cinema` systemd host (git pull + restart) + creating the Creator API key are manual user steps, documented in `JINXXY_DEPLOY.md`, not automated phase scope. **Security:** the API key pasted during planning must be rotated after the phase ships (noted in the deploy doc).
+**UAT Gap Closure** *(from 09-HUMAN-UAT.md — two minor improvement gaps found in live testing 2026-07-11)*
+
+- [ ] 09-12-PLAN.md — GAP-1: staff-gated `/tienda editar` command to set a product's `editor` (credited creator) + object-aware `set_store_editor` transport (preserves `_comment`, no-op guard, input validation, D-05 log-only) + merge regression pinning `editor` stays staff-owned (nocturna-bot repo)
+- [ ] 09-13-PLAN.md — GAP-2: rewrite the public announce embed to English + engaging + visual (store-page link `nocturna-avatars.site/en/store`, per-product `checkoutUrl` links, best-effort thumbnail from `images[0]`) — overrides D-05 Spanish-first for STORE announcements only; error handling stays log-only (nocturna-bot repo)
+
+**Notes**: **Cross-repo, bot-side.** ~90% is reuse of Phases 5/7/8 (cross-repo transport, SQLite state idiom, `tasks.loop` scheduler, staff gate). Three genuinely-new mechanics get their own plans: the Jinxxy API client (09-02), the object-aware `store.json` transport (09-04 — `store.json` is an OBJECT, not an array like gallery/reviews), and the three-way ownership merge (09-03). Scope reduced by the live API probe (D-14/D-15): the API has no images/descriptions, so those two staff-owned fields are supplied via a Discord attach flow (09-06) instead of pausing the phase. Website repo gets **zero component changes** — only `store.json` is written, by the bot at runtime; the Phase-6 store UI already renders it and falls back to the placeholder when `images` is empty. Deploying to the `cinema` systemd host (git pull + restart) + creating the Creator API key are manual user steps, documented in `JINXXY_DEPLOY.md`, not automated phase scope. **Security:** the API key pasted during planning must be rotated after the phase ships (noted in the deploy doc). **UAT gap closure (09-12/09-13):** two minor improvement gaps surfaced during live UAT (2026-07-11) — no Discord path to set `editor`, and the announce embed needed to be English/engaging/visual for the public channel — closed without touching the locked merge ownership contract.
 
 ### Phase 10: Editor Profile Pages — carrd-style template editor for Nocturna editors, bot-driven
 
