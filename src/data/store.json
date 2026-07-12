@@ -14,9 +14,11 @@
       "date": "2026-07-10",
       "id": "cahuama",
       "description": {
-        "es": "",
-        "en": ""
-      }
+        "es": "Una caguama improvisada"
+      },
+      "images": [
+        "/store/cahuama-1.webp"
+      ]
     }
   ]
 }
