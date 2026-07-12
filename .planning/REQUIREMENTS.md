@@ -165,8 +165,8 @@ Which phases cover which requirements. Populated during roadmap creation.
 | REV-03 | Phase 7 | Complete (07-03) |
 | REV-04 | Phase 7 | Planned (07-02, 07-04) |
 | REV-05 | Phase 7 | Planned (07-02, 07-03, 07-04) |
-| STORE-SYNC-01 | Phase 9 | Planned (09-01, 09-02, 09-03, 09-04, 09-05) |
-| STORE-SYNC-02 | Phase 9 | Planned (09-06) |
+| STORE-SYNC-01 | Phase 9 | Complete (09-01..09-05, gap closure 09-07..09-12) |
+| STORE-SYNC-02 | Phase 9 | Complete (09-06, editor write path 09-12) |
 
 **Coverage:**
 - v1 requirements: 42 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6 + STORE 5 + REV 5 + STORE-SYNC 2)

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 09-11-PLAN.md
-last_updated: "2026-07-11T23:56:19.150Z"
-last_activity: 2026-07-11 -- Phase 09 execution started
+stopped_at: Completed 09-12-PLAN.md
+last_updated: "2026-07-12T05:20:00.000Z"
+last_activity: 2026-07-12 -- Completed 09-12 (/tienda editar + set_store_editor, GAP-1)
 progress:
   total_phases: 12
   completed_phases: 10
-  total_plans: 52
-  completed_plans: 51
-  percent: 83
+  total_plans: 55
+  completed_plans: 53
+  percent: 84
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 09 (jinxxy-store-auto-sync-new-jinxxy-uploads-appear-in-the-asse) — EXECUTING
-Plan: 1 of 11
-Status: Executing Phase 09
-Last activity: 2026-07-11 -- Phase 09 execution started
+Plan: 12 of 13 complete (09-13 English visual announce override remaining)
+Status: 09-12 complete — GAP-1 closed
+Last activity: 2026-07-12 -- Completed 09-12 (/tienda editar + set_store_editor, GAP-1)
 
 Progress: [██████████] 100%
 
@@ -92,6 +92,7 @@ Progress: [██████████] 100%
 | Phase 09 P09-08 | 12min | 1 tasks | 2 files |
 | Phase 09 P09-09 | 14min | 3 tasks | 2 files |
 | Phase 09 P09-10 | 11min | 3 tasks | 2 files |
+| Phase 09 P09-12 | 14min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -178,6 +179,7 @@ Recent decisions affecting current work:
 - [Phase ?]: [09-08] Gap closure (CR-02, TDD, nocturna-bot ef7a89f test -> a96224a fix): core/jinxxy_api.py::_retry_delay rewritten into three _MAX_BACKOFF(=60s)-clamped branches — Retry-After as a delta, X-RateLimit-Reset as a unix epoch converted via - time.time() (was mis-read as a raw delta = ~56yr sleep), fallback exponential also clamped. A server-controlled 429 hint can no longer freeze the asyncio.to_thread sync/poll for decades (STORE-SYNC-01). +6 tests; full bot suite 324 passed (was 322).
 - [Phase 09-10]: Cog error-handling gap closure (WR-07/08/09): /tienda medios optimize wrapped in broad try/except (PIL bomb/non-image), /tienda sync guard broadened to except Exception (map_product KeyError/TypeError), _announce channel.send wrapped in except discord.HTTPException — every command failure now hits the D-05 ephemeral/log-only path. 337 bot tests pass (+6).
 - [Phase 09-11]: Gap closure (CR-01 / 09-VERIFICATION truth #5 BLOCKER, TDD, nocturna-bot 901d902 test -> cf91348 fix): cogs/jinxxy.py::_run_sync tail reordered into (5) gated github_publish.sync_store commit FIRST, (6) unconditional db.upsert_store_snapshot loop SECOND, (7) gated db.delete_store_snapshot removals THIRD. Previously the WR-03 unconditional upsert ran BEFORE the commit, so a GitHubPublishError advanced the durable snapshot past a store.json that was never written — next cycle's three_way_merge read live_v==snap_v and permanently masked the un-committed price/name/category/nsfw/date change as "Jinxxy unchanged, staff edit wins." Now a raise skips the advance so the change is re-detected + retried next cycle (STORE-SYNC-01: transient GitHub failures go to logs only, never silent loss). WR-03 unconditional advance + removal-safety (T-09-11-03, removal gated + post-commit) both preserved. +1 regression test; full bot suite 338 passed (was 337). Closes the sole remaining Phase-9 blocker.
+- [Phase 09-12]: UAT GAP-1 closure (staff had no Discord path to set a product's `editor`, TDD, nocturna-bot a9d1a7b/82ac6a4 + 99a2f19/1530706): (Task 1) core/github_publish.py::set_store_editor/_set_store_editor_sync — object-aware editor-only read-modify-commit matched by checkoutUrl, mirrors _attach_store_media_sync MINUS the image-blob tree; preserves _comment + every other product/field byte-for-byte, raises GitHubPublishError on no match, no-ops (no commit/ref PATCH) when editor unchanged (T-09-24). Commit message is the FIXED `store: set editor for {checkout_url}` template — raw editor text NEVER interpolated (T-09-22). (Task 2) cogs/jinxxy.py::/tienda editar — staff gate FIRST (T-09-20) → validate BEFORE defer (strip, reject empty-after-strip / >100 chars / control-or-newline via `[\x00-\x1f\x7f]`, T-09-21) → set_store_editor commit → GitHubPublishError log-only + single ephemeral reply (D-05/T-09-23); @editar.autocomplete('producto') reuses _producto_choices ([] for non-staff). core/store_sync.py UNCHANGED — editor already staff-owned (absent from SYNC_OWNED) + grafted by sync_store's _GRAFT_KEYS (09-07); a merge regression pins editor survives a Jinxxy price change. +18 tests; full bot suite 356 passed (was 338). Closes STORE-SYNC-02 for editor. Cinema host needs git pull + systemd restart to surface /tienda editar.
 
 ### Pending Todos
 
@@ -220,6 +222,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-11T19:37:16.324Z
-Stopped at: Completed 09-11-PLAN.md
+Last session: 2026-07-12T05:20:00.000Z
+Stopped at: Completed 09-12-PLAN.md
 Resume file: None
