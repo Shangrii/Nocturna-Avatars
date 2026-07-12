@@ -1,4 +1,22 @@
 {
   "_comment": "Nocturna asset store catalog (D-13 locked schema). STAFF: add or edit products HERE — no code changes needed. Each product needs: id (unique), name{es,en}, description{es,en}, price (plain number string, NO $ — the site adds '$ … USD'), images[] (Jinxxy CDN URLs; images[0] is the card thumbnail), checkoutUrl (the PRIMARY Jinxxy listing — https:// only; this is the main 'Comprar en Jinxxy' button), editor (credited creator, plain text), category, nsfw (true blurs the card), featured (true pins it first + red badge), date (YYYY-MM-DD, newest shown first after featured). OPTIONAL long-form quick-view sections (each {es,en}, omit or leave empty to hide the section): license (usage terms), details (specs/formats), updates (changelog). Use \\n inside these for line breaks. OPTIONAL storefronts (array): extra stores BESIDES the primary Jinxxy link — each entry is { \"platform\": \"booth\", \"url\": \"https://…\" } (https:// only). They render as extra 'Comprar en {platform}' buttons in the quick-view below the primary buttons; nothing extra shows if the array is absent/empty. Known platform display names (jinxxy, booth, gumroad, payhip) are pretty-printed automatically; any other platform key is title-cased. To add a store later, just append to a product's storefronts array — no code change. Example: \"storefronts\": [{ \"platform\": \"booth\", \"url\": \"https://booth.pm/en/items/123\" }]. Replace the example jinxxy-cdn.com URLs below with real listing images + links.",
-  "products": []
+  "products": [
+    {
+      "checkoutUrl": "https://jinxxy.com/NocturnaAssets/cahuama",
+      "name": {
+        "es": "Cahuama",
+        "en": "Cahuama"
+      },
+      "price": "0",
+      "category": "avatar-props",
+      "editor": "",
+      "nsfw": true,
+      "date": "2026-07-10",
+      "id": "cahuama",
+      "description": {
+        "es": "",
+        "en": ""
+      }
+    }
+  ]
 }
