@@ -409,10 +409,46 @@ Plans:
 
 ### Phase 10: Editor Profile Pages — carrd-style template editor for Nocturna editors, bot-driven
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** Each Nocturna editor has a public carrd/guns.lol-style profile page, built freeform from a closed block system and published bilingually to the static site, edited through the project's first authenticated web surface: a Discord-OAuth2-gated admin app on the cinema host (alongside `nocturna-bot`) where an editor logs in, arranges blocks with a live preview, uploads images, and hits Publish — committing `editors.json` + images cross-repo the same way the bot does, so the public site stays 100% static on GitHub Pages. An editor edits only their own page; the portfolio block auto-pulls their SFW credited store/gallery work by exact slug; losing the editor role auto-unpublishes the page.
+**Requirements**: EDIT-01, EDIT-02, EDIT-03, EDIT-04, EDIT-05, EDIT-06, EDIT-07, EDIT-08
 **Depends on:** Phase 9
-**Plans:** 0 plans
+**Success Criteria** (what must be TRUE):
 
+  1. A visitor opens `/en/editors/<slug>` · `/es/editores/<slug>` and sees a per-editor profile rendered from `editors.json` blocks, plus a `/editores`·`/editors` directory of all published editors (EDIT-01/EDIT-02)
+  2. An editor logs in via Discord OAuth2 to the admin app, gated by a live bot-token guild editor-role check; a non-editor is denied (EDIT-04)
+  3. An editor edits ONLY their own page (session-scoped 1:1 Discord ID → page); first login auto-creates an empty draft (EDIT-05)
+  4. An editor adds/removes/reorders blocks with a live preview, uploads images (SVG-rejected, Pillow-re-encoded), and Publish commits `editors.json` + images cross-repo immediately (EDIT-06)
+  5. The portfolio block auto-pulls SFW credited work from `store.json`+`gallery.json` by exact slug, excluding NSFW, plus editor-added items (EDIT-03/EDIT-08)
+  6. An editor can self-unpublish; losing the editor role auto-unpublishes the page; the public site stays static + CNAME intact (EDIT-07)
+
+**Plans**: 11 plans
 Plans:
-- [ ] TBD (run /gsd-plan-phase 10 to break down)
+
+**Wave 1**
+
+- [ ] 10-01-PLAN.md — Website foundation: `editors.json` ([]) contract + route/nav/i18n wiring (editors concept + `editorPath` + directory)
+- [ ] 10-02-PLAN.md — Bot foundation: pinned admin-app deps (legitimacy gate) + config/OAuth/session env + `editors_model.py` closed-union pydantic schema (TDD)
+- [ ] 10-03-PLAN.md — Infra prerequisites: Discord OAuth2 app + DNS subdomain + reverse-proxy/TLS + members-intent confirmation → `EDITOR_DEPLOY.md`
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 10-04-PLAN.md — Website block library: `BlockRenderer` + 8 auto-escaping block components + build-time portfolio auto-pull (D-03/D-04/D-12)
+- [ ] 10-05-PLAN.md — Bot transport: `sync_editors()` + `unpublish_editor()` (atomic upsert-by-discordId, image blobs, no-regression) (TDD)
+- [ ] 10-06-PLAN.md — EDIT-08: gallery ✅ approve editor-credit affordance + `gallery.json` editor field + `store.json` slug re-tag
+
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] 10-07-PLAN.md — Website pages: per-editor `[slug].astro` route + `EditorsDirectory` + slug-carrying language switch + human verify (EDIT-01/EDIT-02)
+- [ ] 10-08-PLAN.md — FastAPI app core: OAuth2 login + bot-token role gate + signed session + `require_editor` ownership gate + first-login draft (EDIT-04/EDIT-05) (TDD)
+- [ ] 10-09-PLAN.md — Role-loss cog: `on_member_update` + polling-sweep auto-unpublish (mass-removal guard) + optional `/mi-pagina` DM (EDIT-07) (TDD)
+
+**Wave 4** *(blocked on 10-08)*
+
+- [ ] 10-10-PLAN.md — Block editor UI: two-pane editor + Alpine live preview + SortableJS reorder + image upload (SVG-reject/re-encode) + save-publishes-immediately + self-unpublish (EDIT-06/EDIT-07)
+
+**Wave 5** *(blocked on 10-07/10-09/10-10)*
+
+- [ ] 10-11-PLAN.md — Deploy + live E2E: systemd unit + reverse-proxy config + full-chain human verification (login→edit→publish→render, non-editor denied, role-loss unpublish) + key rotation
+
+**UI hint**: yes (two surfaces — public Astro pages reuse the Refined Street Editorial system verbatim; the admin app is a brand-adjacent, chrome-light builder tool)
+**Notes**: **Spans TWO repos + introduces the project's first authenticated, internet-facing web surface** (D-05 pivot). The public site half (website repo) stays 100% static Astro — new per-editor dynamic route, block-renderer library, directory, and `editors.json`. The backend half lives in `nocturna-bot` (D-06, on the cinema host): a FastAPI+Authlib admin app that reuses `core/github_publish.py` (cross-repo commit) + `core/image_optimize.py` (upload optimization) by direct import, gated by a bot-token guild role check (reuses `ROLE_MODERATOR_ID`, D-15). Security is load-bearing (ASVS L1): OAuth CSRF (`state`), IDOR (session-only identity, D-08), stale-session role re-check, image bomb/polyglot/SVG rejection, closed block union (no `set:html`), TLS-only, PAT/secret hygiene. Two hard human prerequisites (Discord OAuth app + DNS/reverse-proxy/TLS) are front-loaded to Wave 1 (10-03) so nothing blocks at the end. The single most likely under-spec point — how the reaction-only gallery ✅ captures an editor credit (D-11) — is resolved by a decision checkpoint in 10-06 (default: ephemeral slug-autocomplete, reusing the Phase-9 `/tienda editar` pattern).
