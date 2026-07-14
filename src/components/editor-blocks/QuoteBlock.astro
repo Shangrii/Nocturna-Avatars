@@ -1,0 +1,53 @@
+---
+/**
+ * QuoteBlock — a bilingual pull-quote (Space Grotesk 700) with a red rule accent
+ * (UI-SPEC reserved-red list) and an optional attribution line.
+ *
+ * Locale-resolved quote text (es → en → '') and the single-string attribution
+ * both render through Astro auto-escaping ONLY (never a raw-HTML directive, D-02). Empty
+ * quote text renders nothing; the attribution renders only when present.
+ */
+import type { BlockOf } from '../../lib/editorTypes';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  block: BlockOf<'quote'>;
+  lang: Lang;
+}
+
+const { block, lang } = Astro.props;
+const text = block.text?.[lang] ?? block.text?.es ?? block.text?.en ?? '';
+const attribution = typeof block.attribution === 'string' ? block.attribution : '';
+---
+
+{text && (
+  <figure class="editor-quote">
+    <blockquote class="editor-quote__text">{text}</blockquote>
+    {attribution && <figcaption class="editor-quote__by">{attribution}</figcaption>}
+  </figure>
+)}
+
+<style>
+  .editor-quote {
+    margin: 0;
+    padding-left: var(--space-sm);
+    border-left: 3px solid var(--color-red-on-ink);
+  }
+  .editor-quote__text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--type-card-title);
+    font-weight: 700;
+    line-height: var(--lh-heading);
+    color: var(--color-white);
+  }
+  .editor-quote__by {
+    margin-top: var(--space-2xs);
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-white-dim);
+  }
+</style>
