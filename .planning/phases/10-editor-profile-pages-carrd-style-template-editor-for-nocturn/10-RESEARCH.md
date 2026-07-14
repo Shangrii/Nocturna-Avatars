@@ -443,7 +443,14 @@ app.add_middleware(
 
 **Note:** A3 and A5 are the two that most need user/host confirmation before planning locks. A3 (DNS + reverse proxy + Discord redirect-URI registration) is a hard prerequisite for any live login and should be an explicit early task or `checkpoint:human-verify`.
 
-## Open Questions
+## Open Questions (RESOLVED — 2026-07-14 planning)
+
+> All five questions were resolved during phase planning:
+> 1. Gallery editor-credit affordance → **10-06 Task 1** `checkpoint:decision` (default: ephemeral slug-autocomplete after ✅, the Phase-9 `/tienda editar` pattern).
+> 2. Reverse proxy / DNS on cinema → **10-03 Task 3** `checkpoint:human-verify` (confirmed values recorded in `EDITOR_DEPLOY.md`).
+> 3. `members` privileged intent → **10-03 Task 3** confirmation; **10-09** ships the polling-sweep fallback either way.
+> 4. `editors.json` location + schema → locked in **10-01** (`src/data/editors.json`, top-level array, ships committed `[]`).
+> 5. `store.json` editor re-tag → **10-06 Task 3** (deferred live re-tag + JinxxyCog coordination documented if `products` is empty locally).
 
 1. **How is the D-11 gallery editor-credit captured on a reaction-only approve?**
    - What we know: current approve is a ✅ reaction (`cogs/gallery.py`); no text input.
