@@ -428,7 +428,7 @@ Plans:
 
 - [x] 10-01-PLAN.md — Website foundation: `editors.json` ([]) contract + route/nav/i18n wiring (editors concept + `editorPath` + directory)
 - [x] 10-02-PLAN.md — Bot foundation: pinned admin-app deps (legitimacy gate) + config/OAuth/session env + `editors_model.py` closed-union pydantic schema (TDD)
-- [~] 10-03-PLAN.md — Infra prerequisites: Discord OAuth2 app + DNS subdomain + reverse-proxy/TLS + members-intent confirmation → `EDITOR_DEPLOY.md` *(BLOCKED: `EDITOR_DEPLOY.md` scaffold committed (Task 1); Tasks 2–4 await human — OAuth app registration, DNS/proxy/TLS confirmation, members-intent status)*
+- [x] 10-03-PLAN.md — Infra prerequisites: Discord OAuth2 app + DNS subdomain + reverse-proxy/TLS + members-intent confirmation → `EDITOR_DEPLOY.md` (completed 2026-07-14 — Client ID 1490114146895794246 + redirect URI registered, subdomain editors.nocturna-avatars.site + Caddy confirmed, members intent enabled → on_member_update primary/polling backstop for D-10)
 
 **Wave 2** *(blocked on Wave 1)*
 

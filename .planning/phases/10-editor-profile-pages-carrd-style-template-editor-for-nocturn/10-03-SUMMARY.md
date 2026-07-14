@@ -2,17 +2,17 @@
 phase: 10-editor-profile-pages-carrd-style-template-editor-for-nocturn
 plan: 03
 subsystem: infra-deploy
-status: BLOCKED — awaiting human action (checkpoint)
+status: COMPLETE
 tags: [infra, oauth2, dns, tls, reverse-proxy, discord, deploy-notes]
 dependency_graph:
   requires:
     - "nocturna-bot repo (deploy/ notes convention, JINXXY_DEPLOY.md precedent)"
     - "10-02 config keys (DISCORD_OAUTH_*/SESSION_SECRET/EDITOR_APP_BASE_URL) — in-flight in bot working tree"
   provides:
-    - "deploy/EDITOR_DEPLOY.md — infra prerequisites source of truth for 10-11 deploy"
+    - "deploy/EDITOR_DEPLOY.md — confirmed infra facts, source of truth for the 10-11 deploy"
   affects:
-    - "10-09 (D-10 role-loss mechanism depends on members-intent status — still TODO)"
-    - "10-11 (final deploy consumes confirmed OAuth/DNS/proxy values — still TODO)"
+    - "10-09 (D-10 role-loss mechanism: on_member_update real-time PRIMARY + polling sweep as backstop — members intent confirmed enabled)"
+    - "10-11 (final deploy consumes the confirmed OAuth Client ID/redirect URI, subdomain, Caddy proxy)"
 tech-stack:
   added: []
   patterns:
@@ -23,59 +23,73 @@ key-files:
   modified: []
 decisions:
   - "Deploy notes live at ../nocturna-bot/deploy/EDITOR_DEPLOY.md (plan-specified path; JINXXY_DEPLOY.md is at repo root, but the plan pins the deploy/ subdir for the new doc)"
-  - "Redirect URI documented as the fixed callback path ${EDITOR_APP_BASE_URL}/auth/callback — no arbitrary post-login redirect (Pitfall 4)"
+  - "Redirect URI documented as the fixed callback path ${EDITOR_APP_BASE_URL}/auth/callback — no arbitrary post-login redirect (Pitfall 4); registered value confirmed https://editors.nocturna-avatars.site/auth/callback"
+  - "OAuth2 app reuses the existing bot application (D-15) — Client ID 1490114146895794246 confirmed; Client Secret deliberately NOT recorded in the repo, deferred to cinema .env at 10-11"
+  - "Subdomain confirmed: editors.nocturna-avatars.site; reverse proxy confirmed: Caddy (automatic HTTPS)"
+  - "members privileged gateway intent confirmed ENABLED — D-10 role-loss mechanism is on_member_update (real-time) as PRIMARY, with the 10-09 polling sweep retained as a backstop (per the plan's original dual-mechanism design), not a fallback-only path"
   - "Secrets (OAuth client secret, SESSION_SECRET) documented as cinema .env-only, never committed; prominent rotation section mirrors the Phase 9 Jinxxy-key note"
 metrics:
-  duration: ~15min
-  completed: "PARTIAL — 2026-07-14"
-  tasks_completed: 1
+  duration: ~25min (across the human-action checkpoint round-trip)
+  completed: "2026-07-14"
+  tasks_completed: 4
   tasks_total: 4
 ---
 
 # Phase 10 Plan 03: Infra Prerequisites (OAuth + DNS/TLS + members intent) Summary
 
-**One-liner:** Scaffolded `EDITOR_DEPLOY.md` as the infra source-of-truth for the editor admin app, then reached a blocking human-action checkpoint for the two non-automatable prerequisites (Discord OAuth2 app + DNS/reverse-proxy/TLS on cinema) plus the `members` privileged-intent status.
+**One-liner:** Resolved and documented all three human-only infra prerequisites — Discord OAuth2 app (Client ID + registered redirect URI), DNS subdomain + Caddy reverse proxy/TLS on cinema, and the `members` gateway intent (confirmed enabled, unlocking real-time role-loss detection) — in `EDITOR_DEPLOY.md`, the source of truth for the 10-11 deploy plan.
 
 ## What Got Done
 
 ### Task 1 (auto) — COMPLETE
-Created `../nocturna-bot/deploy/EDITOR_DEPLOY.md` modeled on the existing `JINXXY_DEPLOY.md` format (Spanish, cinema-host manual deploy guide). All six required sections present, with confirmed-value fields left as explicit `TODO` placeholders for Tasks 2–4:
+Created `../nocturna-bot/deploy/EDITOR_DEPLOY.md` modeled on the existing `JINXXY_DEPLOY.md` format (Spanish, cinema-host manual deploy guide). All six sections scaffolded with TODO placeholders for the human-confirmed values.
 
-1. **Discord OAuth2 app** — reuse the existing bot application (D-15); obtain Client ID / reset Client Secret; register the **exact fixed** redirect URI `${EDITOR_APP_BASE_URL}/auth/callback` (Pitfall 4, no arbitrary post-login redirect); `identify` scope only (role check is server-side via bot token).
-2. **DNS subdomain** — proposed `editors.nocturna-avatars.site` → A/AAAA record to the cinema host IP.
-3. **Reverse proxy + automatic HTTPS** — Caddy preferred / nginx+certbot acceptable, fronting uvicorn bound to `127.0.0.1` (Pitfall 8); `Secure`+`SameSite=Lax` cookies.
-4. **`.env` keys to fill on cinema** — `DISCORD_OAUTH_CLIENT_ID/SECRET/REDIRECT_URI`, `SESSION_SECRET` (32+ random bytes), `EDITOR_APP_BASE_URL`; plus the reused-and-live keys (`GITHUB_PAT`, `WEBSITE_REPO`, `WEBSITE_BRANCH`, `BOT_TOKEN`) that must not be re-committed.
-5. **`members` gateway-intent status field** (Yes/No) with the resulting D-10 mechanism note (real-time `on_member_update` if Yes, periodic polling sweep if No).
-6. **Prominent secret-rotation reminder** — any secret pasted during planning must be rotated/reset after ship (mirrors the Phase 9 Jinxxy-key note and the Phase 5 `GITHUB_PAT` regime).
+### Task 2 (checkpoint:human-action, blocking) — COMPLETE
+User registered the Discord OAuth2 app (reusing the existing bot application per D-15) and confirmed:
+- **Client ID:** `1490114146895794246`
+- **Redirect URI:** `https://editors.nocturna-avatars.site/auth/callback` — registered in the Developer Portal under OAuth2 → Redirects, exact fixed callback path (Pitfall 4).
+- Client Secret intentionally withheld from this session — will be set directly in the cinema `.env` at 10-11 deploy time (never committed).
 
-Verification passed (`test -f` + `grep 'redirect URI'` + `grep 'rotation/rotación'`).
+### Task 3 (checkpoint:human-verify, blocking) — COMPLETE
+User confirmed:
+- **Subdomain:** `editors.nocturna-avatars.site`
+- **Reverse proxy:** Caddy (automatic HTTPS)
+- **`members` privileged gateway intent:** **enabled (Yes)**
+
+This resolves Assumption A5 favorably — the D-10 role-loss mechanism is **`on_member_update`** in real time as the **primary** path, with the 10-09 polling sweep retained as a backstop (the plan's original design already builds both; the intent-enabled outcome just confirms which one leads).
+
+### Task 4 (auto) — COMPLETE
+Filled all TODO placeholders in `EDITOR_DEPLOY.md` with the confirmed values from Tasks 2–3:
+- §1 OAuth2 app: Client ID + registered redirect URI recorded; Client Secret explicitly marked as NOT written here, deferred to the cinema `.env` at 10-11.
+- §2 DNS subdomain: `editors.nocturna-avatars.site` confirmed.
+- §3 Reverse proxy: Caddy (automatic HTTPS) confirmed.
+- §5 `members` intent: **Sí** — with the resulting D-10 mechanism note (`on_member_update` primary + polling backstop).
+- §6 Secret-rotation reminder unchanged (still applies to the Client Secret + `SESSION_SECRET` once set on cinema).
+
+Verification passed: `grep -qi 'members.*intent' EDITOR_DEPLOY.md && ! grep -Eq 'CLIENT_SECRET *= *[A-Za-z0-9]' EDITOR_DEPLOY.md` — the confirmed-values table required an explicit "members intent" phrasing to satisfy the exact plan-specified grep pattern; added as a bilingual parenthetical on the table row without changing the Spanish-first prose elsewhere. No secret literal exists anywhere in the file.
+
 Committed to the `nocturna-bot` repo (branch `main`) as a normal hook-run commit scoped to the single file.
 
-### Task 2 (checkpoint:human-action, blocking) — NOT STARTED (awaiting human)
-Create/register the Discord OAuth2 application. Developer-Portal-only; no CLI/API path. Requires the user to reveal/reset the Client Secret and register the redirect URI.
+## Result
 
-### Task 3 (checkpoint:human-verify, blocking) — NOT STARTED (awaiting human)
-Confirm DNS subdomain control, reverse-proxy/TLS availability on cinema, and whether the bot's `members` privileged gateway intent is enabled (drives the D-10 mechanism).
-
-### Task 4 (auto) — BLOCKED on Tasks 2–3
-Record the confirmed values (redirect URI, subdomain, proxy, members-intent Yes/No + D-10 note) into the `EDITOR_DEPLOY.md` TODO placeholders. Cannot run until the human supplies Task 2–3 values.
-
-## Checkpoint Reached — Human Action Required
-
-This plan is `autonomous: false`. Tasks 2 and 3 are hard, human-only infrastructure gates. **No values were fabricated or guessed.** The specifics the user must provide are listed in the completion/checkpoint output.
+The two hard, human-only infrastructure prerequisites (OAuth2 app + DNS/reverse-proxy/TLS) are resolved and documented, and the D-10 mechanism is decided (on_member_update primary + polling backstop). 10-08/10-09/10-11 can proceed without external blockers — `EDITOR_DEPLOY.md` is the confirmed-facts source of truth for the 10-11 deploy.
 
 ## Deviations from Plan
 
-None. Task 1 executed exactly as written.
-
-**Observation (not a deviation):** the `nocturna-bot` working tree has uncommitted changes to `config.py`, `requirements.txt`, and `.env.example` — these belong to the parallel Wave-1 plan **10-02** (they add exactly the `DISCORD_OAUTH_*` / `SESSION_SECRET` / `EDITOR_APP_BASE_URL` keys this deploy doc references). They were left untouched per orchestrator instruction; my commit staged only `deploy/EDITOR_DEPLOY.md`.
+**1. [Rule 1 - minor fix] Grep-pattern word-order mismatch in Task 4 verification**
+- **Found during:** Task 4 automated verification.
+- **Issue:** The plan's exact verify command `grep -qi 'members.*intent'` requires "members" to appear before "intent" on the same line. The scaffold's Spanish prose used "Intent `members`" (intent-then-members word order throughout), which never satisfied that pattern.
+- **Fix:** Added a small bilingual parenthetical `(members intent)` to the confirmed-values table row for that field, satisfying the grep pattern without altering the Spanish-first document voice elsewhere.
+- **Files modified:** `../nocturna-bot/deploy/EDITOR_DEPLOY.md`
+- **Commit:** `b51ef98`
 
 ## Known Stubs
 
-The confirmed-value fields in `EDITOR_DEPLOY.md` (§1 Client ID + redirect URI, §2 subdomain + DNS, §3 proxy + HTTPS + bind, §5 members intent + D-10 mechanism) are intentional `TODO` placeholders that Task 4 fills once the human resolves Tasks 2–3. This is by design — the plan splits scaffold (Task 1) from human-confirmed values (Tasks 2–4).
+None remaining. All confirmed-value fields in `EDITOR_DEPLOY.md` are filled. The Client Secret and `SESSION_SECRET` are intentionally absent from the repo by design (cinema `.env`-only, filled at 10-11 deploy) — this is documented in the file itself (§1, §4, §6), not an unresolved stub.
 
 ## Self-Check: PASSED
 
 - FOUND: `../nocturna-bot/deploy/EDITOR_DEPLOY.md`
-- FOUND commit: `5872257` (nocturna-bot, branch main)
+- FOUND commit: `5872257` (nocturna-bot, branch main — Task 1 scaffold)
+- FOUND commit: `b51ef98` (nocturna-bot, branch main — Task 4 confirmed values)
 - FOUND: `.planning/phases/10-editor-profile-pages-carrd-style-template-editor-for-nocturn/10-03-SUMMARY.md`
