@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 10 UI-SPEC approved
-last_updated: "2026-07-14T18:13:11.371Z"
-last_activity: 2026-07-14 -- Phase 10 planning complete
+stopped_at: 10-03 BLOCKED — awaiting human infra action (OAuth app + DNS/proxy/TLS + members intent)
+last_updated: "2026-07-14T23:10:00.000Z"
+last_activity: 2026-07-14 -- 10-03 Task 1 done (EDITOR_DEPLOY.md scaffold); Tasks 2-4 blocked on human
 progress:
   total_phases: 12
   completed_phases: 11
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** A visitor is visually impressed and reaches "Abrir Ticket" on Discord, while staff keep gallery/catalog current without touching code.
-**Current focus:** Phase 09 — jinxxy-store-auto-sync-new-jinxxy-uploads-appear-in-the-asse
+**Current focus:** Phase 10 — editor-profile-pages-carrd-style-template-editor-for-nocturn
 
 ## Current Position
 
-Phase: 09 (jinxxy-store-auto-sync-new-jinxxy-uploads-appear-in-the-asse) — VERIFIED (human_needed) — code-complete, awaiting live cinema-host deploy confirmation
-Plan: 13 of 13 complete
-Status: Ready to execute
-Last activity: 2026-07-14 -- Phase 10 planning complete
+Phase: 10 (editor-profile-pages-carrd-style-template-editor-for-nocturn) — EXECUTING
+Plan: 1 of 11
+Status: Executing Phase 10
+Last activity: 2026-07-14 -- Phase 10 execution started
 
 Progress: [██████████] 100%
 
@@ -181,6 +181,7 @@ Recent decisions affecting current work:
 - [Phase 09-10]: Cog error-handling gap closure (WR-07/08/09): /tienda medios optimize wrapped in broad try/except (PIL bomb/non-image), /tienda sync guard broadened to except Exception (map_product KeyError/TypeError), _announce channel.send wrapped in except discord.HTTPException — every command failure now hits the D-05 ephemeral/log-only path. 337 bot tests pass (+6).
 - [Phase 09-11]: Gap closure (CR-01 / 09-VERIFICATION truth #5 BLOCKER, TDD, nocturna-bot 901d902 test -> cf91348 fix): cogs/jinxxy.py::_run_sync tail reordered into (5) gated github_publish.sync_store commit FIRST, (6) unconditional db.upsert_store_snapshot loop SECOND, (7) gated db.delete_store_snapshot removals THIRD. Previously the WR-03 unconditional upsert ran BEFORE the commit, so a GitHubPublishError advanced the durable snapshot past a store.json that was never written — next cycle's three_way_merge read live_v==snap_v and permanently masked the un-committed price/name/category/nsfw/date change as "Jinxxy unchanged, staff edit wins." Now a raise skips the advance so the change is re-detected + retried next cycle (STORE-SYNC-01: transient GitHub failures go to logs only, never silent loss). WR-03 unconditional advance + removal-safety (T-09-11-03, removal gated + post-commit) both preserved. +1 regression test; full bot suite 338 passed (was 337). Closes the sole remaining Phase-9 blocker.
 - [Phase 09-13]: UAT GAP-2 closure (public announce embed was generic Spanish, but the channel is public + audience now English, TDD-adjacent, nocturna-bot ba31f71 feat + 4aebadb feat): (Task 1) config.py + .env.example gained WEBSITE_BASE_URL (default https://nocturna-avatars.site — site origin, base for absolute thumbnail URLs) and JINXXY_STORE_URL (default https://nocturna-avatars.site/en/store — the EN store route, audience is now English). (Task 2) cogs/jinxxy.py::_build_announce_embed rewritten English/engaging/visual — OVERRIDES D-05 Spanish-first for STORE announcements ONLY: English title "New on the Nocturna store" + engaging description, store-page link as embed.url AND a "Store" field link to JINXXY_STORE_URL, English buckets (🆕 New/✏️ Updated/🗑️ Removed) each product rendered [name](checkoutUrl) https-guarded via store_sync.is_https_url (T-09-27) with []() stripped from the label (T-09-28), best-effort thumbnail from images[0] site-relative path composed against WEBSITE_BASE_URL (T-09-27) omitted when no product has images; English-first name (en→es→key); brand red 0xC0192C + UTC timestamp kept. _announce D-05 error path + D-06 no-change guard UNCHANGED (git diff touches only _build_announce_embed). +4 net announce tests; full bot suite 360 passed (was 356). Closes STORE-SYNC-01 GAP-2. All 13 phase-09 plans now have a SUMMARY — phase fully executed, awaiting verification. Cinema host needs git pull + systemd restart to surface the new embed.
+- [Phase 10]: [10-03] Infra deploy notes live at `../nocturna-bot/deploy/EDITOR_DEPLOY.md` (plan-pinned `deploy/` subdir; the Phase-9 `JINXXY_DEPLOY.md` at repo root is the format model). OAuth redirect URI documented as the FIXED callback path `${EDITOR_APP_BASE_URL}/auth/callback` — no arbitrary post-login redirect (Pitfall 4). Secrets (`DISCORD_OAUTH_CLIENT_SECRET`, `SESSION_SECRET`) are cinema-`.env`-only with a prominent rotation section (mirrors the Phase-9 Jinxxy-key note). Scaffold committed (nocturna-bot 5872257); confirmed values are TODO placeholders pending human Tasks 2–4.
 - [Phase 09-12]: UAT GAP-1 closure (staff had no Discord path to set a product's `editor`, TDD, nocturna-bot a9d1a7b/82ac6a4 + 99a2f19/1530706): (Task 1) core/github_publish.py::set_store_editor/_set_store_editor_sync — object-aware editor-only read-modify-commit matched by checkoutUrl, mirrors _attach_store_media_sync MINUS the image-blob tree; preserves _comment + every other product/field byte-for-byte, raises GitHubPublishError on no match, no-ops (no commit/ref PATCH) when editor unchanged (T-09-24). Commit message is the FIXED `store: set editor for {checkout_url}` template — raw editor text NEVER interpolated (T-09-22). (Task 2) cogs/jinxxy.py::/tienda editar — staff gate FIRST (T-09-20) → validate BEFORE defer (strip, reject empty-after-strip / >100 chars / control-or-newline via `[\x00-\x1f\x7f]`, T-09-21) → set_store_editor commit → GitHubPublishError log-only + single ephemeral reply (D-05/T-09-23); @editar.autocomplete('producto') reuses _producto_choices ([] for non-staff). core/store_sync.py UNCHANGED — editor already staff-owned (absent from SYNC_OWNED) + grafted by sync_store's _GRAFT_KEYS (09-07); a merge regression pins editor survives a Jinxxy price change. +18 tests; full bot suite 356 passed (was 338). Closes STORE-SYNC-02 for editor. Cinema host needs git pull + systemd restart to surface /tienda editar.
 
 ### Pending Todos
@@ -202,6 +203,7 @@ Recent decisions affecting current work:
 - [Cutover] ~~deploy.yml is now workflow_dispatch-ONLY (05-05 incident fix) — must revert at cutover.~~ RESOLVED by the 2026-07-04 beta cutover: deploy.yml auto-deploys again via the gh-pages force-push topology; bot publishes rebuild the live site.
 - [Phase 5] Cinema host still runs pre-Fix-A/B code — user must `git pull` + restart the `nocturna-bot` systemd unit; then remaining UAT: (b) dismiss, (c) delete re-test with journal logs, (d) backfill + multi-image/idempotency, (e) non-staff gate. Note: the 683 orphan was already removed in the cutover cleanup, so the restart orphan-reconcile should log NOTHING to remove — that is the expected observation.
 - [Doc] REQUIREMENTS.md footer originally said "27 v1"; actual v1 count is 30 (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6). Coverage corrected to 30/30.
+- [Phase 10] 10-03 BLOCKED on human-only infra (non-autonomous plan). Needs from the user: (1) Discord OAuth2 app Client ID + registered redirect URI `https://editors.nocturna-avatars.site/auth/callback` (secret → cinema `.env` only); (2) DNS subdomain confirmation + reverse-proxy/TLS on cinema (Caddy/nginx); (3) whether the bot's `members` privileged gateway intent is enabled (drives D-10: real-time `on_member_update` vs. 10-09 polling sweep). `EDITOR_DEPLOY.md` scaffold committed (nocturna-bot 5872257); Task 4 fills the TODO placeholders once these are supplied. EDIT-04 NOT yet complete.
 
 ### Quick Tasks Completed
 
@@ -224,6 +226,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-14T08:21:26.022Z
-Stopped at: Phase 10 UI-SPEC approved
-Resume file: .planning/phases/10-editor-profile-pages-carrd-style-template-editor-for-nocturn/10-UI-SPEC.md
+Last session: 2026-07-14T23:10:00.000Z
+Stopped at: 10-03 BLOCKED — checkpoint (human-action): OAuth app + DNS/proxy/TLS + members-intent
+Resume file: .planning/phases/10-editor-profile-pages-carrd-style-template-editor-for-nocturn/10-03-PLAN.md (resume at Task 2 once the user replies with the three infra items; then Task 4 fills EDITOR_DEPLOY.md)
