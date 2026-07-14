@@ -426,8 +426,8 @@ Plans:
 
 **Wave 1**
 
-- [ ] 10-01-PLAN.md — Website foundation: `editors.json` ([]) contract + route/nav/i18n wiring (editors concept + `editorPath` + directory)
-- [ ] 10-02-PLAN.md — Bot foundation: pinned admin-app deps (legitimacy gate) + config/OAuth/session env + `editors_model.py` closed-union pydantic schema (TDD)
+- [x] 10-01-PLAN.md — Website foundation: `editors.json` ([]) contract + route/nav/i18n wiring (editors concept + `editorPath` + directory)
+- [x] 10-02-PLAN.md — Bot foundation: pinned admin-app deps (legitimacy gate) + config/OAuth/session env + `editors_model.py` closed-union pydantic schema (TDD)
 - [~] 10-03-PLAN.md — Infra prerequisites: Discord OAuth2 app + DNS subdomain + reverse-proxy/TLS + members-intent confirmation → `EDITOR_DEPLOY.md` *(BLOCKED: `EDITOR_DEPLOY.md` scaffold committed (Task 1); Tasks 2–4 await human — OAuth app registration, DNS/proxy/TLS confirmation, members-intent status)*
 
 **Wave 2** *(blocked on Wave 1)*
