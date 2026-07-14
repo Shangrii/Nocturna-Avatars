@@ -10,11 +10,12 @@
  *   home     → /es/        · /en/
  *   services → /es/servicios · /en/services
  *   gallery  → /es/galeria   · /en/gallery
+ *   editors  → /es/editores  · /en/editors  (directory concept; per-editor pages ship in 10-07)
  *   terms    → /es/terminos  · /en/terms   (page itself ships in plan 01-04)
  */
 import { langCodes, type Lang } from './ui';
 
-export type PageConcept = 'home' | 'services' | 'gallery' | 'store' | 'terms';
+export type PageConcept = 'home' | 'services' | 'gallery' | 'store' | 'editors' | 'terms';
 
 /** concept → { es slug, en slug }. Home is the empty slug (bare locale root). */
 export const routeSlugs: Record<PageConcept, Record<Lang, string>> = {
@@ -22,16 +23,28 @@ export const routeSlugs: Record<PageConcept, Record<Lang, string>> = {
   services: { es: 'servicios', en: 'services' },
   gallery: { es: 'galeria', en: 'gallery' },
   store: { es: 'tienda', en: 'store' },
+  editors: { es: 'editores', en: 'editors' },
   terms: { es: 'terminos', en: 'terms' },
 };
 
 /** Concepts that are real, navigable pages in the nav, in display order. */
-export const navConcepts: PageConcept[] = ['home', 'services', 'gallery', 'store', 'terms'];
+export const navConcepts: PageConcept[] = ['home', 'services', 'gallery', 'store', 'editors', 'terms'];
 
 /** Build the localized path for a concept in a given locale, e.g. "/en/services". */
 export function localizedPath(concept: PageConcept, lang: Lang): string {
   const slug = routeSlugs[concept][lang];
   return slug ? `/${lang}/${slug}` : `/${lang}/`;
+}
+
+/**
+ * Per-editor path helper: build the localized URL for a single editor profile,
+ * e.g. editorPath('aria','en') → "/en/editors/aria", editorPath('aria','es') →
+ * "/es/editores/aria". Distinct from the concept-only `localizedPath` because it
+ * carries the editor's `<slug>`. Per-editor language switching that preserves the
+ * slug is added in 10-07; this helper only builds the forward link.
+ */
+export function editorPath(slug: string, lang: Lang): string {
+  return `/${lang}/${routeSlugs.editors[lang]}/${slug}`;
 }
 
 /**

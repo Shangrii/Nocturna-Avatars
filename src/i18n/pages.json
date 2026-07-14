@@ -138,6 +138,16 @@
       "emptyBody": "Aún no hay assets publicados. Abre un ticket para pedidos personalizados.",
       "emptyCta": "Abrir Ticket"
     },
+    "editores": {
+      "metaTitle": "Editores — Nocturna Avatars",
+      "metaDescription": "Las personas detrás del trabajo de Nocturna. Conoce a los editores del equipo.",
+      "tag": "Editores",
+      "title": "Editores",
+      "subtitle": "Las personas detrás del trabajo de Nocturna.",
+      "emptyHeading": "Aún no hay editores",
+      "emptyBody": "Los perfiles de editores están en camino — abre un ticket en Discord para trabajar con el equipo.",
+      "emptyCta": "Abrir Ticket"
+    },
     "notFound": {
       "metaTitle": "Página no encontrada — Nocturna Avatars",
       "metaDescription": "La página que buscas no existe.",
@@ -287,6 +297,16 @@
       "emptyHeading": "Store coming soon",
       "emptyBody": "No assets published yet. Open a ticket for custom requests.",
       "emptyCta": "Open Ticket"
+    },
+    "editores": {
+      "metaTitle": "Editors — Nocturna Avatars",
+      "metaDescription": "The people behind Nocturna's work. Meet the team's editors.",
+      "tag": "Editors",
+      "title": "Editors",
+      "subtitle": "The people behind Nocturna's work.",
+      "emptyHeading": "No editors yet",
+      "emptyBody": "Editor profiles are on the way — open a ticket on Discord to work with the team.",
+      "emptyCta": "Open a Ticket"
     },
     "notFound": {
       "metaTitle": "Page not found — Nocturna Avatars",
