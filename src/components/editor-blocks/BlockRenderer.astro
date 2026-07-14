@@ -1,0 +1,54 @@
+---
+/**
+ * BlockRenderer — the closed-union `block.type → component` dispatch (D-02).
+ *
+ * Every block in an editor's `blocks[]` array is rendered by exactly ONE typed
+ * component from this fixed, closed library. There is NO raw-HTML directive anywhere in
+ * this file or any component it dispatches to — all content flows through Astro
+ * auto-escaping only, which is the render-side half of the D-02 XSS guarantee.
+ *
+ * An unknown / unlisted `block.type` produces no output (no throw) — editors.json
+ * is externally written, so a malformed or future block type must never break the
+ * whole-site build. `slug` is threaded through to PortfolioBlock only (it needs it
+ * for the build-time credited-work join); the other blocks are self-contained.
+ */
+import type { EditorBlock } from '../../lib/editorTypes';
+import type { Lang } from '../../i18n/ui';
+import BioBlock from './BioBlock.astro';
+import HeadingBlock from './HeadingBlock.astro';
+import TextBlock from './TextBlock.astro';
+import LinksBlock from './LinksBlock.astro';
+import PortfolioBlock from './PortfolioBlock.astro';
+import QuoteBlock from './QuoteBlock.astro';
+import ImageBlock from './ImageBlock.astro';
+
+interface Props {
+  block: EditorBlock;
+  lang: Lang;
+  slug: string;
+}
+
+const { block, lang, slug } = Astro.props;
+---
+
+{block.type === 'bio' && <BioBlock block={block} lang={lang} />}
+{block.type === 'heading' && <HeadingBlock block={block} lang={lang} />}
+{block.type === 'text' && <TextBlock block={block} lang={lang} />}
+{block.type === 'links' && <LinksBlock block={block} />}
+{block.type === 'portfolio' && <PortfolioBlock block={block} lang={lang} slug={slug} />}
+{block.type === 'quote' && <QuoteBlock block={block} lang={lang} />}
+{block.type === 'image' && <ImageBlock block={block} />}
+{block.type === 'divider' && <hr class="editor-divider" />}
+
+<style>
+  /* Divider block — a hairline red rule (UI-SPEC reserved-red list: dividers).
+     Kept surgical: a thin, half-opacity red line, no fill, full column width. */
+  .editor-divider {
+    width: 100%;
+    height: 0;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--color-red-on-ink);
+    opacity: 0.45;
+  }
+</style>
