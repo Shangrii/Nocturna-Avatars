@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
+status: executing
 stopped_at: Phase 10.1 UI-SPEC approved
-last_updated: "2026-07-15T13:58:49.157Z"
-last_activity: 2026-07-15
+last_updated: "2026-07-15T21:00:54.008Z"
+last_activity: 2026-07-15 -- Phase 10.1 execution started
 progress:
   total_phases: 13
   completed_phases: 12
-  total_plans: 65
+  total_plans: 77
   completed_plans: 65
-  percent: 92
+  percent: 84
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** A visitor is visually impressed and reaches "Abrir Ticket" on Discord, while staff keep gallery/catalog current without touching code.
-**Current focus:** Phase 10 — editor-profile-pages-carrd-style-template-editor-for-nocturn
+**Current focus:** Phase 10.1 — editor-pages-redesign-guns-lol-carrd-premium-replica-per-edi
 
 ## Current Position
 
-Phase: 10 (editor-profile-pages-carrd-style-template-editor-for-nocturn) — EXECUTING
-Plan: 10 of 11 complete; 10-11 = deploy artifacts SHIPPED (Task 1), awaiting LIVE human verification (Task 2/3)
-Status: Awaiting live human verification on cinema — see 10-11-SUMMARY.md "LIVE VERIFICATION CHECKLIST (Task 2)"
-Last activity: 2026-07-15
+Phase: 10.1 (editor-pages-redesign-guns-lol-carrd-premium-replica-per-edi) — EXECUTING
+Plan: 1 of 12
+Status: Executing Phase 10.1
+Last activity: 2026-07-15 -- Phase 10.1 execution started
 
 Progress: [██████████] 99%
 

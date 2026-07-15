@@ -461,16 +461,16 @@ Plans:
 **Goal:** Each Nocturna editor gets a premium guns.lol/carrd-style link-in-bio page at the canonical `/e/<slug>` — a fully standalone visual identity (no site chrome, only a tiny watermark) with per-editor theming (background image/GIF/video, 14 curated self-hosted fonts, free colors + 8 presets, the full opt-in premium effect suite, live Discord presence, splash-gated background audio, view counter, social icon row, specialty badges), driven by an extended theme editor in the Phase-10 admin app with side-by-side live preview. The Phase-10 block system survives inside the new themed shell; old bilingual routes redirect to `/e/<slug>`; the directory stays live but unlisted and store credits link to it — clean cutover with sensible defaults so existing pages render instantly.
 **Requirements**: D-01…D-26 (CONTEXT.md locked-decision set; no formal REQ-IDs mapped, mirroring Phase 8)
 **Depends on:** Phase 10
-**Plans:** 12 plans
+**Plans:** 4/12 plans executed
 
 Plans:
 
 **Wave 1**
 
-- [ ] 10.1-01-PLAN.md — Website foundation: editorTypes theme schema + editors.json migration + editorPath -> /e/<slug> + navbar drop (D-01/D-13/D-14/D-16/D-17/D-26)
-- [ ] 10.1-02-PLAN.md — Theme CSS system (token defaults + full CSS effect suite + reduced-motion) + 14 self-hosted curated fonts (D-02/D-03/D-04/D-11/D-21)
-- [ ] 10.1-09-PLAN.md — Bot schema: ThemeModel + extended EditorPage (theme-injection validation gate, TDD, nocturna-bot) (D-02/D-07/D-09/D-13/D-21)
-- [ ] 10.1-12-PLAN.md — View-counter endpoint (standalone counter app + SQLite store + CORS/dedup) + sibling deploy artifacts (nocturna-bot) (D-08/D-25)
+- [x] 10.1-01-PLAN.md — Website foundation: editorTypes theme schema + editors.json migration + editorPath -> /e/<slug> + navbar drop (D-01/D-13/D-14/D-16/D-17/D-26)
+- [x] 10.1-02-PLAN.md — Theme CSS system (token defaults + full CSS effect suite + reduced-motion) + 14 self-hosted curated fonts (D-02/D-03/D-04/D-11/D-21)
+- [x] 10.1-09-PLAN.md — Bot schema: ThemeModel + extended EditorPage (theme-injection validation gate, TDD, nocturna-bot) (D-02/D-07/D-09/D-13/D-21)
+- [x] 10.1-12-PLAN.md — View-counter endpoint (standalone counter app + SQLite store + CORS/dedup) + sibling deploy artifacts (nocturna-bot) (D-08/D-25)
 
 **Wave 2** *(blocked on Wave 1)*
 
