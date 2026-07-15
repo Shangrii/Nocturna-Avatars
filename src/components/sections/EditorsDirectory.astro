@@ -1,0 +1,195 @@
+---
+/**
+ * EditorsDirectory — body of the /editores (es) · /en/editors (en) directory
+ * (D-20). Lists every PUBLISHED editor as an avatar + name + tagline card that
+ * links to the per-editor profile, so the individual pages (10-07 Task 1) are
+ * discoverable rather than orphaned.
+ *
+ * Data-driven from src/data/editors.json (the admin app / bot commit target —
+ * externally written, D-18). The read is defensive end-to-end (mirrors
+ * StorePage): a copy-before-filter keeps only `published` entries with a usable
+ * string slug, then sorts by name — one malformed entry must never throw the
+ * whole-site build (T-10-07-02). An empty directory falls back to the branded
+ * EmptyState so it never looks broken and the "Abrir Ticket" Discord CTA stays
+ * reachable (NAV-03).
+ *
+ * All copy renders through Astro `{...}` auto-escaping — no raw-HTML directive is
+ * ever used on editors.json fields (T-10-07-01, D-02).
+ */
+import EmptyState from '../EmptyState.astro';
+import NightBackground from '../NightBackground.astro';
+import { useTranslations, type Lang } from '../../i18n/ui';
+import { editorPath } from '../../i18n/routes';
+import editorsData from '../../data/editors.json';
+
+/**
+ * Every field except `slug` is treated as OPTIONAL because editors.json is
+ * written by the admin app / bot — the schema documents intent but the build
+ * must tolerate a missing/typo'd key. Never assume a field is present.
+ */
+interface EditorEntry {
+  slug: string;
+  published?: boolean;
+  name?: string;
+  avatar?: string;
+  tagline?: { es?: string; en?: string };
+}
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const page = useTranslations(lang, 'pages').editores;
+
+// Copy before sorting so the imported module array is never mutated. Keep only
+// published entries with a usable string slug; sort A→Z by resolved name.
+const rawEditors: EditorEntry[] = Array.isArray(editorsData)
+  ? ([...editorsData] as EditorEntry[])
+  : [];
+const editors = rawEditors
+  .filter(
+    (e) =>
+      Boolean(e) &&
+      e.published === true &&
+      typeof e.slug === 'string' &&
+      e.slug.length > 0,
+  )
+  .map((e) => ({
+    slug: e.slug,
+    name: typeof e.name === 'string' && e.name ? e.name : e.slug,
+    avatar: typeof e.avatar === 'string' ? e.avatar : '',
+    tagline: e.tagline?.[lang] ?? e.tagline?.es ?? e.tagline?.en ?? '',
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+---
+
+{/* Reusable night-sky backdrop — full-viewport fixed field behind the directory. */}
+<NightBackground fixed />
+
+<section class="section section-page-top section--rule">
+  <div class="section-header reveal">
+    <span class="section-tag">{page.tag}</span>
+    <h2 class="section-title">{page.title}</h2>
+    <p class="section-subtitle">{page.subtitle}</p>
+  </div>
+
+  {editors.length ? (
+    <div class="editors-grid">
+      {editors.map((editor) => (
+        <a class="editor-card reveal" href={editorPath(editor.slug, lang)}>
+          {editor.avatar && (
+            <img
+              class="editor-card__avatar"
+              src={editor.avatar}
+              alt={editor.name}
+              width="120"
+              height="120"
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+          <span class="editor-card__name">{editor.name}</span>
+          {editor.tagline && <span class="editor-card__tagline">{editor.tagline}</span>}
+        </a>
+      ))}
+    </div>
+  ) : (
+    <div class="reveal">
+      <EmptyState
+        heading={page.emptyHeading}
+        body={page.emptyBody}
+        ticketLabel={page.emptyCta}
+      />
+    </div>
+  )}
+</section>
+
+<style is:global>
+  /* Interior page (no hero): keep the nav in its solid dark state at all times. */
+  .nav {
+    background: rgba(10, 12, 20, 0.95);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 var(--color-border);
+  }
+
+  /* Drop the opaque section field so the fixed <NightBackground /> shows through. */
+  main .section {
+    background: transparent;
+  }
+</style>
+
+<style>
+  /* Responsive card grid: 1 col mobile → 2 col tablet → 3 col desktop, lg gap. */
+  .editors-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    max-width: 1000px;
+    margin-inline: auto;
+  }
+  @media (min-width: 768px) {
+    .editors-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .editors-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .editor-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-2xs);
+    padding: var(--space-lg);
+    background: var(--color-ink-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .editor-card:hover {
+    border-color: var(--color-red);
+    transform: translateY(-2px);
+  }
+  .editor-card:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+
+  .editor-card__avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--color-border);
+    background: var(--color-ink);
+  }
+  .editor-card__name {
+    font-family: var(--font-display);
+    font-size: var(--type-card-title);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--color-red-on-ink);
+  }
+  .editor-card__tagline {
+    font-family: var(--font-body);
+    font-size: var(--type-body);
+    font-weight: 400;
+    line-height: var(--lh-body);
+    color: var(--color-white-dim);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .editor-card {
+      transition: none;
+    }
+    .editor-card:hover {
+      transform: none;
+    }
+  }
+</style>

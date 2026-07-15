@@ -64,10 +64,25 @@ export function conceptForSlug(lang: Lang, slug: string): PageConcept | null {
  * Translate the CURRENT pathname to its counterpart in `target` locale using the
  * concept map (NOT a prefix swap). On /en/services → Español yields /es/servicios.
  * Falls back to the target locale root if the path can't be resolved.
+ *
+ * Per-editor pages carry a trailing `<slug>` the concept map alone can't resolve
+ * (the editor slug is item-level, not a concept). When the path is
+ * `/<lang>/<editorsSlug>/<slug>` we detect the editors concept from the first
+ * path segment and rebuild the counterpart with the SAME slug via `editorPath`,
+ * so the language switcher lands on `/es/editores/<slug>` instead of dropping to
+ * the locale root (10-07 — D-19).
  */
 export function translatePath(pathname: string, target: Lang): string {
-  const segments = pathname.split('/').filter(Boolean); // ['en','services']
+  const segments = pathname.split('/').filter(Boolean); // ['en','editors','aria']
   const sourceLang = (segments[0] as Lang) ?? target;
+
+  // Per-editor page: /<lang>/<editorsSlug>/<editorSlug> — carry the slug across
+  // locales. segments[1] must equal the editors concept slug in the source lang.
+  if (segments.length >= 3 && segments[1] === routeSlugs.editors[sourceLang]) {
+    const editorSlug = segments.slice(2).join('/');
+    return editorPath(editorSlug, target);
+  }
+
   const slug = segments.slice(1).join('/'); // 'services' (or '' at root)
   const concept = conceptForSlug(sourceLang, slug);
   if (!concept) return `/${target}/`;
