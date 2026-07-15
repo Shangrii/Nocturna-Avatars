@@ -1,0 +1,31 @@
+---
+/**
+ * ImageBlock — a single full-column-width image (already-optimized WebP path).
+ *
+ * `src` and `alt` are plain string fields rendered as attributes via Astro
+ * auto-escaping ONLY (never a raw-HTML directive, D-02); a malformed entry with no `src`
+ * renders nothing. Lazy-loaded so off-fold profile images never block the fold.
+ */
+import type { BlockOf } from '../../lib/editorTypes';
+
+interface Props {
+  block: BlockOf<'image'>;
+}
+
+const { block } = Astro.props;
+const src = typeof block.src === 'string' ? block.src : '';
+const alt = typeof block.alt === 'string' ? block.alt : '';
+---
+
+{src && (
+  <img class="editor-image" src={src} alt={alt} loading="lazy" decoding="async" />
+)}
+
+<style>
+  .editor-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+</style>

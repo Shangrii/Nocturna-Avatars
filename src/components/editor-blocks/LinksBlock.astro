@@ -1,0 +1,81 @@
+---
+/**
+ * LinksBlock — a stack of full-width link-buttons (guns.lol style).
+ *
+ * Each item is an `<a href={item.url}>` opened in a new tab with
+ * `rel="noopener noreferrer nofollow"` (T-10-04-02 — the link is untrusted, the
+ * new tab must not gain `window.opener`, and it must not pass link equity). The
+ * label is rendered through Astro auto-escaping ONLY (never a raw-HTML directive, D-02),
+ * falling back to the raw URL when a label is missing. URLs are `https://`-only,
+ * validated upstream (10-02 model); malformed entries (no url) are skipped so one
+ * bad link never throws the build. 44px min touch target (a11y / PLAT-04).
+ */
+import type { BlockOf } from '../../lib/editorTypes';
+
+interface Props {
+  block: BlockOf<'links'>;
+}
+
+const { block } = Astro.props;
+const items = Array.isArray(block.items) ? block.items : [];
+const links = items.filter(
+  (item): item is { label: string; url: string } =>
+    Boolean(item) && typeof item.url === 'string' && item.url.length > 0,
+);
+---
+
+{links.length > 0 && (
+  <nav class="editor-links">
+    {links.map((item) => (
+      <a
+        class="editor-links__btn"
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+      >
+        {item.label || item.url}
+      </a>
+    ))}
+  </nav>
+)}
+
+<style>
+  .editor-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    width: 100%;
+  }
+  .editor-links__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-min);
+    padding: var(--space-2xs) var(--space-sm);
+    background: var(--color-ink-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    color: var(--color-white);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-decoration: none;
+    word-break: break-word;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .editor-links__btn:hover {
+    border-color: var(--color-red);
+    background: var(--color-red-soft);
+  }
+  .editor-links__btn:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .editor-links__btn {
+      transition: none;
+    }
+  }
+</style>

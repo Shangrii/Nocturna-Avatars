@@ -1,0 +1,211 @@
+---
+/**
+ * PortfolioBlock — build-time credited-work auto-pull (D-03 / D-04 / D-12).
+ *
+ * At build time this joins the editor's credited work by EXACT slug equality
+ * (D-12 — never substring/fuzzy) against two data sources, then appends the
+ * block's hand-added `extra` items:
+ *   1. store.json products where `p.editor === slug` and NOT `p.nsfw` (D-04).
+ *   2. gallery.json entries where `g.editor === slug` and `g.nsfw !== true` — the
+ *      `editor`/`nsfw` fields are the OPTIONAL additions from 10-06; a missing
+ *      `nsfw` means SFW (D-04), a missing `editor` means the photo is uncredited.
+ *   3. block.extra[] hand-added items (D-03), always shown regardless of `auto`.
+ *
+ * The `auto` flag gates ONLY the credited auto-pull (steps 1–2): when a block
+ * sets `auto: false` the editor has opted out of the store/gallery join and only
+ * their hand-added items render. A missing `auto` defaults to on.
+ *
+ * NSFW is excluded ENTIRELY (T-10-04-03) — an NSFW-credited item is never
+ * rendered on the public SFW profile, not merely blurred. When the combined list
+ * is empty the component renders NOTHING (no empty grid, no placeholder — UI-SPEC
+ * portfolio empty rule).
+ *
+ * The read is defensive end-to-end (T-10-04-04): copy-before-filter, per-entry
+ * type guards, per-field fallback — one malformed store/gallery entry is skipped,
+ * never thrown on, so a bad row can't break the whole-site build. All captions /
+ * badges render through Astro auto-escaping ONLY (never a raw-HTML directive, D-02).
+ */
+import type { BlockOf } from '../../lib/editorTypes';
+import type { Lang } from '../../i18n/ui';
+import storeData from '../../data/store.json';
+import galleryData from '../../data/gallery.json';
+
+interface Props {
+  block: BlockOf<'portfolio'>;
+  lang: Lang;
+  slug: string;
+}
+
+/** Defensive local shapes — the data files are staff/bot write-targets, so every
+ *  field is optional here regardless of the seed JSON's inferred type. */
+interface StoreProductLike {
+  editor?: string;
+  nsfw?: boolean;
+  images?: string[];
+  name?: { es?: string; en?: string };
+}
+interface GalleryEntryLike {
+  file?: string;
+  caption?: string;
+  editor?: string;
+  nsfw?: boolean;
+}
+
+type Source = 'store' | 'gallery' | 'extra';
+interface PortfolioItem {
+  image: string;
+  caption: string;
+  source: Source;
+}
+
+const { block, lang, slug } = Astro.props;
+
+// `auto` gates the credited join only; a missing flag defaults to on.
+const autoPull = block.auto !== false;
+
+// 1. Store products credited to this slug, SFW only (defensive copy-before-filter).
+const rawProducts: StoreProductLike[] = Array.isArray((storeData as { products?: unknown }).products)
+  ? ([...((storeData as { products: StoreProductLike[] }).products)])
+  : [];
+const storeItems: PortfolioItem[] = autoPull
+  ? rawProducts
+      .filter(
+        (p) =>
+          Boolean(p) &&
+          p.editor === slug &&
+          p.nsfw !== true &&
+          Array.isArray(p.images) &&
+          typeof p.images[0] === 'string' &&
+          p.images[0].length > 0,
+      )
+      .map((p) => ({
+        image: p.images![0],
+        caption: p.name?.[lang] ?? p.name?.es ?? p.name?.en ?? '',
+        source: 'store' as const,
+      }))
+  : [];
+
+// 2. Gallery entries credited to this slug, SFW only (missing nsfw = SFW).
+const rawGallery: GalleryEntryLike[] = Array.isArray(galleryData)
+  ? ([...(galleryData as GalleryEntryLike[])])
+  : [];
+const galleryItems: PortfolioItem[] = autoPull
+  ? rawGallery
+      .filter(
+        (g) =>
+          Boolean(g) &&
+          g.editor === slug &&
+          g.nsfw !== true &&
+          typeof g.file === 'string' &&
+          g.file.length > 0,
+      )
+      .map((g) => ({
+        image: `/gallery/${g.file}`,
+        caption: typeof g.caption === 'string' ? g.caption : '',
+        source: 'gallery' as const,
+      }))
+  : [];
+
+// 3. Hand-added items (always shown, independent of the auto flag).
+const rawExtra = Array.isArray(block.extra) ? block.extra : [];
+const extraItems: PortfolioItem[] = rawExtra
+  .filter((e) => Boolean(e) && typeof e.image === 'string' && e.image.length > 0)
+  .map((e) => ({
+    image: e.image,
+    caption: e.caption?.[lang] ?? e.caption?.es ?? e.caption?.en ?? '',
+    source: 'extra' as const,
+  }));
+
+const items: PortfolioItem[] = [...storeItems, ...galleryItems, ...extraItems];
+
+// Credited-source badge copy (UI-SPEC). Space Mono label; hand-added items carry
+// no badge.
+const badgeStore = lang === 'es' ? 'De la tienda' : 'From the store';
+const badgeGallery = lang === 'es' ? 'De la galería' : 'From the gallery';
+---
+
+{items.length > 0 && (
+  <div class="editor-portfolio">
+    {items.map((item) => (
+      <figure class="editor-portfolio__cell">
+        <div class="editor-portfolio__frame">
+          <img
+            class="editor-portfolio__img"
+            src={item.image}
+            alt={item.caption}
+            loading="lazy"
+            decoding="async"
+          />
+          {item.source !== 'extra' && (
+            <span class="editor-portfolio__badge">
+              {item.source === 'store' ? badgeStore : badgeGallery}
+            </span>
+          )}
+        </div>
+        {item.caption && <figcaption class="editor-portfolio__cap">{item.caption}</figcaption>}
+      </figure>
+    ))}
+  </div>
+)}
+
+<style>
+  /* Grid of image cards within the ~640px profile column: 1 col mobile → 2 col
+     from 480px. Mirrors the store grid's card rhythm at profile scale. */
+  .editor-portfolio {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    width: 100%;
+  }
+  @media (min-width: 480px) {
+    .editor-portfolio {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .editor-portfolio__cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    margin: 0;
+  }
+
+  /* Fixed square frame prevents CLS while images load. */
+  .editor-portfolio__frame {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--color-ink);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+  }
+  .editor-portfolio__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Credited badge — Space Mono label, brand red (UI-SPEC reserved-red list). */
+  .editor-portfolio__badge {
+    position: absolute;
+    top: var(--space-2xs);
+    left: var(--space-2xs);
+    padding: var(--space-3xs) var(--space-2xs);
+    background: var(--color-red);
+    color: var(--color-white);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+
+  .editor-portfolio__cap {
+    font-family: var(--font-mono);
+    font-size: var(--type-label);
+    line-height: var(--lh-label);
+    color: var(--color-white-dim);
+  }
+</style>
