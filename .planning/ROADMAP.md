@@ -470,6 +470,7 @@ Plans:
 - [ ] 10.1-01-PLAN.md — Website foundation: editorTypes theme schema + editors.json migration + editorPath -> /e/<slug> + navbar drop (D-01/D-13/D-14/D-16/D-17/D-26)
 - [ ] 10.1-02-PLAN.md — Theme CSS system (token defaults + full CSS effect suite + reduced-motion) + 14 self-hosted curated fonts (D-02/D-03/D-04/D-11/D-21)
 - [ ] 10.1-09-PLAN.md — Bot schema: ThemeModel + extended EditorPage (theme-injection validation gate, TDD, nocturna-bot) (D-02/D-07/D-09/D-13/D-21)
+- [ ] 10.1-12-PLAN.md — View-counter endpoint (standalone counter app + SQLite store + CORS/dedup) + sibling deploy artifacts (nocturna-bot) (D-08/D-25)
 
 **Wave 2** *(blocked on Wave 1)*
 
@@ -477,10 +478,9 @@ Plans:
 - [ ] 10.1-04-PLAN.md — Client-dynamic components: PresenceDot (Lanyard) + ViewCounter (cinema ping) + AudioPlayer (splash-gated) (D-05/D-06/D-22/D-25)
 - [ ] 10.1-05-PLAN.md — Block token-swap (7 blocks + BlockRenderer) + PortfolioBlock 2-3 col grid + lightbox (D-10/D-12)
 - [ ] 10.1-06-PLAN.md — EditorLayout (standalone, token emission, watermark) + Splash (editor:enter unlock) + effects.ts engine (D-04/D-15/D-21/D-22/D-26)
-- [ ] 10.1-08-PLAN.md — Directory restyle + unlist/noindex + store credit links -> /e/<slug> (D-16/D-17)
+- [ ] 10.1-08-PLAN.md — Directory restyle + unlist/noindex + store credit links + gallery lightbox credit links -> /e/<slug> (D-16/D-17)
 - [ ] 10.1-10-PLAN.md — Admin theme panel + 8 presets + live preview + lang/badges/socials (nocturna-bot) (D-23/D-24/D-03/D-07/D-09/D-13)
 - [ ] 10.1-11-PLAN.md — Media/audio upload endpoints (image+GIF+video+audio, per-kind caps, ffmpeg optimize) (nocturna-bot) (D-06/D-18/D-19/D-20)
-- [ ] 10.1-12-PLAN.md — View-counter endpoint (standalone counter app + SQLite store + CORS/dedup) + sibling deploy artifacts (nocturna-bot) (D-25)
 
 **Wave 3** *(blocked on Wave 2)*
 
