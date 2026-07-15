@@ -433,7 +433,7 @@ Plans:
 **Wave 2** *(blocked on Wave 1)*
 
 - [ ] 10-04-PLAN.md — Website block library: `BlockRenderer` + 8 auto-escaping block components + build-time portfolio auto-pull (D-03/D-04/D-12)
-- [ ] 10-05-PLAN.md — Bot transport: `sync_editors()` + `unpublish_editor()` (atomic upsert-by-discordId, image blobs, no-regression) (TDD)
+- [x] 10-05-PLAN.md — Bot transport: `sync_editors()` + `unpublish_editor()` (atomic upsert-by-discordId, image blobs, no-regression) (TDD) — done 2026-07-14, nocturna-bot 9dd1dff/027b6b8/9fbfb22, full bot suite 418/418
 
 **Wave 3** *(blocked on Wave 2)*
 
