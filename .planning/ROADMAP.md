@@ -438,7 +438,7 @@ Plans:
 **Wave 3** *(blocked on Wave 2)*
 
 - [x] 10-06-PLAN.md — EDIT-08: gallery ✅ approve editor-credit + NSFW-flag affordance + `gallery.json` `editor`/`nsfw` fields + `store.json` slug re-tag *(after 10-05 — shares `core/github_publish.py`)* ✅ 2026-07-14 (ephemeral slug-autocomplete follow-up; store re-tag = local no-op, live re-tag deferred via `/tienda editar`)
-- [ ] 10-07-PLAN.md — Website pages: per-editor `[slug].astro` route + `EditorsDirectory` + slug-carrying language switch + human verify (EDIT-01/EDIT-02)
+- [x] 10-07-PLAN.md — Website pages: per-editor `[slug].astro` route + `EditorsDirectory` + slug-carrying language switch + human verify (EDIT-01/EDIT-02) — code complete 2026-07-14 (build green, 16 pages); visual human-verify checkpoint against UI-SPEC still pending user sign-off
 - [ ] 10-08-PLAN.md — FastAPI app core: OAuth2 login + bot-token role gate + signed session + `require_editor` ownership gate + first-login draft (EDIT-04/EDIT-05) (TDD)
 - [ ] 10-09-PLAN.md — Role-loss cog: `on_member_update` + polling-sweep auto-unpublish (mass-removal guard) + optional `/mi-pagina` DM (EDIT-07) (TDD)
 

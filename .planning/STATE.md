@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 10-06-PLAN.md
-last_updated: "2026-07-15T00:20:00.000Z"
-last_activity: 2026-07-14 -- 10-06 complete (Task 2 TDD): gallery ✅ editor-credit + NSFW-flag affordance (D-11/D-12/D-04); publish_message optional fields + set_gallery_editor + /galeria creditar; full bot suite 435/435 (was 418)
+stopped_at: Completed 10-07-PLAN.md (code); human-verify checkpoint pending
+last_updated: "2026-07-15T00:30:00.000Z"
+last_activity: 2026-07-14 -- 10-07 code complete (per-editor page route + EditorsDirectory + slug-carrying language switch); build green (16 pages); Task 3 human-verify checkpoint against UI-SPEC pending user sign-off
 progress:
   total_phases: 12
   completed_phases: 11
   total_plans: 65
-  completed_plans: 60
-  percent: 92
+  completed_plans: 61
+  percent: 93
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 10 (editor-profile-pages-carrd-style-template-editor-for-nocturn) — EXECUTING
-Plan: 6 of 11 (Wave 3 — 10-04 still pending)
-Status: 10-06 complete
-Last activity: 2026-07-14 -- 10-06 complete (Task 2 TDD; Task 1 decision pre-resolved, Task 3 local no-op)
+Plan: 7 of 11 (Wave 3 — 10-08, 10-09 still pending)
+Status: 10-07 code complete; human-verify checkpoint pending
+Last activity: 2026-07-14 -- 10-07 code complete (per-editor page route + EditorsDirectory + slug-carrying language switch)
 
-Progress: [█████████░] 92%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
