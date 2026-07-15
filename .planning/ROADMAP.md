@@ -278,6 +278,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 7. Reviews Publishing Pipeline | 4/4 | Complete   | 2026-07-09 |
 | 8. Bot Reminders Command | 5/5 | Complete   | 2026-07-10 |
 | 9. Jinxxy Store Auto-Sync | 12/13 | In Progress |  |
+| 10. Editor Profile Pages | 9/11 | In Progress |  |
 
 ### Phase 6: Asset Store
 
@@ -440,7 +441,7 @@ Plans:
 - [x] 10-06-PLAN.md — EDIT-08: gallery ✅ approve editor-credit + NSFW-flag affordance + `gallery.json` `editor`/`nsfw` fields + `store.json` slug re-tag *(after 10-05 — shares `core/github_publish.py`)* ✅ 2026-07-14 (ephemeral slug-autocomplete follow-up; store re-tag = local no-op, live re-tag deferred via `/tienda editar`)
 - [x] 10-07-PLAN.md — Website pages: per-editor `[slug].astro` route + `EditorsDirectory` + slug-carrying language switch + human verify (EDIT-01/EDIT-02) — code complete 2026-07-14 (build green, 16 pages); visual human-verify checkpoint against UI-SPEC still pending user sign-off
 - [x] 10-08-PLAN.md — FastAPI app core: OAuth2 login + bot-token role gate + signed session + `require_editor` ownership gate + first-login draft (EDIT-04/EDIT-05) (TDD)
-- [ ] 10-09-PLAN.md — Role-loss cog: `on_member_update` + polling-sweep auto-unpublish (mass-removal guard) + optional `/mi-pagina` DM (EDIT-07) (TDD)
+- [x] 10-09-PLAN.md — Role-loss cog: `on_member_update` + polling-sweep auto-unpublish (mass-removal guard) + optional `/mi-pagina` DM (EDIT-07) (TDD) — done 2026-07-15, nocturna-bot 7101db7/58108a8/9955145; enabled `intents.members` (D-10 on_member_update PRIMARY) + hourly sweep backstop; full bot suite 466/466
 
 **Wave 4** *(blocked on 10-08)*
 
