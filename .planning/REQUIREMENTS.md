@@ -94,7 +94,7 @@ _Added 2026-07-14 during Phase 10 planning. Minted from the D-01…D-20 locked d
 - [ ] **EDIT-05**: An editor edits ONLY their own page (1:1 Discord ID → page, no admin override); first login auto-creates an empty draft (D-08/D-09)
 - [x] **EDIT-06**: A block editor supports add/remove/reorder + live preview + image upload; save publishes immediately cross-repo (`editors.json` + images in one commit) (D-13/D-14/D-17)
 - [ ] **EDIT-07**: An editor can self-unpublish; losing the editor role auto-unpublishes their page on next detection (D-10/D-16)
-- [ ] **EDIT-08**: The gallery ✅ approve flow is extended to capture an editor `editor` credit and an optional `nsfw` flag (the gallery-side data source for D-04's SFW-only portfolio exclusion); existing `store.json` `editor` values are re-tagged to exact slugs (D-04/D-11/D-12)
+- [x] **EDIT-08**: The gallery ✅ approve flow is extended to capture an editor `editor` credit and an optional `nsfw` flag (the gallery-side data source for D-04's SFW-only portfolio exclusion); existing `store.json` `editor` values are re-tagged to exact slugs (D-04/D-11/D-12)
 
 ## v2 Requirements
 
@@ -189,7 +189,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | EDIT-05 | Phase 10 | Planned (10-08) |
 | EDIT-06 | Phase 10 | Planned (10-02, 10-05, 10-10) |
 | EDIT-07 | Phase 10 | Planned (10-05, 10-09, 10-10) |
-| EDIT-08 | Phase 10 | Planned (10-01, 10-06) |
+| EDIT-08 | Phase 10 | Done (10-01, 10-06) |
 
 **Coverage:**
 - v1 requirements: 50 total (PLAT 4 + I18N 4 + NAV 4 + FX 4 + CAT 4 + GAL 4 + BOT 6 + STORE 5 + REV 5 + STORE-SYNC 2 + EDIT 8)

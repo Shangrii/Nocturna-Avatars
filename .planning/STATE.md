@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 10-05-PLAN.md
-last_updated: "2026-07-14T23:55:00.000Z"
-last_activity: 2026-07-14 -- 10-05 complete (2 tasks, TDD): sync_editors() + unpublish_editor() cross-repo transport; full bot suite 418/418
+stopped_at: Completed 10-06-PLAN.md
+last_updated: "2026-07-15T00:20:00.000Z"
+last_activity: 2026-07-14 -- 10-06 complete (Task 2 TDD): gallery ✅ editor-credit + NSFW-flag affordance (D-11/D-12/D-04); publish_message optional fields + set_gallery_editor + /galeria creditar; full bot suite 435/435 (was 418)
 progress:
   total_phases: 12
   completed_phases: 11
   total_plans: 65
-  completed_plans: 59
-  percent: 91
+  completed_plans: 60
+  percent: 92
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 10 (editor-profile-pages-carrd-style-template-editor-for-nocturn) — EXECUTING
-Plan: 5 of 11 (Wave 2 — 10-04 still pending)
-Status: 10-05 complete
-Last activity: 2026-07-14 -- 10-05 complete (2 tasks, TDD)
+Plan: 6 of 11 (Wave 3 — 10-04 still pending)
+Status: 10-06 complete
+Last activity: 2026-07-14 -- 10-06 complete (Task 2 TDD; Task 1 decision pre-resolved, Task 3 local no-op)
 
-Progress: [█████████░] 91%
+Progress: [█████████░] 92%
 
 ## Performance Metrics
 
@@ -97,6 +97,7 @@ Progress: [█████████░] 91%
 | Phase 10 P02 | 20min | 3 tasks | 5 files |
 | Phase 10 P03 | ~25min | 4 tasks | 1 files |
 | Phase 10 P05 | 18min | 2 tasks | 2 files |
+| Phase 10 P06 | 20min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -188,6 +189,7 @@ Recent decisions affecting current work:
 - [Phase 09-12]: UAT GAP-1 closure (staff had no Discord path to set a product's `editor`, TDD, nocturna-bot a9d1a7b/82ac6a4 + 99a2f19/1530706): (Task 1) core/github_publish.py::set_store_editor/_set_store_editor_sync — object-aware editor-only read-modify-commit matched by checkoutUrl, mirrors _attach_store_media_sync MINUS the image-blob tree; preserves _comment + every other product/field byte-for-byte, raises GitHubPublishError on no match, no-ops (no commit/ref PATCH) when editor unchanged (T-09-24). Commit message is the FIXED `store: set editor for {checkout_url}` template — raw editor text NEVER interpolated (T-09-22). (Task 2) cogs/jinxxy.py::/tienda editar — staff gate FIRST (T-09-20) → validate BEFORE defer (strip, reject empty-after-strip / >100 chars / control-or-newline via `[\x00-\x1f\x7f]`, T-09-21) → set_store_editor commit → GitHubPublishError log-only + single ephemeral reply (D-05/T-09-23); @editar.autocomplete('producto') reuses _producto_choices ([] for non-staff). core/store_sync.py UNCHANGED — editor already staff-owned (absent from SYNC_OWNED) + grafted by sync_store's _GRAFT_KEYS (09-07); a merge regression pins editor survives a Jinxxy price change. +18 tests; full bot suite 356 passed (was 338). Closes STORE-SYNC-02 for editor. Cinema host needs git pull + systemd restart to surface /tienda editar.
 - [Phase 10]: [10-02] Package legitimacy checkpoint approved for fastapi==0.139.0, uvicorn[standard]==0.51.0, authlib==1.7.2, python-multipart==0.0.32, jinja2==3.1.6, httpx==0.28.1 (starlette/itsdangerous left transitive per FastAPI resolution)
 - [Phase 10]: [10-02] editors_model.py splits URL validation into is_https_url (strict, for user-typed link URLs, D-16) vs is_safe_image_ref (site-relative-path-or-https, for admin-app-written avatar/image/portfolio-extra fields per 10-01's schema) -- both reject javascript:/data:/http:/vbscript: schemes; is_safe_image_ref also rejects .. traversal
+- [Phase 10]: [10-06] Gallery ✅ editor-credit + NSFW-flag affordance shipped (EDIT-08 closed; nocturna-bot 54cb152 test -> 921261a feat, TDD). Task-1 checkpoint:decision was PRE-RESOLVED by locked D-11/D-12 + RESEARCH Open Q1 -> ephemeral slug-autocomplete follow-up after ✅ (a reaction carries no text, Pitfall 7). Transport: publish_message gained optional editor slug (D-11/D-12) + nsfw flag (D-04) trailing the Phase-4 entry shape (both OMITTED when unset — missing editor = uncredited, missing nsfw = SFW, so historical entries stay valid + no BOT-01/02 regression); new set_gallery_editor()/_set_gallery_editor_sync updates ALL of a message's entries by the D-14 {msgID} filename segment (like _remove_sync), no image re-upload, no-op-safe (no match / unchanged -> no commit), id-only commit message (raw slug never interpolated, T-10-05-02). Cog: added a `galeria` app_commands.Group with /galeria creditar (mensaje/editor/nsfw) — _is_staff-gated FIRST (T-10-06-01), slug validated against the live editors.json set (D-12 exact match, T-10-06-02, fails closed on fetch error) before any write; @creditar.autocomplete reuses the 09-12 _producto_choices seam. store.json re-tag was a LOCAL NO-OP (products == []); the live re-tag is deferred via /tienda editar + documented (editor is staff-owned + sync-preserved per 09-07/09-12, so a JinxxyCog sync won't fight it). Full bot suite 435/435 (was 418; +17 TDD). Feeds 10-04's portfolio auto-pull (g.editor === slug && g.nsfw !== true). Cinema host needs git pull + systemd restart to surface /galeria creditar.
 - [Phase 10]: [10-05] core/github_publish.py gained sync_editors() + unpublish_editor() (nocturna-bot 9dd1dff test -> 027b6b8 feat -> 9fbfb22 test, TDD). editors.json is a top-level ARRAY (D-18) so both reuse the generic _fetch_json reader + audited _commit_with_retry atomic blobs->tree->commit->ref core VERBATIM — NO new commit path; gallery/store/reviews transports byte-for-byte unchanged (full bot suite 418/418, was 400). sync_editors upserts THIS editor by discordId into the FRESHLY fetched array each retry (Pitfall 6 concurrent-clobber guard, mirrors sync_store's re-graft-by-checkoutUrl) and commits uploaded image blobs under public/editors/<slug>/<filename> in the SAME tree -> ONE commit (D-17); fixed 'editors: publish <slug>' message (never editor text, T-10-05-02); no no-op guard (D-13 publishes on save). unpublish_editor flips published=false via the same core leaving the entry+images in place (re-publishable), with a no-op guard on unknown/already-unpublished (D-10/D-16). discordId compared as str both sides. Transport stays dumb — callers validate via editors_model (10-02) first. Ready for 10-08 (FastAPI save) + 10-09 (role-loss cog) + 10-10 (block editor UI). Note: unpublish_editor implementation landed in the Task 1 GREEN commit (shared transport section), so the Task 2 test commit followed it (TDD-ordering nuance, documented in 10-05-SUMMARY).
 
 ### Pending Todos
@@ -232,6 +234,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-14T23:55:00.000Z
-Stopped at: Completed 10-05-PLAN.md
+Last session: 2026-07-15T00:20:00.000Z
+Stopped at: Completed 10-06-PLAN.md
 Resume file: None
