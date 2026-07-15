@@ -17,6 +17,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ServicesPage from '../../components/sections/ServicesPage.astro';
 import GalleryPage from '../../components/sections/GalleryPage.astro';
 import StorePage from '../../components/sections/StorePage.astro';
+import EditorsDirectory from '../../components/sections/EditorsDirectory.astro';
 import TermsPage from '../../components/sections/TermsPage.astro';
 import CartDrawer from '../../components/CartDrawer.astro';
 import CartPill from '../../components/CartPill.astro';
@@ -34,6 +35,7 @@ export function getStaticPaths() {
     ...staticPathsForConcept('services'),
     ...staticPathsForConcept('gallery'),
     ...staticPathsForConcept('store'),
+    ...staticPathsForConcept('editors'),
     ...staticPathsForConcept('terms'),
   ];
 }
@@ -50,6 +52,8 @@ if (concept === 'gallery') {
   meta = { title: pages.galeria.metaTitle, description: pages.galeria.metaDescription };
 } else if (concept === 'store') {
   meta = { title: pages.tienda.metaTitle, description: pages.tienda.metaDescription };
+} else if (concept === 'editors') {
+  meta = { title: pages.editores.metaTitle, description: pages.editores.metaDescription };
 } else if (concept === 'terms') {
   meta = { title: terms.metaTitle, description: terms.metaDescription };
 } else {
@@ -60,6 +64,7 @@ if (concept === 'gallery') {
 <BaseLayout lang={lang} title={meta.title} description={meta.description}>
   {concept === 'gallery' && <GalleryPage lang={lang} />}
   {concept === 'store' && <StorePage lang={lang} />}
+  {concept === 'editors' && <EditorsDirectory lang={lang} />}
   {concept === 'terms' && <TermsPage lang={lang} />}
   {concept === 'services' && <ServicesPage lang={lang} />}
 
