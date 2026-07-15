@@ -48,6 +48,48 @@ export type EditorBlock =
 /** Narrow the union to a single variant (used by each per-block component). */
 export type BlockOf<T extends EditorBlock['type']> = Extract<EditorBlock, { type: T }>;
 
+/**
+ * Per-editor theme (10.1 D-01/D-02/D-03/D-11/D-21/D-26). Mirrors the UI-SPEC
+ * "Theme Token Contract" table one-to-one: each field feeds a single `--theme-*`
+ * CSS custom property emitted by `EditorLayout` (10.1-06). Every field has a
+ * Midnight-Nocturna default so an entry with a partial/absent theme still renders
+ * (the render layer fills defaults — D-26 clean cutover). Types document intent
+ * only; the render layer emits a FIXED whitelist of tokens and never trusts the
+ * shape of these values (T-10.1-01-01), so there is no raw-HTML/media-exec field.
+ */
+export interface EditorTheme {
+  /** `--theme-bg` — page background behind media. Default `#0a0c14`. */
+  bg: string;
+  /** `--theme-bg-media` — image/gif/video ref layer. Default none. */
+  bgMedia?: string;
+  /** `--theme-overlay` — 0–100, scrim darkness over media (D-21). Default 40. */
+  overlay: number;
+  /** `--theme-blur` — 0–20px, media backdrop blur (D-21). Default 0. */
+  blur: number;
+  /** `--theme-tint` — media color tint (D-21). Default none. */
+  tint?: string;
+  /** `--theme-surface` — glass card fill. Default `rgba(240,234,228,0.06)`. */
+  surface: string;
+  /** `--theme-accent` — buttons, ring, icon hover, active. Default `#c0192c`. */
+  accent: string;
+  /** `--theme-text` — body/link text. Default `#f0eae4`. */
+  text: string;
+  /** `--theme-text-muted` — tagline, meta. Default `#9a9198`. */
+  textMuted: string;
+  /** `--theme-font` — one curated family key (D-03). Default `Inter`. */
+  font: string;
+  /** `--theme-btn-style` — link-button treatment (D-11). Default `glass`. */
+  btnStyle: 'filled' | 'outline' | 'glass';
+  /** `--theme-btn-shape` — corner radius (D-11: 0/12px/999px). Default `rounded`. */
+  btnShape: 'sharp' | 'rounded' | 'pill';
+  /** Opt-in effect keys (Effects Catalog). Default `[]`. */
+  effects: string[];
+  /** Background audio ref (D-06). Default none. */
+  audio?: string;
+  /** Applied preset key (D-24). Default `midnight-nocturna`. */
+  preset?: string;
+}
+
 /** A single editor-profile entry (the `editors.json` array element). */
 export interface Editor {
   slug: string;
@@ -55,7 +97,18 @@ export interface Editor {
   published: boolean;
   name: string;
   avatar: string;
-  tagline: Bilingual;
+  /** D-13: single-language page — the field the page renders in. */
+  lang: 'es' | 'en';
+  /** D-13: single-string tagline (per `lang`), replaces the old `Bilingual`. */
+  tagline: string;
+  /** Curated-set badge keys (D-07). */
+  badges: string[];
+  /** Platform-icon social row (D-09). */
+  socials: EditorLink[];
   links: EditorLink[];
   blocks: EditorBlock[];
+  /** Per-editor theme (D-01/D-26). */
+  theme: EditorTheme;
+  /** View count (D-25); optional — hidden when absent/unreachable. */
+  views?: number;
 }

@@ -27,8 +27,13 @@ export const routeSlugs: Record<PageConcept, Record<Lang, string>> = {
   terms: { es: 'terminos', en: 'terms' },
 };
 
-/** Concepts that are real, navigable pages in the nav, in display order. */
-export const navConcepts: PageConcept[] = ['home', 'services', 'gallery', 'store', 'editors', 'terms'];
+/**
+ * Concepts that are real, navigable pages in the nav, in display order.
+ * `editors` is intentionally ABSENT (10.1 D-16): the directory is unlisted, so it
+ * no longer appears in the navbar — but it stays in `routeSlugs` / `PageConcept`
+ * so the (now-unlisted) directory route and the legacy redirect stubs still build.
+ */
+export const navConcepts: PageConcept[] = ['home', 'services', 'gallery', 'store', 'terms'];
 
 /** Build the localized path for a concept in a given locale, e.g. "/en/services". */
 export function localizedPath(concept: PageConcept, lang: Lang): string {
@@ -37,14 +42,16 @@ export function localizedPath(concept: PageConcept, lang: Lang): string {
 }
 
 /**
- * Per-editor path helper: build the localized URL for a single editor profile,
- * e.g. editorPath('aria','en') → "/en/editors/aria", editorPath('aria','es') →
- * "/es/editores/aria". Distinct from the concept-only `localizedPath` because it
- * carries the editor's `<slug>`. Per-editor language switching that preserves the
- * slug is added in 10-07; this helper only builds the forward link.
+ * Per-editor path helper: build the canonical vanity URL for a single editor
+ * profile — editorPath('aria') → "/e/aria" (10.1 D-14/D-17). This one change
+ * repoints every D-17 credit cross-link (store cards, gallery items, directory)
+ * at the short standalone URL at once. Editor pages are single-language (D-13),
+ * so the URL no longer carries a locale segment. The `lang` parameter is kept in
+ * the signature so existing callers (ProductCard / directory / translatePath)
+ * compile unchanged; it is intentionally unused now.
  */
-export function editorPath(slug: string, lang: Lang): string {
-  return `/${lang}/${routeSlugs.editors[lang]}/${slug}`;
+export function editorPath(slug: string, _lang?: Lang): string {
+  return `/e/${slug}`;
 }
 
 /**
