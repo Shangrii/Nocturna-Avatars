@@ -432,14 +432,14 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1)*
 
-- [ ] 10-04-PLAN.md — Website block library: `BlockRenderer` + 8 auto-escaping block components + build-time portfolio auto-pull (D-03/D-04/D-12)
+- [x] 10-04-PLAN.md — Website block library: `BlockRenderer` + 8 auto-escaping block components + build-time portfolio auto-pull (D-03/D-04/D-12)
 - [x] 10-05-PLAN.md — Bot transport: `sync_editors()` + `unpublish_editor()` (atomic upsert-by-discordId, image blobs, no-regression) (TDD) — done 2026-07-14, nocturna-bot 9dd1dff/027b6b8/9fbfb22, full bot suite 418/418
 
 **Wave 3** *(blocked on Wave 2)*
 
 - [x] 10-06-PLAN.md — EDIT-08: gallery ✅ approve editor-credit + NSFW-flag affordance + `gallery.json` `editor`/`nsfw` fields + `store.json` slug re-tag *(after 10-05 — shares `core/github_publish.py`)* ✅ 2026-07-14 (ephemeral slug-autocomplete follow-up; store re-tag = local no-op, live re-tag deferred via `/tienda editar`)
 - [x] 10-07-PLAN.md — Website pages: per-editor `[slug].astro` route + `EditorsDirectory` + slug-carrying language switch + human verify (EDIT-01/EDIT-02) — code complete 2026-07-14 (build green, 16 pages); visual human-verify checkpoint against UI-SPEC still pending user sign-off
-- [ ] 10-08-PLAN.md — FastAPI app core: OAuth2 login + bot-token role gate + signed session + `require_editor` ownership gate + first-login draft (EDIT-04/EDIT-05) (TDD)
+- [x] 10-08-PLAN.md — FastAPI app core: OAuth2 login + bot-token role gate + signed session + `require_editor` ownership gate + first-login draft (EDIT-04/EDIT-05) (TDD)
 - [ ] 10-09-PLAN.md — Role-loss cog: `on_member_update` + polling-sweep auto-unpublish (mass-removal guard) + optional `/mi-pagina` DM (EDIT-07) (TDD)
 
 **Wave 4** *(blocked on 10-08)*

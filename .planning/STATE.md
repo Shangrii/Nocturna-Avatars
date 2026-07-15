@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 10-07-PLAN.md (code); human-verify checkpoint pending
-last_updated: "2026-07-15T00:30:00.000Z"
-last_activity: 2026-07-14 -- 10-07 code complete (per-editor page route + EditorsDirectory + slug-carrying language switch); build green (16 pages); Task 3 human-verify checkpoint against UI-SPEC pending user sign-off
+stopped_at: Completed 10-08-PLAN.md (admin app auth core)
+last_updated: "2026-07-15T05:00:36.414Z"
+last_activity: 2026-07-15 -- 10-08 complete (Discord OAuth2 + bot-token role gate + signed session + require_editor IDOR gate + first-login draft; nocturna-bot app/{auth,deps,main}.py, 16 tests, bot suite 451)
 progress:
   total_phases: 12
   completed_phases: 11
   total_plans: 65
-  completed_plans: 61
-  percent: 93
+  completed_plans: 62
+  percent: 92
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 10 (editor-profile-pages-carrd-style-template-editor-for-nocturn) — EXECUTING
-Plan: 7 of 11 (Wave 3 — 10-08, 10-09 still pending)
-Status: 10-07 code complete; human-verify checkpoint pending
-Last activity: 2026-07-14 -- 10-07 code complete (per-editor page route + EditorsDirectory + slug-carrying language switch)
+Plan: 8 of 11 complete (Wave 3 — 10-09 next, then 10-10/10-11)
+Status: 10-08 complete — admin app auth core (OAuth2 + role gate + session + require_editor)
+Last activity: 2026-07-15 -- 10-08 complete (nocturna-bot app/{auth,deps,main}.py + tests)
 
-Progress: [█████████░] 93%
+Progress: [██████████] 95%
 
 ## Performance Metrics
 
@@ -98,6 +98,7 @@ Progress: [█████████░] 93%
 | Phase 10 P03 | ~25min | 4 tasks | 1 files |
 | Phase 10 P05 | 18min | 2 tasks | 2 files |
 | Phase 10 P06 | 20min | 3 tasks | 3 files |
+| Phase 10 P08 | 22min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -190,6 +191,7 @@ Recent decisions affecting current work:
 - [Phase 10]: [10-02] Package legitimacy checkpoint approved for fastapi==0.139.0, uvicorn[standard]==0.51.0, authlib==1.7.2, python-multipart==0.0.32, jinja2==3.1.6, httpx==0.28.1 (starlette/itsdangerous left transitive per FastAPI resolution)
 - [Phase 10]: [10-02] editors_model.py splits URL validation into is_https_url (strict, for user-typed link URLs, D-16) vs is_safe_image_ref (site-relative-path-or-https, for admin-app-written avatar/image/portfolio-extra fields per 10-01's schema) -- both reject javascript:/data:/http:/vbscript: schemes; is_safe_image_ref also rejects .. traversal
 - [Phase 10]: [10-06] Gallery ✅ editor-credit + NSFW-flag affordance shipped (EDIT-08 closed; nocturna-bot 54cb152 test -> 921261a feat, TDD). Task-1 checkpoint:decision was PRE-RESOLVED by locked D-11/D-12 + RESEARCH Open Q1 -> ephemeral slug-autocomplete follow-up after ✅ (a reaction carries no text, Pitfall 7). Transport: publish_message gained optional editor slug (D-11/D-12) + nsfw flag (D-04) trailing the Phase-4 entry shape (both OMITTED when unset — missing editor = uncredited, missing nsfw = SFW, so historical entries stay valid + no BOT-01/02 regression); new set_gallery_editor()/_set_gallery_editor_sync updates ALL of a message's entries by the D-14 {msgID} filename segment (like _remove_sync), no image re-upload, no-op-safe (no match / unchanged -> no commit), id-only commit message (raw slug never interpolated, T-10-05-02). Cog: added a `galeria` app_commands.Group with /galeria creditar (mensaje/editor/nsfw) — _is_staff-gated FIRST (T-10-06-01), slug validated against the live editors.json set (D-12 exact match, T-10-06-02, fails closed on fetch error) before any write; @creditar.autocomplete reuses the 09-12 _producto_choices seam. store.json re-tag was a LOCAL NO-OP (products == []); the live re-tag is deferred via /tienda editar + documented (editor is staff-owned + sync-preserved per 09-07/09-12, so a JinxxyCog sync won't fight it). Full bot suite 435/435 (was 418; +17 TDD). Feeds 10-04's portfolio auto-pull (g.editor === slug && g.nsfw !== true). Cinema host needs git pull + systemd restart to surface /galeria creditar.
+- [Phase 10]: [10-08] Admin app auth core shipped in nocturna-bot (app/__init__.py + app/{auth,deps,main}.py, TDD, commits 1e3464a test -> 80ba852 feat -> 2509061 feat; bot suite 451, was 435; +16 tests). This is the project's FIRST authenticated web surface — the trust boundary is established BEFORE any editing UI (EDIT-04/EDIT-05). auth.py: has_editor_role does a SERVER-SIDE GET /guilds/{GUILD_ID}/members/{id} with the `Bot {BOT_TOKEN}` header (never the OAuth user token, T-10-08-05) checking ROLE_MODERATOR_ID (D-07/D-15); a 404 non-member is a clean False. Authlib OAuth2 client (identify scope, fixed registered redirect URI); callback verifies `state` (Authlib, CSRF/Pitfall 4), role-gates BEFORE issuing a session (403 non-editor with UI-SPEC copy, no session), redirects to a FIXED internal POST_LOGIN_REDIRECT='/' (never a client ?next, open-redirect guard); ensure_draft creates a published=false empty-blocks draft with a normalize_slug unique slug (numeric-suffix collision, Pitfall 5; ValueError falls back to editor-<id>) committed via sync_editors (D-09). deps.py: require_editor() is the D-08 IDOR choke point — identity from request.session ONLY (401 without), re-runs the bot-token role check each call and clears session+403 on role loss (Pitfall 2 stale-session). main.py: SessionMiddleware(https_only=True, same_site=lax, max_age=6h short TTL, V3); fail-fast validate_config() at LIFESPAN STARTUP not import (deviation — keeps `from app.main import app` working in the dev/test env where secrets are empty, per the plan's own verify command); uvicorn bound to 127.0.0.1 behind Caddy (Pitfall 8). No bot token/client secret/OAuth code ever logged or in an error body. Feeds 10-09 (save endpoints mount behind require_editor) + 10-11 deploy (app.main:app + cinema .env secrets). Only the pre-existing unrelated .env.example change left untouched.
 - [Phase 10]: [10-05] core/github_publish.py gained sync_editors() + unpublish_editor() (nocturna-bot 9dd1dff test -> 027b6b8 feat -> 9fbfb22 test, TDD). editors.json is a top-level ARRAY (D-18) so both reuse the generic _fetch_json reader + audited _commit_with_retry atomic blobs->tree->commit->ref core VERBATIM — NO new commit path; gallery/store/reviews transports byte-for-byte unchanged (full bot suite 418/418, was 400). sync_editors upserts THIS editor by discordId into the FRESHLY fetched array each retry (Pitfall 6 concurrent-clobber guard, mirrors sync_store's re-graft-by-checkoutUrl) and commits uploaded image blobs under public/editors/<slug>/<filename> in the SAME tree -> ONE commit (D-17); fixed 'editors: publish <slug>' message (never editor text, T-10-05-02); no no-op guard (D-13 publishes on save). unpublish_editor flips published=false via the same core leaving the entry+images in place (re-publishable), with a no-op guard on unknown/already-unpublished (D-10/D-16). discordId compared as str both sides. Transport stays dumb — callers validate via editors_model (10-02) first. Ready for 10-08 (FastAPI save) + 10-09 (role-loss cog) + 10-10 (block editor UI). Note: unpublish_editor implementation landed in the Task 1 GREEN commit (shared transport section), so the Task 2 test commit followed it (TDD-ordering nuance, documented in 10-05-SUMMARY).
 
 ### Pending Todos
@@ -234,6 +236,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-15T00:20:00.000Z
-Stopped at: Completed 10-06-PLAN.md
+Last session: 2026-07-15T05:00:36.403Z
+Stopped at: Completed 10-08-PLAN.md (admin app auth core)
 Resume file: None
