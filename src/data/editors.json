@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "slug": "aria-test",
+    "discordId": "000000000000000000",
+    "published": true,
+    "name": "Aria",
+    "avatar": "/gallery/placeholder.webp",
+    "tagline": { "es": "Editora de texturas y outfits", "en": "Texture & outfit editor" },
+    "links": [
+      { "label": "Discord", "url": "https://discord.com" }
+    ],
+    "blocks": [
+      { "type": "bio", "text": { "es": "Trabajo con texturas y detalles finos para VRChat.", "en": "I work on textures and fine detail for VRChat avatars." } },
+      { "type": "heading", "text": { "es": "Mi trabajo", "en": "My work" } },
+      { "type": "portfolio", "auto": true },
+      { "type": "quote", "text": { "es": "El detalle lo es todo.", "en": "Detail is everything." }, "attribution": "Aria" },
+      { "type": "links", "items": [{ "label": "Instagram", "url": "https://instagram.com" }] }
+    ]
+  }
+]
