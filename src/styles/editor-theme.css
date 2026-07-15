@@ -1,0 +1,297 @@
+/* ═══════════════════════════════════════════════
+   NOCTURNA · EDITOR PAGES — Standalone theme system (D-15/D-26)
+   ───────────────────────────────────────────────
+   Editor pages import NONE of the brand `theme.css`; THIS file is their
+   design system. It declares:
+     (a) the 13 --theme-* tokens at their Midnight-Nocturna DEFAULTS so an
+         editor with no theme still renders on clean cutover (D-26), plus the
+         --space-* / --touch-min primitives adopted from the brand scale
+         (editor pages don't import theme.css, so they are re-declared here);
+     (b) the premium CSS effect suite — glassmorphism, avatar glow/ring,
+         animated username gradient, link-button hover + sheen, the button
+         style×shape matrix, and the background overlay/blur/tint layer —
+         EVERY declaration driven only by --theme-* tokens (never brand
+         --color-*), so free per-editor theming works with zero hard-coded
+         colours (D-04/D-11/D-21);
+     (c) ONE reduced-motion guard that kills every motion effect while
+         leaving overlay/blur/tint on (they are legibility, not motion).
+   The layout (plan 06) overrides these tokens inline per editor on the page
+   root; shell (03) and blocks (05) READ the tokens. Typewriter / tilt /
+   particles are JS effects owned by plan 06, not this file.
+   ═══════════════════════════════════════════════ */
+
+:root {
+  /* ── Layout primitives adopted from the brand scale (UI-SPEC Spacing).
+       Re-declared because editor pages do NOT import brand theme.css. ── */
+  --space-3xs: 4px;
+  --space-2xs: 8px;
+  --space-xs: 12px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: clamp(60px, 10vw, 120px);
+  --page-gutter: clamp(20px, 4vw, 48px);
+  --touch-min: 44px;
+
+  /* ── Theme Token Contract — Midnight-Nocturna DEFAULTS (D-26).
+       The layout emits editor-chosen overrides inline on the page root;
+       these defaults guarantee a bare page renders correctly. ── */
+  --theme-bg: #0a0c14;                        /* page background behind media */
+  --theme-bg-media: none;                     /* image/gif/video layer (D-21) */
+  --theme-overlay: 40;                        /* 0–100 scrim darkness over media (D-21) */
+  --theme-blur: 0px;                          /* 0–20px media backdrop blur (D-21) */
+  --theme-tint: transparent;                  /* media colour tint, none by default (D-21) */
+  --theme-surface: rgba(240, 234, 228, 0.06); /* glass card fill */
+  --theme-accent: #c0192c;                    /* buttons, ring, icon hover, active */
+  --theme-text: #f0eae4;                      /* body / link text */
+  --theme-text-muted: #9a9198;                /* tagline, meta */
+  --theme-font: 'Inter', system-ui, -apple-system, sans-serif; /* one curated family (D-03) */
+  --theme-btn-style: glass;                   /* filled | outline | glass (D-11) */
+  --theme-btn-shape: rounded;                 /* sharp | rounded | pill (D-11) */
+}
+
+/* ── Page shell ──────────────────────────────────────────────────────── */
+.editor-page {
+  min-height: 100dvh;
+  margin: 0;
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+  font-family: var(--theme-font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Background media treatment (D-21) ────────────────────────────────────
+   Fixed layer: solid --theme-bg, optional media, colour tint, backdrop blur,
+   and a darken scrim from --theme-overlay. These three knobs are LEGIBILITY
+   controls, not motion — they stay active under reduced-motion. ─────────── */
+.editor-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background-color: var(--theme-bg);
+  pointer-events: none;
+}
+.editor-bg__media {
+  position: absolute;
+  inset: 0;
+  background-image: var(--theme-bg-media);
+  background-size: cover;
+  background-position: center;
+  filter: blur(var(--theme-blur));
+  transform: scale(1.06); /* absorb the blur edge bleed */
+}
+.editor-bg__tint {
+  position: absolute;
+  inset: 0;
+  background: var(--theme-tint);
+  mix-blend-mode: color;
+}
+.editor-bg__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, calc(var(--theme-overlay) / 100));
+}
+
+/* ── Glassmorphism card (D-04) ────────────────────────────────────────── */
+.editor-glass {
+  background: var(--theme-surface);
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+  backdrop-filter: blur(16px) saturate(1.25);
+  border: 1px solid color-mix(in srgb, var(--theme-text) 12%, transparent);
+  border-radius: 20px;
+  padding: var(--space-md);
+}
+/* Static translucent fallback where backdrop-filter is unsupported. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .editor-glass {
+    background: color-mix(in srgb, var(--theme-surface), var(--theme-bg) 62%);
+  }
+}
+
+/* ── Avatar glow + conic ring (D-04) ──────────────────────────────────── */
+.editor-avatar {
+  position: relative;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--theme-accent) 62%, transparent),
+    0 0 26px 4px color-mix(in srgb, var(--theme-accent) 42%, transparent);
+  animation: editor-avatar-pulse 3.2s ease-in-out infinite;
+}
+.editor-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  z-index: -1;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--theme-accent),
+    transparent 35%,
+    var(--theme-accent) 70%,
+    transparent 100%
+  );
+  animation: editor-ring-spin 6s linear infinite;
+}
+@keyframes editor-avatar-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--theme-accent) 62%, transparent),
+      0 0 22px 3px color-mix(in srgb, var(--theme-accent) 38%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--theme-accent) 62%, transparent),
+      0 0 40px 8px color-mix(in srgb, var(--theme-accent) 55%, transparent);
+  }
+}
+@keyframes editor-ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Animated username gradient (D-04) ────────────────────────────────── */
+.editor-username--gradient {
+  background: linear-gradient(
+    90deg,
+    var(--theme-accent),
+    var(--theme-text),
+    var(--theme-accent)
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: editor-username-slide 6s linear infinite;
+}
+@keyframes editor-username-slide {
+  to { background-position: 200% center; }
+}
+
+/* ── Link buttons — style × shape matrix + hover (D-11) ───────────────────
+   The layout emits --theme-btn-style / --theme-btn-shape as the source of
+   truth (defaults above); the shell (plan 03) mirrors those enum values onto
+   the button as [data-btn-style] / [data-btn-shape] so this attribute-driven
+   CSS resolves cross-browser. All colour comes from --theme-accent /
+   --theme-surface / --theme-text — never a brand token. ─────────────────── */
+.editor-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-xs) var(--space-sm);
+  overflow: hidden;
+  font-family: var(--theme-font);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  word-break: break-word;
+  color: var(--theme-text);
+  background: var(--theme-surface);
+  border: 1px solid color-mix(in srgb, var(--theme-text) 14%, transparent);
+  border-radius: 12px; /* default (rounded); overridden per shape below */
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+/* Shape matrix (D-11): sharp 0 / rounded 12px / pill 999px. */
+.editor-btn[data-btn-shape='sharp']   { border-radius: 0; }
+.editor-btn[data-btn-shape='rounded'] { border-radius: 12px; }
+.editor-btn[data-btn-shape='pill']    { border-radius: 999px; }
+
+/* Style matrix (D-11): filled / outline / glass. */
+.editor-btn[data-btn-style='filled'] {
+  background: var(--theme-accent);
+  border-color: var(--theme-accent);
+  color: var(--theme-text);
+}
+.editor-btn[data-btn-style='outline'] {
+  background: transparent;
+  border-color: var(--theme-accent);
+  color: var(--theme-text);
+}
+.editor-btn[data-btn-style='glass'] {
+  background: var(--theme-surface);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-color: color-mix(in srgb, var(--theme-text) 14%, transparent);
+  color: var(--theme-text);
+}
+
+/* Hover: lift + accent shadow, plus a diagonal sheen sweep. */
+.editor-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--theme-accent);
+  box-shadow: 0 6px 22px -6px color-mix(in srgb, var(--theme-accent) 55%, transparent);
+}
+.editor-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent,
+    color-mix(in srgb, var(--theme-text) 22%, transparent),
+    transparent
+  );
+  transform: skewX(-18deg);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+.editor-btn:hover::before { left: 130%; }
+.editor-btn:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 2px;
+}
+
+/* ── Social icons — rest = text, hover = accent (Effects Catalog icon hover) ── */
+.editor-social__icon {
+  color: var(--theme-text);
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+.editor-social__icon:hover {
+  color: var(--theme-accent);
+  transform: translateY(-2px);
+}
+
+/* ═══════════════════════════════════════════════
+   REDUCED-MOTION GUARD (single block — Effects Catalog global rule)
+   Disables EVERY motion effect (gradient slide, glow pulse, ring spin,
+   hover transforms, button sheen). Overlay / blur / tint are legibility
+   controls, NOT motion — they are deliberately left untouched.
+   ═══════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .editor-avatar,
+  .editor-avatar::after,
+  .editor-username--gradient {
+    animation: none;
+  }
+  .editor-btn,
+  .editor-social__icon {
+    transition: none;
+  }
+  .editor-btn:hover,
+  .editor-social__icon:hover {
+    transform: none;
+  }
+  .editor-btn::before,
+  .editor-btn:hover::before {
+    transition: none;
+    left: -120%;
+  }
+}
