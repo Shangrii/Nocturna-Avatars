@@ -278,7 +278,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 7. Reviews Publishing Pipeline | 4/4 | Complete   | 2026-07-09 |
 | 8. Bot Reminders Command | 5/5 | Complete   | 2026-07-10 |
 | 9. Jinxxy Store Auto-Sync | 12/13 | In Progress |  |
-| 10. Editor Profile Pages | 9/11 | In Progress |  |
+| 10. Editor Profile Pages | 10/11 | In Progress|  |
 
 ### Phase 6: Asset Store
 
@@ -445,7 +445,7 @@ Plans:
 
 **Wave 4** *(blocked on 10-08)*
 
-- [ ] 10-10-PLAN.md — Block editor UI: two-pane editor + Alpine live preview + SortableJS reorder + image upload (SVG-reject/re-encode) + save-publishes-immediately + self-unpublish (EDIT-06/EDIT-07)
+- [x] 10-10-PLAN.md — Block editor UI: two-pane editor + Alpine live preview + SortableJS reorder + image upload (SVG-reject/re-encode) + save-publishes-immediately + self-unpublish (EDIT-06/EDIT-07)
 
 **Wave 5** *(blocked on 10-07/10-09/10-10)*
 

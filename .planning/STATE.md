@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 10-09-PLAN.md (role-loss cog)
-last_updated: "2026-07-15T06:30:00.000Z"
-last_activity: 2026-07-15 -- 10-09 complete (EditorsCog role-loss auto-unpublish: on_member_update PRIMARY + hourly sweep backstop + mass-removal guard + /mi-pagina DM; enabled intents.members; nocturna-bot cogs/editors.py, 15 tests, bot suite 466)
+stopped_at: "Completed 10-10-PLAN.md (editor authoring surface: block editor UI + image upload + save/publish/unpublish)"
+last_updated: "2026-07-15T09:11:29.692Z"
+last_activity: 2026-07-15
 progress:
   total_phases: 12
   completed_phases: 11
   total_plans: 65
-  completed_plans: 63
-  percent: 93
+  completed_plans: 64
+  percent: 92
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 ## Current Position
 
 Phase: 10 (editor-profile-pages-carrd-style-template-editor-for-nocturn) — EXECUTING
-Plan: 9 of 11 complete (Wave 3 done — 10-10/10-11 remain)
-Status: 10-09 complete — role-loss cog (on_member_update PRIMARY + hourly sweep backstop + mass-removal guard + /mi-pagina DM; intents.members enabled)
-Last activity: 2026-07-15 -- 10-09 complete (nocturna-bot cogs/editors.py + bot.py wiring + 15 tests, bot suite 466)
+Plan: 10 of 11 complete (Wave 3 done — 10-10/10-11 remain)
+Status: Ready to execute
+Last activity: 2026-07-15
 
-Progress: [██████████] 95%
+Progress: [██████████] 98%
 
 ## Performance Metrics
 
@@ -100,6 +100,7 @@ Progress: [██████████] 95%
 | Phase 10 P06 | 20min | 3 tasks | 3 files |
 | Phase 10 P08 | 22min | 2 tasks | 5 files |
 | Phase 10 P09 | 20min | 2 tasks | 3 files |
+| Phase 10 P10 | 70min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -195,6 +196,7 @@ Recent decisions affecting current work:
 - [Phase 10]: [10-08] Admin app auth core shipped in nocturna-bot (app/__init__.py + app/{auth,deps,main}.py, TDD, commits 1e3464a test -> 80ba852 feat -> 2509061 feat; bot suite 451, was 435; +16 tests). This is the project's FIRST authenticated web surface — the trust boundary is established BEFORE any editing UI (EDIT-04/EDIT-05). auth.py: has_editor_role does a SERVER-SIDE GET /guilds/{GUILD_ID}/members/{id} with the `Bot {BOT_TOKEN}` header (never the OAuth user token, T-10-08-05) checking ROLE_MODERATOR_ID (D-07/D-15); a 404 non-member is a clean False. Authlib OAuth2 client (identify scope, fixed registered redirect URI); callback verifies `state` (Authlib, CSRF/Pitfall 4), role-gates BEFORE issuing a session (403 non-editor with UI-SPEC copy, no session), redirects to a FIXED internal POST_LOGIN_REDIRECT='/' (never a client ?next, open-redirect guard); ensure_draft creates a published=false empty-blocks draft with a normalize_slug unique slug (numeric-suffix collision, Pitfall 5; ValueError falls back to editor-<id>) committed via sync_editors (D-09). deps.py: require_editor() is the D-08 IDOR choke point — identity from request.session ONLY (401 without), re-runs the bot-token role check each call and clears session+403 on role loss (Pitfall 2 stale-session). main.py: SessionMiddleware(https_only=True, same_site=lax, max_age=6h short TTL, V3); fail-fast validate_config() at LIFESPAN STARTUP not import (deviation — keeps `from app.main import app` working in the dev/test env where secrets are empty, per the plan's own verify command); uvicorn bound to 127.0.0.1 behind Caddy (Pitfall 8). No bot token/client secret/OAuth code ever logged or in an error body. Feeds 10-09 (save endpoints mount behind require_editor) + 10-11 deploy (app.main:app + cinema .env secrets). Only the pre-existing unrelated .env.example change left untouched.
 - [Phase 10]: [10-09] cogs/editors.py EditorsCog closes EDIT-07's role-loss half (nocturna-bot 7101db7 test -> 58108a8 feat -> 9955145 feat, TDD). on_member_update(before, after) is the D-10 PRIMARY real-time path — fires only on the exact edge (editor role in before.roles, absent in after.roles) → unpublish_editor(str(after.id)); an hourly @tasks.loop sweep is the BACKSTOP (heals a role change missed during downtime), delegating to a plain _process_role_losses() so it's unit-testable (tasks.Loop.start neutralized in the fixture). MASS-REMOVAL GUARD (T-10-09-02, mirrors JinxxyCog T-09-15): the sweep ENUMERATES every published editor's live membership FIRST and unpublishes NOTHING if any check raises a transient discord.HTTPException; a member who LEFT the guild (discord.NotFound, caught before the general HTTPException) is a CONFIRMED loss and IS unpublished; an unresolvable guild is a safe no-op. Candidate set is `published is True` only (idempotency: drafts/already-unpublished never re-considered; unpublish_editor's 10-05 no-op guard is the second line). Both paths funnel through one _unpublish_one → errors go to logs only (D-05, never a channel). /mi-pagina is staff-gated on the editor role (ROLE_MODERATOR_ID, D-15) and DMs EDITOR_APP_BASE_URL — DMs-closed (Forbidden) falls back to an ephemeral reply, never leaking the link. bot.py loads cogs.editors AND enables intents.members = True (REQUIRED for on_member_update to fire — safe now that 10-03 confirmed the Portal toggle; bonus: gallery fetch_member REST calls become cache lookups). Full bot suite 466 passed (was 451; +15 TDD). EDIT-07 role-loss half done; self-unpublish (D-16) half is 10-10. Cinema host needs git pull + systemd restart (the process must reconnect with the new members intent) to surface the cog + live role-loss E2E at 10-11.
 - [Phase 10]: [10-05] core/github_publish.py gained sync_editors() + unpublish_editor() (nocturna-bot 9dd1dff test -> 027b6b8 feat -> 9fbfb22 test, TDD). editors.json is a top-level ARRAY (D-18) so both reuse the generic _fetch_json reader + audited _commit_with_retry atomic blobs->tree->commit->ref core VERBATIM — NO new commit path; gallery/store/reviews transports byte-for-byte unchanged (full bot suite 418/418, was 400). sync_editors upserts THIS editor by discordId into the FRESHLY fetched array each retry (Pitfall 6 concurrent-clobber guard, mirrors sync_store's re-graft-by-checkoutUrl) and commits uploaded image blobs under public/editors/<slug>/<filename> in the SAME tree -> ONE commit (D-17); fixed 'editors: publish <slug>' message (never editor text, T-10-05-02); no no-op guard (D-13 publishes on save). unpublish_editor flips published=false via the same core leaving the entry+images in place (re-publishable), with a no-op guard on unknown/already-unpublished (D-10/D-16). discordId compared as str both sides. Transport stays dumb — callers validate via editors_model (10-02) first. Ready for 10-08 (FastAPI save) + 10-09 (role-loss cog) + 10-10 (block editor UI). Note: unpublish_editor implementation landed in the Task 1 GREEN commit (shared transport section), so the Task 2 test commit followed it (TDD-ordering nuance, documented in 10-05-SUMMARY).
+- [Phase ?]: [Phase 10]: [10-10] Editor authoring surface shipped (nocturna-bot b60fd20..356a3cb, TDD): two-pane block editor (Alpine live preview + SortableJS drag/keyboard reorder, vendored 3.15.12/1.15.7 not CDN) + POST /editor/image (SVG-reject + size-cap + Pillow re-encode, only WebP bytes committed) + POST /editor/save (EditorPage validation, session identity forced in, publishes immediately per D-13) + POST /editor/unpublish (D-16 self-unpublish). Route conflict between 10-08's fixed POST_LOGIN_REDIRECT='/' and this plan's GET /editor resolved by mounting the same handler at both paths. Rate limiting (T-10-10-04) documented as a Caddy directive for 10-11 instead of adding slowapi mid-plan. Full bot suite 480 passed (was 466). EDIT-06/EDIT-07 complete.
 
 ### Pending Todos
 
@@ -238,6 +240,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-15T06:30:00.000Z
-Stopped at: Completed 10-09-PLAN.md (role-loss cog)
+Last session: 2026-07-15T09:11:29.680Z
+Stopped at: Completed 10-10-PLAN.md (editor authoring surface: block editor UI + image upload + save/publish/unpublish)
 Resume file: None

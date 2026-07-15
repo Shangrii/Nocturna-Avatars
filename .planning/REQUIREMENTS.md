@@ -93,7 +93,7 @@ _Added 2026-07-14 during Phase 10 planning. Minted from the D-01…D-20 locked d
 - [x] **EDIT-04**: A Discord-OAuth2 admin app on the cinema host gates login by a live bot-token guild editor-role check (the existing moderator role), TLS-fronted (D-05/D-06/D-07/D-15)
 - [x] **EDIT-05**: An editor edits ONLY their own page (1:1 Discord ID → page, no admin override); first login auto-creates an empty draft (D-08/D-09)
 - [x] **EDIT-06**: A block editor supports add/remove/reorder + live preview + image upload; save publishes immediately cross-repo (`editors.json` + images in one commit) (D-13/D-14/D-17)
-- [ ] **EDIT-07**: An editor can self-unpublish; losing the editor role auto-unpublishes their page on next detection (D-10/D-16)
+- [x] **EDIT-07**: An editor can self-unpublish; losing the editor role auto-unpublishes their page on next detection (D-10/D-16)
 - [x] **EDIT-08**: The gallery ✅ approve flow is extended to capture an editor `editor` credit and an optional `nsfw` flag (the gallery-side data source for D-04's SFW-only portfolio exclusion); existing `store.json` `editor` values are re-tagged to exact slugs (D-04/D-11/D-12)
 
 ## v2 Requirements
