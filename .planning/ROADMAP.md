@@ -26,6 +26,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: Bot Reminders Command** - Weekly/monthly scheduled reminders with custom message — cog in `nocturna-bot` (completed 2026-07-10)
 - [ ] **Phase 9: Jinxxy Store Auto-Sync** - New Jinxxy uploads appear in the asset store (`store.json`) automatically (code-complete, re-verified 13/13; awaiting human live-deploy confirmation on cinema host — see 09-HUMAN-UAT.md Test 3)
 - [ ] **Phase 10: Editor Profile Pages** - Carrd-style profile pages per Nocturna editor, bot-driven publishing
+- [ ] **Phase 10.1: Editor Pages Redesign — guns.lol/carrd premium replica** - Per-editor themed link-in-bio pages (bg image/gif/video, curated fonts, free colors), standalone identity, no navbar link (INSERTED)
 
 ## Phase Details
 
@@ -453,3 +454,36 @@ Plans:
 
 **UI hint**: yes (two surfaces — public Astro pages reuse the Refined Street Editorial system verbatim; the admin app is a brand-adjacent, chrome-light builder tool)
 **Notes**: **Spans TWO repos + introduces the project's first authenticated, internet-facing web surface** (D-05 pivot). The public site half (website repo) stays 100% static Astro — new per-editor dynamic route, block-renderer library, directory, and `editors.json`. The backend half lives in `nocturna-bot` (D-06, on the cinema host): a FastAPI+Authlib admin app that reuses `core/github_publish.py` (cross-repo commit) + `core/image_optimize.py` (upload optimization) by direct import, gated by a bot-token guild role check (reuses `ROLE_MODERATOR_ID`, D-15). Security is load-bearing (ASVS L1): OAuth CSRF (`state`), IDOR (session-only identity, D-08), stale-session role re-check, image bomb/polyglot/SVG rejection, closed block union (no `set:html`), TLS-only, PAT/secret hygiene. Two hard human prerequisites (Discord OAuth app + DNS/reverse-proxy/TLS) are front-loaded to Wave 1 (10-03) so nothing blocks at the end. The single most likely under-spec point — how the reaction-only gallery ✅ captures an editor credit (D-11) — is resolved by a decision checkpoint in 10-06 (default: ephemeral slug-autocomplete, reusing the Phase-9 `/tienda editar` pattern).
+
+
+### Phase 10.1: Editor Pages Redesign — guns.lol/carrd premium replica: per-editor themed link-in-bio pages (bg image/gif/video, curated fonts, colors), own visual identity separate from main site, no navbar link (INSERTED)
+
+**Goal:** Each Nocturna editor gets a premium guns.lol/carrd-style link-in-bio page at the canonical `/e/<slug>` — a fully standalone visual identity (no site chrome, only a tiny watermark) with per-editor theming (background image/GIF/video, 14 curated self-hosted fonts, free colors + 8 presets, the full opt-in premium effect suite, live Discord presence, splash-gated background audio, view counter, social icon row, specialty badges), driven by an extended theme editor in the Phase-10 admin app with side-by-side live preview. The Phase-10 block system survives inside the new themed shell; old bilingual routes redirect to `/e/<slug>`; the directory stays live but unlisted and store credits link to it — clean cutover with sensible defaults so existing pages render instantly.
+**Requirements**: D-01…D-26 (CONTEXT.md locked-decision set; no formal REQ-IDs mapped, mirroring Phase 8)
+**Depends on:** Phase 10
+**Plans:** 12 plans
+
+Plans:
+
+**Wave 1**
+
+- [ ] 10.1-01-PLAN.md — Website foundation: editorTypes theme schema + editors.json migration + editorPath -> /e/<slug> + navbar drop (D-01/D-13/D-14/D-16/D-17/D-26)
+- [ ] 10.1-02-PLAN.md — Theme CSS system (token defaults + full CSS effect suite + reduced-motion) + 14 self-hosted curated fonts (D-02/D-03/D-04/D-11/D-21)
+- [ ] 10.1-09-PLAN.md — Bot schema: ThemeModel + extended EditorPage (theme-injection validation gate, TDD, nocturna-bot) (D-02/D-07/D-09/D-13/D-21)
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 10.1-03-PLAN.md — Static shell components: LinkButton (style x shape) + SpecialtyBadges + SocialIconRow (+icon subset) + EditorHeaderCard (D-07/D-09/D-10/D-11)
+- [ ] 10.1-04-PLAN.md — Client-dynamic components: PresenceDot (Lanyard) + ViewCounter (cinema ping) + AudioPlayer (splash-gated) (D-05/D-06/D-22/D-25)
+- [ ] 10.1-05-PLAN.md — Block token-swap (7 blocks + BlockRenderer) + PortfolioBlock 2-3 col grid + lightbox (D-10/D-12)
+- [ ] 10.1-06-PLAN.md — EditorLayout (standalone, token emission, watermark) + Splash (editor:enter unlock) + effects.ts engine (D-04/D-15/D-21/D-22/D-26)
+- [ ] 10.1-08-PLAN.md — Directory restyle + unlist/noindex + store credit links -> /e/<slug> (D-16/D-17)
+- [ ] 10.1-10-PLAN.md — Admin theme panel + 8 presets + live preview + lang/badges/socials (nocturna-bot) (D-23/D-24/D-03/D-07/D-09/D-13)
+- [ ] 10.1-11-PLAN.md — Media/audio upload endpoints (image+GIF+video+audio, per-kind caps, ffmpeg optimize) (nocturna-bot) (D-06/D-18/D-19/D-20)
+- [ ] 10.1-12-PLAN.md — View-counter endpoint (standalone counter app + SQLite store + CORS/dedup) + sibling deploy artifacts (nocturna-bot) (D-25)
+
+**Wave 3** *(blocked on Wave 2)*
+
+- [ ] 10.1-07-PLAN.md — Canonical /e/[slug] route assembly (layout + shell + blocks + bg media + lightbox) + legacy-route redirect stubs (D-14/D-13/D-18/D-21)
+
+**Notes**: **Spans TWO repos** — the standalone public `/e/<slug>` page, theme-token system, self-hosted fonts, directory, and credit-link work live in this website repo (Astro static); the admin theme editor, media/audio upload endpoints, and the view-counter endpoint live in the sibling `nocturna-bot` (FastAPI on cinema). No formal REQ-IDs — the CONTEXT.md D-01...D-26 locked decisions are the requirement set (Phase-8 convention). **Security load-bearing:** the theme-injection surface (editor-controlled colors/fonts/effects/media flowing into CSS custom properties + `<img/video/audio src>`) is defended by plan-09's ThemeModel validation (hex/enum/numeric/allowlist) at the source AND plan-06's fixed clamped token whitelist at render; the D-02 no-`set:html` invariant survives the whole restyle. No new npm dependencies (fonts/icons are vendored static assets); no new pip dependencies (ffmpeg is a documented cinema system binary). Two human steps mirror Phase 10: installing ffmpeg on cinema, and deploying the new admin panel + view-counter systemd unit/Caddy block (no secrets in artifacts).
