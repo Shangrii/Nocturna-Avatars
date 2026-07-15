@@ -1,0 +1,242 @@
+---
+/**
+ * Per-editor profile page (Surface A) — the site's first per-ITEM × per-lang
+ * dynamic route: /en/editors/<slug> · /es/editores/<slug> (D-19).
+ *
+ * The middle `[concept]` segment is DYNAMIC (not a literal folder) because the
+ * directory slug itself localizes — `editors` (en) vs `editores` (es). A literal
+ * `editores/` folder would emit `/en/editores/...` for both locales and fail
+ * D-19; emitting the per-locale `routeSlugs.editors[lang]` as the `concept` param
+ * is what makes `/en/editors/<slug>` distinct from `/es/editores/<slug>`.
+ *
+ * getStaticPaths emits the CARTESIAN product of the published editors in
+ * editors.json × langCodes, so every published editor gets one static page per
+ * locale. editors.json is externally written (admin app / bot commit target), so
+ * the read is defensive end-to-end: a copy-before-filter drops any malformed /
+ * unpublished / slug-less entry rather than throwing at build time and freezing
+ * every deploy (T-10-07-02). An empty editors.json simply emits no pages — the
+ * build stays green.
+ *
+ * The page renders the header (circular avatar, red-accent editor name, dim
+ * tagline, custom links) then loops `editor.blocks` in order through the 10-04
+ * BlockRenderer inside a ~640px centered ink column (UI-SPEC Layout Contract).
+ * Every field renders through Astro auto-escaping / the set:html-free
+ * BlockRenderer — no raw-HTML directive anywhere (T-10-07-01, D-02). The site
+ * chrome (Nav / Footer / FloatingCTA / LanguageSwitcher) is inherited from
+ * BaseLayout so "Abrir Ticket" stays reachable (NAV-03).
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlockRenderer from '../../../components/editor-blocks/BlockRenderer.astro';
+import NightBackground from '../../../components/NightBackground.astro';
+import { langCodes, toLang, type Lang } from '../../../i18n/ui';
+import { routeSlugs } from '../../../i18n/routes';
+import type { Editor } from '../../../lib/editorTypes';
+import editorsData from '../../../data/editors.json';
+
+export function getStaticPaths() {
+  // Copy-before-filter so the imported module array is never mutated, then keep
+  // only publishable entries (published === true + a usable string slug). One
+  // malformed/unpublished entry must never break the whole-site build.
+  const raw: Editor[] = Array.isArray(editorsData) ? ([...editorsData] as Editor[]) : [];
+  const published = raw.filter(
+    (e) =>
+      Boolean(e) &&
+      e.published === true &&
+      typeof e.slug === 'string' &&
+      e.slug.length > 0,
+  );
+  // Cartesian product: one page per published editor per locale. The `concept`
+  // param carries the localized directory slug so the URL differs per locale.
+  return published.flatMap((editor) =>
+    langCodes.map((lang) => ({
+      params: { lang, concept: routeSlugs.editors[lang], slug: editor.slug },
+      props: { editor },
+    })),
+  );
+}
+
+interface Props {
+  editor: Editor;
+}
+
+const lang = toLang(Astro.params.lang);
+const { editor } = Astro.props;
+
+// Per-locale resolution (es → en → '') for the tagline; header fields are read
+// defensively because the entry originates from an external writer.
+const tagline =
+  editor.tagline?.[lang] ?? editor.tagline?.es ?? editor.tagline?.en ?? '';
+const name = typeof editor.name === 'string' ? editor.name : editor.slug;
+const avatar = typeof editor.avatar === 'string' ? editor.avatar : '';
+const blocks = Array.isArray(editor.blocks) ? editor.blocks : [];
+// Header custom links (distinct from a `links` block) — https-only, validated
+// upstream; skip malformed entries so one bad link never throws the build.
+const links = (Array.isArray(editor.links) ? editor.links : []).filter(
+  (l): l is { label: string; url: string } =>
+    Boolean(l) && typeof l.url === 'string' && l.url.length > 0,
+);
+
+const meta = {
+  title: `${name} — Nocturna Avatars`,
+  description: tagline || `${name} — Nocturna Avatars`,
+};
+---
+
+<BaseLayout lang={lang} title={meta.title} description={meta.description}>
+  {/* Full-viewport fixed night backdrop; the on-page section is made transparent
+      (is:global below) so the night shows through, matching the store/gallery. */}
+  <NightBackground fixed />
+
+  <section class="section section-page-top editor-profile">
+    <div class="editor-column">
+      <header class="editor-header">
+        {avatar && (
+          <img
+            class="editor-avatar"
+            src={avatar}
+            alt={name}
+            width="160"
+            height="160"
+            loading="eager"
+            decoding="async"
+          />
+        )}
+        <h1 class="editor-name">{name}</h1>
+        {tagline && <p class="editor-tagline">{tagline}</p>}
+
+        {links.length > 0 && (
+          <nav class="editor-header-links" aria-label={name}>
+            {links.map((link) => (
+              <a
+                class="editor-header-links__btn"
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+              >
+                {link.label || link.url}
+              </a>
+            ))}
+          </nav>
+        )}
+      </header>
+
+      <div class="editor-blocks">
+        {blocks.map((block) => (
+          <BlockRenderer block={block} lang={lang} slug={editor.slug} />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  /* Interior page (no hero): keep the nav in its solid dark state at all times. */
+  .nav {
+    background: rgba(10, 12, 20, 0.95);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 var(--color-border);
+  }
+
+  /* Drop the opaque section field so the fixed <NightBackground /> shows through. */
+  main .section.editor-profile {
+    background: transparent;
+  }
+</style>
+
+<style>
+  /* ~640px single centered ink column (carrd/guns.lol feel) — UI-SPEC Layout. */
+  .editor-column {
+    max-width: 640px;
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+
+  .editor-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-sm);
+  }
+
+  /* Circular avatar, 120–160px (clamps down on small screens). */
+  .editor-avatar {
+    width: clamp(120px, 30vw, 160px);
+    height: clamp(120px, 30vw, 160px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--color-border);
+    background: var(--color-ink-raised);
+  }
+
+  /* Editor name — Heading role, red accent (AA-safe on-ink red variant). */
+  .editor-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--type-heading, clamp(24px, 5vw, 44px));
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--color-red-on-ink);
+  }
+
+  .editor-tagline {
+    margin: 0;
+    max-width: 48ch;
+    font-family: var(--font-body);
+    font-size: var(--type-body);
+    font-weight: 400;
+    line-height: var(--lh-body);
+    color: var(--color-white-dim);
+  }
+
+  /* Header custom links — full-width stacked buttons, 44px min target. */
+  .editor-header-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    width: 100%;
+    margin-top: var(--space-2xs);
+  }
+  .editor-header-links__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-min);
+    padding: var(--space-2xs) var(--space-sm);
+    background: var(--color-ink-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    color: var(--color-white);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-decoration: none;
+    word-break: break-word;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .editor-header-links__btn:hover {
+    border-color: var(--color-red);
+    background: var(--color-red-soft);
+  }
+  .editor-header-links__btn:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+
+  /* Blocks in editor-defined order, md (24px) vertical rhythm. */
+  .editor-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .editor-header-links__btn {
+      transition: none;
+    }
+  }
+</style>
