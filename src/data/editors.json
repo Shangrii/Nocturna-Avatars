@@ -5,7 +5,24 @@
     "published": true,
     "name": "Aria",
     "avatar": "/gallery/placeholder.webp",
-    "tagline": { "es": "Editora de texturas y outfits", "en": "Texture & outfit editor" },
+    "lang": "es",
+    "tagline": "Editora de texturas y outfits",
+    "badges": [],
+    "socials": [],
+    "theme": {
+      "bg": "#0a0c14",
+      "overlay": 40,
+      "blur": 0,
+      "surface": "rgba(240,234,228,0.06)",
+      "accent": "#c0192c",
+      "text": "#f0eae4",
+      "textMuted": "#9a9198",
+      "font": "Inter",
+      "btnStyle": "glass",
+      "btnShape": "rounded",
+      "effects": [],
+      "preset": "midnight-nocturna"
+    },
     "links": [
       { "label": "Discord", "url": "https://discord.com" }
     ],
