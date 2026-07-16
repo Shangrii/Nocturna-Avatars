@@ -534,6 +534,22 @@ interface LightboxEntry {
   file: string;
   caption: string; // '' when absent
   alt: string;
+  editor: string; // '' when uncredited; otherwise the editor slug (D-17)
+}
+
+/** Client-side slug guard (defense-in-depth): gallery.json is bot-written but
+ *  externally sourced, so validate the editor slug before it becomes a credit href. */
+const EDITOR_SLUG_RE = /^[a-z0-9-]+$/;
+
+/**
+ * Resolve a tile's `data-file` to an <img> src. Legacy gallery tiles carry a BARE
+ * filename ("foo.webp") that lives under /gallery/; the editor PortfolioBlock (plan
+ * 10.1-05) emits a FULL path ("/gallery/foo.webp" or any "/…/…" src). Accept both:
+ * a value already containing a slash is used as-is; a bare filename keeps the legacy
+ * /gallery/ prefix. Cross-plan contract with 10.1-05.
+ */
+function resolveSrc(file: string): string {
+  return file.includes('/') ? file : `/gallery/${file}`;
 }
 
 /** Entries are DERIVED from the rendered [data-gallery-tile] nodes each page-load
@@ -577,7 +593,7 @@ function trapFocus(container: HTMLElement): (e: KeyboardEvent) => void {
 function preload(index: number): void {
   const entry = entries[index];
   if (!entry) return;
-  new Image().src = `/gallery/${entry.file}`;
+  new Image().src = resolveSrc(entry.file);
 }
 
 /** Render the entry at `currentIndex` into the live overlay. textContent ONLY. */
@@ -588,9 +604,10 @@ function renderCurrent(overlay: HTMLElement): void {
   const img = overlay.querySelector<HTMLImageElement>('[data-lightbox-img]');
   const counter = overlay.querySelector<HTMLElement>('[data-lightbox-counter]');
   const caption = overlay.querySelector<HTMLElement>('[data-lightbox-caption]');
+  const credit = overlay.querySelector<HTMLAnchorElement>('[data-lightbox-credit]');
 
   if (img) {
-    img.src = `/gallery/${entry.file}`;
+    img.src = resolveSrc(entry.file);
     img.alt = entry.alt; // already caption-or-fallback from Plan 01's tile markup
   }
   if (counter) {
@@ -606,6 +623,24 @@ function renderCurrent(overlay: HTMLElement): void {
     } else {
       caption.textContent = '';
       caption.hidden = true; // hide the block but keep the counter (D-03)
+    }
+  }
+  if (credit) {
+    // D-17 gallery half: show a "por/by <editor>" link to /e/<slug> ONLY when the
+    // tile carries a valid slug. The regex guard blocks a crafted `editor` value
+    // (e.g. `javascript:`, `//evil`) from ever reaching the href — the path prefix is
+    // a fixed literal so the target is always same-origin /e/… (T-10.1-08-03). Set via
+    // textContent/setAttribute ONLY — never raw-HTML injection (D-02). The else branch
+    // re-hides + clears so prev/next between credited/uncredited photos toggles right.
+    if (entry.editor && EDITOR_SLUG_RE.test(entry.editor)) {
+      const prefix = document.documentElement.lang === 'es' ? 'por ' : 'by ';
+      credit.textContent = prefix + entry.editor;
+      credit.setAttribute('href', '/e/' + entry.editor);
+      credit.hidden = false;
+    } else {
+      credit.textContent = '';
+      credit.removeAttribute('href');
+      credit.hidden = true;
     }
   }
 
@@ -681,6 +716,7 @@ function initLightbox(): void {
     file: tile.dataset.file ?? '',
     caption: tile.dataset.caption ?? '',
     alt: tile.querySelector('img')?.getAttribute('alt') ?? '',
+    editor: tile.dataset.editor ?? '', // '' = uncredited (D-17 gallery half)
   }));
 
   // Each tile opens the lightbox at its index (click + Enter/Space via native

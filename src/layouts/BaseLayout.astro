@@ -23,9 +23,16 @@ interface Props {
   lang: Lang;
   title: string;
   description: string;
+  /**
+   * Optional per-page robots directive rendered into <head> (e.g. "noindex,follow"
+   * for the unlisted editors directory — D-16). Omitted pages get no robots meta and
+   * remain indexable by default. Head placement is required: crawlers ignore a robots
+   * meta found in <body>.
+   */
+  robots?: string;
 }
 
-const { lang, title, description } = Astro.props;
+const { lang, title, description, robots } = Astro.props;
 
 /**
  * D-17 glitch-wipe: a quick (~0.26s) digital wipe with a red-fringe RGB-split that
@@ -49,6 +56,7 @@ const glitchWipe = { forwards: glitchPair, backwards: glitchPair };
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a0c14" />
     <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
     <title>{title}</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

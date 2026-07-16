@@ -15,6 +15,8 @@
  * never used on store.json fields (T-06-01). Quick-view (Plan 02) + add-to-cart
  * (Plan 03) wire onto this markup later; this slice only browses.
  */
+import { editorPath } from '../i18n/routes';
+
 interface ResolvedProduct {
   id: string;
   name: string;
@@ -95,7 +97,17 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
       <button type="button" class="product-card__open" data-card-open>{product.name}</button>
     </h3>
     <p class="product-card__price">${product.price} {usd}</p>
-    <p class="product-card__editor">{editorCredit} {product.editor}</p>
+    {/* D-17 organic-discovery cross-link: the editor credit points at the canonical
+        /e/<slug> profile (editorPath is lang-agnostic post-plan-01). Rendered as a
+        link ONLY when the product carries an editor — some products have none. The
+        name still renders through {} auto-escaping (T-06-01); the slug charset is
+        constrained upstream so it can't break the href. */}
+    <p class="product-card__editor">
+      {editorCredit}{' '}
+      {product.editor && (
+        <a class="product-card__editor-link" href={editorPath(product.editor)}>{product.editor}</a>
+      )}
+    </p>
     {/* Secondary/outline add-to-cart control — store-cart.ts binds [data-store-add]
         and stopPropagations the click so it never opens the quick-view. On add,
         store-cart.ts swaps the label to data-label-added for ~1.5s (textContent
@@ -267,6 +279,24 @@ const thumb = product.images?.[0] ?? '/store/placeholder.svg';
     font-family: var(--font-mono);
     font-size: var(--type-label);
     color: var(--color-white-dim);
+  }
+  /* Editor credit link → /e/<slug> (D-17). Subtle at rest, brand red on hover/focus;
+     underline offset keeps the mono label legible. */
+  .product-card__editor-link {
+    color: var(--color-white);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-white) 32%, transparent);
+    text-underline-offset: 2px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+  }
+  .product-card__editor-link:hover {
+    color: var(--color-red-on-ink);
+    text-decoration-color: var(--color-red);
+  }
+  .product-card__editor-link:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 
   /* Add-to-cart — secondary/outline control (NOT red-fill; the featured border +
