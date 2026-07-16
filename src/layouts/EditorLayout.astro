@@ -74,7 +74,19 @@ const blur = clampNum(theme.blur, 0, 20, 0);
 const rawMedia = typeof theme.bgMedia === 'string' ? theme.bgMedia.replace(/["'\\()]/g, '') : '';
 const bgMedia = rawMedia.length > 0 ? `url("${rawMedia}")` : 'none';
 
-const bg = typeof theme.bg === 'string' ? theme.bg : '#0a0c14';
+/* Colour-value guard (WR-01) — the render-side half of the theme-injection defense.
+   Astro serializes a style object as `prop:value;` pairs and HTML-attribute-escapes
+   the result, which escapes "/</>/& but NOT `;` or `:`. An unsanitized colour like
+   `#000; background-image: url(https://attacker.example/beacon.gif)` therefore injects
+   an extra CSS declaration onto the page root. Accept ONLY hex, rgb()/rgba(),
+   hsl()/hsla(), a bare colour keyword, or `transparent`; anything else (containing
+   `;`, `{`, `}`, `url(`, `:` …) fails the pattern and falls back to the
+   Midnight-Nocturna default. Mirrors the numeric `clampNum` / `bgMedia` treatment. */
+const COLOR_RE = /^(#[0-9a-fA-F]{3,8}|rgba?\([\d.,\s%]+\)|hsla?\([\d.,\s%]+\)|[a-zA-Z]+|transparent)$/;
+const safeColor = (v: unknown, dflt: string): string =>
+  typeof v === 'string' && COLOR_RE.test(v.trim()) ? v.trim() : dflt;
+
+const bg = safeColor(theme.bg, '#0a0c14');
 
 /* FIXED whitelist of --theme-* property NAMES. Editor values fill VALUES only. */
 const themeStyle: Record<string, string> = {
@@ -82,11 +94,11 @@ const themeStyle: Record<string, string> = {
   '--theme-bg-media': bgMedia,
   '--theme-overlay': String(overlay),
   '--theme-blur': `${blur}px`,
-  '--theme-tint': typeof theme.tint === 'string' && theme.tint.length > 0 ? theme.tint : 'transparent',
-  '--theme-surface': typeof theme.surface === 'string' ? theme.surface : 'rgba(240,234,228,0.06)',
-  '--theme-accent': typeof theme.accent === 'string' ? theme.accent : '#c0192c',
-  '--theme-text': typeof theme.text === 'string' ? theme.text : '#f0eae4',
-  '--theme-text-muted': typeof theme.textMuted === 'string' ? theme.textMuted : '#9a9198',
+  '--theme-tint': safeColor(theme.tint, 'transparent'),
+  '--theme-surface': safeColor(theme.surface, 'rgba(240,234,228,0.06)'),
+  '--theme-accent': safeColor(theme.accent, '#c0192c'),
+  '--theme-text': safeColor(theme.text, '#f0eae4'),
+  '--theme-text-muted': safeColor(theme.textMuted, '#9a9198'),
   '--theme-font': `var(--font-editor-${fontEntry.slug})`,
   '--theme-btn-style': BTN_STYLES.includes(theme.btnStyle as string) ? (theme.btnStyle as string) : 'glass',
   '--theme-btn-shape': BTN_SHAPES.includes(theme.btnShape as string) ? (theme.btnShape as string) : 'rounded',
