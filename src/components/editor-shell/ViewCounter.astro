@@ -1,0 +1,61 @@
+---
+/**
+ * ViewCounter — self-hosted cinema view-count ping (D-25).
+ *
+ * Hidden by default; `viewcounter.ts` pings the cinema endpoint ONCE on the
+ * `editor:enter` splash-dismiss event and reveals the returned count via
+ * textContent only. On any failure the element stays hidden with no error text
+ * (Copywriting Contract). Micro (12px) type role; the eye icon uses --theme-accent.
+ * Renders nothing without a slug.
+ */
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+---
+
+{
+  slug && (
+    <span class="editor-views" data-viewcount data-slug={slug} hidden>
+      <svg
+        class="editor-views__icon"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8" />
+      </svg>
+      <span class="editor-views__count" data-viewcount-n aria-live="polite" />
+    </span>
+  )
+}
+
+<style>
+  .editor-views {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    font-family: var(--theme-font);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--theme-text-muted);
+  }
+  .editor-views__icon {
+    flex-shrink: 0;
+    color: var(--theme-accent);
+  }
+</style>
+
+<script>
+  import '../../scripts/editor/viewcounter.ts';
+</script>

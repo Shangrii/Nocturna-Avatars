@@ -1,0 +1,65 @@
+---
+/**
+ * PresenceDot — live Discord status dot via the public Lanyard API (D-05).
+ *
+ * Hidden by default; `presence.ts` reveals it ONLY on a successful fetch and
+ * leaves it hidden on any failure (unreachable / non-member / no status) with no
+ * error text (Copywriting Contract). The dot colour is a fixed semantic status
+ * colour (online/idle/dnd/offline); the surrounding ring uses --theme-accent.
+ * Renders nothing without a discordId.
+ */
+interface Props {
+  discordId: string;
+}
+const { discordId } = Astro.props;
+---
+
+{
+  discordId && (
+    <span class="editor-presence" data-presence data-discord-id={discordId} hidden>
+      <span class="editor-presence__dot" data-presence-dot aria-hidden="true" />
+      <span class="editor-presence__activity" data-presence-activity hidden />
+    </span>
+  )
+}
+
+<style>
+  .editor-presence {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-family: var(--theme-font);
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--theme-text-muted);
+  }
+  .editor-presence__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--presence-color, #747f8d);
+    /* Ring = accent (theme); glow = the live status colour. */
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--theme-accent) 55%, transparent),
+      0 0 8px 1px color-mix(in srgb, var(--presence-color, #747f8d) 70%, transparent);
+    animation: editor-presence-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes editor-presence-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .editor-presence__dot {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import '../../scripts/editor/presence.ts';
+</script>
