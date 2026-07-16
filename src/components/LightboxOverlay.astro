@@ -60,6 +60,11 @@ const lightbox = useTranslations(lang, 'pages').lightbox;
     <figcaption class="lightbox__meta">
       <span class="lightbox__counter" data-lightbox-counter aria-live="polite"></span>
       <span class="lightbox__caption" data-lightbox-caption hidden></span>
+      {/* Editor credit → /e/<slug> (D-17 gallery half). Ships hidden + empty; gallery.ts
+          fills its textContent (localized "por/by " + slug) and href per photo via
+          textContent/setAttribute ONLY (D-02), unhiding only for a valid slug. Same-origin
+          navigation — no target/rel needed. */}
+      <a class="lightbox__credit" data-lightbox-credit hidden></a>
     </figcaption>
   </figure>
 
