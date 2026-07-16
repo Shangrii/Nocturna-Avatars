@@ -126,9 +126,16 @@ const badgeGallery = lang === 'es' ? 'De la galería' : 'From the gallery';
 
 {items.length > 0 && (
   <div class="editor-portfolio">
-    {items.map((item) => (
+    {items.map((item, i) => (
       <figure class="editor-portfolio__cell">
-        <div class="editor-portfolio__frame">
+        <button
+          type="button"
+          class="editor-portfolio__frame"
+          data-gallery-tile
+          data-file={item.image}
+          data-caption={item.caption}
+          data-index={i}
+        >
           <img
             class="editor-portfolio__img"
             src={item.image}
@@ -141,7 +148,7 @@ const badgeGallery = lang === 'es' ? 'De la galería' : 'From the gallery';
               {item.source === 'store' ? badgeStore : badgeGallery}
             </span>
           )}
-        </div>
+        </button>
         {item.caption && <figcaption class="editor-portfolio__cap">{item.caption}</figcaption>}
       </figure>
     ))}
@@ -149,17 +156,25 @@ const badgeGallery = lang === 'es' ? 'De la galería' : 'From the gallery';
 )}
 
 <style>
-  /* Grid of image cards within the ~640px profile column: 1 col mobile → 2 col
-     from 480px. Mirrors the store grid's card rhythm at profile scale. */
+  /* Compact thumbnail grid (D-12): 1 col → 2 col from 480px → 3 col from 640px.
+     Allowed to break out to max-width 560px, wider than the 480px profile
+     column (UI-SPEC Spacing §portfolio breakout). */
   .editor-portfolio {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-sm);
+    gap: var(--space-2xs);
     width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
   }
   @media (min-width: 480px) {
     .editor-portfolio {
       grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 640px) {
+    .editor-portfolio {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 
@@ -170,14 +185,33 @@ const badgeGallery = lang === 'es' ? 'De la galería' : 'From the gallery';
     margin: 0;
   }
 
-  /* Fixed square frame prevents CLS while images load. */
+  /* Fixed square frame prevents CLS while images load. Rendered as a <button>
+     so gallery.ts::initLightbox binds click + native Enter/Space semantics with
+     zero new JS; button chrome is reset to inherit. */
   .editor-portfolio__frame {
     position: relative;
+    display: block;
+    width: 100%;
     aspect-ratio: 1 / 1;
+    padding: 0;
     overflow: hidden;
-    background: var(--color-ink);
-    border: 1px solid var(--color-border);
+    background: var(--theme-surface);
+    border: 1px solid color-mix(in srgb, var(--theme-text) 14%, transparent);
     border-radius: 4px;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .editor-portfolio__frame:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px -6px color-mix(in srgb, var(--theme-accent) 45%, transparent);
+  }
+  .editor-portfolio__frame:focus-visible {
+    outline: 2px solid var(--theme-accent);
+    outline-offset: 2px;
   }
   .editor-portfolio__img {
     display: block;
@@ -186,15 +220,15 @@ const badgeGallery = lang === 'es' ? 'De la galería' : 'From the gallery';
     object-fit: cover;
   }
 
-  /* Credited badge — Space Mono label, brand red (UI-SPEC reserved-red list). */
+  /* Credited badge — mono label, theme accent (UI-SPEC reserved-accent list). */
   .editor-portfolio__badge {
     position: absolute;
     top: var(--space-2xs);
     left: var(--space-2xs);
     padding: var(--space-3xs) var(--space-2xs);
-    background: var(--color-red);
-    color: var(--color-white);
-    font-family: var(--font-mono);
+    background: var(--theme-accent);
+    color: var(--theme-text);
+    font-family: var(--theme-font);
     font-size: 10px;
     font-weight: 400;
     letter-spacing: 0.1em;
@@ -203,9 +237,18 @@ const badgeGallery = lang === 'es' ? 'De la galería' : 'From the gallery';
   }
 
   .editor-portfolio__cap {
-    font-family: var(--font-mono);
+    font-family: var(--theme-font);
     font-size: var(--type-label);
     line-height: var(--lh-label);
-    color: var(--color-white-dim);
+    color: var(--theme-text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .editor-portfolio__frame {
+      transition: none;
+    }
+    .editor-portfolio__frame:hover {
+      transform: none;
+    }
   }
 </style>
