@@ -26,7 +26,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: Bot Reminders Command** - Weekly/monthly scheduled reminders with custom message — cog in `nocturna-bot` (completed 2026-07-10)
 - [ ] **Phase 9: Jinxxy Store Auto-Sync** - New Jinxxy uploads appear in the asset store (`store.json`) automatically (code-complete, re-verified 13/13; awaiting human live-deploy confirmation on cinema host — see 09-HUMAN-UAT.md Test 3)
 - [ ] **Phase 10: Editor Profile Pages** - Carrd-style profile pages per Nocturna editor, bot-driven publishing
-- [ ] **Phase 10.1: Editor Pages Redesign — guns.lol/carrd premium replica** - Per-editor themed link-in-bio pages (bg image/gif/video, curated fonts, free colors), standalone identity, no navbar link (INSERTED)
+- [x] **Phase 10.1: Editor Pages Redesign — guns.lol/carrd premium replica** - Per-editor themed link-in-bio pages (bg image/gif/video, curated fonts, free colors), standalone identity, no navbar link (INSERTED) (completed 2026-07-16)
 
 ## Phase Details
 
@@ -461,7 +461,7 @@ Plans:
 **Goal:** Each Nocturna editor gets a premium guns.lol/carrd-style link-in-bio page at the canonical `/e/<slug>` — a fully standalone visual identity (no site chrome, only a tiny watermark) with per-editor theming (background image/GIF/video, 14 curated self-hosted fonts, free colors + 8 presets, the full opt-in premium effect suite, live Discord presence, splash-gated background audio, view counter, social icon row, specialty badges), driven by an extended theme editor in the Phase-10 admin app with side-by-side live preview. The Phase-10 block system survives inside the new themed shell; old bilingual routes redirect to `/e/<slug>`; the directory stays live but unlisted and store credits link to it — clean cutover with sensible defaults so existing pages render instantly.
 **Requirements**: D-01…D-26 (CONTEXT.md locked-decision set; no formal REQ-IDs mapped, mirroring Phase 8)
 **Depends on:** Phase 10
-**Plans:** 11/12 plans executed
+**Plans:** 12/12 plans complete
 
 Plans:
 
@@ -484,6 +484,6 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2)*
 
-- [ ] 10.1-07-PLAN.md — Canonical /e/[slug] route assembly (layout + shell + blocks + bg media + lightbox) + legacy-route redirect stubs (D-14/D-13/D-18/D-21)
+- [x] 10.1-07-PLAN.md — Canonical /e/[slug] route assembly (layout + shell + blocks + bg media + lightbox) + legacy-route redirect stubs (D-14/D-13/D-18/D-21)
 
 **Notes**: **Spans TWO repos** — the standalone public `/e/<slug>` page, theme-token system, self-hosted fonts, directory, and credit-link work live in this website repo (Astro static); the admin theme editor, media/audio upload endpoints, and the view-counter endpoint live in the sibling `nocturna-bot` (FastAPI on cinema). No formal REQ-IDs — the CONTEXT.md D-01...D-26 locked decisions are the requirement set (Phase-8 convention). **Security load-bearing:** the theme-injection surface (editor-controlled colors/fonts/effects/media flowing into CSS custom properties + `<img/video/audio src>`) is defended by plan-09's ThemeModel validation (hex/enum/numeric/allowlist) at the source AND plan-06's fixed clamped token whitelist at render; the D-02 no-`set:html` invariant survives the whole restyle. No new npm dependencies (fonts/icons are vendored static assets); no new pip dependencies (ffmpeg is a documented cinema system binary). Two human steps mirror Phase 10: installing ffmpeg on cinema, and deploying the new admin panel + view-counter systemd unit/Caddy block (no secrets in artifacts).
