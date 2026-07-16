@@ -6,7 +6,7 @@
      (a) the 13 --theme-* tokens at their Midnight-Nocturna DEFAULTS so an
          editor with no theme still renders on clean cutover (D-26), plus the
          --space-* / --touch-min primitives adopted from the brand scale
-         (editor pages don't import theme.css, so they are re-declared here);
+         (editor pages do not import theme.css, so they are re-declared here);
      (b) the premium CSS effect suite — glassmorphism, avatar glow/ring,
          animated username gradient, link-button hover + sheen, the button
          style×shape matrix, and the background overlay/blur/tint layer —
@@ -37,9 +37,9 @@
 
   /* ── Type scale + line heights adopted from the brand scale (theme.css).
        Re-declared here because editor pages do NOT import brand theme.css, yet the
-       re-themed editor-block components (plan 05) read --type-*/--lh-* for their
+       re-themed editor-block components (plan 05) read --type-* / --lh-* for their
        font-family-AGNOSTIC type roles — without these they would fall back to the
-       browser's default sizes. Mirrors theme.css keys verbatim. ── */
+       browser default sizes. Mirrors theme.css keys verbatim. ── */
   --type-display: clamp(46px, 11.5vw, 240px);
   --type-display-nav: 33px;
   --type-heading: clamp(24px, 5vw, 44px);

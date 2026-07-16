@@ -1,0 +1,304 @@
+---
+/**
+ * Canonical standalone editor page — /e/<slug> (D-14, Wave-3 integration).
+ *
+ * This is the vanity route every editor profile now lives at. Unlike the legacy
+ * `/es/editores/<slug>` · `/en/editors/<slug>` route it is SINGLE-LANGUAGE (D-13):
+ * getStaticPaths emits exactly ONE page per PUBLISHED editor keyed on `slug` — no
+ * langCodes cartesian — and the page renders in the editor's own `editor.lang`.
+ *
+ * It assembles every Wave-2 artifact into the shippable guns.lol/carrd page:
+ *   EditorLayout (06, chrome-free shell: token whitelist, splash gate, watermark)
+ *     → background-media layer (video/img + tint + scrim, D-18/D-21)
+ *     → glass EditorHeaderCard (03) with PresenceDot (04) in its `presence` slot
+ *     → header LinkButton list (03)
+ *     → themed blocks via BlockRenderer (05, incl. the portfolio grid)
+ *     → ViewCounter + AudioPlayer (04)
+ *     → one LightboxOverlay + gallery.ts so portfolio cells open the shared
+ *       lightbox with ZERO new JS.
+ *
+ * editors.json is written by the admin app / bot (untrusted at build time), so the
+ * read is defensive end-to-end: a copy-before-filter drops any malformed /
+ * unpublished / slug-less entry rather than throwing and freezing every deploy
+ * (T-10.1-07-04). An empty editors.json simply emits no /e pages — build stays green.
+ *
+ * XSS (T-10.1-07-01): every editor string flows through Astro auto-escaping / the
+ * set:html-free shell + block components (D-02). `bgMedia` binds ONLY as an escaped
+ * <video>/<img> src attribute (scheme validated bot-side, plan 09, T-10.1-07-03); a
+ * load failure degrades to the solid --theme-bg base.
+ */
+import EditorLayout from '../../layouts/EditorLayout.astro';
+import EditorHeaderCard from '../../components/editor-shell/EditorHeaderCard.astro';
+import PresenceDot from '../../components/editor-shell/PresenceDot.astro';
+import LinkButton from '../../components/editor-shell/LinkButton.astro';
+import ViewCounter from '../../components/editor-shell/ViewCounter.astro';
+import AudioPlayer from '../../components/editor-shell/AudioPlayer.astro';
+import BlockRenderer from '../../components/editor-blocks/BlockRenderer.astro';
+import LightboxOverlay from '../../components/LightboxOverlay.astro';
+import type { Editor, EditorLink } from '../../lib/editorTypes';
+import editorsData from '../../data/editors.json';
+import '../../styles/gallery.css';
+
+export function getStaticPaths() {
+  // Copy-before-filter so the imported module array is never mutated, then keep
+  // only publishable entries (published === true + a usable string slug). One
+  // malformed/unpublished entry must never break the whole-site build.
+  const raw: Editor[] = Array.isArray(editorsData) ? ([...editorsData] as Editor[]) : [];
+  const published = raw.filter(
+    (e) =>
+      Boolean(e) &&
+      e.published === true &&
+      typeof e.slug === 'string' &&
+      e.slug.length > 0,
+  );
+  // ONE page per published editor — single-language, NO langCodes cartesian (D-13).
+  return published.map((editor) => ({
+    params: { slug: editor.slug },
+    props: { editor },
+  }));
+}
+
+interface Props {
+  editor: Editor;
+}
+
+const { editor } = Astro.props;
+
+// Every field is read defensively — the entry originates from an external writer.
+const lang: 'es' | 'en' = editor.lang === 'en' ? 'en' : 'es';
+const name = typeof editor.name === 'string' ? editor.name : editor.slug;
+const avatar = typeof editor.avatar === 'string' ? editor.avatar : '';
+const tagline = typeof editor.tagline === 'string' ? editor.tagline : '';
+const discordId = typeof editor.discordId === 'string' ? editor.discordId : '';
+const badges = Array.isArray(editor.badges) ? editor.badges : [];
+const socials = Array.isArray(editor.socials) ? editor.socials : [];
+const blocks = Array.isArray(editor.blocks) ? editor.blocks : [];
+const theme = (editor.theme ?? {}) as Partial<Editor['theme']>;
+
+// Header custom links — https-only, validated upstream; skip malformed entries so
+// one bad link never throws the build (mirrors the legacy route filter).
+const links = (Array.isArray(editor.links) ? editor.links : []).filter(
+  (l): l is EditorLink =>
+    Boolean(l) && typeof l.url === 'string' && l.url.length > 0,
+);
+
+// Page-level button treatment (D-11) — the SAME style/shape for every button.
+const btnStyle = theme.btnStyle ?? 'glass';
+const btnShape = theme.btnShape ?? 'rounded';
+const effects = Array.isArray(theme.effects) ? theme.effects : [];
+const audio = typeof theme.audio === 'string' ? theme.audio : '';
+
+// Background media (D-18): a video ref (.mp4/.webm) becomes a real <video> element
+// because CSS backgrounds cannot play video; an image ref (.gif/.webp/.png/.jpg…)
+// becomes an <img>. Anything empty/unknown degrades to the solid --theme-bg base.
+// The <video> is muted+loop+playsinline and started by splash.ts on `editor:enter`
+// (D-22) via the [data-editor-bg-video] hook. The scrim/tint/blur read the theme
+// knobs (--theme-overlay / --theme-blur / --theme-tint, D-21).
+const bgMediaRaw = typeof theme.bgMedia === 'string' ? theme.bgMedia.trim() : '';
+const isVideoBg = /\.(mp4|webm)(?:[?#].*)?$/i.test(bgMediaRaw);
+const isImageBg = !isVideoBg && /\.(gif|webp|png|jpe?g|avif)(?:[?#].*)?$/i.test(bgMediaRaw);
+---
+
+<EditorLayout
+  editor={editor}
+  title={`${name} — Nocturna Avatars`}
+  description={tagline || `${name} — Nocturna Avatars`}
+>
+  {/* Background-media layer (D-18/D-21). Opaque --theme-bg base fully occludes the
+      layout's fallback bg layer, so there is exactly ONE darken scrim (no double
+      darkening). Video vs img is resolved from the bgMedia extension above. */}
+  <div class="e-bg" aria-hidden="true">
+    {isVideoBg && (
+      <video
+        class="e-bg__media"
+        data-editor-bg-video
+        src={bgMediaRaw}
+        poster={avatar || undefined}
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      ></video>
+    )}
+    {isImageBg && (
+      <img
+        class="e-bg__media"
+        src={bgMediaRaw}
+        alt=""
+        loading="eager"
+        decoding="async"
+      />
+    )}
+    <div class="e-bg__tint"></div>
+    <div class="e-bg__scrim"></div>
+  </div>
+
+  {/* Centered themed column — max-width 480px link-in-bio column (UI-SPEC Spacing).
+      The portfolio grid breaks out to its own 560px inside its block. */}
+  <main class="e-main">
+    <div class="e-column">
+      <EditorHeaderCard
+        name={name}
+        avatar={avatar}
+        tagline={tagline}
+        badges={badges}
+        socials={socials}
+        effects={effects}
+      >
+        <PresenceDot discordId={discordId} slot="presence" />
+      </EditorHeaderCard>
+
+      {links.length > 0 && (
+        <nav class="e-links" aria-label={name}>
+          {links.map((link) => (
+            <LinkButton
+              label={link.label}
+              url={link.url}
+              btnStyle={btnStyle}
+              btnShape={btnShape}
+            />
+          ))}
+        </nav>
+      )}
+
+      <div class="e-blocks">
+        {blocks.map((block) => (
+          <BlockRenderer block={block} lang={lang} slug={editor.slug} />
+        ))}
+      </div>
+
+      <div class="e-meta">
+        <ViewCounter slug={editor.slug} />
+        <AudioPlayer src={audio} />
+      </div>
+    </div>
+  </main>
+
+  {/* One shared lightbox per page — gallery.ts derives its entries from the
+      rendered [data-gallery-tile] portfolio cells and binds click/keyboard with
+      zero new JS. On this chrome-free page it runs via its hard-nav fallback. */}
+  <LightboxOverlay lang={lang} />
+  <script>
+    import '../../scripts/gallery.ts';
+  </script>
+</EditorLayout>
+
+{/* The lightbox markup (LightboxOverlay + gallery.ts) reuses the brand
+    .dc-overlay backdrop + .lightbox* stage styles. The chrome-free EditorLayout
+    loads no brand stylesheet, so re-declare the tiny .dc-overlay base here and map
+    the handful of brand tokens the .lightbox* rules (from gallery.css) reference
+    onto the editor's own theme tokens — the lightbox then adopts the page theme. */}
+<style is:global>
+  .editor-page {
+    --color-white: var(--theme-text);
+    --color-white-dim: var(--theme-text-muted);
+    --color-ink-raised: color-mix(in srgb, var(--theme-bg) 70%, #000);
+    --color-red: var(--theme-accent);
+    --color-red-on-ink: var(--theme-accent);
+    --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --font-body: var(--theme-font);
+  }
+
+  /* Minimal .dc-overlay backdrop (copied from chrome.css) so gallery.ts's
+     hidden/active toggling reveals a full-viewport dimmed lightbox. */
+  .dc-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 5, 10, 0.88);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .dc-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .dc-overlay[hidden] {
+    display: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dc-overlay {
+      transition: none;
+    }
+  }
+</style>
+
+<style>
+  /* Background-media layer — fixed, behind all content. Opaque themed base so it
+     fully replaces the layout fallback layer (single scrim). */
+  .e-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background-color: var(--theme-bg);
+    pointer-events: none;
+  }
+  .e-bg__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(var(--theme-blur));
+    transform: scale(1.06); /* absorb the blur edge bleed */
+  }
+  .e-bg__tint {
+    position: absolute;
+    inset: 0;
+    background: var(--theme-tint);
+    mix-blend-mode: color;
+  }
+  .e-bg__scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, calc(var(--theme-overlay) / 100));
+  }
+
+  /* Centered link-in-bio column (UI-SPEC: max-width 480px, page-gutter padding). */
+  .e-main {
+    position: relative;
+    z-index: 1;
+    min-height: 100dvh;
+    padding-block: clamp(48px, 12vh, 96px);
+  }
+  .e-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    max-width: 480px;
+    margin-inline: auto;
+    padding-inline: var(--page-gutter, clamp(20px, 5vw, 48px));
+  }
+
+  /* Header custom links — full-width stacked buttons. */
+  .e-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    width: 100%;
+  }
+
+  /* Blocks in editor-defined order. */
+  .e-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  /* Live-widget meta row (view counter + audio control). */
+  .e-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+</style>
