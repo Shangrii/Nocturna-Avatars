@@ -1,0 +1,117 @@
+---
+/**
+ * EditorHeaderCard — the guns.lol glass header card (D-10). Composes the shell's
+ * transform pieces in a single glassmorphism card:
+ *   avatar (+accent glow/ring) → name (+animated gradient) → SpecialtyBadges →
+ *   `presence` slot (plan 04's PresenceDot) → tagline (typewriter-capable) →
+ *   SocialIconRow.
+ *
+ * Everything is theme-token driven (`.editor-glass`, `.editor-avatar`,
+ * `.editor-username--gradient` from editor-theme.css; no brand `--color-*`). Each
+ * premium effect is OPT-IN per editor via the `effects` key list (UI-SPEC Effects
+ * Catalog): `glow` adds the avatar glow/ring, `gradient` animates the name,
+ * `typewriter` marks the tagline with `data-typewriter` so plan 06's effects.ts can
+ * drive the char reveal (static tagline otherwise + under reduced-motion). Reduced
+ * motion is handled centrally in editor-theme.css.
+ *
+ * Security (T-10.1-03-01): every editor string (name, tagline, badge labels, social
+ * labels) renders through Astro `{}` auto-escaping — no raw-HTML directive anywhere.
+ * The header's custom `links` are NOT rendered here; the route places the LinkButton
+ * list below the card.
+ */
+import type { EditorLink } from '../../lib/editorTypes';
+import SpecialtyBadges from './SpecialtyBadges.astro';
+import SocialIconRow from './SocialIconRow.astro';
+
+interface Props {
+  name: string;
+  avatar: string;
+  tagline: string;
+  badges: string[];
+  socials: EditorLink[];
+  effects: string[];
+}
+
+const { name, avatar, tagline, badges, socials, effects } = Astro.props;
+
+// Opt-in effect gates (UI-SPEC Effects Catalog / bot KNOWN_EFFECTS keys).
+const fx = Array.isArray(effects) ? effects : [];
+const hasGlow = fx.includes('glow');
+const hasGradient = fx.includes('gradient');
+const hasTypewriter = fx.includes('typewriter');
+---
+
+<header class="editor-glass editor-header-card">
+  {avatar && (
+    <img
+      class:list={['editor-header-card__avatar', hasGlow && 'editor-avatar']}
+      src={avatar}
+      alt={name}
+      width="160"
+      height="160"
+      loading="eager"
+      decoding="async"
+    />
+  )}
+
+  <h1 class:list={['editor-header-card__name', hasGradient && 'editor-username--gradient']}>
+    {name}
+  </h1>
+
+  <SpecialtyBadges badges={badges} />
+
+  {/* Empty-safe named slot — plan 04's PresenceDot fills this. */}
+  <slot name="presence" />
+
+  {tagline && (
+    <p class="editor-header-card__tagline" data-typewriter={hasTypewriter ? '' : undefined}>
+      {tagline}
+    </p>
+  )}
+
+  <SocialIconRow socials={socials} />
+</header>
+
+<style>
+  .editor-header-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Circular avatar, 120–160px (UI-SPEC). Glow/ring is the opt-in `.editor-avatar`
+     layer from editor-theme.css; this class owns only shape + sizing. */
+  .editor-header-card__avatar {
+    width: clamp(120px, 30vw, 160px);
+    height: clamp(120px, 30vw, 160px);
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  /* Name — Display role (32px clamp 28–40, 700, 1.1) in the editor's font. */
+  .editor-header-card__name {
+    margin: 0;
+    font-family: var(--theme-font);
+    font-size: clamp(28px, 6vw, 40px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--theme-text);
+    word-break: break-word;
+  }
+
+  /* Tagline — Body role, muted. `data-typewriter` is a JS hook (plan 06); the text
+     is fully present statically for no-JS / reduced-motion. */
+  .editor-header-card__tagline {
+    margin: 0;
+    max-width: 48ch;
+    font-family: var(--theme-font);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--theme-text-muted);
+    word-break: break-word;
+  }
+</style>

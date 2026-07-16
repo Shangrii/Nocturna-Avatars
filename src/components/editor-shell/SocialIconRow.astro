@@ -1,0 +1,151 @@
+---
+/**
+ * SocialIconRow — auto-detects each social link's platform from its URL and
+ * renders a self-hosted glyph (D-09). Simple Icons for known platforms, a Lucide
+ * generic `globe` for anything unrecognised. NO icon font, NO CDN — the SVGs are
+ * first-party files committed under `src/icons/` and inlined at build via Vite
+ * `?raw` (supply-chain threat T-10.1-03-SC mitigated).
+ *
+ * Security posture (T-10.1-03-01/02):
+ *  - The inlined SVG string is a TRUSTED first-party asset, so `set:html` on the
+ *    ICON is safe. Editor-controlled data (`url`) is NEVER inlined as raw HTML — it
+ *    appears only as an escaped `href` / `aria-label` attribute.
+ *  - Each anchor carries `rel="noopener noreferrer nofollow"` + `target="_blank"`.
+ *  - `new URL(url)` is parsed defensively; a malformed/relative entry is skipped so
+ *    one bad link can't throw the whole-site build. Empty list → renders NOTHING.
+ *
+ * Colour is theme-token driven: `.editor-social__icon` (editor-theme.css) paints
+ * the glyph `--theme-text` at rest, `--theme-accent` on hover. 44px touch target.
+ */
+import type { EditorLink } from '../../lib/editorTypes';
+
+// Self-hosted glyphs, inlined as raw strings (trusted first-party assets).
+import tiktok from '../../icons/social/tiktok.svg?raw';
+import youtube from '../../icons/social/youtube.svg?raw';
+import twitch from '../../icons/social/twitch.svg?raw';
+import xIcon from '../../icons/social/x.svg?raw';
+import instagram from '../../icons/social/instagram.svg?raw';
+import discord from '../../icons/social/discord.svg?raw';
+import github from '../../icons/social/github.svg?raw';
+import kofi from '../../icons/social/kofi.svg?raw';
+import bluesky from '../../icons/social/bluesky.svg?raw';
+import threads from '../../icons/social/threads.svg?raw';
+import globe from '../../icons/ui/globe.svg?raw';
+
+interface Props {
+  socials: EditorLink[];
+}
+
+/** platform key → inlined self-hosted glyph. `generic` is the fallback. */
+const GLYPHS: Record<string, string> = {
+  tiktok,
+  youtube,
+  twitch,
+  x: xIcon,
+  instagram,
+  discord,
+  github,
+  kofi,
+  bluesky,
+  threads,
+  generic: globe,
+};
+
+/** Registered-domain → platform. Matched against the URL hostname suffix. */
+const HOST_MAP: Record<string, string> = {
+  'tiktok.com': 'tiktok',
+  'youtube.com': 'youtube',
+  'youtu.be': 'youtube',
+  'twitch.tv': 'twitch',
+  'x.com': 'x',
+  'twitter.com': 'x',
+  'instagram.com': 'instagram',
+  'discord.com': 'discord',
+  'discord.gg': 'discord',
+  'discordapp.com': 'discord',
+  'github.com': 'github',
+  'ko-fi.com': 'kofi',
+  'bsky.app': 'bluesky',
+  'threads.net': 'threads',
+  'threads.com': 'threads',
+};
+
+interface ResolvedSocial {
+  url: string;
+  platform: string;
+  label: string;
+  glyph: string;
+}
+
+const input = Array.isArray(Astro.props.socials) ? Astro.props.socials : [];
+
+const resolved: ResolvedSocial[] = input
+  .map((item): ResolvedSocial | null => {
+    if (!item || typeof item.url !== 'string' || item.url.length === 0) return null;
+    let host = '';
+    try {
+      host = new URL(item.url).hostname.toLowerCase().replace(/^www\./, '');
+    } catch {
+      return null; // malformed / relative URL — skip, never throw
+    }
+    // hostname suffix match: `sub.tiktok.com` → tiktok, unknown host → generic.
+    let platform = 'generic';
+    for (const domain in HOST_MAP) {
+      if (host === domain || host.endsWith(`.${domain}`)) {
+        platform = HOST_MAP[domain];
+        break;
+      }
+    }
+    return {
+      url: item.url,
+      platform,
+      label: typeof item.label === 'string' && item.label.length > 0 ? item.label : platform,
+      glyph: GLYPHS[platform] ?? GLYPHS.generic,
+    };
+  })
+  .filter((r): r is ResolvedSocial => r !== null);
+---
+
+{resolved.length > 0 && (
+  <nav class="editor-socials" aria-label="Social links">
+    {resolved.map((social) => (
+      <a
+        class="editor-social__icon"
+        href={social.url}
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        aria-label={social.label}
+      >
+        <Fragment set:html={social.glyph} />
+      </a>
+    ))}
+  </nav>
+)}
+
+<style>
+  .editor-socials {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+  /* 44px touch target (PLAT-04); colour/hover comes from editor-theme.css. */
+  .editor-social__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--touch-min);
+    min-height: var(--touch-min);
+    text-decoration: none;
+  }
+  .editor-social__icon :global(svg) {
+    width: 22px;
+    height: 22px;
+  }
+  .editor-social__icon:focus-visible {
+    outline: 2px solid var(--theme-accent);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+</style>
