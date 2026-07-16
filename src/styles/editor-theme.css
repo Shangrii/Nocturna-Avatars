@@ -3,7 +3,7 @@
    ───────────────────────────────────────────────
    Editor pages import NONE of the brand `theme.css`; THIS file is their
    design system. It declares:
-     (a) the 13 --theme-* tokens at their Midnight-Nocturna DEFAULTS so an
+     (a) the 12 --theme-* tokens at their Midnight-Nocturna DEFAULTS so an
          editor with no theme still renders on clean cutover (D-26), plus the
          --space-* / --touch-min primitives adopted from the brand scale
          (editor pages do not import theme.css, so they are re-declared here);
