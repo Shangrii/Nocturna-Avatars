@@ -37,6 +37,7 @@ import BlockRenderer from '../../components/editor-blocks/BlockRenderer.astro';
 import LightboxOverlay from '../../components/LightboxOverlay.astro';
 import type { Editor, EditorLink } from '../../lib/editorTypes';
 import editorsData from '../../data/editors.json';
+import { safeHref } from '../../lib/url';
 import '../../styles/gallery.css';
 
 export function getStaticPaths() {
@@ -76,10 +77,12 @@ const blocks = Array.isArray(editor.blocks) ? editor.blocks : [];
 const theme = (editor.theme ?? {}) as Partial<Editor['theme']>;
 
 // Header custom links — https-only, validated upstream; skip malformed entries so
-// one bad link never throws the build (mirrors the legacy route filter).
+// one bad link never throws the build (mirrors the legacy route filter). The
+// render-side scheme guard (CR-01) drops any javascript:/data: href here so the
+// already-filtered URLs reaching LinkButton are safe.
 const links = (Array.isArray(editor.links) ? editor.links : []).filter(
   (l): l is EditorLink =>
-    Boolean(l) && typeof l.url === 'string' && l.url.length > 0,
+    Boolean(l) && typeof l.url === 'string' && safeHref(l.url) !== null,
 );
 
 // Page-level button treatment (D-11) — the SAME style/shape for every button.

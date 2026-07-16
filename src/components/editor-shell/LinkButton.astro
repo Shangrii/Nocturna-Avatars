@@ -18,6 +18,8 @@
  * falling back to the raw URL when a label is missing. Reduced-motion is handled
  * centrally in `editor-theme.css` for `.editor-btn`. 44px min touch target.
  */
+import { safeHref } from '../../lib/url';
+
 interface Props {
   label: string;
   url: string;
@@ -34,15 +36,32 @@ const STYLES = ['filled', 'outline', 'glass'] as const;
 const SHAPES = ['sharp', 'rounded', 'pill'] as const;
 const safeStyle = STYLES.includes(btnStyle as (typeof STYLES)[number]) ? btnStyle : 'glass';
 const safeShape = SHAPES.includes(btnShape as (typeof SHAPES)[number]) ? btnShape : 'rounded';
+
+// Render-side scheme guard (CR-01) — defense-in-depth. The route filter already
+// drops unsafe URLs before they reach this component, but if a `javascript:`/
+// `data:` URL ever arrives directly it renders as a non-interactive disabled
+// element (no clickable href) rather than a script-execution vector.
+const href = safeHref(url);
 ---
 
-<a
-  class="editor-btn editor-linkbtn"
-  data-btn-style={safeStyle}
-  data-btn-shape={safeShape}
-  href={url}
-  target="_blank"
-  rel="noopener noreferrer nofollow"
->
-  {label || url}
-</a>
+{href !== null ? (
+  <a
+    class="editor-btn editor-linkbtn"
+    data-btn-style={safeStyle}
+    data-btn-shape={safeShape}
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer nofollow"
+  >
+    {label || href}
+  </a>
+) : (
+  <span
+    class="editor-btn editor-linkbtn"
+    data-btn-style={safeStyle}
+    data-btn-shape={safeShape}
+    aria-disabled="true"
+  >
+    {label}
+  </span>
+)}
