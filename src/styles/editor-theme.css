@@ -35,6 +35,24 @@
   --page-gutter: clamp(20px, 4vw, 48px);
   --touch-min: 44px;
 
+  /* ── Type scale + line heights adopted from the brand scale (theme.css).
+       Re-declared here because editor pages do NOT import brand theme.css, yet the
+       re-themed editor-block components (plan 05) read --type-*/--lh-* for their
+       font-family-AGNOSTIC type roles — without these they would fall back to the
+       browser's default sizes. Mirrors theme.css keys verbatim. ── */
+  --type-display: clamp(46px, 11.5vw, 240px);
+  --type-display-nav: 33px;
+  --type-heading: clamp(24px, 5vw, 44px);
+  --type-card-title: clamp(20px, 3vw, 28px);
+  --type-body: 16px;
+  --type-body-dense: 15px;
+  --type-label: clamp(10px, 1.4vw, 12px);
+  --lh-body: 1.7;
+  --lh-legal: 1.8;
+  --lh-heading: 1.15;
+  --lh-display: 0.9;
+  --lh-label: 1.4;
+
   /* ── Theme Token Contract — Midnight-Nocturna DEFAULTS (D-26).
        The layout emits editor-chosen overrides inline on the page root;
        these defaults guarantee a bare page renders correctly. ── */
