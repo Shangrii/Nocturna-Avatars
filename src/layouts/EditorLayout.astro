@@ -1,0 +1,178 @@
+---
+/**
+ * EditorLayout — the STANDALONE shell every editor page (`/e/<slug>`) mounts into (D-15).
+ *
+ * This is a SUBTRACTIVE analog of BaseLayout: it keeps only the doctype / <head> / lang
+ * skeleton and DELETES all site chrome — no nav bar, no footer, no floating CTA, no shared
+ * modal, no view-transition router, no brand stylesheets, no hosted-fonts link, no film
+ * grain. The only site reference is a tiny corner "nocturna" watermark linking back to `/`.
+ *
+ * It is the RENDER-SIDE half of the theme-injection defense (bot-side validation is
+ * plan 09). It emits a FIXED WHITELIST of 12 `--theme-*` custom properties as an inline
+ * style on the page root: editor-controlled values only ever fill VALUES (Astro attribute
+ * auto-escaping prevents attribute breakout), numerics are re-clamped (overlay 0..100,
+ * blur 0..20), and the font resolves through a fixed name→slug map (unknown → Inter).
+ * No editor string can ever become a CSS property name, selector, or `@import`
+ * (T-10.1-06-01). Colors default to Midnight-Nocturna so a bare/partial theme still
+ * renders on clean cutover (D-26).
+ *
+ * Owns: token emission, single-font preload (D-03), the themed background layer, the
+ * watermark (D-15), the splash mount (D-22), and index,follow + OG (Discovery/SEO).
+ */
+import type { Editor } from '../lib/editorTypes';
+import '../styles/editor-theme.css';
+import '../styles/editor-fonts.css';
+import Splash from '../components/editor-shell/Splash.astro';
+
+interface Props {
+  editor: Editor;
+  title: string;
+  description: string;
+}
+
+const { editor, title, description } = Astro.props;
+const theme = (editor?.theme ?? {}) as Partial<Editor['theme']>;
+
+/* ── Fixed curated-font NAME → key-slug + primary woff2 (D-03). Unknown → Inter.
+   `editor.theme.font` carries a curated FAMILY NAME (bot allowlist CURATED_FONTS);
+   the editor-fonts.css :root map is keyed by lowercase SLUG (--font-editor-<slug>). ── */
+const FONT_MAP: Record<string, { slug: string; woff2: string }> = {
+  Inter: { slug: 'inter', woff2: '/fonts/editors/inter/inter-400-latin.woff2' },
+  'Space Grotesk': { slug: 'space-grotesk', woff2: '/fonts/editors/space-grotesk/space-grotesk-400-latin.woff2' },
+  Sora: { slug: 'sora', woff2: '/fonts/editors/sora/sora-400-latin.woff2' },
+  'Playfair Display': { slug: 'playfair-display', woff2: '/fonts/editors/playfair-display/playfair-display-400-latin.woff2' },
+  Fraunces: { slug: 'fraunces', woff2: '/fonts/editors/fraunces/fraunces-400-latin.woff2' },
+  'Bebas Neue': { slug: 'bebas-neue', woff2: '/fonts/editors/bebas-neue/bebas-neue-400-latin.woff2' },
+  UnifrakturMaguntia: { slug: 'unifrakturmaguntia', woff2: '/fonts/editors/unifrakturmaguntia/unifrakturmaguntia-400-latin.woff2' },
+  'Pirata One': { slug: 'pirata-one', woff2: '/fonts/editors/pirata-one/pirata-one-400-latin.woff2' },
+  Caveat: { slug: 'caveat', woff2: '/fonts/editors/caveat/caveat-400-latin.woff2' },
+  'Permanent Marker': { slug: 'permanent-marker', woff2: '/fonts/editors/permanent-marker/permanent-marker-400-latin.woff2' },
+  'Press Start 2P': { slug: 'press-start-2p', woff2: '/fonts/editors/press-start-2p/press-start-2p-400-latin.woff2' },
+  VT323: { slug: 'vt323', woff2: '/fonts/editors/vt323/vt323-400-latin.woff2' },
+  Orbitron: { slug: 'orbitron', woff2: '/fonts/editors/orbitron/orbitron-400-latin.woff2' },
+  Rajdhani: { slug: 'rajdhani', woff2: '/fonts/editors/rajdhani/rajdhani-400-latin.woff2' },
+};
+
+/* Effects allowlist mirrors the bot-side KNOWN_EFFECTS (editors_model.py) exactly. */
+const KNOWN_EFFECTS = ['glass', 'glow', 'hover', 'gradient', 'typewriter', 'tilt', 'particles', 'presence', 'audio'];
+const BTN_STYLES = ['filled', 'outline', 'glass'];
+const BTN_SHAPES = ['sharp', 'rounded', 'pill'];
+
+const fontEntry = FONT_MAP[theme.font as string] ?? FONT_MAP.Inter;
+
+/* Numeric clamp — render-side half of the theme-injection guard (T-10.1-06-01). */
+const clampNum = (v: unknown, lo: number, hi: number, dflt: number): number => {
+  const n = typeof v === 'number' ? v : Number(v);
+  if (!Number.isFinite(n)) return dflt;
+  return Math.max(lo, Math.min(hi, Math.round(n)));
+};
+const overlay = clampNum(theme.overlay, 0, 100, 40);
+const blur = clampNum(theme.blur, 0, 20, 0);
+
+/* bgMedia becomes a url() VALUE only; the property NAME (--theme-bg-media) is fixed.
+   Strip quotes/backslashes/parens defensively so the value cannot break out of url(). */
+const rawMedia = typeof theme.bgMedia === 'string' ? theme.bgMedia.replace(/["'\\()]/g, '') : '';
+const bgMedia = rawMedia.length > 0 ? `url("${rawMedia}")` : 'none';
+
+const bg = typeof theme.bg === 'string' ? theme.bg : '#0a0c14';
+
+/* FIXED whitelist of --theme-* property NAMES. Editor values fill VALUES only. */
+const themeStyle: Record<string, string> = {
+  '--theme-bg': bg,
+  '--theme-bg-media': bgMedia,
+  '--theme-overlay': String(overlay),
+  '--theme-blur': `${blur}px`,
+  '--theme-tint': typeof theme.tint === 'string' && theme.tint.length > 0 ? theme.tint : 'transparent',
+  '--theme-surface': typeof theme.surface === 'string' ? theme.surface : 'rgba(240,234,228,0.06)',
+  '--theme-accent': typeof theme.accent === 'string' ? theme.accent : '#c0192c',
+  '--theme-text': typeof theme.text === 'string' ? theme.text : '#f0eae4',
+  '--theme-text-muted': typeof theme.textMuted === 'string' ? theme.textMuted : '#9a9198',
+  '--theme-font': `var(--font-editor-${fontEntry.slug})`,
+  '--theme-btn-style': BTN_STYLES.includes(theme.btnStyle as string) ? (theme.btnStyle as string) : 'glass',
+  '--theme-btn-shape': BTN_SHAPES.includes(theme.btnShape as string) ? (theme.btnShape as string) : 'rounded',
+};
+
+const effects = Array.isArray(theme.effects)
+  ? theme.effects.filter((e): e is string => typeof e === 'string' && KNOWN_EFFECTS.includes(e))
+  : [];
+const dataEffects = effects.join(' ');
+
+const name = typeof editor?.name === 'string' ? editor.name : '';
+const avatar = typeof editor?.avatar === 'string' ? editor.avatar : '';
+const tagline = typeof editor?.tagline === 'string' ? editor.tagline : '';
+const lang: 'es' | 'en' = editor?.lang === 'en' ? 'en' : 'es';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content={bg} />
+    <meta name="description" content={description} />
+    <!-- Discovery/SEO: editor pages are index,follow — organic discovery is the goal (D-17). -->
+    <meta name="robots" content="index,follow" />
+    <title>{title}</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <!-- OG from name + tagline + avatar (Interaction Contract Discovery/SEO). -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={name} />
+    <meta property="og:description" content={tagline} />
+    {avatar && <meta property="og:image" content={avatar} />}
+    <!-- Preload ONLY the editor's ONE chosen curated family (D-03) — driven by editor.theme.font. -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin href={fontEntry.woff2} />
+  </head>
+  <body>
+    <!-- Page root: owns the FIXED --theme-* token whitelist + the data-effects opt-in list. -->
+    <div class="editor-page" data-effects={dataEffects} style={themeStyle}>
+      <!-- Themed background layer (D-21): media + tint + darken scrim. Its blur/tint/overlay
+           are legibility controls (stay on under reduced-motion, handled by editor-theme.css). -->
+      <div class="editor-bg" aria-hidden="true">
+        <div class="editor-bg__media"></div>
+        <div class="editor-bg__tint"></div>
+        <div class="editor-bg__scrim"></div>
+      </div>
+
+      <!-- Splash gate (D-22): blurred bg peek + name + Enter; unlocks audio/video autoplay. -->
+      <Splash name={name} lang={lang} />
+
+      <!-- The ONLY site reference on a standalone editor page (D-15). Non-themed off-white. -->
+      <a class="editor-watermark" href="/">nocturna</a>
+
+      <slot />
+    </div>
+
+    <script>
+      import '../scripts/editor/splash.ts';
+    </script>
+    <script>
+      import '../scripts/editor/effects.ts';
+    </script>
+
+    <style>
+      /* Corner watermark — off-white 50%, non-themed, links to the main site (D-15). */
+      .editor-watermark {
+        position: fixed;
+        right: var(--space-sm);
+        bottom: var(--space-sm);
+        z-index: 900;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: lowercase;
+        text-decoration: none;
+        color: color-mix(in srgb, #f0eae4 50%, transparent);
+        transition: color 0.18s ease;
+      }
+      .editor-watermark:hover,
+      .editor-watermark:focus-visible {
+        color: #f0eae4;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .editor-watermark {
+          transition: none;
+        }
+      }
+    </style>
+  </body>
+</html>
