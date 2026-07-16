@@ -1,0 +1,48 @@
+---
+/**
+ * LinkButton — a single full-width editor link button (D-11, guns.lol style).
+ *
+ * The visual treatment is ATTRIBUTE-DRIVEN: the page theme picks ONE
+ * `--theme-btn-style` (filled|outline|glass) × ONE `--theme-btn-shape`
+ * (sharp|rounded|pill) for the whole page, and every button mirrors those enum
+ * values onto `[data-btn-style]` / `[data-btn-shape]`. The matrix CSS lives in
+ * `editor-theme.css` (plan 02) on `.editor-btn[data-btn-*]` — CSS custom-property
+ * values cannot key selectors cross-browser, so the shell emits the attributes.
+ * There are NO per-button colour/shape overrides (D-11): the route passes the
+ * same page-level style/shape to every LinkButton; the values here only DEFAULT
+ * to the Midnight-Nocturna tokens so a bare render still resolves.
+ *
+ * The anchor opens in a new tab with a safe outbound rel (noopener + noreferrer +
+ * nofollow — T-10.1-03-02: untrusted link, no `window.opener`, no link equity). The label
+ * renders through Astro auto-escaping ONLY (never a raw-HTML directive, D-02),
+ * falling back to the raw URL when a label is missing. Reduced-motion is handled
+ * centrally in `editor-theme.css` for `.editor-btn`. 44px min touch target.
+ */
+interface Props {
+  label: string;
+  url: string;
+  /** Page-level button style (D-11). Same for every button; defaults to token. */
+  btnStyle?: 'filled' | 'outline' | 'glass';
+  /** Page-level button shape (D-11). Same for every button; defaults to token. */
+  btnShape?: 'sharp' | 'rounded' | 'pill';
+}
+
+const { label, url, btnStyle = 'glass', btnShape = 'rounded' } = Astro.props;
+
+// Whitelist the enum so a malformed theme value can never inject an attribute.
+const STYLES = ['filled', 'outline', 'glass'] as const;
+const SHAPES = ['sharp', 'rounded', 'pill'] as const;
+const safeStyle = STYLES.includes(btnStyle as (typeof STYLES)[number]) ? btnStyle : 'glass';
+const safeShape = SHAPES.includes(btnShape as (typeof SHAPES)[number]) ? btnShape : 'rounded';
+---
+
+<a
+  class="editor-btn editor-linkbtn"
+  data-btn-style={safeStyle}
+  data-btn-shape={safeShape}
+  href={url}
+  target="_blank"
+  rel="noopener noreferrer nofollow"
+>
+  {label || url}
+</a>

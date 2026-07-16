@@ -1,0 +1,77 @@
+---
+/**
+ * SpecialtyBadges — the editor's specialty pills, curated set ONLY (D-07).
+ *
+ * Editors pick badges FROM a fixed, team-defined allowlist — never free-form
+ * text — so a badge value can never carry injected markup. The allowlist here
+ * mirrors the bot-side validation gate EXACTLY (`nocturna-bot/core/editors_model.py`
+ * `SPECIALTY_BADGES`): Outfits, Accessories, Dances, Textures, Blender, Modeling3D.
+ * Any key not in the allowlist is DROPPED (defensive — `editors.json` is written
+ * by the admin app / bot, untrusted at build time). Labels render through Astro
+ * auto-escaping ONLY (never a raw-HTML directive, D-02).
+ *
+ * Pill styling reads `--theme-*` tokens only (no brand `--color-*`), so it recolours
+ * with the page theme. When the filtered list is empty the component renders NOTHING
+ * (no empty rail — UI-SPEC minimal-state rule).
+ */
+interface Props {
+  badges: string[];
+}
+
+// Curated key → display label. Keys match the bot allowlist one-to-one (D-07).
+const BADGE_LABELS: Record<string, string> = {
+  Outfits: 'Outfits',
+  Accessories: 'Accessories',
+  Dances: 'Dances',
+  Textures: 'Textures',
+  Blender: 'Blender',
+  Modeling3D: '3D Modeling',
+};
+
+const { badges } = Astro.props;
+const input = Array.isArray(badges) ? badges : [];
+// Drop unknown keys, de-dupe, preserve editor order.
+const seen = new Set<string>();
+const curated = input.filter(
+  (key): key is string =>
+    typeof key === 'string' &&
+    Object.prototype.hasOwnProperty.call(BADGE_LABELS, key) &&
+    !seen.has(key) &&
+    (seen.add(key), true),
+);
+---
+
+{curated.length > 0 && (
+  <ul class="editor-badges" aria-label="Specialties">
+    {curated.map((key) => (
+      <li class="editor-badges__pill">{BADGE_LABELS[key]}</li>
+    ))}
+  </ul>
+)}
+
+<style>
+  /* Pill rail — mirrors the PortfolioBlock credited-badge rhythm, recoloured to
+     theme tokens (no brand --color-*). Accent-tinted surface + accent hairline. */
+  .editor-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .editor-badges__pill {
+    padding: var(--space-3xs) var(--space-xs);
+    background: color-mix(in srgb, var(--theme-accent) 14%, var(--theme-surface));
+    border: 1px solid color-mix(in srgb, var(--theme-accent) 40%, transparent);
+    border-radius: 999px;
+    color: var(--theme-text);
+    font-family: var(--theme-font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+</style>
