@@ -461,7 +461,7 @@ Plans:
 **Goal:** Each Nocturna editor gets a premium guns.lol/carrd-style link-in-bio page at the canonical `/e/<slug>` — a fully standalone visual identity (no site chrome, only a tiny watermark) with per-editor theming (background image/GIF/video, 14 curated self-hosted fonts, free colors + 8 presets, the full opt-in premium effect suite, live Discord presence, splash-gated background audio, view counter, social icon row, specialty badges), driven by an extended theme editor in the Phase-10 admin app with side-by-side live preview. The Phase-10 block system survives inside the new themed shell; old bilingual routes redirect to `/e/<slug>`; the directory stays live but unlisted and store credits link to it — clean cutover with sensible defaults so existing pages render instantly.
 **Requirements**: D-01…D-26 (CONTEXT.md locked-decision set; no formal REQ-IDs mapped, mirroring Phase 8)
 **Depends on:** Phase 10
-**Plans:** 4/12 plans executed
+**Plans:** 11/12 plans executed
 
 Plans:
 
@@ -474,13 +474,13 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1)*
 
-- [ ] 10.1-03-PLAN.md — Static shell components: LinkButton (style x shape) + SpecialtyBadges + SocialIconRow (+icon subset) + EditorHeaderCard (D-07/D-09/D-10/D-11)
-- [ ] 10.1-04-PLAN.md — Client-dynamic components: PresenceDot (Lanyard) + ViewCounter (cinema ping) + AudioPlayer (splash-gated) (D-05/D-06/D-22/D-25)
-- [ ] 10.1-05-PLAN.md — Block token-swap (7 blocks + BlockRenderer) + PortfolioBlock 2-3 col grid + lightbox (D-10/D-12)
-- [ ] 10.1-06-PLAN.md — EditorLayout (standalone, token emission, watermark) + Splash (editor:enter unlock) + effects.ts engine (D-04/D-15/D-21/D-22/D-26)
-- [ ] 10.1-08-PLAN.md — Directory restyle + unlist/noindex + store credit links + gallery lightbox credit links -> /e/<slug> (D-16/D-17)
-- [ ] 10.1-10-PLAN.md — Admin theme panel + 8 presets + live preview + lang/badges/socials (nocturna-bot) (D-23/D-24/D-03/D-07/D-09/D-13)
-- [ ] 10.1-11-PLAN.md — Media/audio upload endpoints (image+GIF+video+audio, per-kind caps, ffmpeg optimize) (nocturna-bot) (D-06/D-18/D-19/D-20)
+- [x] 10.1-03-PLAN.md — Static shell components: LinkButton (style x shape) + SpecialtyBadges + SocialIconRow (+icon subset) + EditorHeaderCard (D-07/D-09/D-10/D-11)
+- [x] 10.1-04-PLAN.md — Client-dynamic components: PresenceDot (Lanyard) + ViewCounter (cinema ping) + AudioPlayer (splash-gated) (D-05/D-06/D-22/D-25)
+- [x] 10.1-05-PLAN.md — Block token-swap (7 blocks + BlockRenderer) + PortfolioBlock 2-3 col grid + lightbox (D-10/D-12)
+- [x] 10.1-06-PLAN.md — EditorLayout (standalone, token emission, watermark) + Splash (editor:enter unlock) + effects.ts engine (D-04/D-15/D-21/D-22/D-26)
+- [x] 10.1-08-PLAN.md — Directory restyle + unlist/noindex + store credit links + gallery lightbox credit links -> /e/<slug> (D-16/D-17)
+- [x] 10.1-10-PLAN.md — Admin theme panel + 8 presets + live preview + lang/badges/socials (nocturna-bot) (D-23/D-24/D-03/D-07/D-09/D-13)
+- [x] 10.1-11-PLAN.md — Media/audio upload endpoints (image+GIF+video+audio, per-kind caps, ffmpeg optimize) (nocturna-bot) (D-06/D-18/D-19/D-20)
 
 **Wave 3** *(blocked on Wave 2)*
 
