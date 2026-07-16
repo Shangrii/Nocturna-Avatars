@@ -1,0 +1,146 @@
+---
+/**
+ * Splash — the click-to-enter gate every editor page opens with (D-22).
+ *
+ * A fixed full-viewport modal overlay (role dialog + aria-modal) showing a blurred
+ * peek of the themed background, the editor NAME (Display role, `var(--theme-font)`),
+ * an "Enter"/"Entrar" CTA (`--theme-accent`), and a device-aware sub-label. Its whole
+ * job is to gate autoplay: the paired `splash.ts` dispatches `editor:enter` once on
+ * dismiss (the unlock signal plan 04's audio + view-counter consume) and starts the
+ * background video. Overlay scaffold copied from LightboxOverlay.astro (aria-modal + a
+ * script-bound `data-*` hook). Copy renders in the editor's ONE language (D-13).
+ *
+ * XSS: the name renders through Astro `{}` auto-escaping only — never a raw-HTML
+ * directive (T-10.1-06-02).
+ */
+interface Props {
+  name: string;
+  lang?: 'es' | 'en';
+}
+
+const { name, lang = 'es' } = Astro.props;
+
+/* Copywriting Contract: splash Enter CTA + device-aware sub-label, per editor lang. */
+const copy = {
+  es: { enter: 'Entrar', touch: 'Toca para entrar', desktop: 'Haz clic para entrar' },
+  en: { enter: 'Enter', touch: 'Tap to enter', desktop: 'Click to enter' },
+}[lang];
+---
+
+<div class="editor-splash" data-splash role="dialog" aria-modal="true" aria-label={name}>
+  <div class="editor-splash__inner">
+    <p class="editor-splash__name">{name}</p>
+    <button type="button" class="editor-splash__enter" data-splash-enter>
+      {copy.enter}
+    </button>
+    <p class="editor-splash__hint" aria-hidden="true">
+      <span class="editor-splash__hint--desktop">{copy.desktop}</span>
+      <span class="editor-splash__hint--touch">{copy.touch}</span>
+    </p>
+  </div>
+</div>
+
+<style>
+  /* Full-viewport gate. `backdrop-filter` blurs the themed bg behind it = the peek. */
+  .editor-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+    background: rgba(0, 0, 0, 0.4);
+    -webkit-backdrop-filter: blur(22px) saturate(1.1);
+    backdrop-filter: blur(22px) saturate(1.1);
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  /* Static fallback where backdrop-filter is unsupported: a solid-ish scrim peek. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .editor-splash {
+      background: color-mix(in srgb, var(--theme-bg) 82%, black);
+    }
+  }
+  .editor-splash.is-leaving {
+    opacity: 0;
+  }
+  .editor-splash[hidden] {
+    display: none;
+  }
+
+  .editor-splash__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    text-align: center;
+  }
+
+  /* Display role: 32px (clamp 28–40) / 700 / 1.1 in the editor font. */
+  .editor-splash__name {
+    margin: 0;
+    max-width: 90vw;
+    font-family: var(--theme-font);
+    font-size: clamp(28px, 8vw, 40px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--theme-text);
+    word-break: break-word;
+  }
+
+  .editor-splash__enter {
+    min-height: var(--touch-min);
+    min-width: 160px;
+    padding: var(--space-xs) var(--space-xl);
+    font-family: var(--theme-font);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--theme-text);
+    background: var(--theme-accent);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+  .editor-splash__enter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px -6px color-mix(in srgb, var(--theme-accent) 60%, transparent);
+  }
+  .editor-splash__enter:focus-visible {
+    outline: 2px solid var(--theme-text);
+    outline-offset: 3px;
+  }
+
+  /* Micro role: 12px / 400. Desktop vs touch copy swapped by pointer capability. */
+  .editor-splash__hint {
+    margin: 0;
+    font-family: var(--theme-font);
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--theme-text-muted);
+  }
+  .editor-splash__hint--touch {
+    display: none;
+  }
+  @media (hover: none), (pointer: coarse) {
+    .editor-splash__hint--desktop {
+      display: none;
+    }
+    .editor-splash__hint--touch {
+      display: inline;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .editor-splash,
+    .editor-splash__enter {
+      transition: none;
+    }
+    .editor-splash__enter:hover {
+      transform: none;
+    }
+  }
+</style>
