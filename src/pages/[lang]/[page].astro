@@ -59,9 +59,14 @@ if (concept === 'gallery') {
 } else {
   meta = { title: pages.servicios.metaTitle, description: pages.servicios.metaDescription };
 }
+
+// The editors directory is unlisted: noindex,follow keeps it out of the index while
+// its inbound /e/<slug> links stay crawlable (D-16). Rendered in <head> by BaseLayout,
+// where crawlers actually honor it. All other concepts stay indexable (no robots meta).
+const robots = concept === 'editors' ? 'noindex,follow' : undefined;
 ---
 
-<BaseLayout lang={lang} title={meta.title} description={meta.description}>
+<BaseLayout lang={lang} title={meta.title} description={meta.description} robots={robots}>
   {concept === 'gallery' && <GalleryPage lang={lang} />}
   {concept === 'store' && <StorePage lang={lang} />}
   {concept === 'editors' && <EditorsDirectory lang={lang} />}
