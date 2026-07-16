@@ -719,11 +719,15 @@ function initLightbox(): void {
     editor: tile.dataset.editor ?? '', // '' = uncredited (D-17 gallery half)
   }));
 
-  // Each tile opens the lightbox at its index (click + Enter/Space via native
-  // <button> semantics — no extra keydown wiring needed).
-  document.querySelectorAll<HTMLElement>('[data-gallery-tile]').forEach((tile) => {
+  // Each tile opens the lightbox at its GLOBAL index (click + Enter/Space via
+  // native <button> semantics — no extra keydown wiring needed). The index is the
+  // tile's position in this same document-order query, which is exactly how
+  // `entries[]` above was built — so it resolves correctly even with multiple
+  // PortfolioBlock groups on one editor page. We deliberately do NOT trust a
+  // per-tile `data-index` (WR-02): PortfolioBlock restarts `data-index` at 0 per
+  // block, so a second block's tiles would otherwise open an earlier block's photo.
+  document.querySelectorAll<HTMLElement>('[data-gallery-tile]').forEach((tile, idx) => {
     tile.addEventListener('click', () => {
-      const idx = Number(tile.dataset.index ?? '0');
       openLightbox(overlay, idx);
     });
   });
