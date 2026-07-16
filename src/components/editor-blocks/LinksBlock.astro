@@ -52,11 +52,11 @@ const links = items.filter(
     justify-content: center;
     min-height: var(--touch-min);
     padding: var(--space-2xs) var(--space-sm);
-    background: var(--color-ink-raised);
-    border: 1px solid var(--color-border);
+    background: var(--theme-surface);
+    border: 1px solid color-mix(in srgb, var(--theme-text) 14%, transparent);
     border-radius: 4px;
-    color: var(--color-white);
-    font-family: var(--font-mono);
+    color: var(--theme-text);
+    font-family: var(--theme-font);
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 0.02em;
@@ -66,11 +66,11 @@ const links = items.filter(
     transition: border-color 0.2s ease, background 0.2s ease;
   }
   .editor-links__btn:hover {
-    border-color: var(--color-red);
-    background: var(--color-red-soft);
+    border-color: var(--theme-accent);
+    background: color-mix(in srgb, var(--theme-accent) 14%, transparent);
   }
   .editor-links__btn:focus-visible {
-    outline: 2px solid var(--color-white);
+    outline: 2px solid var(--theme-text);
     outline-offset: 2px;
   }
   @media (prefers-reduced-motion: reduce) {
