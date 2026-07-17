@@ -93,4 +93,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-10 after Phase 8 completion (staff-gated /recordatorio reminders: weekly/monthly/one-off scheduler with custom messages, SQLite persistence, atrasado catch-up — verified 18/18 after gap closure)*
+*Last updated: 2026-07-16 after Phase 10.1 completion (editor pages redesign — premium guns.lol/carrd-style per-editor link-in-bio pages at canonical `/e/<slug>`: standalone chrome-free identity, 13 `--theme-*` tokens + 14 self-hosted curated fonts + 8 admin presets, opt-in effect suite, splash-gated audio, live Lanyard presence, self-hosted view counter; Phase-10 block system re-themed inside the new shell; legacy routes redirect; bot-side ThemeModel injection gate + theme editor panel + media/audio upload endpoints. 26/26 D-decisions code-verified; stored-XSS + CSS-injection review blockers fixed; 5 live/deploy items tracked in 10.1-HUMAN-UAT.md. This is the final phase of milestone v1.0.)*
