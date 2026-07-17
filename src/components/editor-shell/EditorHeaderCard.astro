@@ -43,15 +43,19 @@ const hasTypewriter = fx.includes('typewriter');
 
 <header class="editor-glass editor-header-card">
   {avatar && (
-    <img
-      class:list={['editor-header-card__avatar', hasGlow && 'editor-avatar']}
-      src={avatar}
-      alt={name}
-      width="160"
-      height="160"
-      loading="eager"
-      decoding="async"
-    />
+    <div class="editor-header-card__avatar-wrap">
+      <img
+        class:list={['editor-header-card__avatar', hasGlow && 'editor-avatar']}
+        src={avatar}
+        alt={name}
+        width="160"
+        height="160"
+        loading="eager"
+        decoding="async"
+      />
+      {/* Discord-style live status dot, pinned to the avatar corner (D-05). */}
+      <slot name="presence" />
+    </div>
   )}
 
   <h1 class:list={['editor-header-card__name', hasGradient && 'editor-username--gradient']}>
@@ -59,9 +63,6 @@ const hasTypewriter = fx.includes('typewriter');
   </h1>
 
   <SpecialtyBadges badges={badges} />
-
-  {/* Empty-safe named slot — plan 04's PresenceDot fills this. */}
-  <slot name="presence" />
 
   {tagline && (
     <p class="editor-header-card__tagline" data-typewriter={hasTypewriter ? '' : undefined}>
@@ -80,6 +81,14 @@ const hasTypewriter = fx.includes('typewriter');
     gap: var(--space-sm);
     width: 100%;
     text-align: center;
+  }
+
+  /* Avatar wrapper — positioning anchor for the Discord-style corner status dot. */
+  .editor-header-card__avatar-wrap {
+    position: relative;
+    display: inline-block;
+    align-self: center;
+    line-height: 0;
   }
 
   /* Circular avatar, 120–160px (UI-SPEC). Glow/ring is the opt-in `.editor-avatar`

@@ -18,30 +18,31 @@ const { discordId } = Astro.props;
   discordId && (
     <span class="editor-presence" data-presence data-discord-id={discordId} hidden>
       <span class="editor-presence__dot" data-presence-dot aria-hidden="true" />
-      <span class="editor-presence__activity" data-presence-activity hidden />
     </span>
   )
 }
 
 <style>
+  /* Discord-style corner status: a small colored dot punched into the avatar's
+     bottom-right, anchored to `.editor-header-card__avatar-wrap` (position:relative).
+     No side chip / no activity text — just the status colour, like Discord. */
   .editor-presence {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2xs);
-    font-family: var(--theme-font);
-    font-size: 12px;
-    line-height: 1.4;
-    color: var(--theme-text-muted);
+    position: absolute;
+    right: 7%;
+    bottom: 7%;
+    z-index: 3;
+    display: block;
+    line-height: 0;
   }
   .editor-presence__dot {
-    width: 10px;
-    height: 10px;
+    display: block;
+    width: clamp(18px, 5vw, 26px);
+    height: clamp(18px, 5vw, 26px);
     border-radius: 50%;
-    background: var(--presence-color, #747f8d);
-    /* Ring = accent (theme); glow = the live status colour. */
-    box-shadow:
-      0 0 0 2px color-mix(in srgb, var(--theme-accent) 55%, transparent),
-      0 0 8px 1px color-mix(in srgb, var(--presence-color, #747f8d) 70%, transparent);
+    background: var(--presence-color, #3ba55d);
+    /* Cut-out ring in the page colour (like Discord's avatar notch) + soft glow. */
+    border: 0.22em solid var(--theme-bg, #0a0c14);
+    box-shadow: 0 0 10px 1px color-mix(in srgb, var(--presence-color, #3ba55d) 65%, transparent);
     animation: editor-presence-pulse 2.4s ease-in-out infinite;
   }
   @keyframes editor-presence-pulse {
