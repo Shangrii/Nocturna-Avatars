@@ -518,70 +518,6 @@
   color: var(--color-red-on-paper);
 }
 
-/* ── Add-ons ── */
-.addons {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 var(--page-gutter);
-}
-.addons-title {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--color-red-on-ink);
-  text-align: center;
-  margin-bottom: var(--space-md);
-}
-.section--surface .addons-title {
-  color: var(--color-red-on-paper);
-}
-.addon-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
-  gap: 1px;
-  background: var(--color-border);
-  border: 1px solid var(--color-border);
-}
-.addon-item {
-  background: var(--color-ink-raised);
-  padding: var(--space-md) var(--space-md);
-  transition: background 0.2s;
-}
-.section--surface .addon-item {
-  background: var(--color-paper);
-}
-.addon-item:hover {
-  background: color-mix(in srgb, var(--color-paper-on-ink) 5%, var(--color-ink-raised));
-}
-.section--surface .addon-item:hover {
-  background: color-mix(in srgb, var(--color-ink-on-paper) 5%, var(--color-paper));
-}
-.addon-item .name {
-  font-size: 14px;
-  color: var(--color-white);
-  margin-bottom: var(--space-3xs);
-}
-.section--surface .addon-item .name {
-  color: var(--color-ink-on-paper);
-}
-.addon-item .price {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--color-red-on-ink);
-  font-variant-numeric: tabular-nums;
-}
-.section--surface .addon-item .price {
-  color: var(--color-red-on-paper);
-}
-.addons-note {
-  font-size: 13px;
-  color: var(--color-white-dim);
-  font-style: italic;
-  text-align: center;
-  margin-top: var(--space-sm);
-}
-
 /* ═══════════════════════════════════
    EMPTY STATE (shells / teasers / 404)
    ═══════════════════════════════════ */
@@ -761,9 +697,6 @@
   }
   .section--surface .workflow-step {
     border-bottom-color: color-mix(in srgb, var(--color-ink-on-paper) 12%, transparent);
-  }
-  .addon-grid {
-    grid-template-columns: 1fr;
   }
 }
 
