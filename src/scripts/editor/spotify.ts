@@ -13,6 +13,7 @@
 interface SpotifyController {
   play(): void;
   togglePlay(): void;
+  seek(seconds: number): void;
   addListener(event: 'playback_update', cb: (e: { data: { isPaused: boolean } }) => void): void;
 }
 interface SpotifyIFrameAPI {
@@ -79,6 +80,11 @@ function initOne(root: HTMLElement): void {
   let controller: SpotifyController | null = null;
   let apiFailed = false;
   let pendingPlay = false;
+  // Ask for a one-time seek-to-0 the first time AUTOPLAY starts, so a full track
+  // begins at 0:00 (harmless no-op if it already did). Only autoplay sets this — a
+  // manual resume after pausing keeps its position. (Spotify's 30s PREVIEW, shown to
+  // visitors without a Spotify session, is a fixed mid-song clip we can't reposition.)
+  let wantRestart = false;
   const setPlaying = (playing: boolean): void => {
     root.dataset.playing = playing ? 'true' : 'false';
     playBtn?.setAttribute('aria-pressed', String(playing));
@@ -93,7 +99,13 @@ function initOne(root: HTMLElement): void {
       document.body.appendChild(host);
       api.createController(host, { uri, width: '100%', height: 80 }, (ctrl) => {
         controller = ctrl;
-        ctrl.addListener('playback_update', (e) => setPlaying(!e.data.isPaused));
+        ctrl.addListener('playback_update', (e) => {
+          setPlaying(!e.data.isPaused);
+          if (wantRestart && !e.data.isPaused) {
+            wantRestart = false;
+            ctrl.seek(0);
+          }
+        });
         if (pendingPlay) {
           pendingPlay = false;
           ctrl.play();
@@ -110,6 +122,7 @@ function initOne(root: HTMLElement): void {
   const startOnEnter = (): void => {
     if (started) return;
     started = true;
+    wantRestart = true; // force the full track to begin at 0:00
     if (controller) controller.play();
     else pendingPlay = true; // plays as soon as the controller is ready
   };
