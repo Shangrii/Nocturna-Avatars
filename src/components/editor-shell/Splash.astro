@@ -2,13 +2,14 @@
 /**
  * Splash — the click-to-enter gate every editor page opens with (D-22).
  *
- * A fixed full-viewport modal overlay (role dialog + aria-modal) showing a blurred
- * peek of the themed background, the editor NAME (Display role, `var(--theme-font)`),
- * an "Enter"/"Entrar" CTA (`--theme-accent`), and a device-aware sub-label. Its whole
- * job is to gate autoplay: the paired `splash.ts` dispatches `editor:enter` once on
- * dismiss (the unlock signal plan 04's audio + view-counter consume) and starts the
- * background video. Overlay scaffold copied from LightboxOverlay.astro (aria-modal + a
- * script-bound `data-*` hook). Copy renders in the editor's ONE language (D-13).
+ * A fixed full-viewport overlay showing a blurred peek of the themed background,
+ * the editor NAME (Display role, `var(--theme-font)`), and a device-aware hint.
+ * The ENTIRE overlay is the enter affordance — there is no button (design call):
+ * it is a single `role="button"` surface, so clicking/tapping anywhere (or Enter /
+ * Space / Escape) dismisses it. Its whole job is to gate autoplay: the paired
+ * `splash.ts` dispatches `editor:enter` once on dismiss (the unlock signal plan 04's
+ * audio + view-counter consume) and starts the background video. Copy renders in the
+ * editor's ONE language (D-13).
  *
  * XSS: the name renders through Astro `{}` auto-escaping only — never a raw-HTML
  * directive (T-10.1-06-02).
@@ -20,19 +21,22 @@ interface Props {
 
 const { name, lang = 'es' } = Astro.props;
 
-/* Copywriting Contract: splash Enter CTA + device-aware sub-label, per editor lang. */
+/* Copywriting Contract: device-aware enter hint + accessible label, per editor lang. */
 const copy = {
-  es: { enter: 'Entrar', touch: 'Toca para entrar', desktop: 'Haz clic para entrar' },
-  en: { enter: 'Enter', touch: 'Tap to enter', desktop: 'Click to enter' },
+  es: { touch: 'Toca para entrar', desktop: 'Haz clic para entrar', aria: `Entrar a la página de ${name}` },
+  en: { touch: 'Tap to enter', desktop: 'Click to enter', aria: `Enter ${name}’s page` },
 }[lang];
 ---
 
-<div class="editor-splash" data-splash role="dialog" aria-modal="true" aria-label={name}>
+<div
+  class="editor-splash"
+  data-splash
+  role="button"
+  tabindex="0"
+  aria-label={copy.aria}
+>
   <div class="editor-splash__inner">
     <p class="editor-splash__name">{name}</p>
-    <button type="button" class="editor-splash__enter" data-splash-enter>
-      {copy.enter}
-    </button>
     <p class="editor-splash__hint" aria-hidden="true">
       <span class="editor-splash__hint--desktop">{copy.desktop}</span>
       <span class="editor-splash__hint--touch">{copy.touch}</span>
@@ -41,7 +45,7 @@ const copy = {
 </div>
 
 <style>
-  /* Full-viewport gate. `backdrop-filter` blurs the themed bg behind it = the peek. */
+  /* Full-viewport gate — the ENTIRE surface is the enter affordance (no button). */
   .editor-splash {
     position: fixed;
     inset: 0;
@@ -54,7 +58,13 @@ const copy = {
     -webkit-backdrop-filter: blur(22px) saturate(1.1);
     backdrop-filter: blur(22px) saturate(1.1);
     opacity: 1;
+    cursor: pointer;
     transition: opacity 0.5s ease;
+  }
+  /* Inset focus ring for keyboard users (the element itself fills the viewport). */
+  .editor-splash:focus-visible {
+    outline: 2px solid var(--theme-text);
+    outline-offset: -8px;
   }
   /* Static fallback where backdrop-filter is unsupported: a solid-ish scrim peek. */
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -89,38 +99,23 @@ const copy = {
     word-break: break-word;
   }
 
-  .editor-splash__enter {
-    min-height: var(--touch-min);
-    min-width: 160px;
-    padding: var(--space-xs) var(--space-xl);
-    font-family: var(--theme-font);
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--theme-text);
-    background: var(--theme-accent);
-    border: none;
-    border-radius: 999px;
-    cursor: pointer;
-    transition:
-      transform 0.18s ease,
-      box-shadow 0.18s ease;
-  }
-  .editor-splash__enter:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 22px -6px color-mix(in srgb, var(--theme-accent) 60%, transparent);
-  }
-  .editor-splash__enter:focus-visible {
-    outline: 2px solid var(--theme-text);
-    outline-offset: 3px;
-  }
-
-  /* Micro role: 12px / 400. Desktop vs touch copy swapped by pointer capability. */
+  /* Micro role: the only interactivity cue now that there's no button. A subtle
+     letter-spaced, muted hint with a slow breathing pulse so the surface reads as
+     "click anywhere". Uppercase + tracking gives it the premium link-in-bio feel. */
   .editor-splash__hint {
     margin: 0;
     font-family: var(--theme-font);
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     line-height: 1.4;
     color: var(--theme-text-muted);
+    animation: editor-splash-breathe 2.6s ease-in-out infinite;
+  }
+  @keyframes editor-splash-breathe {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
   }
   .editor-splash__hint--touch {
     display: none;
@@ -135,12 +130,12 @@ const copy = {
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .editor-splash,
-    .editor-splash__enter {
+    .editor-splash {
       transition: none;
     }
-    .editor-splash__enter:hover {
-      transform: none;
+    .editor-splash__hint {
+      animation: none;
+      opacity: 0.85;
     }
   }
 </style>

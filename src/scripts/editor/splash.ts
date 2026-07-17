@@ -16,7 +16,6 @@
  */
 
 const splash = document.querySelector<HTMLElement>('[data-splash]');
-const enterBtn = document.querySelector<HTMLElement>('[data-splash-enter]');
 
 // Once-guard: `editor:enter` must fire exactly once no matter how enter is triggered.
 let entered = false;
@@ -56,18 +55,20 @@ function enter(): void {
   hideSplash();
 }
 
-if (splash && enterBtn) {
-  enterBtn.addEventListener('click', enter);
+if (splash) {
+  // The whole overlay is the enter surface (no button) — click/tap anywhere enters.
+  splash.addEventListener('click', enter);
 
-  // Enter confirms; Escape skips the gate. Both funnel through the once-guard.
+  // Enter / Space confirm (role="button" semantics); Escape skips. All funnel through
+  // the once-guard. Space is guarded to the splash itself so it can't hijack the page.
   document.addEventListener('keydown', (event) => {
     if (entered) return;
-    if (event.key === 'Enter' || event.key === 'Escape') {
+    if (event.key === 'Enter' || event.key === ' ' || event.key === 'Escape') {
       event.preventDefault();
       enter();
     }
   });
 
-  // Move focus to the enter control so keyboard users can act immediately.
-  window.requestAnimationFrame(() => enterBtn.focus?.());
+  // Move focus to the overlay so keyboard users can act immediately.
+  window.requestAnimationFrame(() => splash.focus?.());
 }
