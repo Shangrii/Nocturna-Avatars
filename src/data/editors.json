@@ -1,1 +1,33 @@
-[]
+[
+  {
+    "slug": "shangri",
+    "discordId": "265742687150276608",
+    "published": false,
+    "name": ".shangri",
+    "avatar": "",
+    "lang": "es",
+    "tagline": "",
+    "badges": [],
+    "socials": [],
+    "links": [],
+    "blocks": [],
+    "theme": {
+      "bg": "#0a0c14",
+      "bgMedia": null,
+      "overlay": 40,
+      "blur": 0,
+      "tint": null,
+      "surface": "rgba(240,234,228,0.06)",
+      "accent": "#c0192c",
+      "text": "#f0eae4",
+      "textMuted": "#9a9198",
+      "font": "Inter",
+      "btnStyle": "glass",
+      "btnShape": "rounded",
+      "effects": [],
+      "audio": null,
+      "preset": null
+    },
+    "views": null
+  }
+]
