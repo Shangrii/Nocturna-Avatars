@@ -142,10 +142,10 @@
         "presence",
         "audio"
       ],
-      "audio": null,
-      "audioCover": null,
-      "audioTitle": null,
-      "spotify": "https://open.spotify.com/intl-es/track/4RKwAD4t3gDRquVCJZqedR?si=1dec13e0b31a4962",
+      "audio": "/editors/shangri/e3ffb5d39143472db12be9002a263c2f.mp3",
+      "audioCover": "/editors/shangri/5903d6bdac0e4149b2748fb256f43a47.webp",
+      "audioTitle": "Shangri Theme",
+      "spotify": null,
       "spotifyStart": 0,
       "preset": "Midnight Nocturna"
     },
