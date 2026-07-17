@@ -74,7 +74,11 @@
 .editor-page {
   min-height: 100dvh;
   margin: 0;
-  background-color: var(--theme-bg);
+  /* MUST stay transparent: the fixed `.editor-bg` layer (z-index:-1) paints the
+     background COLOR *and* the media image. An opaque background here would sit on
+     top of that layer (0 > -1) and hide the image entirely — you'd only ever see the
+     flat --theme-bg colour. The bg colour is provided by `.editor-bg` below. */
+  background-color: transparent;
   color: var(--theme-text);
   font-family: var(--theme-font);
   -webkit-font-smoothing: antialiased;
