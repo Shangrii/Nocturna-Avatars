@@ -127,7 +127,13 @@
     ],
     "socials": [],
     "links": [],
-    "blocks": [],
+    "blocks": [
+      {
+        "type": "image",
+        "src": "/editors/impyh/2af0a844cfb04df7ab9ef9f461366784.webp",
+        "alt": ""
+      }
+    ],
     "theme": {
       "bg": "#000000",
       "bgMedia": "/editors/impyh/027a00ed712d403ba69c99cb030d4b7a.webp",
@@ -148,8 +154,8 @@
         "glass",
         "glow"
       ],
-      "audio": "/editors/impyh/5583afa3a1214af7b5dd1a452ccdbbc1.mp3",
-      "audioCover": null,
+      "audio": "/editors/impyh/b19b6a89d00a43eda2a9e95181d90b18.mp3",
+      "audioCover": "/editors/impyh/631874148965402d8358db4814d5eb98.webp",
       "audioTitle": null,
       "spotify": null,
       "spotifyStart": 0,
