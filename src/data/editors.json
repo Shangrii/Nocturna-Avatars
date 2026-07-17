@@ -48,7 +48,7 @@
       "overlay": 0,
       "blur": 0,
       "tint": null,
-      "surface": "rgba(56,98,143,0.2)",
+      "surface": "rgba(56,98,143,0.12)",
       "accent": "#8c1220",
       "text": "#ffffff",
       "textMuted": "#ffffff",
