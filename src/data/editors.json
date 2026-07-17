@@ -44,7 +44,7 @@
       "overlay": 8,
       "blur": 2,
       "tint": "#6b6b6b",
-      "surface": "rgba(59,96,135,0.01)",
+      "surface": "rgba(59,96,135,0)",
       "accent": "#a22b32",
       "text": "#e8f7fb",
       "textMuted": "#3f474c",
