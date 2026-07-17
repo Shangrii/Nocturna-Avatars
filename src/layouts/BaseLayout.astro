@@ -59,6 +59,15 @@ const glitchWipe = { forwards: glitchPair, backwards: glitchPair };
     {robots && <meta name="robots" content={robots} />}
     <title>{title}</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
+    {/* Preload the graffiti display font so it arrives within the font-display:block
+        window (global.css) — kills the flash-of-fallback swap on the landing. */}
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/a-another-tag.woff2"
+      crossorigin
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
