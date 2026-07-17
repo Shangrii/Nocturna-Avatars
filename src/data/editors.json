@@ -4,7 +4,7 @@
     "discordId": "265742687150276608",
     "published": true,
     "name": "Shangri",
-    "avatar": "/public/editors/shangri/d0347687613541fd86b5d100153f5dc3.webp",
+    "avatar": "/editors/shangri/d0347687613541fd86b5d100153f5dc3.webp",
     "lang": "en",
     "tagline": "Sometimes I just wanna kms",
     "badges": [
@@ -46,7 +46,7 @@
       "btnStyle": "outline",
       "btnShape": "sharp",
       "effects": [],
-      "audio": "/public/editors/shangri/8c3a07bab1f742fd807d583c76e48be0.mp3",
+      "audio": "/editors/shangri/8c3a07bab1f742fd807d583c76e48be0.mp3",
       "preset": "Minimal Mono"
     },
     "views": null
