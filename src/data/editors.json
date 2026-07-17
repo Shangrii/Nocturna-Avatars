@@ -70,6 +70,7 @@
       ],
       "audio": null,
       "spotify": "https://open.spotify.com/intl-es/track/4RKwAD4t3gDRquVCJZqedR?si=1dec13e0b31a4962",
+      "spotifyStart": 0,
       "preset": "Midnight Nocturna"
     },
     "views": null
