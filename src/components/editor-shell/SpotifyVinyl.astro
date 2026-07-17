@@ -1,0 +1,221 @@
+---
+/**
+ * SpotifyVinyl — a static picked-track mini player with the album art on a spinning
+ * vinyl (Material-style card). The page stores ONLY the track URL; `spotify.ts`
+ * resolves album art + title client-side via Spotify's CORS-open oEmbed and drives
+ * playback through Spotify's official IFrame API (graceful link fallback).
+ *
+ * Renders NOTHING without a valid open.spotify.com/track/ URL. Starts `hidden` and is
+ * revealed by the script only once oEmbed resolves, so a dead/removed track shows no
+ * empty card. Theme-independent neutral dark surface (like the AudioPlayer) so it reads
+ * on any background.
+ */
+interface Props {
+  url?: string | null;
+}
+const { url } = Astro.props;
+const clean =
+  typeof url === 'string' && /^https:\/\/open\.spotify\.com\/(?:intl-[a-z]{2}\/)?track\//.test(url)
+    ? url
+    : '';
+---
+
+{
+  clean && (
+    <section class="spotify-vinyl" data-spotify data-spotify-url={clean} hidden aria-label="Música">
+      <div class="spotify-vinyl__disc" data-spotify-disc aria-hidden="true">
+        <span class="spotify-vinyl__art" data-spotify-art />
+      </div>
+
+      <div class="spotify-vinyl__meta">
+        <span class="spotify-vinyl__eyebrow">Spotify</span>
+        <span class="spotify-vinyl__title" data-spotify-title />
+        <div class="spotify-vinyl__controls">
+          <button class="spotify-vinyl__play" data-spotify-play type="button" aria-pressed="false" aria-label="Reproducir / pausar">
+            <svg class="spotify-vinyl__ico spotify-vinyl__ico--play" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14l11-7z" fill="currentColor" />
+            </svg>
+            <svg class="spotify-vinyl__ico spotify-vinyl__ico--pause" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor" />
+            </svg>
+          </button>
+          <a class="spotify-vinyl__open" data-spotify-open href={clean} target="_blank" rel="noopener noreferrer">Abrir</a>
+        </div>
+      </div>
+
+      {/* Off-screen host: the IFrame API replaces this with the real (hidden) player. */}
+      <div class="spotify-vinyl__embed" data-spotify-embed aria-hidden="true" />
+    </section>
+  )
+}
+
+<style>
+  .spotify-vinyl {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    /* Neutral dark glass — theme-independent, reads on any background. */
+    background: rgba(18, 20, 28, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+    color: #f0eae4;
+    overflow: hidden;
+  }
+  .spotify-vinyl[hidden] {
+    display: none;
+  }
+
+  /* ── The vinyl record ─────────────────────────────────────────────────── */
+  .spotify-vinyl__disc {
+    position: relative;
+    flex: 0 0 auto;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    /* Black disc + concentric grooves. */
+    background:
+      repeating-radial-gradient(circle at 50% 50%, #0b0b0d 0 1.5px, #1a1a1e 1.5px 3px),
+      #121214;
+    box-shadow:
+      0 4px 14px -4px rgba(0, 0, 0, 0.8),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    animation: spotify-spin 3.4s linear infinite;
+    animation-play-state: paused; /* runs only while playing */
+  }
+  .spotify-vinyl[data-playing='true'] .spotify-vinyl__disc {
+    animation-play-state: running;
+  }
+  /* Album art = the record label in the centre. */
+  .spotify-vinyl__art {
+    position: absolute;
+    inset: 27%;
+    border-radius: 50%;
+    background: #2a2a30 center / cover no-repeat;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55);
+  }
+  /* Centre spindle hole. */
+  .spotify-vinyl__disc::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 50%;
+    background: #050506;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  }
+  @keyframes spotify-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ── Meta + controls ──────────────────────────────────────────────────── */
+  .spotify-vinyl__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .spotify-vinyl__eyebrow {
+    font-family: 'Space Mono', ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1db954; /* Spotify green — a small brand cue */
+  }
+  .spotify-vinyl__title {
+    font-family: var(--theme-font, 'Inter', sans-serif);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #f0eae4;
+    /* Two-line clamp so long titles never blow out the card. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .spotify-vinyl__controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .spotify-vinyl__play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #1db954;
+    color: #06130a;
+    cursor: pointer;
+    box-shadow: 0 4px 12px -3px rgba(29, 185, 84, 0.6);
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .spotify-vinyl__play:hover {
+    transform: scale(1.06);
+    filter: brightness(1.05);
+  }
+  .spotify-vinyl__play:focus-visible {
+    outline: 2px solid #1db954;
+    outline-offset: 2px;
+  }
+  .spotify-vinyl__ico--pause {
+    display: none;
+  }
+  .spotify-vinyl[data-playing='true'] .spotify-vinyl__ico--play {
+    display: none;
+  }
+  .spotify-vinyl[data-playing='true'] .spotify-vinyl__ico--pause {
+    display: block;
+  }
+  .spotify-vinyl__open {
+    font-family: 'Space Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, #f0eae4 60%, transparent);
+    text-decoration: none;
+  }
+  .spotify-vinyl__open:hover {
+    color: #f0eae4;
+  }
+
+  /* Rendered but off-screen: the IFrame API needs a live player to drive audio. */
+  .spotify-vinyl__embed {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    width: 300px;
+    height: 80px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spotify-vinyl__disc {
+      animation: none !important;
+    }
+    .spotify-vinyl__play {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import '../../scripts/editor/spotify.ts';
+</script>

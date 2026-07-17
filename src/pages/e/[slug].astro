@@ -33,6 +33,7 @@ import PresenceDot from '../../components/editor-shell/PresenceDot.astro';
 import LinkButton from '../../components/editor-shell/LinkButton.astro';
 import ViewCounter from '../../components/editor-shell/ViewCounter.astro';
 import AudioPlayer from '../../components/editor-shell/AudioPlayer.astro';
+import SpotifyVinyl from '../../components/editor-shell/SpotifyVinyl.astro';
 import BlockRenderer from '../../components/editor-blocks/BlockRenderer.astro';
 import LightboxOverlay from '../../components/LightboxOverlay.astro';
 import type { Editor, EditorLink } from '../../lib/editorTypes';
@@ -90,6 +91,7 @@ const btnStyle = theme.btnStyle ?? 'glass';
 const btnShape = theme.btnShape ?? 'rounded';
 const effects = Array.isArray(theme.effects) ? theme.effects : [];
 const audio = typeof theme.audio === 'string' ? theme.audio : '';
+const spotify = typeof theme.spotify === 'string' ? theme.spotify : '';
 
 // Background media (D-18): a video ref (.mp4/.webm) becomes a real <video> element
 // because CSS backgrounds cannot play video; an image ref (.gif/.webp/.png/.jpg…)
@@ -151,6 +153,8 @@ const isImageBg = !isVideoBg && /\.(gif|webp|png|jpe?g|avif)(?:[?#].*)?$/i.test(
       >
         <PresenceDot discordId={discordId} slot="presence" />
       </EditorHeaderCard>
+
+      {spotify && <SpotifyVinyl url={spotify} />}
 
       {links.length > 0 && (
         <nav class="e-links" aria-label={name}>

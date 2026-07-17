@@ -86,6 +86,12 @@ export interface EditorTheme {
   effects: string[];
   /** Background audio ref (D-06). Default none. */
   audio?: string;
+  /** Independent link-button color (hex). Falls back to accent when unset. */
+  btnColor?: string;
+  /** Global text-size multiplier (0.8–1.6). Default 1. */
+  fontScale?: number;
+  /** Picked Spotify TRACK url (static vinyl player; art/title via oEmbed). Default none. */
+  spotify?: string;
   /** Applied preset key (D-24). Default `midnight-nocturna`. */
   preset?: string;
 }
