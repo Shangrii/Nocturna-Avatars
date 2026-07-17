@@ -66,13 +66,18 @@ const clampNum = (v: unknown, lo: number, hi: number, dflt: number): number => {
   if (!Number.isFinite(n)) return dflt;
   return Math.max(lo, Math.min(hi, Math.round(n)));
 };
-const overlay = clampNum(theme.overlay, 0, 100, 40);
 const blur = clampNum(theme.blur, 0, 20, 0);
 
 /* bgMedia becomes a url() VALUE only; the property NAME (--theme-bg-media) is fixed.
    Strip quotes/backslashes/parens defensively so the value cannot break out of url(). */
 const rawMedia = typeof theme.bgMedia === 'string' ? theme.bgMedia.replace(/["'\\()]/g, '') : '';
 const bgMedia = rawMedia.length > 0 ? `url("${rawMedia}")` : 'none';
+const hasMedia = bgMedia !== 'none';
+
+/* Overlay (darken scrim) + tint are IMAGE-legibility controls: with no media they
+   only muddy a solid background colour, so both are disabled when no media is set —
+   the picked background colour then shows exactly as chosen. */
+const overlay = hasMedia ? clampNum(theme.overlay, 0, 100, 40) : 0;
 
 /* Colour-value guard (WR-01) — the render-side half of the theme-injection defense.
    Astro serializes a style object as `prop:value;` pairs and HTML-attribute-escapes
@@ -94,7 +99,7 @@ const themeStyle: Record<string, string> = {
   '--theme-bg-media': bgMedia,
   '--theme-overlay': String(overlay),
   '--theme-blur': `${blur}px`,
-  '--theme-tint': safeColor(theme.tint, 'transparent'),
+  '--theme-tint': hasMedia ? safeColor(theme.tint, 'transparent') : 'transparent',
   '--theme-surface': safeColor(theme.surface, 'rgba(240,234,228,0.06)'),
   '--theme-accent': safeColor(theme.accent, '#c0192c'),
   '--theme-text': safeColor(theme.text, '#f0eae4'),
