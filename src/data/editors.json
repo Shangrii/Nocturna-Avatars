@@ -37,67 +37,6 @@
     "views": null
   },
   {
-    "slug": "shangri",
-    "discordId": "265742687150276608",
-    "published": true,
-    "name": "Shangri",
-    "avatar": "/editors/shangri/d0347687613541fd86b5d100153f5dc3.webp",
-    "lang": "en",
-    "tagline": "Esto es un simple y sencillo test... Uhm, Lorem Ipsum y no sé qué más sigue, pero se entiende, lorem ipsum y esas cosas, la verdad quería escribir algo largo, pero tengo 30 horas sin dormir.",
-    "badges": [],
-    "socials": [
-      {
-        "label": "Instagram",
-        "url": "https://www.instagram.com/heir.shangri/"
-      },
-      {
-        "label": "Git",
-        "url": "https://github.com/Shangrii"
-      },
-      {
-        "label": "Discord",
-        "url": "https://discord.gg/sJbGuM8KD"
-      }
-    ],
-    "links": [],
-    "blocks": [],
-    "theme": {
-      "bg": "#ffffff",
-      "bgMedia": "/editors/shangri/d418ba1d324a402aa1aa9deeb3473565.mp4",
-      "overlay": 0,
-      "blur": 3,
-      "tint": null,
-      "surface": "rgba(56,98,143,0.12)",
-      "accent": "#8c1220",
-      "text": "#ffffff",
-      "textMuted": "#ffffff",
-      "font": "Pirata One",
-      "btnStyle": "glass",
-      "btnShape": "pill",
-      "btnColor": "#38628f",
-      "fontScale": 1.0,
-      "effects": [
-        "glow",
-        "glass",
-        "hover",
-        "gradient",
-        "tilt",
-        "typewriter",
-        "particles",
-        "presence",
-        "audio"
-      ],
-      "audio": "/editors/shangri/6f5b7e18bd884afc8b745b873d86a5db.mp3",
-      "audioCover": "/editors/shangri/5903d6bdac0e4149b2748fb256f43a47.webp",
-      "audioTitle": "Shangri Theme",
-      "spotify": null,
-      "spotifyStart": 0,
-      "musicVolume": 25,
-      "preset": "Midnight Nocturna"
-    },
-    "views": null
-  },
-  {
     "slug": "impyh",
     "discordId": "247919526174392320",
     "published": true,
@@ -157,6 +96,67 @@
       "spotifyStart": 0,
       "musicVolume": 29,
       "preset": "Noir"
+    },
+    "views": null
+  },
+  {
+    "slug": "shangri",
+    "discordId": "265742687150276608",
+    "published": true,
+    "name": "Shangri",
+    "avatar": "/editors/shangri/d0347687613541fd86b5d100153f5dc3.webp",
+    "lang": "en",
+    "tagline": "Esto es un simple y sencillo test... Uhm, Lorem Ipsum y no sé qué más sigue, pero se entiende, lorem ipsum y esas cosas, la verdad quería escribir algo largo, pero tengo 30 horas sin dormir.",
+    "badges": [],
+    "socials": [
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/heir.shangri/"
+      },
+      {
+        "label": "Git",
+        "url": "https://github.com/Shangrii"
+      },
+      {
+        "label": "Discord",
+        "url": "https://discord.gg/sJbGuM8KD"
+      }
+    ],
+    "links": [],
+    "blocks": [],
+    "theme": {
+      "bg": "#ffffff",
+      "bgMedia": "/editors/shangri/d418ba1d324a402aa1aa9deeb3473565.mp4",
+      "overlay": 0,
+      "blur": 3,
+      "tint": null,
+      "surface": "rgba(56,98,143,0.12)",
+      "accent": "#8c1220",
+      "text": "#ffffff",
+      "textMuted": "#ffffff",
+      "font": "Pirata One",
+      "btnStyle": "glass",
+      "btnShape": "pill",
+      "btnColor": "#38628f",
+      "fontScale": 1.0,
+      "effects": [
+        "glow",
+        "glass",
+        "hover",
+        "gradient",
+        "tilt",
+        "typewriter",
+        "particles",
+        "presence",
+        "audio"
+      ],
+      "audio": "/editors/shangri/6f5b7e18bd884afc8b745b873d86a5db.mp3",
+      "audioCover": "/editors/shangri/5903d6bdac0e4149b2748fb256f43a47.webp",
+      "audioTitle": "Shangri Theme",
+      "spotify": null,
+      "spotifyStart": 0,
+      "musicVolume": 25,
+      "preset": "Midnight Nocturna"
     },
     "views": null
   }
