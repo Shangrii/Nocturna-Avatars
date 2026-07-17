@@ -1,50 +1,50 @@
 ---
 /**
- * SpecialtyBadges — the editor's specialty pills, curated set ONLY (D-07).
+ * SpecialtyBadges — the editor's specialty pills, FREE-FORM text (loosened from
+ * the old D-07 curated set on user request: not everyone is an "editor" — modelers,
+ * managers, etc. — so a fixed allowlist no longer fits).
  *
- * Editors pick badges FROM a fixed, team-defined allowlist — never free-form
- * text — so a badge value can never carry injected markup. The allowlist here
- * mirrors the bot-side validation gate EXACTLY (`nocturna-bot/core/editors_model.py`
- * `SPECIALTY_BADGES`): Outfits, Accessories, Dances, Textures, Blender, Modeling3D.
- * Any key not in the allowlist is DROPPED (defensive — `editors.json` is written
- * by the admin app / bot, untrusted at build time). Labels render through Astro
- * auto-escaping ONLY (never a raw-HTML directive, D-02).
+ * Values are now arbitrary strings, kept safe the same way the bot validates them
+ * (`nocturna-bot/core/editors_model.py` `_badges_free_text`): each tag is trimmed,
+ * empties dropped, capped at 40 chars, de-duped (case-insensitive), and at most 10
+ * render. Labels go through Astro `{}` auto-escaping ONLY (never a raw-HTML
+ * directive, D-02), so a tag can never carry injected markup — the render-side half
+ * of the defense. A couple of legacy keys keep their nicer display label.
  *
  * Pill styling reads `--theme-*` tokens only (no brand `--color-*`), so it recolours
- * with the page theme. When the filtered list is empty the component renders NOTHING
- * (no empty rail — UI-SPEC minimal-state rule).
+ * with the page theme. When the list is empty the component renders NOTHING (no empty
+ * rail — UI-SPEC minimal-state rule).
  */
 interface Props {
   badges: string[];
 }
 
-// Curated key → display label. Keys match the bot allowlist one-to-one (D-07).
-const BADGE_LABELS: Record<string, string> = {
-  Outfits: 'Outfits',
-  Accessories: 'Accessories',
-  Dances: 'Dances',
-  Textures: 'Textures',
-  Blender: 'Blender',
+// Legacy curated keys keep a nicer display label; any other value renders verbatim.
+const LEGACY_LABELS: Record<string, string> = {
   Modeling3D: '3D Modeling',
 };
 
 const { badges } = Astro.props;
 const input = Array.isArray(badges) ? badges : [];
-// Drop unknown keys, de-dupe, preserve editor order.
+// Trim, drop empties/over-long, de-dupe (case-insensitive), preserve order, cap at 10.
 const seen = new Set<string>();
-const curated = input.filter(
-  (key): key is string =>
-    typeof key === 'string' &&
-    Object.prototype.hasOwnProperty.call(BADGE_LABELS, key) &&
-    !seen.has(key) &&
-    (seen.add(key), true),
-);
+const tags: string[] = [];
+for (const raw of input) {
+  if (typeof raw !== 'string') continue;
+  const tag = raw.trim();
+  if (!tag || tag.length > 40) continue;
+  const key = tag.toLowerCase();
+  if (seen.has(key)) continue;
+  seen.add(key);
+  tags.push(LEGACY_LABELS[tag] ?? tag);
+  if (tags.length >= 10) break;
+}
 ---
 
-{curated.length > 0 && (
+{tags.length > 0 && (
   <ul class="editor-badges" aria-label="Specialties">
-    {curated.map((key) => (
-      <li class="editor-badges__pill">{BADGE_LABELS[key]}</li>
+    {tags.map((tag) => (
+      <li class="editor-badges__pill">{tag}</li>
     ))}
   </ul>
 )}
