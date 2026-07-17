@@ -123,7 +123,16 @@
       }
     ],
     "links": [],
-    "blocks": [],
+    "blocks": [
+      {
+        "type": "quote",
+        "text": {
+          "es": "",
+          "en": "¿Qué es esta erección en mis pantalones?"
+        },
+        "attribution": ""
+      }
+    ],
     "theme": {
       "bg": "#ffffff",
       "bgMedia": "/editors/shangri/1c19f78839f1482c9b1c4b505f5cca92.webp",
