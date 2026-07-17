@@ -108,10 +108,14 @@ const { src } = Astro.props;
     gap: var(--space-2xs);
     padding: 6px 10px 6px 8px;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--theme-bg) 62%, transparent);
-    border: 1px solid color-mix(in srgb, var(--theme-text) 14%, transparent);
-    -webkit-backdrop-filter: blur(10px) saturate(1.2);
-    backdrop-filter: blur(10px) saturate(1.2);
+    /* Neutral dark glass (NOT --theme-bg): a bright bg colour made the pill a
+       blending blob. This reads on any theme, light or dark. */
+    background: rgba(12, 14, 22, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 6px 20px -8px rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    backdrop-filter: blur(12px) saturate(1.2);
+    color: #f0eae4;
   }
   @media (max-width: 520px) {
     /* Collapse the slider on small screens so the pill stays tidy in the corner. */
@@ -134,9 +138,9 @@ const { src } = Astro.props;
     min-width: var(--touch-min);
     min-height: var(--touch-min);
     padding: 0;
-    color: var(--theme-text);
-    background: var(--theme-surface);
-    border: 1px solid color-mix(in srgb, var(--theme-text) 14%, transparent);
+    color: #f0eae4;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 50%;
     cursor: pointer;
     transition:
