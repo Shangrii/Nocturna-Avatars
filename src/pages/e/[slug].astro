@@ -90,6 +90,7 @@ const btnStyle = theme.btnStyle ?? 'glass';
 const btnShape = theme.btnShape ?? 'rounded';
 const effects = Array.isArray(theme.effects) ? theme.effects : [];
 const spotify = typeof theme.spotify === 'string' ? theme.spotify : '';
+const spotifyStart = Number.isFinite(theme.spotifyStart as number) ? Number(theme.spotifyStart) : 0;
 
 // Background media (D-18): a video ref (.mp4/.webm) becomes a real <video> element
 // because CSS backgrounds cannot play video; an image ref (.gif/.webp/.png/.jpg…)
@@ -152,7 +153,7 @@ const isImageBg = !isVideoBg && /\.(gif|webp|png|jpe?g|avif)(?:[?#].*)?$/i.test(
         <PresenceDot discordId={discordId} slot="presence" />
       </EditorHeaderCard>
 
-      {spotify && <SpotifyVinyl url={spotify} />}
+      {spotify && <SpotifyVinyl url={spotify} start={spotifyStart} />}
 
       {links.length > 0 && (
         <nav class="e-links" aria-label={name}>

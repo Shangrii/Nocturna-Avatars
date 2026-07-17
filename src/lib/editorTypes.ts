@@ -92,6 +92,8 @@ export interface EditorTheme {
   fontScale?: number;
   /** Picked Spotify TRACK url (static vinyl player; art/title via oEmbed). Default none. */
   spotify?: string;
+  /** Where the track starts on autoplay, in seconds. Default 0 (beginning). */
+  spotifyStart?: number;
   /** Applied preset key (D-24). Default `midnight-nocturna`. */
   preset?: string;
 }

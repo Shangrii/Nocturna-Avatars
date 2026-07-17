@@ -12,17 +12,19 @@
  */
 interface Props {
   url?: string | null;
+  start?: number;
 }
-const { url } = Astro.props;
+const { url, start = 0 } = Astro.props;
 const clean =
   typeof url === 'string' && /^https:\/\/open\.spotify\.com\/(?:intl-[a-z]{2}\/)?track\//.test(url)
     ? url
     : '';
+const startAt = Number.isFinite(start) ? Math.max(0, Math.round(start)) : 0;
 ---
 
 {
   clean && (
-    <section class="spotify-vinyl" data-spotify data-spotify-url={clean} hidden aria-label="Música">
+    <section class="spotify-vinyl" data-spotify data-spotify-url={clean} data-spotify-start={startAt} hidden aria-label="Música">
       <div class="spotify-vinyl__disc" data-spotify-disc aria-hidden="true">
         <span class="spotify-vinyl__art" data-spotify-art />
       </div>

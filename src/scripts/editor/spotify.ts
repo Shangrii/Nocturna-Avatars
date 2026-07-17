@@ -56,6 +56,7 @@ function initOne(root: HTMLElement): void {
   const match = url.match(TRACK_RE);
   if (!match) return;
   const uri = `spotify:track:${match[1]}`;
+  const startAt = Math.max(0, parseInt(root.dataset.spotifyStart ?? '0', 10) || 0);
 
   const artEl = root.querySelector<HTMLElement>('[data-spotify-art]');
   const titleEl = root.querySelector<HTMLElement>('[data-spotify-title]');
@@ -92,18 +93,23 @@ function initOne(root: HTMLElement): void {
 
   loadApi()
     .then((api) => {
-      const host = document.createElement('div');
-      host.setAttribute('aria-hidden', 'true');
-      // Off-screen but fully rendered (playback keeps working; nothing visible).
-      host.style.cssText = 'position:fixed;left:-9999px;top:0;width:320px;height:80px;pointer-events:none;';
-      document.body.appendChild(host);
-      api.createController(host, { uri, width: '100%', height: 80 }, (ctrl) => {
+      // WRAPPER carries the off-screen hiding: createController REPLACES the inner node
+      // with an iframe (dropping its styles), so hiding the inner node alone would leave
+      // the iframe visible in flow. Wrapper stays; only the inner node is swapped.
+      const wrap = document.createElement('div');
+      wrap.setAttribute('aria-hidden', 'true');
+      wrap.style.cssText = 'position:fixed;left:-9999px;top:0;width:320px;height:80px;pointer-events:none;';
+      const inner = document.createElement('div');
+      wrap.appendChild(inner);
+      document.body.appendChild(wrap);
+      api.createController(inner, { uri, width: '100%', height: 80 }, (ctrl) => {
         controller = ctrl;
         ctrl.addListener('playback_update', (e) => {
           setPlaying(!e.data.isPaused);
+          // On the first autoplay start, jump to the editor-chosen start position.
           if (wantRestart && !e.data.isPaused) {
             wantRestart = false;
-            ctrl.seek(0);
+            if (startAt > 0) ctrl.seek(startAt);
           }
         });
         if (pendingPlay) {
