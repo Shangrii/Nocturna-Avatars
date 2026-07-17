@@ -39,7 +39,7 @@
       }
     ],
     "theme": {
-      "bg": "#1f2c65",
+      "bg": "#ff0000",
       "bgMedia": "/editors/shangri/0f7dc369479c42e09cf33231e2c40e6c.webp",
       "overlay": 8,
       "blur": 2,
@@ -52,13 +52,15 @@
       "btnStyle": "glass",
       "btnShape": "rounded",
       "effects": [
-        "audio",
+        "glow",
+        "glass",
+        "hover",
+        "gradient",
+        "tilt",
+        "typewriter",
         "particles",
         "presence",
-        "glass",
-        "glow",
-        "gradient",
-        "tilt"
+        "audio"
       ],
       "audio": "/editors/shangri/8c3a07bab1f742fd807d583c76e48be0.mp3",
       "preset": "Midnight Nocturna"
