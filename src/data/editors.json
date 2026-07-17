@@ -124,9 +124,9 @@
     "blocks": [],
     "theme": {
       "bg": "#ffffff",
-      "bgMedia": "/editors/shangri/3ba8354d75c4403696286d6a8d0c7b37.mp4",
+      "bgMedia": "/editors/shangri/d418ba1d324a402aa1aa9deeb3473565.mp4",
       "overlay": 0,
-      "blur": 0,
+      "blur": 3,
       "tint": null,
       "surface": "rgba(56,98,143,0.12)",
       "accent": "#8c1220",
