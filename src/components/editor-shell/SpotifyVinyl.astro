@@ -43,20 +43,26 @@ const clean =
         </div>
       </div>
 
-      {/* Off-screen host: the IFrame API replaces this with the real (hidden) player. */}
-      <div class="spotify-vinyl__embed" data-spotify-embed aria-hidden="true" />
+      {/* Off-screen WRAPPER: the IFrame API REPLACES the inner node with an iframe
+          (dropping its classes), so the hiding must live on the wrapper, not the node. */}
+      <div class="spotify-vinyl__embed-wrap" aria-hidden="true">
+        <div data-spotify-embed />
+      </div>
     </section>
   )
 }
 
 <style>
   .spotify-vinyl {
-    position: relative;
+    position: fixed;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    z-index: 900; /* under the splash (1000); appears after entering */
     display: flex;
     align-items: center;
-    gap: 16px;
-    width: 100%;
-    padding: 12px 16px;
+    gap: 14px;
+    width: min(300px, calc(100vw - 2 * var(--space-sm)));
+    padding: 10px 14px;
     border-radius: 18px;
     /* Neutral dark glass — theme-independent, reads on any background. */
     background: rgba(18, 20, 28, 0.55);
@@ -94,7 +100,7 @@ const clean =
   /* Album art = the record label in the centre. */
   .spotify-vinyl__art {
     position: absolute;
-    inset: 18%;
+    inset: 11%;
     border-radius: 50%;
     background: #2a2a30 center / cover no-repeat;
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55);
@@ -195,8 +201,9 @@ const clean =
     color: #f0eae4;
   }
 
-  /* Rendered but off-screen: the IFrame API needs a live player to drive audio. */
-  .spotify-vinyl__embed {
+  /* Rendered but off-screen: the IFrame API needs a live player to drive audio.
+     The wrapper (not the replaced node) carries the hiding. */
+  .spotify-vinyl__embed-wrap {
     position: absolute;
     left: -9999px;
     top: 0;
@@ -204,6 +211,11 @@ const clean =
     height: 80px;
     opacity: 0;
     pointer-events: none;
+  }
+  .spotify-vinyl__embed-wrap :global(iframe) {
+    width: 300px;
+    height: 80px;
+    border: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
