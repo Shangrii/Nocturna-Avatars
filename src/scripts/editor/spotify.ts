@@ -58,7 +58,6 @@ function initOne(root: HTMLElement): void {
   const artEl = root.querySelector<HTMLElement>('[data-spotify-art]');
   const titleEl = root.querySelector<HTMLElement>('[data-spotify-title]');
   const playBtn = root.querySelector<HTMLButtonElement>('[data-spotify-play]');
-  const embedHost = root.querySelector<HTMLElement>('[data-spotify-embed]');
 
   // 1. Album art + title via oEmbed (CORS-open). Reveal only once resolved.
   fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`)
@@ -73,29 +72,41 @@ function initOne(root: HTMLElement): void {
       /* leave hidden — no error text */
     });
 
-  // 2. Playback via the IFrame API; the button falls back to opening Spotify.
+  // 2. Playback via the IFrame API. The hidden player host is appended to <body>
+  //    (NOT inside the widget) and kept RENDERED off-screen — no display:none,
+  //    no opacity:0, no clipping — or the browser/Spotify suspends its audio.
   let controller: SpotifyController | null = null;
+  let apiFailed = false;
+  let pendingPlay = false;
   const setPlaying = (playing: boolean): void => {
     root.dataset.playing = playing ? 'true' : 'false';
     playBtn?.setAttribute('aria-pressed', String(playing));
   };
 
-  if (embedHost) {
-    loadApi()
-      .then((api) => {
-        api.createController(embedHost, { uri, width: '100%', height: 80 }, (ctrl) => {
-          controller = ctrl;
-          ctrl.addListener('playback_update', (e) => setPlaying(!e.data.isPaused));
-        });
-      })
-      .catch(() => {
-        /* API unavailable — the click handler below falls back to the link */
+  loadApi()
+    .then((api) => {
+      const host = document.createElement('div');
+      host.setAttribute('aria-hidden', 'true');
+      // Off-screen but fully rendered (playback keeps working; nothing visible).
+      host.style.cssText = 'position:fixed;left:-9999px;top:0;width:320px;height:80px;pointer-events:none;';
+      document.body.appendChild(host);
+      api.createController(host, { uri, width: '100%', height: 80 }, (ctrl) => {
+        controller = ctrl;
+        ctrl.addListener('playback_update', (e) => setPlaying(!e.data.isPaused));
+        if (pendingPlay) {
+          pendingPlay = false;
+          ctrl.togglePlay();
+        }
       });
-  }
+    })
+    .catch(() => {
+      apiFailed = true;
+    });
 
   playBtn?.addEventListener('click', () => {
     if (controller) controller.togglePlay();
-    else window.open(url, '_blank', 'noopener');
+    else if (apiFailed) window.open(url, '_blank', 'noopener');
+    else pendingPlay = true; // controller still loading — play as soon as it's ready
   });
 }
 

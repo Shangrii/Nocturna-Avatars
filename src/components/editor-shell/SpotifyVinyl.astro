@@ -27,32 +27,23 @@ const clean =
         <span class="spotify-vinyl__art" data-spotify-art />
       </div>
 
-      <div class="spotify-vinyl__meta">
-        <span class="spotify-vinyl__eyebrow">Spotify</span>
-        <span class="spotify-vinyl__title" data-spotify-title />
-        <div class="spotify-vinyl__controls">
-          <button class="spotify-vinyl__play" data-spotify-play type="button" aria-pressed="false" aria-label="Reproducir / pausar">
-            <svg class="spotify-vinyl__ico spotify-vinyl__ico--play" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 5v14l11-7z" fill="currentColor" />
-            </svg>
-            <svg class="spotify-vinyl__ico spotify-vinyl__ico--pause" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor" />
-            </svg>
-          </button>
-          <a class="spotify-vinyl__open" data-spotify-open href={clean} target="_blank" rel="noopener noreferrer">Abrir</a>
-        </div>
-      </div>
+      <span class="spotify-vinyl__title" data-spotify-title />
 
-      {/* Off-screen WRAPPER: the IFrame API REPLACES the inner node with an iframe
-          (dropping its classes), so the hiding must live on the wrapper, not the node. */}
-      <div class="spotify-vinyl__embed-wrap" aria-hidden="true">
-        <div data-spotify-embed />
-      </div>
+      <button class="spotify-vinyl__play" data-spotify-play type="button" aria-pressed="false" aria-label="Reproducir / pausar">
+        <svg class="spotify-vinyl__ico spotify-vinyl__ico--play" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 5v14l11-7z" fill="currentColor" />
+        </svg>
+        <svg class="spotify-vinyl__ico spotify-vinyl__ico--pause" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor" />
+        </svg>
+      </button>
+
     </section>
   )
 }
 
 <style>
+  /* Discreet fixed pill, top-right. */
   .spotify-vinyl {
     position: fixed;
     top: var(--space-sm);
@@ -60,18 +51,17 @@ const clean =
     z-index: 900; /* under the splash (1000); appears after entering */
     display: flex;
     align-items: center;
-    gap: 14px;
-    width: min(300px, calc(100vw - 2 * var(--space-sm)));
-    padding: 10px 14px;
-    border-radius: 18px;
+    gap: 10px;
+    max-width: min(230px, calc(100vw - 2 * var(--space-sm)));
+    padding: 6px 10px 6px 6px;
+    border-radius: 999px;
     /* Neutral dark glass — theme-independent, reads on any background. */
     background: rgba(18, 20, 28, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
-    -webkit-backdrop-filter: blur(14px) saturate(1.2);
-    backdrop-filter: blur(14px) saturate(1.2);
+    box-shadow: 0 8px 22px -12px rgba(0, 0, 0, 0.7);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    backdrop-filter: blur(12px) saturate(1.2);
     color: #f0eae4;
-    overflow: hidden;
   }
   .spotify-vinyl[hidden] {
     display: none;
@@ -81,8 +71,8 @@ const clean =
   .spotify-vinyl__disc {
     position: relative;
     flex: 0 0 auto;
-    width: 84px;
-    height: 84px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     /* Black disc + concentric grooves. */
     background:
@@ -124,56 +114,37 @@ const clean =
     }
   }
 
-  /* ── Meta + controls ──────────────────────────────────────────────────── */
-  .spotify-vinyl__meta {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 0;
-    flex: 1 1 auto;
-  }
-  .spotify-vinyl__eyebrow {
-    font-family: 'Space Mono', ui-monospace, monospace;
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #1db954; /* Spotify green — a small brand cue */
-  }
+  /* ── Title + play (discreet, single row) ──────────────────────────────── */
   .spotify-vinyl__title {
+    flex: 1 1 auto;
+    min-width: 0;
     font-family: var(--theme-font, 'Inter', sans-serif);
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 1.3;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.25;
     color: #f0eae4;
-    /* Two-line clamp so long titles never blow out the card. */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
     overflow: hidden;
-  }
-  .spotify-vinyl__controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 4px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .spotify-vinyl__play {
+    flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     padding: 0;
     border: 0;
     border-radius: 50%;
     background: #1db954;
     color: #06130a;
     cursor: pointer;
-    box-shadow: 0 4px 12px -3px rgba(29, 185, 84, 0.6);
+    box-shadow: 0 3px 10px -3px rgba(29, 185, 84, 0.6);
     transition: transform 0.15s ease, filter 0.15s ease;
   }
   .spotify-vinyl__play:hover {
-    transform: scale(1.06);
+    transform: scale(1.08);
     filter: brightness(1.05);
   }
   .spotify-vinyl__play:focus-visible {
@@ -199,23 +170,6 @@ const clean =
   }
   .spotify-vinyl__open:hover {
     color: #f0eae4;
-  }
-
-  /* Rendered but off-screen: the IFrame API needs a live player to drive audio.
-     The wrapper (not the replaced node) carries the hiding. */
-  .spotify-vinyl__embed-wrap {
-    position: absolute;
-    left: -9999px;
-    top: 0;
-    width: 300px;
-    height: 80px;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .spotify-vinyl__embed-wrap :global(iframe) {
-    width: 300px;
-    height: 80px;
-    border: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
