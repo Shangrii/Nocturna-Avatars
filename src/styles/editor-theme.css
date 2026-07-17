@@ -263,10 +263,12 @@
   color: var(--theme-text);
 }
 .editor-btn[data-btn-style='glass'] {
-  background: var(--theme-surface);
+  /* Glass still frosts, but takes a subtle wash + border of the button colour so the
+     link-button colour affects it too (was neutral --theme-surface/text only). */
+  background: color-mix(in srgb, var(--theme-btn-color, var(--theme-accent)) 12%, var(--theme-surface));
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  border-color: color-mix(in srgb, var(--theme-text) 14%, transparent);
+  border-color: color-mix(in srgb, var(--theme-btn-color, var(--theme-accent)) 38%, transparent);
   color: var(--theme-text);
 }
 

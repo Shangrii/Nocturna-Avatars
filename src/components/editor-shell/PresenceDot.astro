@@ -42,29 +42,49 @@ const { discordId } = Astro.props;
     display: none;
   }
   .editor-presence__dot {
+    /* Neutral Discord-style cut colour — NOT --theme-bg, so a bright background
+       never bleeds into the status glyph or the ring around it. */
+    --presence-cut: #0b0d13;
+    position: relative;
     display: block;
     width: clamp(18px, 5vw, 26px);
     height: clamp(18px, 5vw, 26px);
     border-radius: 50%;
     background: var(--presence-color, #3ba55d);
-    /* Cut-out ring in the page colour (like Discord's avatar notch) + soft glow. */
-    border: 0.22em solid var(--theme-bg, #0a0c14);
-    box-shadow: 0 0 10px 1px color-mix(in srgb, var(--presence-color, #3ba55d) 65%, transparent);
-    animation: editor-presence-pulse 2.4s ease-in-out infinite;
+    border: 3px solid var(--presence-cut);
+    box-shadow: 0 0 8px 1px color-mix(in srgb, var(--presence-color, #3ba55d) 55%, transparent);
   }
-  @keyframes editor-presence-pulse {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.6;
-    }
+  /* Real Discord status glyphs, cut with --presence-cut:
+       online → solid (no cut) · idle → crescent · dnd → bar · offline → ring. */
+  .editor-presence__dot::after {
+    content: '';
+    position: absolute;
+    display: none;
+    background: var(--presence-cut);
   }
-  @media (prefers-reduced-motion: reduce) {
-    .editor-presence__dot {
-      animation: none;
-    }
+  .editor-presence[data-status='idle'] .editor-presence__dot::after {
+    display: block;
+    width: 62%;
+    height: 62%;
+    top: -16%;
+    right: -16%;
+    border-radius: 50%;
+  }
+  .editor-presence[data-status='dnd'] .editor-presence__dot::after {
+    display: block;
+    width: 58%;
+    height: 20%;
+    top: 40%;
+    left: 21%;
+    border-radius: 999px;
+  }
+  .editor-presence[data-status='offline'] .editor-presence__dot::after {
+    display: block;
+    width: 46%;
+    height: 46%;
+    top: 27%;
+    left: 27%;
+    border-radius: 50%;
   }
 </style>
 
