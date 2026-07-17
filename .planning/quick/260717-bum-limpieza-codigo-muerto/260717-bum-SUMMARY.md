@@ -3,50 +3,46 @@ quick_id: 260717-bum
 slug: limpieza-codigo-muerto
 title: Limpieza de código muerto exhaustiva (máxima profundidad)
 date: 2026-07-17
-status: incomplete
-reason_incomplete: Sweep automatizado de imports/exports/CSS/i18n bloqueado por caída del clasificador de seguridad de Bash/context-mode (comandos `node` no ejecutables). Reanudable.
+status: complete
 ---
 
 # Summary — Quick Task 260717-bum
 
-Limpieza de código muerto ejecutada **inline, por fases, con commits atómicos** y
-build verificado en cada fase (decidido así por presupuesto de tokens y para poder
-pausar/reanudar; el análisis ya estaba en contexto, evitando el coste de subagentes).
+Limpieza de código muerto **exhaustiva (máxima)**, ejecutada inline por fases con
+commits atómicos y `npm run build` verde tras cada una (19 páginas siempre).
+Análisis computacional (imports/exports/CSS/i18n) hecho con scripts Node; se
+verificó cada candidato contra acceso dinámico antes de borrar.
 
-## Ejecutado (borrados reales, build verde)
+## Commits (código)
 
-| Commit | Fase | Qué |
-|--------|------|-----|
-| `ec291aa` | 1 | Sitio legado pre-Astro en la raíz: `index.html`, `functions.js`, `styles.css`, `favicon.png` (duplicado; el vivo es `public/favicon.png`) y `assets/` (16 MB, 30 archivos — galería vieja + fuente duplicada). No entraban al build. |
-| `964d74d` | 2 | `AudioPlayer.astro` (nunca importado; el editor usa `SpotifyVinyl`) + su único consumidor `scripts/editor/audio.ts`. Comentario obsoleto corregido en `e/[slug].astro`. |
+| Commit | Qué se borró / arregló |
+|--------|------------------------|
+| `ec291aa` | **Sitio legado pre-Astro (raíz):** `index.html`, `functions.js`, `styles.css`, `favicon.png` (dup; el vivo es `public/favicon.png`), `assets/` (16 MB, 30 archivos). No entraban al build. |
+| `964d74d` | **`AudioPlayer.astro` + `scripts/editor/audio.ts`** (nunca importados; el editor usa `SpotifyVinyl`). Comentario obsoleto corregido en `e/[slug].astro`. |
+| `6e75aea` | **Bloque CSS `.addons*`** en `sections.css` (feature add-ons nunca renderizada). |
+| `8807482` | **i18n:** `packages.json` entero (namespace no registrado en `ui.ts`) + `common.json` entero (sin uso) + copy de add-ons (`addonsTitle`/`addons`/`addonsNote` en packages/pages/services) + claves sueltas (`navAbout`, `navEditors`, `langSwitchLabel`, `taglineDivider`, `emptyState.galleryCta`). Comentario `PackageCard` corregido. |
 
-Build tras cada fase: **19 páginas, verde** (tienda `/es/tienda`·`/en/store` intacta).
+## Verificación final (todo verde)
 
-## Verificado limpio (sin nada más que borrar)
+- `npm run build`: 19 páginas, sin errores. Tienda `/es/tienda`·`/en/store` intacta.
+- Unused imports: **0** · Dead exports (lib/i18n): **0** · Dead CSS classes: **0**.
+- Deps npm: `astro`/`gsap`/`lenis`/`imagesloaded` + 3 devDeps → todas en uso.
+- Assets `public/`: galería/editores gestionados por bot, tienda deferida, fuentes/favicon/CNAME infra, `hero-fallback.avif` referenciado → 0 podables.
 
-- **CSS (Fase 3):** los 13 archivos `.css` están importados; 0 selectores globales de
-  cosas borradas.
-- **Deps npm (Fase 6):** `astro`, `gsap`, `lenis`, `imagesloaded` + 3 devDeps → todas en uso.
-- **Assets public/ (Fase 6):** `gallery/`+`editores/` gestionados por el bot/admin (auto-galería,
-  núcleo del proyecto); `store/` deferido; `fonts/`/`favicon`/`CNAME` infra; `hero-fallback.avif`
-  referenciado. 0 podables.
+## Decisiones clave
 
-## Deferido a propósito (riesgo > payoff)
+- **Tienda deferida NO tocada** (ruteada, "Coming Soon" a propósito).
+- **`storefrontNames.jinxxy/payhip` conservado** — falso positivo: `QuickViewModal`
+  lo serializa (`JSON.stringify(t.storefrontNames)`) y el cliente lo usa por clave de
+  plataforma. Borrarlo habría roto la tienda. (Ejemplo de por qué se verificó cada
+  candidato en vez de borrar en bloque.)
+- **Copy add-ons borrado** por decisión del usuario (feature muerta; se re-escribe si vuelve).
+- **Comentarios de provenance conservados** (`Footer`/`About`/`chrome.ts`/`choreography.ts`):
+  son historial intencional, no cruft.
 
-- **Reglas CSS por selector (Fase 3):** `cart.ts`/`store.ts` generan DOM con clases que
-  el análisis estático marca "sin uso" pero están vivas. Tailwind v4 ya purga utilidades.
-- **Claves i18n (Fase 4):** acceso por propiedad computada (`pages[concept]`,
-  `useTranslations` devuelve el dict) → poda estática puede romper runtime.
-- **Comentarios (Fase 5):** los de provenance y el de `choreography.ts` son historial útil
-  intencional, no cruft → conservados.
+## Notas
 
-## Pendiente (bloqueo de herramienta, reanudable)
-
-- **Sweep de imports/exports sin uso (Fase 5):** requiere ejecutar `node` para el análisis;
-  el clasificador de seguridad de Bash/context-mode estuvo caído durante la sesión. El script
-  de análisis ya está escrito en el scratchpad; reanudar cuando la herramienta vuelva.
-
-## Reanudar
-
-`/gsd:quick resume limpieza-codigo-muerto` — o simplemente pedir "reanuda la limpieza";
-retomar por la Fase 5 (imports/exports) y opcionalmente reconsiderar CSS/i18n con herramienta viva.
+- Las claves i18n sin referenciar **no se envían al HTML** del build, así que su
+  eliminación es limpieza de fuente (sin impacto en peso/runtime).
+- Durante la sesión hubo una caída intermitente del clasificador de seguridad de Bash
+  que bloqueó temporalmente los sweeps Node; se reanudó y completó al recuperarse.

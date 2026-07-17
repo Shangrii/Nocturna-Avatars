@@ -4,7 +4,7 @@ slug: limpieza-codigo-muerto
 title: Limpieza de código muerto exhaustiva (máxima profundidad)
 date: 2026-07-17
 mode: inline-phased
-status: in-progress
+status: complete
 ---
 
 # Quick Task 260717-bum — Limpieza de código muerto exhaustiva
@@ -46,25 +46,23 @@ con casillas sin marcar.
 - [x] `npm run build` verde
 - [x] commit atómico
 
-### Fase 3 — CSS sin uso  [x] VERIFICADO — SIN BORRADOS SEGUROS
+### Fase 3 — CSS sin uso  [x] HECHO (commit 6e75aea)
 - [x] Los 13 archivos `.css` están **todos importados** → 0 archivos huérfanos
-- [x] 0 selectores globales de cosas borradas (audio-player, marquee, teaser)
-- [~] Pruning por regla: **NO ejecutado a propósito**. `cart.ts`/`store.ts` generan DOM
-      con clases que el análisis estático marca "sin uso" pero están vivas; Tailwind v4
-      ya purga utilidades. Riesgo de rotura > payoff. (Sweep automatizado bloqueado por
-      caída del clasificador de seguridad de la herramienta.)
+- [x] Sweep de clases con 0 refs (contra `.astro`+`.ts`, que incluye literales JS) → 5
+      candidatas, todas del bloque `.addons*` (feature add-ons nunca renderizada) → borradas
+- [x] Re-sweep: **0 clases muertas** restantes; build verde
 
-### Fase 4 — Claves i18n sin uso  [~] DIFERIDO (riesgo dinámico)
-- [~] i18n se accede por propiedad computada (`pages[concept]`, `useTranslations` devuelve
-      el dict completo) → poda estática de claves puede romper runtime. Bajo payoff.
-      Requiere sweep computacional (bloqueado por clasificador). Diferido.
+### Fase 4 — Claves i18n sin uso  [x] HECHO (commit 8807482)
+- [x] Sweep con exclusión de acceso dinámico → borrado `packages.json` (namespace no
+      registrado en `ui.ts`), `common.json` (sin uso), copy add-ons, y claves sueltas
+- [x] `storefrontNames.jinxxy/payhip` CONSERVADO (falso positivo: acceso dinámico vivo)
+- [x] JSON válidos, build verde
 
-### Fase 5 — Exports/imports y comentarios obsoletos  [~] PARCIAL
-- [x] Comentarios "obsoletos" revisados: los de provenance (`Footer`/`About`/`chrome.ts`
-      "portado de index.html/functions.js") y el de `choreography.ts` (teaser removido)
-      son **historial útil intencional**, NO cruft → se conservan.
-- [~] Imports sin uso / exports muertos: sweep automatizado **bloqueado** por caída del
-      clasificador (comandos `node` no ejecutables esta sesión). PENDIENTE de reanudar.
+### Fase 5 — Exports/imports y comentarios obsoletos  [x] HECHO / VERIFICADO
+- [x] Sweep: **0 imports sin uso, 0 exports muertos** en todo `src`
+- [x] Comentarios de provenance (`Footer`/`About`/`chrome.ts`/`choreography.ts`)
+      conservados (historial intencional). Corregidos los stale reales: `e/[slug].astro`
+      (Fase 2) y `PackageCard.astro` (Fase 4).
 
 ### Fase 6 — Deps npm + assets public/  [x] VERIFICADO — SIN BORRADOS
 - [x] `astro`, `gsap`, `lenis`, `imagesloaded` + 3 devDeps: **todas en uso**
@@ -72,23 +70,28 @@ con casillas sin marcar.
       objetivo del proyecto) → NO podar; `store/` deferido; `fonts/`/`favicon`/`CNAME`
       infra; `hero-fallback.avif` referenciado. 0 assets podables.
 
-### Cierre  [ ]
-- [x] `npm run build` final verde (tras Fase 2)
-- [ ] Actualizar `README.md` (refleja el revamp Astro)
-- [ ] SUMMARY.md + STATE.md + commit de docs
+### Fase 6 — Deps npm + assets public/  [x] VERIFICADO — SIN BORRADOS
+(ver detalle arriba)
 
-## Resultado neto
+### Cierre  [x] HECHO
+- [x] `npm run build` final verde (19 páginas)
+- [x] `README.md` actualizado (refleja el revamp Astro)
+- [x] SUMMARY.md + STATE.md + commit de docs
 
-- **Borrado (código muerto real):** sitio legado raíz (index.html, functions.js,
-  styles.css, favicon dup, assets/ 16MB) + `AudioPlayer.astro` + `audio.ts`.
-- **Verificado limpio:** archivos CSS, deps npm, assets public/ → nada más que borrar.
-- **Diferido por riesgo/bajo valor:** poda de reglas CSS y claves i18n (acceso dinámico).
-- **Pendiente (bloqueo de herramienta):** sweep de imports/exports sin uso — reanudar
-  cuando el clasificador de seguridad de Bash/context-mode vuelva a estar disponible.
+## Resultado neto (COMPLETO)
+
+- **Borrado (código muerto real, 5 commits):** sitio legado raíz (16 MB) +
+  `AudioPlayer.astro`/`audio.ts` + bloque CSS `.addons*` + `packages.json` +
+  `common.json` + copy add-ons + claves i18n sueltas sin uso.
+- **Verificado limpio:** imports (0), exports (0), CSS (0), deps npm (todas usadas),
+  assets public/ (bot/deferido/infra) → nada más que borrar.
+- **Conservado por diseño:** tienda deferida, `storefrontNames` (dinámico vivo),
+  comentarios de provenance.
 
 ## Log de progreso
 
 - 2026-07-17 — Análisis completo; plan creado.
 - 2026-07-17 — Fase 1 (ec291aa) y Fase 2 (964d74d) ejecutadas, build verde.
-- 2026-07-17 — Fases 3/6 verificadas sin borrados seguros; 4/5 diferidas.
-- 2026-07-17 — Sweep computacional (imports/CSS/i18n) bloqueado por caída del clasificador.
+- 2026-07-17 — Caída intermitente del clasificador bloqueó los sweeps Node temporalmente.
+- 2026-07-17 — Clasificador recuperado; Fase 3 (6e75aea, CSS add-ons) y Fase 4 (8807482,
+  i18n) ejecutadas. Fases 5/6 verificadas limpias. Cierre completo, build verde.

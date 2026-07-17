@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 Phase: 10.1
 Plan: Not started
 Status: Milestone complete
-Last activity: 2026-07-17 - Quick task 260717-bum: exhaustive dead-code cleanup (legacy root site + dead AudioPlayer removed; build green)
+Last activity: 2026-07-17 - Quick task 260717-bum COMPLETE: exhaustive dead-code cleanup (legacy site, dead component, dead CSS + i18n; 5 commits, build green)
 
 Progress: [██████████] 99%
 
@@ -230,7 +230,7 @@ Recent decisions affecting current work:
 | 260707-0q0 | 5 pre-phase-6 website todos: night background on Services+Terms, stronger hero searchlights/static, catalog items (Quest $15 / VTuber VRM $30 / Unitypackage $35), Terms ban disclaimer + block-04 reconcile, Discord popup store copy | 2026-07-07 | 9884c1a | [260707-0q0-ejecutar-5-todos-pendientes-del-sitio-we](./quick/260707-0q0-ejecutar-5-todos-pendientes-del-sitio-we/) |
 | 260707-1yi | Post-deploy fixes for 260707-0q0: footer buried by fixed night backdrop (stacking-context bug, footer z-index fix) + card-style readability panels behind Services catalog and Terms text | 2026-07-07 | 204bcc6 | [260707-1yi-fix-footer-invisible-panel-de-fondo-para](./quick/260707-1yi-fix-footer-invisible-panel-de-fondo-para/) |
 | 260709-hm5 | Removed dead duplicate gallery Teaser from landing (superseded by FeaturedGallery since Phase 4, never cleaned up) + emptied store.json to trigger the existing Coming Soon empty state; code review also found and fixed dead D-14/D-16 scroll-choreography code (marquee/parallax) targeting the removed Teaser's DOM hooks | 2026-07-09 | be8ef22 | [260709-hm5-limpiar-landing-galeria-duplicada-y-tien](./quick/260709-hm5-limpiar-landing-galeria-duplicada-y-tien/) |
-| 260717-bum | Exhaustive dead-code cleanup (phased): removed legacy pre-Astro root site (index.html, functions.js, styles.css, root favicon dup, assets/ 16MB) + dead AudioPlayer.astro + audio.ts (editor uses SpotifyVinyl). Verified clean: all 13 CSS files imported, all npm deps used, public/ assets bot-managed/deferred/referenced. Deferred as unsafe/low-value: per-rule CSS + i18n key pruning (dynamic/JS-generated access). Pending: unused import/export sweep (blocked by Bash safety-classifier outage) | 2026-07-17 | 964d74d | [260717-bum-limpieza-codigo-muerto](./quick/260717-bum-limpieza-codigo-muerto/) |
+| 260717-bum | Exhaustive dead-code cleanup (phased, 5 code commits): removed legacy pre-Astro root site (index.html/functions.js/styles.css/root favicon dup/assets 16MB) + dead AudioPlayer.astro+audio.ts (editor uses SpotifyVinyl) + dead .addons CSS block + unused i18n (packages.json & common.json whole namespaces, add-ons copy, navAbout/navEditors/langSwitchLabel/taglineDivider/galleryCta). Verified clean: 0 unused imports/exports/CSS classes, all npm deps used, public/ assets bot-managed/deferred/referenced. Kept: store (deferred), storefrontNames (live dynamic access). Build green (19 pages) each phase | 2026-07-17 | 8807482 | [260717-bum-limpieza-codigo-muerto](./quick/260717-bum-limpieza-codigo-muerto/) |
 
 ## Deferred Items
 
