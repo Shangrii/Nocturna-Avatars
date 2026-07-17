@@ -55,6 +55,8 @@
       "font": "Pirata One",
       "btnStyle": "glass",
       "btnShape": "pill",
+      "btnColor": null,
+      "fontScale": 1.0,
       "effects": [
         "glow",
         "glass",
@@ -66,7 +68,8 @@
         "presence",
         "audio"
       ],
-      "audio": "/editors/shangri/8c3a07bab1f742fd807d583c76e48be0.mp3",
+      "audio": null,
+      "spotify": "https://open.spotify.com/intl-es/track/4RKwAD4t3gDRquVCJZqedR?si=1dec13e0b31a4962",
       "preset": "Midnight Nocturna"
     },
     "views": null
