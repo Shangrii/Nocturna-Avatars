@@ -41,10 +41,10 @@
     "theme": {
       "bg": "#ffffff",
       "bgMedia": "/editors/shangri/0f7dc369479c42e09cf33231e2c40e6c.webp",
-      "overlay": 8,
-      "blur": 2,
+      "overlay": 0,
+      "blur": 0,
       "tint": null,
-      "surface": "rgba(255,255,255,0.02)",
+      "surface": "rgba(56,98,143,0.08)",
       "accent": "#c0192c",
       "text": "#f0eae4",
       "textMuted": "#9a9198",
