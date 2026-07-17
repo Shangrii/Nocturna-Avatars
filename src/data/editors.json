@@ -39,31 +39,29 @@
       }
     ],
     "theme": {
-      "bg": "#606376",
+      "bg": "#1f2c65",
       "bgMedia": "/editors/shangri/0f7dc369479c42e09cf33231e2c40e6c.webp",
       "overlay": 8,
       "blur": 2,
       "tint": null,
-      "surface": "rgba(59,96,135,0.04)",
-      "accent": "#a22b32",
-      "text": "#e8f7fb",
-      "textMuted": "#3f474c",
-      "font": "Pirata One",
+      "surface": "rgba(240,234,228,0.06)",
+      "accent": "#c0192c",
+      "text": "#f0eae4",
+      "textMuted": "#9a9198",
+      "font": "Space Grotesk",
       "btnStyle": "glass",
       "btnShape": "rounded",
       "effects": [
+        "audio",
+        "particles",
+        "presence",
         "glass",
         "glow",
-        "hover",
         "gradient",
-        "presence",
-        "particles",
-        "tilt",
-        "typewriter",
-        "audio"
+        "tilt"
       ],
       "audio": "/editors/shangri/8c3a07bab1f742fd807d583c76e48be0.mp3",
-      "preset": "Ocean"
+      "preset": "Midnight Nocturna"
     },
     "views": null
   }
