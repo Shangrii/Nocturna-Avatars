@@ -37,69 +37,6 @@
     "views": null
   },
   {
-    "slug": "impyh",
-    "discordId": "247919526174392320",
-    "published": true,
-    "name": "IMP",
-    "avatar": "/editors/impyh/d20138ff33e3494cbea9d74e626c0ffc.webp",
-    "lang": "es",
-    "tagline": "I like broken people. Normal people are like a white wall... boring to look at.",
-    "badges": [
-      "3D/2D"
-    ],
-    "socials": [],
-    "links": [],
-    "blocks": [
-      {
-        "type": "divider"
-      },
-      {
-        "type": "quote",
-        "text": {
-          "es": "\"Hay una belleza retorcida en las cicatrices, te dicen exactamente donde estuvo la batalla.\"",
-          "en": "\"There's a twisted beauty in scars; they tell you exactly where the battle was.\""
-        },
-        "attribution": ""
-      },
-      {
-        "type": "image",
-        "src": "/editors/impyh/dfef9dc98e9941f3b3d4614409e6b2c4.webp",
-        "alt": ""
-      }
-    ],
-    "theme": {
-      "bg": "#000000",
-      "bgMedia": "/editors/impyh/027a00ed712d403ba69c99cb030d4b7a.webp",
-      "overlay": 65,
-      "blur": 4,
-      "tint": null,
-      "surface": "rgba(81,69,99,0.11)",
-      "accent": "#4a4b64",
-      "text": "#ffffff",
-      "textMuted": "#ff8f8f",
-      "font": "Rajdhani",
-      "btnStyle": "glass",
-      "btnShape": "rounded",
-      "btnColor": null,
-      "fontScale": 1.0,
-      "effects": [
-        "typewriter",
-        "glass",
-        "glow",
-        "particles",
-        "presence"
-      ],
-      "audio": "/editors/impyh/eb20095c51a94f208fc47eca64b127f2.mp3",
-      "audioCover": null,
-      "audioTitle": null,
-      "spotify": null,
-      "spotifyStart": 0,
-      "musicVolume": 29,
-      "preset": "Noir"
-    },
-    "views": null
-  },
-  {
     "slug": "shangri",
     "discordId": "265742687150276608",
     "published": true,
@@ -166,6 +103,69 @@
       "spotifyStart": 0,
       "musicVolume": 25,
       "preset": "Midnight Nocturna"
+    },
+    "views": null
+  },
+  {
+    "slug": "impyh",
+    "discordId": "247919526174392320",
+    "published": true,
+    "name": "IMP",
+    "avatar": "/editors/impyh/d20138ff33e3494cbea9d74e626c0ffc.webp",
+    "lang": "es",
+    "tagline": "I like broken people. Normal people are like a white wall... boring to look at.",
+    "badges": [
+      "3D/2D Artist"
+    ],
+    "socials": [],
+    "links": [],
+    "blocks": [
+      {
+        "type": "divider"
+      },
+      {
+        "type": "quote",
+        "text": {
+          "es": "\"Hay una belleza retorcida en las cicatrices, te dicen exactamente donde estuvo la batalla.\"",
+          "en": "\"There's a twisted beauty in scars; they tell you exactly where the battle was.\""
+        },
+        "attribution": ""
+      },
+      {
+        "type": "image",
+        "src": "/editors/impyh/dfef9dc98e9941f3b3d4614409e6b2c4.webp",
+        "alt": ""
+      }
+    ],
+    "theme": {
+      "bg": "#000000",
+      "bgMedia": "/editors/impyh/027a00ed712d403ba69c99cb030d4b7a.webp",
+      "overlay": 65,
+      "blur": 4,
+      "tint": null,
+      "surface": "rgba(81,69,99,0.11)",
+      "accent": "#4a4b64",
+      "text": "#ffffff",
+      "textMuted": "#ff8f8f",
+      "font": "Rajdhani",
+      "btnStyle": "glass",
+      "btnShape": "rounded",
+      "btnColor": null,
+      "fontScale": 1.0,
+      "effects": [
+        "typewriter",
+        "glass",
+        "glow",
+        "particles",
+        "presence"
+      ],
+      "audio": "/editors/impyh/eb20095c51a94f208fc47eca64b127f2.mp3",
+      "audioCover": null,
+      "audioTitle": null,
+      "spotify": null,
+      "spotifyStart": 0,
+      "musicVolume": 29,
+      "preset": "Noir"
     },
     "views": null
   }
