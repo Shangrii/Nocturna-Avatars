@@ -104,7 +104,7 @@ const hasTypewriter = fx.includes('typewriter');
   .editor-header-card__name {
     margin: 0;
     font-family: var(--theme-font);
-    font-size: clamp(28px, 6vw, 40px);
+    font-size: calc(clamp(28px, 6vw, 40px) * var(--theme-font-scale, 1));
     font-weight: 700;
     line-height: 1.1;
     color: var(--theme-text);
@@ -117,7 +117,7 @@ const hasTypewriter = fx.includes('typewriter');
     margin: 0;
     max-width: 48ch;
     font-family: var(--theme-font);
-    font-size: 16px;
+    font-size: calc(16px * var(--theme-font-scale, 1));
     font-weight: 400;
     line-height: 1.5;
     color: var(--theme-text-muted);

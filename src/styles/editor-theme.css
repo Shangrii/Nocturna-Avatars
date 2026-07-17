@@ -72,6 +72,14 @@
 
 /* ── Page shell ──────────────────────────────────────────────────────── */
 .editor-page {
+  /* Text-size scale (editor-controlled). Block text reads the --type-* scale below;
+     defining them here both provides them (EditorLayout skips the global scale) AND
+     multiplies by --theme-font-scale so the whole page grows/shrinks together. */
+  --theme-font-scale: 1;
+  --type-body: calc(16px * var(--theme-font-scale));
+  --type-heading: calc(26px * var(--theme-font-scale));
+  --type-card-title: calc(21px * var(--theme-font-scale));
+  --type-label: calc(12px * var(--theme-font-scale));
   min-height: 100dvh;
   margin: 0;
   /* MUST stay transparent: the fixed `.editor-bg` layer (z-index:-1) paints the
@@ -219,7 +227,7 @@
   padding: var(--space-xs) var(--space-sm);
   overflow: hidden;
   font-family: var(--theme-font);
-  font-size: 16px;
+  font-size: calc(16px * var(--theme-font-scale, 1));
   font-weight: 700;
   line-height: 1.2;
   text-align: center;
@@ -242,15 +250,16 @@
 .editor-btn[data-btn-shape='rounded'] { border-radius: 12px; }
 .editor-btn[data-btn-shape='pill']    { border-radius: 999px; }
 
-/* Style matrix (D-11): filled / outline / glass. */
+/* Style matrix (D-11): filled / outline / glass. Colour comes from --theme-btn-color
+   (independent link-button colour; falls back to accent when unset). */
 .editor-btn[data-btn-style='filled'] {
-  background: var(--theme-accent);
-  border-color: var(--theme-accent);
+  background: var(--theme-btn-color, var(--theme-accent));
+  border-color: var(--theme-btn-color, var(--theme-accent));
   color: var(--theme-text);
 }
 .editor-btn[data-btn-style='outline'] {
   background: transparent;
-  border-color: var(--theme-accent);
+  border-color: var(--theme-btn-color, var(--theme-accent));
   color: var(--theme-text);
 }
 .editor-btn[data-btn-style='glass'] {
@@ -264,8 +273,8 @@
 /* Hover: lift + accent shadow, plus a diagonal sheen sweep. */
 .editor-btn:hover {
   transform: translateY(-2px);
-  border-color: var(--theme-accent);
-  box-shadow: 0 6px 22px -6px color-mix(in srgb, var(--theme-accent) 55%, transparent);
+  border-color: var(--theme-btn-color, var(--theme-accent));
+  box-shadow: 0 6px 22px -6px color-mix(in srgb, var(--theme-btn-color, var(--theme-accent)) 55%, transparent);
 }
 .editor-btn::before {
   content: '';

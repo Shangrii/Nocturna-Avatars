@@ -92,6 +92,17 @@ const safeColor = (v: unknown, dflt: string): string =>
   typeof v === 'string' && COLOR_RE.test(v.trim()) ? v.trim() : dflt;
 
 const bg = safeColor(theme.bg, '#0a0c14');
+const accent = safeColor(theme.accent, '#c0192c');
+
+/* Independent link-button colour — falls back to accent when unset ("auto"). */
+const btnColor = safeColor(theme.btnColor, accent);
+
+/* Global text-size multiplier (0.8–1.6, default 1.0), clamped like the numerics. */
+const fontScale = ((): number => {
+  const n = typeof theme.fontScale === 'number' ? theme.fontScale : Number(theme.fontScale);
+  if (!Number.isFinite(n)) return 1;
+  return Math.max(0.8, Math.min(1.6, n));
+})();
 
 /* FIXED whitelist of --theme-* property NAMES. Editor values fill VALUES only. */
 const themeStyle: Record<string, string> = {
@@ -101,7 +112,9 @@ const themeStyle: Record<string, string> = {
   '--theme-blur': `${blur}px`,
   '--theme-tint': hasMedia ? safeColor(theme.tint, 'transparent') : 'transparent',
   '--theme-surface': safeColor(theme.surface, 'rgba(240,234,228,0.06)'),
-  '--theme-accent': safeColor(theme.accent, '#c0192c'),
+  '--theme-accent': accent,
+  '--theme-btn-color': btnColor,
+  '--theme-font-scale': String(fontScale),
   '--theme-text': safeColor(theme.text, '#f0eae4'),
   '--theme-text-muted': safeColor(theme.textMuted, '#9a9198'),
   '--theme-font': `var(--font-editor-${fontEntry.slug})`,
