@@ -34,6 +34,13 @@ const { discordId } = Astro.props;
     display: block;
     line-height: 0;
   }
+  /* The `hidden` attribute must win: presence.ts only reveals the dot on a
+     successful Lanyard read. Author `display` overrides the UA `[hidden]` rule,
+     so restore it explicitly — otherwise a fake default-green dot always shows
+     even when the user isn't monitored (or is actually idle/dnd/offline). */
+  .editor-presence[hidden] {
+    display: none;
+  }
   .editor-presence__dot {
     display: block;
     width: clamp(18px, 5vw, 26px);

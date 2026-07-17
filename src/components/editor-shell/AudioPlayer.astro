@@ -21,6 +21,15 @@ const { src } = Astro.props;
     <div class="editor-audio" data-audio-player data-audio-state="muted">
       <audio data-editor-audio src={src} preload="none" muted loop />
 
+      {/* Vinyl logo — spins while playing (a small "now-playing" cue). */}
+      <span class="editor-audio__vinyl" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6" />
+          <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.6" />
+          <circle cx="12" cy="12" r="1" fill="currentColor" />
+        </svg>
+      </span>
+
       <button
         type="button"
         class="editor-audio__toggle"
@@ -87,10 +96,36 @@ const { src } = Astro.props;
 }
 
 <style>
+  /* Fixed top-right widget (was a bottom meta row) — a themed pill that reads as
+     a mini player. Sits under the splash (z 1000) so it appears after entering. */
   .editor-audio {
+    position: fixed;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    z-index: 900;
     display: inline-flex;
     align-items: center;
     gap: var(--space-2xs);
+    padding: 6px 10px 6px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--theme-bg) 62%, transparent);
+    border: 1px solid color-mix(in srgb, var(--theme-text) 14%, transparent);
+    -webkit-backdrop-filter: blur(10px) saturate(1.2);
+    backdrop-filter: blur(10px) saturate(1.2);
+  }
+  @media (max-width: 520px) {
+    /* Collapse the slider on small screens so the pill stays tidy in the corner. */
+    .editor-audio__volume { display: none; }
+  }
+  .editor-audio__vinyl {
+    display: inline-flex;
+    color: var(--theme-accent);
+  }
+  .editor-audio[data-audio-state='playing'] .editor-audio__vinyl {
+    animation: editor-vinyl-spin 3.2s linear infinite;
+  }
+  @keyframes editor-vinyl-spin {
+    to { transform: rotate(360deg); }
   }
   .editor-audio__toggle {
     display: inline-flex;
@@ -142,6 +177,9 @@ const { src } = Astro.props;
   @media (prefers-reduced-motion: reduce) {
     .editor-audio__toggle {
       transition: none;
+    }
+    .editor-audio[data-audio-state='playing'] .editor-audio__vinyl {
+      animation: none;
     }
   }
 </style>

@@ -81,6 +81,15 @@
   text-rendering: optimizeLegibility;
 }
 
+/* Box-sizing reset — EditorLayout is subtractive and does NOT import the global
+   brand reset, so without this padded full-width elements (the glass card) overflow
+   the column while unpadded ones (link buttons) don't → visible misalignment. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* ── Background media treatment (D-21) ────────────────────────────────────
    Fixed layer: solid --theme-bg, optional media, colour tint, backdrop blur,
    and a darken scrim from --theme-overlay. These three knobs are LEGIBILITY
