@@ -102,7 +102,7 @@
   {
     "slug": "shangri",
     "discordId": "265742687150276608",
-    "published": false,
+    "published": true,
     "name": "Shangri",
     "avatar": "/editors/shangri/e498e7f2fd3c465e84db75403ef5ade3.webp",
     "lang": "en",
@@ -135,7 +135,7 @@
     ],
     "theme": {
       "bg": "#ffffff",
-      "bgMedia": "/editors/shangri/40e36f36fb38410182187467e11f23cb.webp",
+      "bgMedia": "/editors/shangri/4a881ef4d5a141558c650bc6d6bf3b91.webp",
       "overlay": 0,
       "blur": 3,
       "tint": null,
