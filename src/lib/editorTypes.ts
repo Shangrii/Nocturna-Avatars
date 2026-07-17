@@ -98,6 +98,8 @@ export interface EditorTheme {
   spotify?: string;
   /** Where the track starts on autoplay, in seconds. Default 0 (beginning). */
   spotifyStart?: number;
+  /** Default music volume 0–100. Default 70. */
+  musicVolume?: number;
   /** Applied preset key (D-24). Default `midnight-nocturna`. */
   preset?: string;
 }

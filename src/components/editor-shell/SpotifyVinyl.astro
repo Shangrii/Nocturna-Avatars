@@ -18,8 +18,10 @@ interface Props {
   cover?: string | null;
   title?: string | null;
   start?: number;
+  volume?: number;
 }
-const { url, audio, cover, title, start = 0 } = Astro.props;
+const { url, audio, cover, title, start = 0, volume = 70 } = Astro.props;
+const vol = Number.isFinite(volume) ? Math.max(0, Math.min(100, Math.round(volume))) : 70;
 const spotifyUrl =
   typeof url === 'string' && /^https:\/\/open\.spotify\.com\/(?:intl-[a-z]{2}\/)?track\//.test(url)
     ? url
@@ -34,49 +36,66 @@ const titleText = typeof title === 'string' ? title : '';
 {
   mode && (
     <section
-      class="spotify-vinyl"
+      class:list={['spotify-vinyl', mode === 'mp3' && 'spotify-vinyl--vol']}
       data-spotify
       data-mode={mode}
       data-spotify-url={spotifyUrl || undefined}
       data-audio-src={mp3 || undefined}
       data-spotify-start={startAt}
+      data-volume={vol}
       hidden={mode === 'spotify'}
       aria-label="Música"
     >
-      <div class="spotify-vinyl__disc" data-spotify-disc aria-hidden="true">
-        <span
-          class="spotify-vinyl__art"
-          data-spotify-art
-          style={mode === 'mp3' && coverUrl ? `background-image:url("${coverUrl}")` : undefined}
-        />
+      <div class="spotify-vinyl__row">
+        <div class="spotify-vinyl__disc" data-spotify-disc aria-hidden="true">
+          <span
+            class="spotify-vinyl__art"
+            data-spotify-art
+            style={mode === 'mp3' && coverUrl ? `background-image:url("${coverUrl}")` : undefined}
+          />
+        </div>
+
+        <span class="spotify-vinyl__title" data-spotify-title>{mode === 'mp3' ? titleText : ''}</span>
+
+        <button class="spotify-vinyl__play" data-spotify-play type="button" aria-pressed="false" aria-label="Reproducir / pausar">
+          <svg class="spotify-vinyl__ico spotify-vinyl__ico--play" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 5v14l11-7z" fill="currentColor" />
+          </svg>
+          <svg class="spotify-vinyl__ico spotify-vinyl__ico--pause" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor" />
+          </svg>
+        </button>
       </div>
 
-      <span class="spotify-vinyl__title" data-spotify-title>{mode === 'mp3' ? titleText : ''}</span>
-
-      <button class="spotify-vinyl__play" data-spotify-play type="button" aria-pressed="false" aria-label="Reproducir / pausar">
-        <svg class="spotify-vinyl__ico spotify-vinyl__ico--play" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M8 5v14l11-7z" fill="currentColor" />
-        </svg>
-        <svg class="spotify-vinyl__ico spotify-vinyl__ico--pause" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor" />
-        </svg>
-      </button>
+      {mode === 'mp3' && (
+        <input
+          class="spotify-vinyl__vol"
+          data-spotify-vol
+          type="range"
+          min="0"
+          max="100"
+          value={vol}
+          aria-label="Volumen"
+        />
+      )}
     </section>
   )
 }
 
 <style>
-  /* Discreet fixed pill, top-right. */
+  /* Discreet fixed widget, top-right. Pill when it's just the row (Spotify), a small
+     rounded card when it also carries the volume slider (MP3). */
   .spotify-vinyl {
     position: fixed;
     top: var(--space-sm);
     right: var(--space-sm);
     z-index: 900; /* under the splash (1000); appears after entering */
     display: flex;
-    align-items: center;
-    gap: 12px;
-    max-width: min(270px, calc(100vw - 2 * var(--space-sm)));
-    padding: 8px 14px 8px 8px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 7px;
+    width: min(270px, calc(100vw - 2 * var(--space-sm)));
+    padding: 8px 12px;
     border-radius: 999px;
     /* Neutral dark glass — theme-independent, reads on any background. */
     background: rgba(18, 20, 28, 0.55);
@@ -86,8 +105,23 @@ const titleText = typeof title === 'string' ? title : '';
     backdrop-filter: blur(12px) saturate(1.2);
     color: #f0eae4;
   }
+  .spotify-vinyl--vol {
+    border-radius: 18px;
+  }
   .spotify-vinyl[hidden] {
     display: none;
+  }
+  .spotify-vinyl__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .spotify-vinyl__vol {
+    width: 100%;
+    height: 16px;
+    margin: 0;
+    accent-color: #1db954;
+    cursor: pointer;
   }
 
   /* ── The vinyl record ─────────────────────────────────────────────────── */

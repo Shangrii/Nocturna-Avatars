@@ -14,6 +14,7 @@ interface SpotifyController {
   play(): void;
   togglePlay(): void;
   seek(seconds: number): void;
+  setVolume?(fraction: number): void; // 0–1; not in all API versions (feature-detected)
   addListener(event: 'playback_update', cb: (e: { data: { isPaused: boolean } }) => void): void;
 }
 interface SpotifyIFrameAPI {
@@ -63,14 +64,21 @@ function initMp3(root: HTMLElement): void {
   const src = root.dataset.audioSrc;
   if (!src) return;
   const startAt = Math.max(0, parseInt(root.dataset.spotifyStart ?? '0', 10) || 0);
+  const vol = Math.max(0, Math.min(100, parseInt(root.dataset.volume ?? '70', 10) || 0));
   const playBtn = root.querySelector<HTMLButtonElement>('[data-spotify-play]');
+  const volSlider = root.querySelector<HTMLInputElement>('[data-spotify-vol]');
   const setPlaying = playState(root, playBtn);
 
   const audio = new Audio(src);
   audio.loop = true;
   audio.preload = 'auto';
+  audio.volume = vol / 100; // editor default; the slider adjusts it live
   audio.addEventListener('play', () => setPlaying(true));
   audio.addEventListener('pause', () => setPlaying(false));
+
+  volSlider?.addEventListener('input', () => {
+    audio.volume = Math.max(0, Math.min(1, Number(volSlider.value) / 100));
+  });
 
   const play = (): void => {
     const go = (): void => {
@@ -103,6 +111,7 @@ function initOne(root: HTMLElement): void {
   if (!match) return;
   const uri = `spotify:track:${match[1]}`;
   const startAt = Math.max(0, parseInt(root.dataset.spotifyStart ?? '0', 10) || 0);
+  const vol = Math.max(0, Math.min(100, parseInt(root.dataset.volume ?? '70', 10) || 0));
 
   const artEl = root.querySelector<HTMLElement>('[data-spotify-art]');
   const titleEl = root.querySelector<HTMLElement>('[data-spotify-title]');
@@ -153,6 +162,14 @@ function initOne(root: HTMLElement): void {
       document.body.appendChild(wrap);
       api.createController(inner, { uri, width: '100%', height: 80 }, (ctrl) => {
         controller = ctrl;
+        // Best-effort default volume (not all IFrame API versions expose setVolume).
+        if (typeof ctrl.setVolume === 'function') {
+          try {
+            ctrl.setVolume(vol / 100);
+          } catch {
+            /* ignore */
+          }
+        }
         ctrl.addListener('playback_update', (e) => {
           setPlaying(!e.data.isPaused);
           // On the first autoplay start, jump to the editor-chosen start position.

@@ -94,6 +94,7 @@ const spotifyStart = Number.isFinite(theme.spotifyStart as number) ? Number(them
 const audio = typeof theme.audio === 'string' ? theme.audio : '';
 const audioCover = typeof theme.audioCover === 'string' ? theme.audioCover : '';
 const audioTitle = typeof theme.audioTitle === 'string' ? theme.audioTitle : '';
+const musicVolume = Number.isFinite(theme.musicVolume as number) ? Number(theme.musicVolume) : 70;
 
 // Background media (D-18): a video ref (.mp4/.webm) becomes a real <video> element
 // because CSS backgrounds cannot play video; an image ref (.gif/.webp/.png/.jpg…)
@@ -163,6 +164,7 @@ const isImageBg = !isVideoBg && /\.(gif|webp|png|jpe?g|avif)(?:[?#].*)?$/i.test(
           cover={audioCover}
           title={audioTitle}
           start={spotifyStart}
+          volume={musicVolume}
         />
       )}
 
