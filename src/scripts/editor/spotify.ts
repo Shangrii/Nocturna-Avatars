@@ -11,6 +11,7 @@
  */
 
 interface SpotifyController {
+  play(): void;
   togglePlay(): void;
   addListener(event: 'playback_update', cb: (e: { data: { isPaused: boolean } }) => void): void;
 }
@@ -95,13 +96,24 @@ function initOne(root: HTMLElement): void {
         ctrl.addListener('playback_update', (e) => setPlaying(!e.data.isPaused));
         if (pendingPlay) {
           pendingPlay = false;
-          ctrl.togglePlay();
+          ctrl.play();
         }
       });
     })
     .catch(() => {
       apiFailed = true;
     });
+
+  // Autoplay on ENTER: the splash dismissal (`editor:enter`) is the user gesture that
+  // unlocks autoplay, so the track starts the moment the visitor clicks into the page.
+  let started = false;
+  const startOnEnter = (): void => {
+    if (started) return;
+    started = true;
+    if (controller) controller.play();
+    else pendingPlay = true; // plays as soon as the controller is ready
+  };
+  document.addEventListener('editor:enter', startOnEnter, { once: true });
 
   playBtn?.addEventListener('click', () => {
     if (controller) controller.togglePlay();
