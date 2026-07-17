@@ -67,7 +67,6 @@
       "heading": "Muy pronto",
       "galleryBody": "Nuestra galería se actualiza sola desde Discord. Mientras tanto, abre un ticket y cuéntanos qué quieres crear.",
       "serviciosBody": "El catálogo completo llega pronto. ¿Tienes algo en mente? Abre un ticket para una cotización.",
-      "galleryCta": "Ver galería",
       "ticketCta": "Abrir Ticket"
     },
     "galeria": {
@@ -89,8 +88,7 @@
       "usd": "USD",
       "popularBadge": "⬡ Más popular",
       "ctaTicket": "Abrir Ticket",
-      "summaryCtaAll": "Ver todos los servicios",
-      "addonsTitle": "Add-ons disponibles"
+      "summaryCtaAll": "Ver todos los servicios"
     },
     "tienda": {
       "metaTitle": "Tienda — Nocturna Avatars",
@@ -227,7 +225,6 @@
       "heading": "Coming soon",
       "galleryBody": "Our gallery updates itself from Discord. In the meantime, open a ticket and tell us what you want to build.",
       "serviciosBody": "The full catalog is coming soon. Have something in mind? Open a ticket for a quote.",
-      "galleryCta": "View gallery",
       "ticketCta": "Open a Ticket"
     },
     "galeria": {
@@ -249,8 +246,7 @@
       "usd": "USD",
       "popularBadge": "⬡ Most popular",
       "ctaTicket": "Open a Ticket",
-      "summaryCtaAll": "View all services",
-      "addonsTitle": "Available add-ons"
+      "summaryCtaAll": "View all services"
     },
     "tienda": {
       "metaTitle": "Store — Nocturna Avatars",

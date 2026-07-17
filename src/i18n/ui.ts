@@ -4,7 +4,6 @@
  * Content lives in per-language JSON dictionaries ({ es: {...}, en: {...} }).
  * Components read copy through these helpers — never hard-code strings.
  */
-import commonDict from './common.json';
 import homeDict from './home.json';
 import navDict from './nav.json';
 import pagesDict from './pages.json';
@@ -33,7 +32,6 @@ export function toLang(value: string | undefined): Lang {
 type Dict<T> = Record<Lang, T>;
 
 const dictionaries = {
-  common: commonDict as Dict<(typeof commonDict)['es']>,
   home: homeDict as Dict<(typeof homeDict)['es']>,
   nav: navDict as Dict<(typeof navDict)['es']>,
   pages: pagesDict as Dict<(typeof pagesDict)['es']>,
