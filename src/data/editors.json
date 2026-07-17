@@ -39,16 +39,16 @@
       }
     ],
     "theme": {
-      "bg": "#ff0000",
+      "bg": "#2b00ff",
       "bgMedia": "/editors/shangri/0f7dc369479c42e09cf33231e2c40e6c.webp",
       "overlay": 8,
       "blur": 2,
       "tint": null,
-      "surface": "rgba(240,234,228,0.06)",
+      "surface": "rgba(255,255,255,0.02)",
       "accent": "#c0192c",
       "text": "#f0eae4",
       "textMuted": "#9a9198",
-      "font": "Space Grotesk",
+      "font": "Pirata One",
       "btnStyle": "glass",
       "btnShape": "rounded",
       "effects": [
