@@ -1,37 +1,57 @@
 [
   {
-    "slug": "aria-test",
-    "discordId": "000000000000000000",
+    "slug": "shangri",
+    "discordId": "265742687150276608",
     "published": true,
-    "name": "Aria",
-    "avatar": "/gallery/placeholder.webp",
-    "lang": "es",
-    "tagline": "Editora de texturas y outfits",
-    "badges": [],
-    "socials": [],
-    "theme": {
-      "bg": "#0a0c14",
-      "overlay": 40,
-      "blur": 0,
-      "surface": "rgba(240,234,228,0.06)",
-      "accent": "#c0192c",
-      "text": "#f0eae4",
-      "textMuted": "#9a9198",
-      "font": "Inter",
-      "btnStyle": "glass",
-      "btnShape": "rounded",
-      "effects": [],
-      "preset": "midnight-nocturna"
-    },
-    "links": [
-      { "label": "Discord", "url": "https://discord.com" }
+    "name": "Shangri",
+    "avatar": "/public/editors/shangri/bd09a7afacff4b71a75fe3fe78729b9c.webp",
+    "lang": "en",
+    "tagline": "Sometimes I just wanna kms",
+    "badges": [
+      "Outfits",
+      "Accessories",
+      "Dances",
+      "Textures",
+      "Modeling3D",
+      "Blender"
     ],
+    "socials": [
+      {
+        "label": "X",
+        "url": "https://x.com/Shxngri"
+      },
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/heir.shangri/"
+      }
+    ],
+    "links": [],
     "blocks": [
-      { "type": "bio", "text": { "es": "Trabajo con texturas y detalles finos para VRChat.", "en": "I work on textures and fine detail for VRChat avatars." } },
-      { "type": "heading", "text": { "es": "Mi trabajo", "en": "My work" } },
-      { "type": "portfolio", "auto": true },
-      { "type": "quote", "text": { "es": "El detalle lo es todo.", "en": "Detail is everything." }, "attribution": "Aria" },
-      { "type": "links", "items": [{ "label": "Instagram", "url": "https://instagram.com" }] }
-    ]
+      {
+        "type": "links",
+        "items": []
+      }
+    ],
+    "theme": {
+      "bg": "#fbf7f2",
+      "bgMedia": null,
+      "overlay": 65,
+      "blur": 9,
+      "tint": "#6b6b6b",
+      "surface": "rgba(201,167,235,0.12)",
+      "accent": "#c9a7eb",
+      "text": "#3a2f4a",
+      "textMuted": "#8b7f96",
+      "font": "Fraunces",
+      "btnStyle": "filled",
+      "btnShape": "pill",
+      "effects": [
+        "tilt",
+        "glow"
+      ],
+      "audio": "/public/editors/shangri/2ddca623e1c5441ca84f29a1412efa29.mp3",
+      "preset": "Soft Pastel"
+    },
+    "views": null
   }
 ]
