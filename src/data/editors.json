@@ -54,7 +54,7 @@
       "textMuted": "#9a9198",
       "font": "Pirata One",
       "btnStyle": "glass",
-      "btnShape": "rounded",
+      "btnShape": "pill",
       "effects": [
         "glow",
         "glass",
