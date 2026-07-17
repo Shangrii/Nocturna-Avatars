@@ -6,20 +6,20 @@
     "name": "Shangri",
     "avatar": "/editors/shangri/d0347687613541fd86b5d100153f5dc3.webp",
     "lang": "en",
-    "tagline": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+    "tagline": "Esto es un simple y sencillo test... Uhm, Lorem Ipsum y no sé qué más sigue, pero se entiende, lorem ipsum y esas cosas, la verdad quería escribir algo largo, pero tengo 30 horas sin dormir.",
     "badges": [],
     "socials": [
-      {
-        "label": "X",
-        "url": "https://x.com/Shxngri"
-      },
       {
         "label": "Instagram",
         "url": "https://www.instagram.com/heir.shangri/"
       },
       {
-        "label": "Tik Tok",
-        "url": "https://www.tiktok.com/"
+        "label": "Git",
+        "url": "https://github.com/Shangrii"
+      },
+      {
+        "label": "Discord",
+        "url": "https://discord.gg/sJbGuM8KD"
       }
     ],
     "links": [],
@@ -50,12 +50,12 @@
       "tint": null,
       "surface": "rgba(56,98,143,0.2)",
       "accent": "#8c1220",
-      "text": "#bd6565",
+      "text": "#ffffff",
       "textMuted": "#ffffff",
       "font": "Pirata One",
       "btnStyle": "glass",
       "btnShape": "pill",
-      "btnColor": null,
+      "btnColor": "#38628f",
       "fontScale": 1.0,
       "effects": [
         "glow",
@@ -69,6 +69,8 @@
         "audio"
       ],
       "audio": null,
+      "audioCover": null,
+      "audioTitle": null,
       "spotify": "https://open.spotify.com/intl-es/track/4RKwAD4t3gDRquVCJZqedR?si=1dec13e0b31a4962",
       "spotifyStart": 0,
       "preset": "Midnight Nocturna"
