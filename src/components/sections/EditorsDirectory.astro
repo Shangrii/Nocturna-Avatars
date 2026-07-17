@@ -32,7 +32,9 @@ interface EditorEntry {
   published?: boolean;
   name?: string;
   avatar?: string;
-  tagline?: { es?: string; en?: string };
+  // D-13 migrated tagline to a single-language plain string; tolerate the legacy
+  // bilingual {es,en} object too so a not-yet-migrated entry still renders.
+  tagline?: string | { es?: string; en?: string };
 }
 
 interface Props {
@@ -58,7 +60,10 @@ const editors = rawEditors
     slug: e.slug,
     name: typeof e.name === 'string' && e.name ? e.name : e.slug,
     avatar: typeof e.avatar === 'string' ? e.avatar : '',
-    tagline: e.tagline?.[lang] ?? e.tagline?.es ?? e.tagline?.en ?? '',
+    tagline:
+      typeof e.tagline === 'string'
+        ? e.tagline
+        : (e.tagline?.[lang] ?? e.tagline?.es ?? e.tagline?.en ?? ''),
   }))
   .sort((a, b) => a.name.localeCompare(b.name));
 ---
