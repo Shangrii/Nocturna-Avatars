@@ -73,6 +73,9 @@ const blur = clampNum(theme.blur, 0, 20, 0);
 const rawMedia = typeof theme.bgMedia === 'string' ? theme.bgMedia.replace(/["'\\()]/g, '') : '';
 const bgMedia = rawMedia.length > 0 ? `url("${rawMedia}")` : 'none';
 const hasMedia = bgMedia !== 'none';
+/* A transcoded background video (/editor/media returns .mp4). Rendered as a muted
+   looping <video> instead of a CSS background-image (which can't play video). */
+const isVideoBg = /\.(mp4|webm)$/i.test(rawMedia);
 
 /* Overlay (darken scrim) + tint are IMAGE-legibility controls: with no media they
    only muddy a solid background colour, so both are disabled when no media is set —
@@ -158,7 +161,20 @@ const lang: 'es' | 'en' = editor?.lang === 'en' ? 'en' : 'es';
       <!-- Themed background layer (D-21): media + tint + darken scrim. Its blur/tint/overlay
            are legibility controls (stay on under reduced-motion, handled by editor-theme.css). -->
       <div class="editor-bg" aria-hidden="true">
-        <div class="editor-bg__media"></div>
+        {isVideoBg ? (
+          <video
+            class="editor-bg__video"
+            data-editor-bg-video
+            src={rawMedia}
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+          />
+        ) : (
+          <div class="editor-bg__media"></div>
+        )}
         <div class="editor-bg__tint"></div>
         <div class="editor-bg__scrim"></div>
       </div>
