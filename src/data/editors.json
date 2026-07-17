@@ -7,14 +7,7 @@
     "avatar": "/editors/shangri/d0347687613541fd86b5d100153f5dc3.webp",
     "lang": "en",
     "tagline": "Sometimes I just wanna kms",
-    "badges": [
-      "Outfits",
-      "Accessories",
-      "Dances",
-      "Textures",
-      "Modeling3D",
-      "Blender"
-    ],
+    "badges": [],
     "socials": [
       {
         "label": "X",
@@ -29,35 +22,48 @@
     "blocks": [
       {
         "type": "links",
-        "items": []
+        "items": [
+          {
+            "label": "Test Link 1",
+            "url": "https://www.tiktok.com/"
+          },
+          {
+            "label": "Test Link 2",
+            "url": "https://www.tiktok.com/"
+          },
+          {
+            "label": "Test Link 3",
+            "url": "https://www.tiktok.com/"
+          }
+        ]
       }
     ],
     "theme": {
-      "bg": "#fff5f7",
-      "bgMedia": null,
-      "overlay": 65,
-      "blur": 9,
+      "bg": "#606376",
+      "bgMedia": "/editors/shangri/4b08f9e307f44a4a94257f3e08edddce.webp",
+      "overlay": 8,
+      "blur": 2,
       "tint": "#6b6b6b",
-      "surface": "rgba(255,183,197,0.16)",
-      "accent": "#ff8fab",
-      "text": "#4a3033",
-      "textMuted": "#a98a90",
-      "font": "Caveat",
+      "surface": "rgba(59,96,135,0.01)",
+      "accent": "#a22b32",
+      "text": "#e8f7fb",
+      "textMuted": "#3f474c",
+      "font": "Pirata One",
       "btnStyle": "glass",
       "btnShape": "rounded",
       "effects": [
-        "particles",
+        "glass",
         "glow",
-        "tilt",
         "hover",
         "gradient",
         "presence",
+        "particles",
+        "tilt",
         "typewriter",
-        "glass",
         "audio"
       ],
       "audio": "/editors/shangri/8c3a07bab1f742fd807d583c76e48be0.mp3",
-      "preset": "Sakura"
+      "preset": "Ocean"
     },
     "views": null
   }
