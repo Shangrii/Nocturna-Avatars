@@ -147,7 +147,8 @@
         "typewriter",
         "glass",
         "glow",
-        "particles"
+        "particles",
+        "presence"
       ],
       "audio": "/editors/impyh/eb20095c51a94f208fc47eca64b127f2.mp3",
       "audioCover": null,
