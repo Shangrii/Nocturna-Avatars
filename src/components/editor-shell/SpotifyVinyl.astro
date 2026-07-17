@@ -1,35 +1,57 @@
 ---
 /**
- * SpotifyVinyl — a static picked-track mini player with the album art on a spinning
- * vinyl (Material-style card). The page stores ONLY the track URL; `spotify.ts`
- * resolves album art + title client-side via Spotify's CORS-open oEmbed and drives
- * playback through Spotify's official IFrame API (graceful link fallback).
+ * SpotifyVinyl — the ONE mini music player: album art on a spinning vinyl (Material
+ * card), used for EITHER a picked Spotify track OR an uploaded MP3 (mutually exclusive,
+ * enforced by the admin). Both render identically.
  *
- * Renders NOTHING without a valid open.spotify.com/track/ URL. Starts `hidden` and is
- * revealed by the script only once oEmbed resolves, so a dead/removed track shows no
- * empty card. Theme-independent neutral dark surface (like the AudioPlayer) so it reads
- * on any background.
+ * Spotify: stores only the track URL; `spotify.ts` resolves art/title via Spotify's
+ * CORS-open oEmbed and plays through the official IFrame API. Starts `hidden`, revealed
+ * once oEmbed resolves. MP3: the editor uploads the cover + (optional) title, and it
+ * plays via a same-origin <audio> element (reliable autoplay). Both autostart on the
+ * splash `editor:enter` gesture and seek to the editor-chosen start seconds.
+ *
+ * Theme-independent neutral dark surface so it reads on any background.
  */
 interface Props {
   url?: string | null;
+  audio?: string | null;
+  cover?: string | null;
+  title?: string | null;
   start?: number;
 }
-const { url, start = 0 } = Astro.props;
-const clean =
+const { url, audio, cover, title, start = 0 } = Astro.props;
+const spotifyUrl =
   typeof url === 'string' && /^https:\/\/open\.spotify\.com\/(?:intl-[a-z]{2}\/)?track\//.test(url)
     ? url
     : '';
+const mp3 = !spotifyUrl && typeof audio === 'string' && audio ? audio : '';
+const mode: 'spotify' | 'mp3' | '' = spotifyUrl ? 'spotify' : mp3 ? 'mp3' : '';
 const startAt = Number.isFinite(start) ? Math.max(0, Math.round(start)) : 0;
+const coverUrl = typeof cover === 'string' ? cover : '';
+const titleText = typeof title === 'string' ? title : '';
 ---
 
 {
-  clean && (
-    <section class="spotify-vinyl" data-spotify data-spotify-url={clean} data-spotify-start={startAt} hidden aria-label="Música">
+  mode && (
+    <section
+      class="spotify-vinyl"
+      data-spotify
+      data-mode={mode}
+      data-spotify-url={spotifyUrl || undefined}
+      data-audio-src={mp3 || undefined}
+      data-spotify-start={startAt}
+      hidden={mode === 'spotify'}
+      aria-label="Música"
+    >
       <div class="spotify-vinyl__disc" data-spotify-disc aria-hidden="true">
-        <span class="spotify-vinyl__art" data-spotify-art />
+        <span
+          class="spotify-vinyl__art"
+          data-spotify-art
+          style={mode === 'mp3' && coverUrl ? `background-image:url("${coverUrl}")` : undefined}
+        />
       </div>
 
-      <span class="spotify-vinyl__title" data-spotify-title />
+      <span class="spotify-vinyl__title" data-spotify-title>{mode === 'mp3' ? titleText : ''}</span>
 
       <button class="spotify-vinyl__play" data-spotify-play type="button" aria-pressed="false" aria-label="Reproducir / pausar">
         <svg class="spotify-vinyl__ico spotify-vinyl__ico--play" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
@@ -39,7 +61,6 @@ const startAt = Number.isFinite(start) ? Math.max(0, Math.round(start)) : 0;
           <path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor" />
         </svg>
       </button>
-
     </section>
   )
 }

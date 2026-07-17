@@ -53,6 +53,8 @@ const { discordId } = Astro.props;
     background: var(--presence-color, #3ba55d);
     border: 3px solid var(--presence-cut);
     box-shadow: 0 0 8px 1px color-mix(in srgb, var(--presence-color, #3ba55d) 55%, transparent);
+    /* Clip the status-glyph cut to the dot so it can't poke outside (clean crescent). */
+    overflow: hidden;
   }
   /* Real Discord status glyphs, cut with --presence-cut:
        online → solid (no cut) · idle → crescent · dnd → bar · offline → ring. */

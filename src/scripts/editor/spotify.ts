@@ -50,7 +50,53 @@ function loadApi(): Promise<SpotifyIFrameAPI> {
   return apiPromise;
 }
 
+/** Shared play/pause visual state (spins the vinyl + swaps the button icon). */
+function playState(root: HTMLElement, playBtn: HTMLButtonElement | null) {
+  return (playing: boolean): void => {
+    root.dataset.playing = playing ? 'true' : 'false';
+    playBtn?.setAttribute('aria-pressed', String(playing));
+  };
+}
+
+/** MP3 path — same-origin <audio>, so autoplay on the enter gesture is reliable. */
+function initMp3(root: HTMLElement): void {
+  const src = root.dataset.audioSrc;
+  if (!src) return;
+  const startAt = Math.max(0, parseInt(root.dataset.spotifyStart ?? '0', 10) || 0);
+  const playBtn = root.querySelector<HTMLButtonElement>('[data-spotify-play]');
+  const setPlaying = playState(root, playBtn);
+
+  const audio = new Audio(src);
+  audio.loop = true;
+  audio.preload = 'auto';
+  audio.addEventListener('play', () => setPlaying(true));
+  audio.addEventListener('pause', () => setPlaying(false));
+
+  const play = (): void => {
+    const go = (): void => {
+      if (startAt > 0) {
+        try {
+          audio.currentTime = startAt;
+        } catch {
+          /* metadata not ready — starts at 0 */
+        }
+      }
+      const p = audio.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    };
+    if (audio.readyState >= 1) go();
+    else audio.addEventListener('loadedmetadata', go, { once: true });
+  };
+
+  document.addEventListener('editor:enter', play, { once: true });
+  playBtn?.addEventListener('click', () => (audio.paused ? play() : audio.pause()));
+}
+
 function initOne(root: HTMLElement): void {
+  if (root.dataset.mode === 'mp3') {
+    initMp3(root);
+    return;
+  }
   const url = root.dataset.spotifyUrl;
   if (!url) return;
   const match = url.match(TRACK_RE);
@@ -93,12 +139,15 @@ function initOne(root: HTMLElement): void {
 
   loadApi()
     .then((api) => {
-      // WRAPPER carries the off-screen hiding: createController REPLACES the inner node
-      // with an iframe (dropping its styles), so hiding the inner node alone would leave
-      // the iframe visible in flow. Wrapper stays; only the inner node is swapped.
+      // WRAPPER carries the hiding: createController REPLACES the inner node with an
+      // iframe (dropping its styles), so hiding the inner node alone would leave the
+      // iframe visible in flow. The wrapper is kept ON-SCREEN but clipped to 1px in a
+      // corner (NOT off-screen, NOT opacity:0): a cross-origin iframe fully off-screen
+      // gets its autoplay suspended by the browser, so it must stay rendered/on-screen.
       const wrap = document.createElement('div');
       wrap.setAttribute('aria-hidden', 'true');
-      wrap.style.cssText = 'position:fixed;left:-9999px;top:0;width:320px;height:80px;pointer-events:none;';
+      wrap.style.cssText =
+        'position:fixed;left:0;bottom:0;width:1px;height:1px;overflow:hidden;pointer-events:none;z-index:0;';
       const inner = document.createElement('div');
       wrap.appendChild(inner);
       document.body.appendChild(wrap);

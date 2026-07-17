@@ -84,8 +84,12 @@ export interface EditorTheme {
   btnShape: 'sharp' | 'rounded' | 'pill';
   /** Opt-in effect keys (Effects Catalog). Default `[]`. */
   effects: string[];
-  /** Background audio ref (D-06). Default none. */
+  /** Uploaded MP3 ref (the "own file" music option; mutually exclusive with spotify). */
   audio?: string;
+  /** Vinyl cover image for the uploaded MP3. */
+  audioCover?: string;
+  /** Song title shown next to the MP3 vinyl. */
+  audioTitle?: string;
   /** Independent link-button color (hex). Falls back to accent when unset. */
   btnColor?: string;
   /** Global text-size multiplier (0.8–1.6). Default 1. */
