@@ -104,7 +104,7 @@
     "discordId": "265742687150276608",
     "published": true,
     "name": "Shangri",
-    "avatar": "/editors/shangri/d0347687613541fd86b5d100153f5dc3.webp",
+    "avatar": "/editors/shangri/e498e7f2fd3c465e84db75403ef5ade3.webp",
     "lang": "en",
     "tagline": "Esto es un simple y sencillo test... Uhm, Lorem Ipsum y no sé qué más sigue, pero se entiende, lorem ipsum y esas cosas, la verdad quería escribir algo largo, pero tengo 30 horas sin dormir.",
     "badges": [],
@@ -135,7 +135,7 @@
     ],
     "theme": {
       "bg": "#ffffff",
-      "bgMedia": "/editors/shangri/1c19f78839f1482c9b1c4b505f5cca92.webp",
+      "bgMedia": "/editors/shangri/e2b2bcd6f5a04a9dbd413e104d4cd6fe.webp",
       "overlay": 0,
       "blur": 3,
       "tint": null,
@@ -159,11 +159,11 @@
         "presence",
         "audio"
       ],
-      "audio": "/editors/shangri/6f5b7e18bd884afc8b745b873d86a5db.mp3",
+      "audio": "/editors/shangri/b27d74ce0fcf4234b550958dba972a13.mp3",
       "audioCover": "/editors/shangri/5903d6bdac0e4149b2748fb256f43a47.webp",
       "audioTitle": "Shangri Theme",
       "spotify": null,
-      "spotifyStart": 0,
+      "spotifyStart": 20,
       "musicVolume": 25,
       "preset": "Midnight Nocturna"
     },
