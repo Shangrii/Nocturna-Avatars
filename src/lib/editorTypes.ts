@@ -104,6 +104,8 @@ export interface EditorTheme {
 export interface Editor {
   slug: string;
   discordId: string;
+  /** Stable server-assigned media namespace (bot-written). Not read by the site. */
+  mediaId?: string;
   published: boolean;
   name: string;
   avatar: string;
