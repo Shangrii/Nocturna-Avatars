@@ -102,7 +102,7 @@ export function initReveals(): void {
 
 export function destroyReveals(): void {
   // Kill ONLY this module's triggers (tagged with the 'reveal-' prefix) — never
-  // choreography's choreo-marquee / choreo-parallax triggers (CR-07).
+  // choreography's choreo-* triggers (CR-07).
   ScrollTrigger.getAll()
     .filter((t) => (t.vars as { id?: string }).id?.startsWith('reveal-'))
     .forEach((t) => t.kill());

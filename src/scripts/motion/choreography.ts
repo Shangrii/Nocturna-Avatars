@@ -4,15 +4,8 @@
  *   D-15  Package-card 3D tilt — pointer-driven rotateX/rotateY (finePointer only),
  *         on top of Plan 01's staggered reveal.
  *
- * D-14 (gallery marquee) and D-16 (featured parallax) targeted the old placeholder
- * `Teaser` component's `[data-teaser]`/`[data-teaser-body]` hooks. That component was
- * removed (quick-260709-hm5) — D-16's target was already gone since FeaturedGallery.astro
- * replaced it in Phase 4, and D-14's target went with it. Both effects were permanently
- * inert (querySelector always null) and have been removed rather than re-wired, since no
- * new motion design was requested.
- *
- * Everything gates on `!prefersReduced` (under reduced-motion the sections still reveal
- * via Plan 01's gentle fade — no marquee scrub, no tilt, no parallax, D-21) and runs
+ * This gates on `!prefersReduced` (under reduced-motion the sections still reveal
+ * via Plan 01's gentle fade — no tilt, D-21) and runs
  * ONLY on the landing path (`/`, `/es/`, `/en/`); dedicated pages keep the subtler Plan
  * 01 treatment (D-12). All effects animate `transform`/`opacity` only — never top/left/
  * width/height (perf budget, RESEARCH anti-patterns).

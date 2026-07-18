@@ -33,7 +33,7 @@ function initMotion(): void {
   initSmoothScroll();
   initReveals();
   initHeroShader(); // HeroShader (FX-03) — no-ops without a [data-hero-shader] canvas
-  initChoreography(); // Landing marquee/tilt/parallax (D-14/15/16) — landing + !reduced only
+  initChoreography(); // Landing package-card 3D tilt (D-15) — landing + !reduced only
   initTransitions(); // First-visit glitch intro (D-18) — initial load + first-ever visit + !reduced
 }
 
