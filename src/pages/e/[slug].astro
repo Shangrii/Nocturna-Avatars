@@ -52,8 +52,20 @@ export function getStaticPaths() {
       typeof e.slug === 'string' &&
       e.slug.length > 0,
   );
+  // Dedupe by slug: editors can rename their slug post-publish, so a near-zero-
+  // probability race (two entries renamed to the same slug in one commit window)
+  // could leave editors.json with a duplicate. Astro's getStaticPaths throws on
+  // duplicate route params, which would fail the ENTIRE site build — so keep only
+  // the first published entry per slug (first wins) rather than let a collision
+  // brick the deploy.
+  const seen = new Set();
+  const unique = published.filter((e) => {
+    if (seen.has(e.slug)) return false;
+    seen.add(e.slug);
+    return true;
+  });
   // ONE page per published editor — single-language, NO langCodes cartesian (D-13).
-  return published.map((editor) => ({
+  return unique.map((editor) => ({
     params: { slug: editor.slug },
     props: { editor },
   }));

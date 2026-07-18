@@ -40,11 +40,24 @@ export function getStaticPaths() {
   );
   // Cartesian: one stub per published editor per locale, so every legacy
   // `/es/editores/<slug>` and `/en/editors/<slug>` URL still resolves.
-  return published.flatMap((editor) =>
+  const cartesian = published.flatMap((editor) =>
     langCodes.map((lang) => ({
       params: { lang, concept: routeSlugs.editors[lang], slug: editor.slug },
     })),
   );
+  // Dedupe by the actual route-param tuple (lang + slug), NOT slug alone: this
+  // route is a per-language cartesian, so deduping on slug alone would wrongly
+  // drop e.g. the EN stub when an ES stub for the same slug already exists.
+  // Guards the same duplicate-slug race as the /e/[slug] route — a collision
+  // here must never fail the whole-site build either.
+  const seen = new Set();
+  const unique = cartesian.filter((p) => {
+    const key = `${p.params.lang}/${p.params.slug}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  return unique;
 }
 
 // Build-time literals (known per generated page). The target is assembled here and
