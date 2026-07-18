@@ -106,20 +106,24 @@
     "name": "Shangri",
     "avatar": "/editors/shangri/44fb0ae201c44732b7fe4fb850549ad1.webp",
     "lang": "en",
-    "tagline": "Esto es un simple y sencillo test... Uhm, Lorem Ipsum y no sé qué más sigue, pero se entiende, lorem ipsum y esas cosas, la verdad quería escribir algo largo, pero tengo 30 horas sin dormir.",
+    "tagline": "Software Development Student. Mostly self-taught, love to tinker with anything tech-related and a strong desire to get deep into topics that I'm intersted in.",
     "badges": [],
     "socials": [
-      {
-        "label": "Instagram",
-        "url": "https://www.instagram.com/heir.shangri/"
-      },
       {
         "label": "Git",
         "url": "https://github.com/Shangrii"
       },
       {
         "label": "Discord",
-        "url": "https://discord.gg/sJbGuM8KD"
+        "url": "https://discord.com/users/265742687150276608"
+      },
+      {
+        "label": "X",
+        "url": "https://x.com/Shxngri"
+      },
+      {
+        "label": "",
+        "url": "https://open.spotify.com/user/jan483?si=4cacf14da2c74e71"
       }
     ],
     "links": [],
@@ -150,7 +154,7 @@
       ],
       "audio": "/editors/shangri/ab9b87ee2c2f4ec19d0f808342e2cad9.mp3",
       "audioCover": "/editors/shangri/8d17c47e53754a64921ba3b2cd2f30ea.webp",
-      "audioTitle": "Pumpfake",
+      "audioTitle": "Sadfriendd - Pumpfake",
       "spotify": null,
       "spotifyStart": 0,
       "musicVolume": 15,
