@@ -10,6 +10,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { langCodes, toLang, useTranslations } from '../../i18n/ui';
 import About from '../../components/sections/About.astro';
 import FeaturedGallery from '../../components/sections/FeaturedGallery.astro';
+import StoreTeaser from '../../components/sections/StoreTeaser.astro';
 import PackagesSummary from '../../components/sections/PackagesSummary.astro';
 import Reviews from '../../components/sections/Reviews.astro';
 import { localizedPath } from '../../i18n/routes';
@@ -78,14 +79,20 @@ const empty = useTranslations(lang, 'pages').emptyState;
     </div>
   </section>
 
-  <!-- Visual-first landing order (D-12): hero → featured gallery → about+process
-       → packages summary → reviews → closing. The featured teaser is raised to #2
-       to impress before the about/process. Reviews (07-01) is social proof adjacent
-       to the conversion path. Ink/paper rhythm alternates: featured(ink) →
-       about(paper) → packages(ink) → reviews(paper, delineated by the .section--rule
-       hairline; renders NOTHING when reviews.json is empty) → closing(ink). -->
+  <!-- Visual-first landing order (D-12, store-first repositioning): hero → featured
+       gallery → about+process → store teaser → packages summary → reviews → closing.
+       The featured teaser is raised to #2 to impress before the about/process. The
+       store teaser sits right after about, ahead of the packages summary, so the
+       conversion path surfaces ready-to-buy assets before the custom-work pitch.
+       Reviews (07-01) is social proof adjacent to the conversion path. Ink/paper
+       rhythm alternates: featured(ink) → about(paper) → store teaser(ink,
+       delineated by its own .section--rule hairline from about) → packages(ink) →
+       reviews(paper, delineated by the .section--rule hairline; renders NOTHING
+       when reviews.json is empty) → closing(ink). Store teaser renders NOTHING
+       when store.json has no SFW products (D-13 empty-store fallback). -->
   <FeaturedGallery lang={lang} />
   <About lang={lang} surface />
+  <StoreTeaser lang={lang} />
   <PackagesSummary lang={lang} />
   <Reviews lang={lang} />
 

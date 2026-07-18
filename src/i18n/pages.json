@@ -39,6 +39,11 @@
       "gallery": {
         "tag": "Galería",
         "title": "Avatares que hablan por sí solos"
+      },
+      "store": {
+        "tag": "Tienda",
+        "title": "Assets listos para usar",
+        "viewAll": "Ver tienda"
       }
     },
     "gallery": {
@@ -192,6 +197,11 @@
       "gallery": {
         "tag": "Gallery",
         "title": "Avatars that speak for themselves"
+      },
+      "store": {
+        "tag": "Store",
+        "title": "Ready-to-use assets",
+        "viewAll": "View store"
       }
     },
     "gallery": {

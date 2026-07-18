@@ -1,0 +1,129 @@
+---
+/**
+ * StoreTeaser — the landing's store teaser (store-first repositioning).
+ *
+ * A lightweight, conversion-focused teaser (NOT the full /tienda page): it renders
+ * the featured-pinned-then-newest SFW products from store.json as simple cards that
+ * link to /tienda, mirroring FeaturedGallery's role for the gallery. No cart, no
+ * quick-view, no product island — the cart lives only on /tienda. store.json is a
+ * staff/bot write-target so the read is defensive end-to-end (copy-before-filter,
+ * per-field fallback); all copy renders through Astro auto-escaping only (T-06-01).
+ */
+import { useTranslations, type Lang } from '../../i18n/ui';
+import { localizedPath } from '../../i18n/routes';
+import storeData from '../../data/store.json';
+
+interface StoreProduct {
+  id: string;
+  name?: { es?: string; en?: string };
+  price?: string;
+  images?: string[];
+  editor?: string;
+  nsfw?: boolean;
+  featured?: boolean;
+  date?: string;
+}
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const head = useTranslations(lang, 'pages').teaser.store;
+const usd = useTranslations(lang, 'pages').tienda.usd;
+
+// Defensive copy-before-filter (StorePage parity): keep only products with the
+// structural minimum (id + name object) and SFW; featured pinned first, then newest
+// by date; take the first 4. Auto-curated so store.json sync keeps it current.
+const rawProducts: StoreProduct[] = Array.isArray((storeData as { products?: unknown }).products)
+  ? ([...((storeData as { products: StoreProduct[] }).products)])
+  : [];
+const featured = rawProducts
+  .filter(
+    (p) =>
+      Boolean(p) &&
+      typeof p.id === 'string' &&
+      typeof p.name === 'object' && p.name !== null &&
+      p.nsfw !== true &&
+      Array.isArray(p.images) && typeof p.images[0] === 'string' && p.images[0].length > 0,
+  )
+  .sort(
+    (a, b) =>
+      (b.featured ? 1 : 0) - (a.featured ? 1 : 0) ||
+      String(b.date ?? '').localeCompare(String(a.date ?? '')),
+  )
+  .slice(0, 4)
+  .map((p) => ({
+    id: p.id,
+    name: p.name?.[lang] ?? p.name?.es ?? p.name?.en ?? '',
+    price: typeof p.price === 'string' ? p.price : String(p.price ?? ''),
+    image: p.images![0],
+  }));
+---
+
+{featured.length >= 1 && (
+  <section class="section section--rule" data-store-teaser>
+    <div class="section-header reveal">
+      <span class="section-tag">{head.tag}</span>
+      <h2 class="section-title">{head.title}</h2>
+    </div>
+
+    <div class="store-teaser-grid reveal">
+      {featured.map((product) => (
+        <a class="store-teaser-card" href={localizedPath('store', lang)}>
+          <span class="store-teaser-card__frame">
+            <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
+          </span>
+          <span class="store-teaser-card__name">{product.name}</span>
+          {product.price && <span class="store-teaser-card__price">${product.price} {usd}</span>}
+        </a>
+      ))}
+    </div>
+
+    <div class="featured-action reveal">
+      <a href={localizedPath('store', lang)} class="link-arrow">{head.viewAll}</a>
+    </div>
+  </section>
+)}
+
+<style>
+  .store-teaser-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+  @media (min-width: 640px) {
+    .store-teaser-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .store-teaser-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  .store-teaser-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    text-decoration: none;
+    color: inherit;
+  }
+  .store-teaser-card__frame {
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: var(--color-ink-raised, rgba(255,255,255,0.03));
+  }
+  .store-teaser-card__frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  .store-teaser-card:hover .store-teaser-card__frame img { transform: scale(1.04); }
+  .store-teaser-card__name { font-weight: 600; }
+  .store-teaser-card__price { font-family: var(--font-mono); color: var(--color-white-dim, #9a9198); }
+  @media (prefers-reduced-motion: reduce) {
+    .store-teaser-card__frame img { transition: none; }
+    .store-teaser-card:hover .store-teaser-card__frame img { transform: none; }
+  }
+</style>
