@@ -67,10 +67,8 @@ const empty = useTranslations(lang, 'pages').emptyState;
         }
       </div>
       <div class="hero-ctas reveal">
-        <button class="hero-cta dc-trigger" type="button">
-          {t.ctaPrimary}
-        </button>
-        <a href={localizedPath('services', lang)} class="hero-cta hero-cta--outline">{t.ctaSecondary}</a>
+        <a href={localizedPath('store', lang)} class="hero-cta">{t.heroCtaStore}</a>
+        <a href={localizedPath('services', lang)} class="hero-cta hero-cta--outline">{t.heroCtaCommissions}</a>
       </div>
     </div>
     <div class="hero-scroll" aria-hidden="true">

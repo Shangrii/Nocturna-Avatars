@@ -9,6 +9,8 @@
     "services": ["Ropa", "Accesorios", "Bailes", "Modelado 3D", "Texturas"],
     "ctaPrimary": "Abrir Ticket",
     "ctaSecondary": "Ver Paquetes",
+    "heroCtaStore": "Ver Tienda",
+    "heroCtaCommissions": "Ver Comisiones",
     "scrollCue": "Desliza",
     "closingTag": "Empecemos"
   },
@@ -22,6 +24,8 @@
     "services": ["Outfits", "Accessories", "Dances", "3D Modeling", "Textures"],
     "ctaPrimary": "Open a Ticket",
     "ctaSecondary": "View Packages",
+    "heroCtaStore": "View Store",
+    "heroCtaCommissions": "View Commissions",
     "scrollCue": "Scroll",
     "closingTag": "Let's begin"
   }
