@@ -104,7 +104,7 @@
     "discordId": "265742687150276608",
     "published": true,
     "name": "Shangri",
-    "avatar": "/editors/shangri/e498e7f2fd3c465e84db75403ef5ade3.webp",
+    "avatar": "/editors/shangri/e289b4bf750445608e97321e4580ec68.webp",
     "lang": "en",
     "tagline": "Esto es un simple y sencillo test... Uhm, Lorem Ipsum y no sé qué más sigue, pero se entiende, lorem ipsum y esas cosas, la verdad quería escribir algo largo, pero tengo 30 horas sin dormir.",
     "badges": [],
@@ -123,49 +123,39 @@
       }
     ],
     "links": [],
-    "blocks": [
-      {
-        "type": "quote",
-        "text": {
-          "es": "",
-          "en": "¿Qué es esta erección en mis pantalones?"
-        },
-        "attribution": ""
-      }
-    ],
+    "blocks": [],
     "theme": {
-      "bg": "#ffffff",
-      "bgMedia": "/editors/shangri/254a2dab61bc4239b7787cc808ab5750.webp",
+      "bg": "#000000",
+      "bgMedia": "/editors/shangri/d98e6224655a4552acafd7ef193eb283.mp4",
       "overlay": 0,
       "blur": 3,
       "tint": null,
-      "surface": "rgba(56,98,143,0.12)",
-      "accent": "#8c1220",
-      "text": "#ffffff",
+      "surface": "rgba(0,8,255,0.03)",
+      "accent": "#4d58ff",
+      "text": "#f6ebff",
       "textMuted": "#ffffff",
-      "font": "Pirata One",
-      "btnStyle": "glass",
-      "btnShape": "pill",
-      "btnColor": "#38628f",
+      "font": "Orbitron",
+      "btnStyle": "outline",
+      "btnShape": "sharp",
+      "btnColor": null,
       "fontScale": 1.0,
       "effects": [
+        "gradient",
         "glow",
+        "particles",
         "glass",
         "hover",
-        "gradient",
-        "tilt",
-        "typewriter",
-        "particles",
         "presence",
-        "audio"
+        "tilt",
+        "typewriter"
       ],
-      "audio": "/editors/shangri/162b5c23525c4cf69af8a04c3e5686d6.mp3",
-      "audioCover": "/editors/shangri/5903d6bdac0e4149b2748fb256f43a47.webp",
+      "audio": "/editors/shangri/49ef5e2cb2c74d33a4b60b0a622849e6.mp3",
+      "audioCover": "/editors/shangri/289dac3523904152bc2fef8e0c44ae49.webp",
       "audioTitle": "Shangri Theme",
       "spotify": null,
       "spotifyStart": 20,
-      "musicVolume": 20,
-      "preset": "Midnight Nocturna"
+      "musicVolume": 0,
+      "preset": "Cyberpunk"
     },
     "views": null
   }
