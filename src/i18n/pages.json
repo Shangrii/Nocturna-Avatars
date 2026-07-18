@@ -29,11 +29,6 @@
         { "icon": "tool", "label": "Producción", "tooltip": "El equipo edita tu avatar, agrega outfits, accesorios y ajusta texturas hasta cumplir el brief." },
         { "icon": "shield", "label": "QA", "tooltip": "Revisamos el avatar para garantizar calidad, funcionalidad y que todo esté listo para VRChat." },
         { "icon": "deliver", "label": "Entrega", "tooltip": "Recibe tu avatar final en la cuenta de VRChat, listo para usar sin complicaciones." }
-      ],
-      "storyTitle": "Nuestra historia",
-      "story": [
-        "Nocturna Avatars nace de una idea simple pero necesaria: que los editores puedan enfocarse en lo que mejor hacen — editar — sin cargar con todo lo demás. Construimos un equipo completo con roles definidos para que cada parte del proceso tenga a alguien dedicado: desde la atención al cliente y la gestión de tickets, hasta el control de calidad y la entrega final.",
-        "Esto no solo permite que los editores trabajen sin saturarse, sino que el cliente recibe un servicio más ágil, organizado y con tiempos de entrega reales. No es un editor solo haciendo todo; es un sistema diseñado para que el resultado sea consistente y profesional en cada proyecto."
       ]
     },
     "teaser": {
@@ -187,11 +182,6 @@
         { "icon": "tool", "label": "Production", "tooltip": "The team edits your avatar, adds outfits and accessories, and adjusts textures until the brief is met." },
         { "icon": "shield", "label": "QA", "tooltip": "We review the avatar to guarantee quality, functionality, and that everything is ready for VRChat." },
         { "icon": "deliver", "label": "Delivery", "tooltip": "Receive your finished avatar on your VRChat account, ready to use with no hassle." }
-      ],
-      "storyTitle": "Our story",
-      "story": [
-        "Nocturna Avatars was born from a simple but necessary idea: that editors should be able to focus on what they do best — editing — without carrying everything else. We built a complete team with defined roles so that every part of the process has someone dedicated to it: from client support and ticket management to quality control and final delivery.",
-        "This doesn't just let editors work without burning out; the client gets a faster, more organized service with real delivery times. It isn't one editor doing everything; it's a system designed to make the result consistent and professional on every project."
       ]
     },
     "teaser": {
