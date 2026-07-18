@@ -18,7 +18,6 @@ interface StoreProduct {
   name?: { es?: string; en?: string };
   price?: string;
   images?: string[];
-  editor?: string;
   nsfw?: boolean;
   featured?: boolean;
   date?: string;
@@ -79,7 +78,7 @@ const featured = rawProducts
       ))}
     </div>
 
-    <div class="featured-action reveal">
+    <div class="store-teaser-action reveal">
       <a href={localizedPath('store', lang)} class="link-arrow">{head.viewAll}</a>
     </div>
   </section>
@@ -111,7 +110,7 @@ const featured = rawProducts
     aspect-ratio: 1 / 1;
     overflow: hidden;
     border: 1px solid var(--color-border);
-    background: var(--color-ink-raised, rgba(255,255,255,0.03));
+    background: var(--color-ink-raised);
   }
   .store-teaser-card__frame img {
     width: 100%;
@@ -121,9 +120,13 @@ const featured = rawProducts
   }
   .store-teaser-card:hover .store-teaser-card__frame img { transform: scale(1.04); }
   .store-teaser-card__name { font-weight: 600; }
-  .store-teaser-card__price { font-family: var(--font-mono); color: var(--color-white-dim, #9a9198); }
+  .store-teaser-card__price { font-family: var(--font-mono); color: var(--color-white-dim); }
   @media (prefers-reduced-motion: reduce) {
     .store-teaser-card__frame img { transition: none; }
     .store-teaser-card:hover .store-teaser-card__frame img { transform: none; }
+  }
+  .store-teaser-action {
+    margin-top: var(--space-xl);
+    text-align: center;
   }
 </style>
