@@ -152,8 +152,8 @@
       "audioCover": "/editors/shangri/8d17c47e53754a64921ba3b2cd2f30ea.webp",
       "audioTitle": "Pumpfake",
       "spotify": null,
-      "spotifyStart": 20,
-      "musicVolume": 0,
+      "spotifyStart": 0,
+      "musicVolume": 15,
       "preset": "Midnight Nocturna"
     },
     "views": null
