@@ -9,7 +9,8 @@
     "services": ["Ropa", "Accesorios", "Bailes", "Modelado 3D", "Texturas"],
     "ctaPrimary": "Abrir Ticket",
     "ctaSecondary": "Ver Paquetes",
-    "scrollCue": "Desliza"
+    "scrollCue": "Desliza",
+    "closingTag": "Empecemos"
   },
   "en": {
     "metaTitle": "Nocturna Avatars — The avatar you wanted",
@@ -21,6 +22,7 @@
     "services": ["Outfits", "Accessories", "Dances", "3D Modeling", "Textures"],
     "ctaPrimary": "Open a Ticket",
     "ctaSecondary": "View Packages",
-    "scrollCue": "Scroll"
+    "scrollCue": "Scroll",
+    "closingTag": "Let's begin"
   }
 }

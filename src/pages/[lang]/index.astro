@@ -22,7 +22,6 @@ export function getStaticPaths() {
 
 const lang = toLang(Astro.params.lang);
 const t = useTranslations(lang, 'home');
-const story = useTranslations(lang, 'pages').about;
 const empty = useTranslations(lang, 'pages').emptyState;
 ---
 
@@ -93,7 +92,7 @@ const empty = useTranslations(lang, 'pages').emptyState;
   <section class="section section--rule">
     <div class="closing reveal">
       <div class="section-header" style="margin-bottom: 0;">
-        <span class="section-tag">{story.storyTitle}</span>
+        <span class="section-tag">{t.closingTag}</span>
         <h2 class="section-title">{t.taglineA}</h2>
         <p class="section-subtitle">{empty.serviciosBody}</p>
       </div>
