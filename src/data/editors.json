@@ -115,11 +115,6 @@
     "blocks": [
       {
         "type": "divider"
-      },
-      {
-        "type": "image",
-        "src": "/editors/impyh/dfef9dc98e9941f3b3d4614409e6b2c4.webp",
-        "alt": ""
       }
     ],
     "theme": {
@@ -131,7 +126,7 @@
       "surface": "rgba(81,69,99,0.11)",
       "accent": "#4a4b64",
       "text": "#ffffff",
-      "textMuted": "#ff8f8f",
+      "textMuted": "#b3b4d0",
       "font": "Rajdhani",
       "btnStyle": "glass",
       "btnShape": "rounded",
