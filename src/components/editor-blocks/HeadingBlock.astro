@@ -1,12 +1,14 @@
 ---
 /**
- * HeadingBlock — a bilingual section heading (Heading role, Space Grotesk 700).
+ * HeadingBlock — a single-language section heading (Heading role, Space Grotesk 700).
  *
- * Locale-resolved text (es → en → '') via Astro auto-escaping ONLY (never a
- * raw-HTML directive, D-02). Empty text renders nothing.
+ * Plain-string text via `blockText` (D-13 single-language, legacy `{es,en}`-tolerant)
+ * rendered through Astro auto-escaping ONLY (never a raw-HTML directive, D-02). Empty
+ * text renders nothing.
  */
 import type { BlockOf } from '../../lib/editorTypes';
 import type { Lang } from '../../i18n/ui';
+import { blockText } from '../../lib/editorText';
 
 interface Props {
   block: BlockOf<'heading'>;
@@ -14,7 +16,7 @@ interface Props {
 }
 
 const { block, lang } = Astro.props;
-const text = block.text?.[lang] ?? block.text?.es ?? block.text?.en ?? '';
+const text = blockText(block.text, lang);
 ---
 
 {text && <h2 class="editor-heading">{text}</h2>}

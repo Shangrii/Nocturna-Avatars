@@ -27,6 +27,7 @@
  */
 import type { BlockOf } from '../../lib/editorTypes';
 import type { Lang } from '../../i18n/ui';
+import { blockText } from '../../lib/editorText';
 import storeData from '../../data/store.json';
 import galleryData from '../../data/gallery.json';
 
@@ -112,7 +113,7 @@ const extraItems: PortfolioItem[] = rawExtra
   .filter((e) => Boolean(e) && typeof e.image === 'string' && e.image.length > 0)
   .map((e) => ({
     image: e.image,
-    caption: e.caption?.[lang] ?? e.caption?.es ?? e.caption?.en ?? '',
+    caption: blockText(e.caption, lang),
     source: 'extra' as const,
   }));
 

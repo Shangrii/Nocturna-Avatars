@@ -1,13 +1,14 @@
 ---
 /**
- * TextBlock — a plain bilingual paragraph (Body role, Inter 16px/1.7).
+ * TextBlock — a single-language paragraph (Body role, Inter 16px/1.7).
  *
- * Identical safety contract to BioBlock: locale-resolved text (es → en → '')
- * rendered through Astro auto-escaping ONLY (never a raw-HTML directive, D-02). Empty text
- * renders nothing.
+ * Identical safety contract to BioBlock: plain-string text via `blockText` (D-13
+ * single-language, legacy `{es,en}`-tolerant) rendered through Astro auto-escaping
+ * ONLY (never a raw-HTML directive, D-02). Empty text renders nothing.
  */
 import type { BlockOf } from '../../lib/editorTypes';
 import type { Lang } from '../../i18n/ui';
+import { blockText } from '../../lib/editorText';
 
 interface Props {
   block: BlockOf<'text'>;
@@ -15,7 +16,7 @@ interface Props {
 }
 
 const { block, lang } = Astro.props;
-const text = block.text?.[lang] ?? block.text?.es ?? block.text?.en ?? '';
+const text = blockText(block.text, lang);
 ---
 
 {text && <p class="editor-text">{text}</p>}

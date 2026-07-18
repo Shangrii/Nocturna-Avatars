@@ -1,13 +1,15 @@
 ---
 /**
- * BioBlock — a bilingual bio paragraph (Body role, Inter 16px/1.7).
+ * BioBlock — a single-language bio paragraph (Body role, Inter 16px/1.7).
  *
- * Resolves `block.text` to the current locale (es → en fallback → ''), rendered
- * through Astro auto-escaping ONLY (never a raw-HTML directive, D-02). Renders nothing when
- * the resolved text is empty so an unfilled block leaves no empty tag.
+ * Resolves `block.text` to a plain string via `blockText` (D-13 single-language,
+ * legacy `{es,en}`-tolerant), rendered through Astro auto-escaping ONLY (never a
+ * raw-HTML directive, D-02). Renders nothing when the text is empty so an unfilled
+ * block leaves no empty tag.
  */
 import type { BlockOf } from '../../lib/editorTypes';
 import type { Lang } from '../../i18n/ui';
+import { blockText } from '../../lib/editorText';
 
 interface Props {
   block: BlockOf<'bio'>;
@@ -15,7 +17,7 @@ interface Props {
 }
 
 const { block, lang } = Astro.props;
-const text = block.text?.[lang] ?? block.text?.es ?? block.text?.en ?? '';
+const text = blockText(block.text, lang);
 ---
 
 {text && <p class="editor-bio">{text}</p>}

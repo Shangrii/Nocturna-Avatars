@@ -1,14 +1,16 @@
 ---
 /**
- * QuoteBlock — a bilingual pull-quote (Space Grotesk 700) with a red rule accent
+ * QuoteBlock — a single-language pull-quote (Space Grotesk 700) with a red rule accent
  * (UI-SPEC reserved-red list) and an optional attribution line.
  *
- * Locale-resolved quote text (es → en → '') and the single-string attribution
- * both render through Astro auto-escaping ONLY (never a raw-HTML directive, D-02). Empty
- * quote text renders nothing; the attribution renders only when present.
+ * Plain-string quote text via `blockText` (D-13 single-language, legacy
+ * `{es,en}`-tolerant) and the single-string attribution both render through Astro
+ * auto-escaping ONLY (never a raw-HTML directive, D-02). Empty quote text renders
+ * nothing; the attribution renders only when present.
  */
 import type { BlockOf } from '../../lib/editorTypes';
 import type { Lang } from '../../i18n/ui';
+import { blockText } from '../../lib/editorText';
 
 interface Props {
   block: BlockOf<'quote'>;
@@ -16,7 +18,7 @@ interface Props {
 }
 
 const { block, lang } = Astro.props;
-const text = block.text?.[lang] ?? block.text?.es ?? block.text?.en ?? '';
+const text = blockText(block.text, lang);
 const attribution = typeof block.attribution === 'string' ? block.attribution : '';
 ---
 

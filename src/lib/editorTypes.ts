@@ -3,20 +3,16 @@
  * block-union schema (D-01 / D-02). This is the SINGLE render-side contract the
  * block library (10-04) and the page route (10-07) type against.
  *
- * The union is CLOSED and every content field is a plain string / bilingual
- * `{es,en}` string — there is no raw-HTML field anywhere in the schema, which is
- * the load-bearing half of the D-02 XSS guarantee (the other half is that every
- * consuming component renders these through Astro auto-escaping, never a
- * raw-HTML directive). `editors.json` is written by the admin app / bot (untrusted at
- * build time), so consumers still read every field defensively — the types
- * document intent, they do not guarantee shape at runtime.
+ * The union is CLOSED and every content field is a plain string — there is no
+ * raw-HTML field anywhere in the schema, which is the load-bearing half of the
+ * D-02 XSS guarantee (the other half is that every consuming component renders
+ * these through Astro auto-escaping, never a raw-HTML directive). Block copy is
+ * SINGLE-LANGUAGE (D-13): the whole page renders in `editor.lang`, so each block
+ * carries one string, not an `{es,en}` pair. `editors.json` is written by the
+ * admin app / bot (untrusted at build time), so consumers still read every field
+ * defensively (and tolerate a legacy `{es,en}` object) — the types document
+ * intent, they do not guarantee shape at runtime.
  */
-
-/** A per-locale string pair. An empty locale is allowed (rendered as written). */
-export interface Bilingual {
-  es: string;
-  en: string;
-}
 
 /** A custom link — `url` is `https://`-only, validated upstream (10-02 model). */
 export interface EditorLink {
@@ -27,7 +23,7 @@ export interface EditorLink {
 /** A hand-added portfolio item (appended to the auto-pulled credited work). */
 export interface PortfolioExtra {
   image: string;
-  caption: Bilingual;
+  caption: string;
 }
 
 /**
@@ -36,12 +32,12 @@ export interface PortfolioExtra {
  * is externally written).
  */
 export type EditorBlock =
-  | { type: 'bio'; text: Bilingual }
-  | { type: 'heading'; text: Bilingual }
-  | { type: 'text'; text: Bilingual }
+  | { type: 'bio'; text: string }
+  | { type: 'heading'; text: string }
+  | { type: 'text'; text: string }
   | { type: 'links'; items: EditorLink[] }
   | { type: 'portfolio'; auto: boolean; extra?: PortfolioExtra[] }
-  | { type: 'quote'; text: Bilingual; attribution?: string }
+  | { type: 'quote'; text: string; attribution?: string }
   | { type: 'image'; src: string; alt: string }
   | { type: 'divider' };
 
