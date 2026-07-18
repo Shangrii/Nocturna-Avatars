@@ -66,7 +66,7 @@
     "emptyState": {
       "heading": "Muy pronto",
       "galleryBody": "Nuestra galería se actualiza sola desde Discord. Mientras tanto, abre un ticket y cuéntanos qué quieres crear.",
-      "serviciosBody": "El catálogo completo llega pronto. ¿Tienes algo en mente? Abre un ticket para una cotización.",
+      "serviciosBody": "¿Listo para un encargo personalizado? Abre un ticket para discutir tu proyecto y obtener una cotización.",
       "ticketCta": "Abrir Ticket"
     },
     "galeria": {
@@ -132,7 +132,7 @@
       "sectionLicense": "Licencia",
       "sectionDetails": "Detalles",
       "sectionUpdates": "Actualizaciones",
-      "emptyHeading": "Tienda en camino",
+      "emptyHeading": "Sin assets aún",
       "emptyBody": "Aún no hay assets publicados. Abre un ticket para pedidos personalizados.",
       "emptyCta": "Abrir Ticket"
     },
@@ -224,7 +224,7 @@
     "emptyState": {
       "heading": "Coming soon",
       "galleryBody": "Our gallery updates itself from Discord. In the meantime, open a ticket and tell us what you want to build.",
-      "serviciosBody": "The full catalog is coming soon. Have something in mind? Open a ticket for a quote.",
+      "serviciosBody": "Ready for a custom commission? Open a ticket to discuss your project and get a quote.",
       "ticketCta": "Open a Ticket"
     },
     "galeria": {
@@ -290,7 +290,7 @@
       "sectionLicense": "License",
       "sectionDetails": "Details",
       "sectionUpdates": "Updates",
-      "emptyHeading": "Store coming soon",
+      "emptyHeading": "No assets yet",
       "emptyBody": "No assets published yet. Open a ticket for custom requests.",
       "emptyCta": "Open Ticket"
     },

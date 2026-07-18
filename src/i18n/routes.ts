@@ -33,7 +33,7 @@ export const routeSlugs: Record<PageConcept, Record<Lang, string>> = {
  * no longer appears in the navbar — but it stays in `routeSlugs` / `PageConcept`
  * so the (now-unlisted) directory route and the legacy redirect stubs still build.
  */
-export const navConcepts: PageConcept[] = ['home', 'services', 'gallery', 'store', 'terms'];
+export const navConcepts: PageConcept[] = ['home', 'store', 'services', 'gallery', 'terms'];
 
 /** Build the localized path for a concept in a given locale, e.g. "/en/services". */
 export function localizedPath(concept: PageConcept, lang: Lang): string {
