@@ -123,11 +123,6 @@
     "blocks": [
       {
         "type": "divider"
-      },
-      {
-        "type": "image",
-        "src": "/editors/impyh/2f7253b9538248428356208009b7b899.webp",
-        "alt": "Sup"
       }
     ],
     "theme": {
