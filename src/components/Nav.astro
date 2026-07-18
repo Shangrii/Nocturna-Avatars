@@ -69,44 +69,7 @@ const isActive = (href: string) => {
         </a>
       ))
     }
-    <button
-      class="nav-sfx"
-      type="button"
-      data-sfx-toggle
-      aria-pressed="false"
-      aria-label={t.sfxMute}
-      data-label-on={t.sfxMute}
-      data-label-muted={t.sfxUnmute}
-    >
-      <svg class="nav-sfx__on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-        <path d="M11 5 6 9H2v6h4l5 4V5z" />
-        <path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14" />
-      </svg>
-      <svg class="nav-sfx__off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-        <path d="M11 5 6 9H2v6h4l5 4V5z" />
-        <path d="M22 9l-6 6M16 9l6 6" />
-      </svg>
-    </button>
     <LanguageSwitcher lang={lang} />
     <button class="nav-cta dc-trigger" type="button">{t.ctaDiscord}</button>
   </div>
 </nav>
-
-<style>
-  .nav-sfx {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 44px;
-    min-height: 44px;
-    background: none;
-    border: 0;
-    color: inherit;
-    cursor: pointer;
-    padding: 0;
-  }
-  .nav-sfx svg { width: 20px; height: 20px; }
-  .nav-sfx__off { display: none; }
-  .nav-sfx[data-muted="true"] .nav-sfx__on { display: none; }
-  .nav-sfx[data-muted="true"] .nav-sfx__off { display: inline; }
-</style>
