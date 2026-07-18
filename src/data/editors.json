@@ -115,6 +115,11 @@
     "blocks": [
       {
         "type": "divider"
+      },
+      {
+        "type": "image",
+        "src": "/editors/impyh/9fa4071833734c64a50937b6752bb6b8.webp",
+        "alt": ""
       }
     ],
     "theme": {
