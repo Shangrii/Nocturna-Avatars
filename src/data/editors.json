@@ -117,14 +117,6 @@
         "type": "divider"
       },
       {
-        "type": "quote",
-        "text": {
-          "es": "\"Hay una belleza retorcida en las cicatrices, te dicen exactamente donde estuvo la batalla.\"",
-          "en": "\"There's a twisted beauty in scars; they tell you exactly where the battle was.\""
-        },
-        "attribution": ""
-      },
-      {
         "type": "image",
         "src": "/editors/impyh/dfef9dc98e9941f3b3d4614409e6b2c4.webp",
         "alt": ""
@@ -132,7 +124,7 @@
     ],
     "theme": {
       "bg": "#000000",
-      "bgMedia": "/editors/impyh/027a00ed712d403ba69c99cb030d4b7a.webp",
+      "bgMedia": "/editors/impyh/daa20c2446454066880bf56b9d807b6e.mp4",
       "overlay": 65,
       "blur": 4,
       "tint": null,
