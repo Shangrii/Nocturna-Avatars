@@ -37,129 +37,6 @@
     "views": null
   },
   {
-    "slug": "shangri",
-    "discordId": "265742687150276608",
-    "published": true,
-    "name": "Shangri",
-    "avatar": "/editors/shangri/44fb0ae201c44732b7fe4fb850549ad1.webp",
-    "lang": "en",
-    "tagline": "Software Development Student. Mostly self-taught, love to tinker with anything tech-related and a strong desire to get deep into topics that I'm intersted in.",
-    "badges": [],
-    "socials": [
-      {
-        "label": "Git",
-        "url": "https://github.com/Shangrii"
-      },
-      {
-        "label": "Discord",
-        "url": "https://discord.com/users/265742687150276608"
-      },
-      {
-        "label": "X",
-        "url": "https://x.com/Shxngri"
-      },
-      {
-        "label": "",
-        "url": "https://open.spotify.com/user/jan483?si=4cacf14da2c74e71"
-      }
-    ],
-    "links": [],
-    "blocks": [
-      {
-        "type": "bio",
-        "text": "Bio Test\nLOREM IMPSUM MAXIMUS MUCHO TEXTUS LOREM IMPSUM MAXIMUS MUCHO TEXTUS LOREM IMPSUM MAXIMUS MUCHO TEXTUS LOREM IMPSUM MAXIMUS MUCHO TEXTUS LOREM IMPSUM MAXIMUS MUCHO TEXTUSLOREM IMPSUM MAXIMUS MUCHO TEXTUS LOREM IMPSUM MAXIMUS MUCHO TEXTUS"
-      },
-      {
-        "type": "divider"
-      },
-      {
-        "type": "heading",
-        "text": "Headers o encabezado Test"
-      },
-      {
-        "type": "text",
-        "text": "Texto normal Test"
-      },
-      {
-        "type": "links",
-        "items": [
-          {
-            "label": "Links Test",
-            "url": "https://www.google.com/"
-          }
-        ]
-      },
-      {
-        "type": "portfolio",
-        "auto": true,
-        "extra": [
-          {
-            "image": "/editors/shangri/b70b4fb63f1a4aa4a58fee3c741827c0.webp",
-            "caption": "TEST"
-          },
-          {
-            "image": "/editors/shangri/e37177de9c30488393002e0254951029.webp",
-            "caption": "TEST"
-          },
-          {
-            "image": "/editors/shangri/b595cc68c178421bab47df3f285c69cb.webp",
-            "caption": "TEST"
-          },
-          {
-            "image": "/editors/shangri/7dcbd0c5ac834d4ab3421850e3ca9bcf.webp",
-            "caption": "TEST"
-          }
-        ]
-      },
-      {
-        "type": "quote",
-        "text": "\"¿Por qué carajo esto sabe a salsa de soya?\"",
-        "attribution": "- Mis pelotas"
-      },
-      {
-        "type": "image",
-        "src": "/editors/shangri/42cd4f45d2794c3bb076776ede2240cd.webp",
-        "alt": "El pequeño Yiyo"
-      },
-      {
-        "type": "divider"
-      }
-    ],
-    "theme": {
-      "bg": "#0a0c14",
-      "bgMedia": "/editors/shangri/6798000ed8d04d89863c31335b3935b4.mp4",
-      "overlay": 0,
-      "blur": 3,
-      "tint": null,
-      "surface": "rgba(240,234,228,0.06)",
-      "accent": "#c0192c",
-      "text": "#ffffff",
-      "textMuted": "#f5f5f5",
-      "font": "Pirata One",
-      "btnStyle": "glass",
-      "btnShape": "rounded",
-      "btnColor": null,
-      "fontScale": 1.0,
-      "effects": [
-        "glow",
-        "glass",
-        "presence",
-        "particles",
-        "hover",
-        "gradient",
-        "tilt"
-      ],
-      "audio": "/editors/shangri/ab9b87ee2c2f4ec19d0f808342e2cad9.mp3",
-      "audioCover": "/editors/shangri/8d17c47e53754a64921ba3b2cd2f30ea.webp",
-      "audioTitle": "Sadfriendd - Pumpfake",
-      "spotify": null,
-      "spotifyStart": 0,
-      "musicVolume": 15,
-      "preset": "Midnight Nocturna"
-    },
-    "views": null
-  },
-  {
     "slug": "imp",
     "discordId": "247919526174392320",
     "mediaId": "impyh",
@@ -217,6 +94,82 @@
       "spotifyStart": 0,
       "musicVolume": 15,
       "preset": "Noir"
+    },
+    "views": null
+  },
+  {
+    "slug": "shangri",
+    "discordId": "265742687150276608",
+    "mediaId": "shangri",
+    "published": true,
+    "name": "Shangri",
+    "avatar": "/editors/shangri/44fb0ae201c44732b7fe4fb850549ad1.webp",
+    "lang": "en",
+    "tagline": "Software Development Student. Mostly self-taught, love to tinker with anything tech-related and a strong desire to get deep into topics that I'm intersted in.",
+    "badges": [],
+    "socials": [
+      {
+        "label": "Git",
+        "url": "https://github.com/Shangrii"
+      },
+      {
+        "label": "Discord",
+        "url": "https://discord.com/users/265742687150276608"
+      },
+      {
+        "label": "X",
+        "url": "https://x.com/Shxngri"
+      },
+      {
+        "label": "",
+        "url": "https://open.spotify.com/user/jan483?si=4cacf14da2c74e71"
+      }
+    ],
+    "links": [],
+    "blocks": [
+      {
+        "type": "divider"
+      },
+      {
+        "type": "quote",
+        "text": "\"¿Why the fuck does this taste like soy sauce?\"",
+        "attribution": "- My balls"
+      },
+      {
+        "type": "divider"
+      }
+    ],
+    "theme": {
+      "bg": "#0a0c14",
+      "bgMedia": "/editors/shangri/6798000ed8d04d89863c31335b3935b4.mp4",
+      "overlay": 0,
+      "blur": 3,
+      "tint": null,
+      "surface": "rgba(240,234,228,0.06)",
+      "accent": "#c0192c",
+      "text": "#ffffff",
+      "textMuted": "#f5f5f5",
+      "font": "Pirata One",
+      "btnStyle": "glass",
+      "btnShape": "rounded",
+      "btnColor": null,
+      "fontScale": 1.0,
+      "effects": [
+        "glow",
+        "glass",
+        "presence",
+        "particles",
+        "hover",
+        "gradient",
+        "tilt"
+      ],
+      "audio": "/editors/shangri/ab9b87ee2c2f4ec19d0f808342e2cad9.mp3",
+      "audioCover": "/editors/shangri/8d17c47e53754a64921ba3b2cd2f30ea.webp",
+      "audioTitle": "Sadfriendd - Pumpfake",
+      "spotify": null,
+      "spotifyStart": 0,
+      "musicVolume": 15,
+      "preset": "Midnight Nocturna"
     },
     "views": null
   }
