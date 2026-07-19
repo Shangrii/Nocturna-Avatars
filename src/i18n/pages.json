@@ -77,9 +77,9 @@
       "subtitle": "Avatares que hablan por sí solos."
     },
     "servicios": {
-      "metaTitle": "Servicios — Nocturna Avatars",
+      "metaTitle": "Comisiones — Nocturna Avatars",
       "metaDescription": "Paquetes de edición de avatares VRChat: Penumbra, Umbra y Eclipse. Precios claros, add-ons disponibles. Abre un ticket para tu cotización.",
-      "tag": "Servicios",
+      "tag": "Comisiones",
       "title": "Nuestros paquetes",
       "subtitle": "Precios claros, entregables definidos. Elige tu nivel y abre un ticket.",
       "catalogTag": "Catálogo",
@@ -88,7 +88,7 @@
       "usd": "USD",
       "popularBadge": "⬡ Más popular",
       "ctaTicket": "Abrir Ticket",
-      "summaryCtaAll": "Ver todos los servicios"
+      "summaryCtaAll": "Ver todas las comisiones"
     },
     "tienda": {
       "metaTitle": "Tienda — Nocturna Avatars",
@@ -235,9 +235,9 @@
       "subtitle": "Avatars that speak for themselves."
     },
     "servicios": {
-      "metaTitle": "Services — Nocturna Avatars",
+      "metaTitle": "Commissions — Nocturna Avatars",
       "metaDescription": "VRChat avatar editing packages: Penumbra, Umbra, and Eclipse. Clear pricing, add-ons available. Open a ticket for your quote.",
-      "tag": "Services",
+      "tag": "Commissions",
       "title": "Our packages",
       "subtitle": "Clear pricing, defined deliverables. Choose your level and open a ticket.",
       "catalogTag": "Catalog",
@@ -246,7 +246,7 @@
       "usd": "USD",
       "popularBadge": "⬡ Most popular",
       "ctaTicket": "Open a Ticket",
-      "summaryCtaAll": "View all services"
+      "summaryCtaAll": "View all commissions"
     },
     "tienda": {
       "metaTitle": "Store — Nocturna Avatars",
