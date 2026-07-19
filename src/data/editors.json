@@ -193,7 +193,7 @@
       "bgMedia": "/editors/impyh/4c74a65e623644f4888ac84516e031f1.mp4",
       "overlay": 75,
       "blur": 4,
-      "tint": "rgba(97,93,111,0.28)",
+      "tint": "rgba(97,93,111,0.3)",
       "surface": "rgba(163,151,180,0.03)",
       "accent": "#4a4b64",
       "text": "#74748b",
