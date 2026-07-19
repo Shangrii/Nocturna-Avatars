@@ -23,18 +23,24 @@ A visitor lands, is visually impressed by the work, and reaches "Abrir Ticket" o
 - ✓ **Production beta cutover** (2026-07-04, user decision): the revamp now serves nocturna-avatars.site via a self-healing gh-pages deploy pipeline; old site archived on `main` (rollback = flip Pages source)
 - ✓ **Asset Store** (`/es/tienda` · `/en/store`): staff-editable `store.json` catalog, Booth-style quick-view, Jinxxy checkout links (single + per-cart-item, D-18 NO buy-all), namespaced purchase cart isolated from the /servicios cotización, NSFW blur, multi-storefront schema prepared (Booth/Gumroad = JSON-only edit). STORE-01…05 verified. Validated in Phase 6: asset-store (2026-07-08)
 
+- ✓ **Astro static site** on GitHub Pages, CNAME preserved — v1.0 (Phase 1)
+- ✓ **Bilingual ES + EN** via Astro i18n, EN-default with per-locale slugs + path-preserving switcher — v1.0 (Phase 1; ES-default assumption superseded)
+- ✓ **Experimental motion layer** — Lenis + GSAP/ScrollTrigger + View Transitions + one WebGL hero shader (custom cursor later removed in the redesign) — v1.0 (Phases 2 / 2.1)
+- ✓ **Refined Street Editorial** visual system — Space Grotesk editorial type + graffiti accent + ink/paper rhythm + Tailwind v4 tokens — v1.0 (Phase 2.1)
+- ✓ **Hybrid structure** — landing + dedicated `/servicios`·`/galeria`·`/terminos`·`/tienda`·`/editores` pages + persistent Discord CTA — v1.0 (Phases 1/3/4/6/10)
+- ✓ **Data-driven service catalog + configurator cart** (`services.json`, "Cotizar") — v1.0 (Phases 3 / 3.1)
+- ✓ **Data-driven gallery** (`gallery.json`, night-evidence-board scatter wall + lightbox, featured-6 on landing) — v1.0 (Phase 4)
+- ✓ **Reviews testimonials pipeline** (Discord reviews channel → `reviews.json`) — v1.0 (Phase 7)
+- ✓ **Bot reminders command** (`/recordatorio`, first background scheduler) — v1.0 (Phase 8)
+- ✓ **Jinxxy store auto-sync** (Creator API poll → three-way merge → `store.json`) — v1.0 (Phase 9)
+- ✓ **Per-editor profile pages** (`/e/<slug>` guns.lol/carrd replica) + Discord-OAuth admin app on cinema — v1.0 (Phases 10 / 10.1)
+
 ### Active
 
-<!-- This revamp's scope. Hypotheses until shipped and validated. -->
+<!-- Next milestone lives in the nocturna-bot repo (bot admin panel). This website's
+     v1.0 scope is fully shipped; no active website requirements. -->
 
-- [ ] Rebuild the site on **Astro** (static output, stays on GitHub Pages, keeps CNAME/domain)
-- [ ] **Bilingual ES + EN** via Astro i18n (language switcher; content dictionaries; ES default for now)
-- [ ] **Experimental motion layer**: Lenis smooth scroll, GSAP/ScrollTrigger, Astro View Transitions, one WebGL hero shader, cursor effects
-- [ ] **Hybrid structure**: landing + dedicated pages (`/servicios`, `/galeria`, `/terminos`)
-- [ ] Persistent, stylized **"Abrir Ticket" / Discord CTA** on every page
-- [ ] **Data-driven service catalog** (`services.json`): 3 packages (Penumbra/Umbra/Eclipse) + modular catalog by category (Unity, Blender/mesh, Textures, Accessories, Extras/NSFW); undecided prices show "Cotizar"
-- [ ] **Data-driven gallery** (`gallery.json`): masonry wall + lightbox, optional caption; featured subset on landing
-- [ ] Formalize the design system into reusable Astro components/tokens; bump the "A Another Tag" type scale (it renders small) and reserve it for display/accents
+- [ ] (Next milestone, `nocturna-bot` repo) Single-guild **bot admin panel** on the existing FastAPI/OAuth surface, preceded by **config consolidation** into one source of truth
 
 ### Out of Scope
 
@@ -68,12 +74,12 @@ A visitor lands, is visually impressed by the work, and reaches "Abrir Ticket" o
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Astro (static) over framework/vanilla | Keeps GitHub Pages + bot-commit flow, but adds components & motion | — Pending |
-| Bot commits to repo (vs external CDN) | Bot already self-hosts; free, versioned, no extra service | — Pending |
-| ✅ approve-to-publish + 🗑️ remove | Public site needs a safety gate; one ✅ approves a whole message (1+ photos) | — Pending |
-| Keep 3 packages + add modular catalog | Tiers are a strong brand hook; modular reflects variable real work | — Pending |
-| 2D-rich + punctual WebGL (no 3D yet) | Max "wow" without the weight/time of Three.js | — Pending |
-| Bilingual ES/EN from launch | Planned shift to US audience | — Pending |
+| Astro (static) over framework/vanilla | Keeps GitHub Pages + bot-commit flow, but adds components & motion | ✓ Good — v1.0 |
+| Bot commits to repo (vs external CDN) | Bot already self-hosts; free, versioned, no extra service | ✓ Good — v1.0 |
+| ✅ approve-to-publish + 🗑️ remove | Public site needs a safety gate; one ✅ approves a whole message (1+ photos) | ✓ Good — v1.0 |
+| Keep 3 packages + add modular catalog | Tiers are a strong brand hook; modular reflects variable real work | ✓ Good — v1.0 |
+| 2D-rich + punctual WebGL (no 3D yet) | Max "wow" without the weight/time of Three.js | ✓ Good — v1.0 |
+| Bilingual ES/EN from launch | Planned shift to US audience | ✓ Good — v1.0 |
 
 ## Evolution
 
@@ -94,3 +100,5 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 *Last updated: 2026-07-16 after Phase 10.1 completion (editor pages redesign — premium guns.lol/carrd-style per-editor link-in-bio pages at canonical `/e/<slug>`: standalone chrome-free identity, 13 `--theme-*` tokens + 14 self-hosted curated fonts + 8 admin presets, opt-in effect suite, splash-gated audio, live Lanyard presence, self-hosted view counter; Phase-10 block system re-themed inside the new shell; legacy routes redirect; bot-side ThemeModel injection gate + theme editor panel + media/audio upload endpoints. 26/26 D-decisions code-verified; stored-XSS + CSS-injection review blockers fixed; 5 live/deploy items tracked in 10.1-HUMAN-UAT.md. This is the final phase of milestone v1.0.)*
+
+*Milestone **v1.0 "Website Revamp"** shipped 2026-07-19 — 13 phases, 77 plans, 141 tasks. The full experimental bilingual site is live (convertible landing, motion + editorial redesign, data-driven catalog/gallery/store/reviews, and per-editor `/e/<slug>` pages), auto-updated by the `nocturna-bot` cogs and the Discord-OAuth admin app on cinema. **Next milestone:** a single-guild bot admin panel (config consolidation → settings dashboard), planned in the `nocturna-bot` repo.*

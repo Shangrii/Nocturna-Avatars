@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: milestone_complete
-stopped_at: Milestone complete (Phase 10.1 was final phase)
-last_updated: 2026-07-17T01:23:34.964Z
-last_activity: 2026-07-15 -- Phase 10.1 execution started
+status: Awaiting next milestone
+stopped_at: Phase 10.1 UI-SPEC approved
+last_updated: "2026-07-19T08:10:17.215Z"
+last_activity: 2026-07-19 — Milestone v1.0 completed and archived
 progress:
   total_phases: 13
-  completed_phases: 12
+  completed_phases: 13
   total_plans: 77
   completed_plans: 77
-  percent: 92
+  percent: 100
 ---
 
 # Project State
@@ -25,12 +25,10 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 
 ## Current Position
 
-Phase: 10.1
-Plan: Not started
-Status: Milestone complete
-Last activity: 2026-07-17 - Quick task 260717-bum COMPLETE: exhaustive dead-code cleanup (legacy site, dead component, dead CSS + i18n; 5 commits, build green)
-
-Progress: [██████████] 99%
+Phase: Milestone v1.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-07-19 — Milestone v1.0 completed and archived
 
 ## Performance Metrics
 
@@ -242,9 +240,16 @@ Items acknowledged and carried forward from previous milestone close:
 | Experimental | Real-time 3D avatar viewer (Three.js) — FX2-01 | Deferred to v2 | 2026-06-28 |
 | Experimental | Ambient music player / audio toggle — FX2-02 | Deferred to v2 | 2026-06-28 |
 | Gallery | Filter gallery by category/tag — GAL2-01 | Deferred to v2 | 2026-06-28 |
+| Content | Terms & Conditions structure decision (one /terminos page with store-purchase + commission-service sections) — deliberately deferred by user | Deferred | 2026-07-19 |
+| Verification | Phase 10 / 10-11 editor-pages live E2E human sign-off (login→edit→publish→public render, non-editor 403, self-unpublish, role-loss auto-unpublish, HTTPS/Secure-cookie). NOTE: the admin app was actually deployed live on cinema this session (nocturna-editor-admin.service running, /login 302, editable-slug feature + auto-deploy landed) — the formal click-through checklist just wasn't signed off item-by-item | Deferred (largely satisfied) | 2026-07-19 |
+| Verification | Phase 9 Jinxxy live-deploy UAT (09-HUMAN-UAT Test 3) confirmation on cinema | Deferred | 2026-07-19 |
 
 ## Session Continuity
 
 Last session: 2026-07-15T13:58:49.146Z
 Stopped at: Phase 10.1 UI-SPEC approved
 Resume file: .planning/phases/10.1-editor-pages-redesign-guns-lol-carrd-premium-replica-per-edi/10.1-UI-SPEC.md
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
