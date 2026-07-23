@@ -216,37 +216,71 @@
   {
     "slug": "olliestd",
     "discordId": "1367963632381722634",
-    "published": false,
-    "name": "olliestd.",
-    "avatar": "",
+    "mediaId": "olliestd",
+    "published": true,
+    "name": "olliestd",
+    "avatar": "/editors/olliestd/6c0d55464ffd445fa608c46f47f3c2b3.webp",
     "lang": "es",
-    "tagline": "",
-    "badges": [],
-    "socials": [],
+    "tagline": "Unity. Blender. Sunstance.",
+    "badges": [
+      "Unity",
+      "textures",
+      "Airi3D",
+      "Blender refitting",
+      "Poiyomi and shaders"
+    ],
+    "socials": [
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/olliestd/"
+      },
+      {
+        "label": "Twitter",
+        "url": "https://x.com/olliestd?s=20"
+      },
+      {
+        "label": "spotify",
+        "url": "https://open.spotify.com/user/31luvwnh4oo3o7nvp5zapw6mye6m?si=6zbxl91SSSC1oDZebH9iuQ&utm_source=copy-link"
+      },
+      {
+        "label": "Kofi",
+        "url": "https://ko-fi.com/olliestd"
+      },
+      {
+        "label": "Discord",
+        "url": "https://discord.gg/kqtuN56Ec"
+      }
+    ],
     "links": [],
     "blocks": [],
     "theme": {
-      "bg": "#0a0c14",
-      "bgMedia": null,
-      "overlay": 40,
-      "blur": 0,
+      "bg": "#1a2347",
+      "bgMedia": "/editors/olliestd/19a2802021764e08a31cef4462cf894e.webp",
+      "overlay": 29,
+      "blur": 2,
       "tint": null,
-      "surface": "rgba(240,234,228,0.06)",
-      "accent": "#c0192c",
-      "text": "#f0eae4",
-      "textMuted": "#9a9198",
-      "font": "Inter",
-      "btnStyle": "glass",
-      "btnShape": "rounded",
+      "surface": "rgba(0,229,255,0.37)",
+      "accent": "#00e5ff",
+      "text": "#ffffff",
+      "textMuted": "#aaaac5",
+      "font": "VT323",
+      "btnStyle": "outline",
+      "btnShape": "sharp",
       "btnColor": null,
-      "fontScale": 1.0,
-      "effects": [],
+      "fontScale": 1.55,
+      "effects": [
+        "glow",
+        "gradient",
+        "presence",
+        "particles"
+      ],
       "audio": null,
       "audioCover": null,
       "audioTitle": null,
-      "spotify": null,
+      "spotify": "https://open.spotify.com/intl-es/track/7oLcpniA1OEWpNfISpQx91?si=3a60f7210b57491e",
       "spotifyStart": 0,
-      "preset": null
+      "musicVolume": 72,
+      "preset": "Neon Night"
     },
     "views": null
   }
