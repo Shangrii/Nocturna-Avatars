@@ -1,0 +1,86 @@
+---
+/**
+ * Legacy per-editor route → build-time redirect stub to the root vanity URL.
+ *
+ * The canonical editor page now lives at the root-level vanity URL `/<slug>`
+ * (plan 10-06 Task 1, moved from here). This file used to RENDER the full
+ * profile; it is now a tiny redirect shell so every already-shared `/e/<slug>`
+ * link still resolves and forwards to `/<slug>` on a static host (GitHub
+ * Pages, no server-side 301).
+ *
+ * Mirrors `Website/src/pages/[lang]/[concept]/[slug].astro` one cartesian
+ * dimension shallower: no `langCodes` loop, one stub per published editor
+ * keyed on `slug` alone (matches the moved `[slug].astro`'s own
+ * getStaticPaths shape). The read stays defensive (copy-before-filter,
+ * published + string-slug guard) so one malformed/unpublished entry never
+ * breaks the whole-site build (T-10.1-07-04).
+ *
+ * Redirect security (T-10-03): the redirect target is a BUILD-TIME per-page
+ * literal `/<slug>` — the slug is baked into the stub at build time via
+ * `define:vars`, NEVER read from a runtime value inside the inline script.
+ * The path is always same-origin `/<slug>` and there is no `?next=`/query-
+ * driven target, so there is no open-redirect surface. This mirrors the
+ * `[lang]/[concept]/[slug].astro` analog and the root index.astro redirect shell.
+ */
+import type { Editor } from '../../lib/editorTypes';
+import editorsData from '../../data/editors.json';
+
+export function getStaticPaths() {
+  // Copy-before-filter (never mutate the imported module array); keep only
+  // publishable entries so a bad/unpublished row can't break the build.
+  const raw: Editor[] = Array.isArray(editorsData) ? ([...editorsData] as Editor[]) : [];
+  const published = raw.filter(
+    (e) =>
+      Boolean(e) &&
+      e.published === true &&
+      typeof e.slug === 'string' &&
+      e.slug.length > 0,
+  );
+  // Dedupe by slug: editors can rename their slug post-publish, so a near-zero-
+  // probability race (two entries renamed to the same slug in one commit window)
+  // could leave editors.json with a duplicate. Astro's getStaticPaths throws on
+  // duplicate route params, which would fail the ENTIRE site build — so keep only
+  // the first published entry per slug (first wins) rather than let a collision
+  // brick the deploy. Mirrors the moved [slug].astro's own dedupe.
+  const seen = new Set();
+  const unique = published.filter((e) => {
+    if (seen.has(e.slug)) return false;
+    seen.add(e.slug);
+    return true;
+  });
+  // ONE stub per published editor — no langCodes cartesian.
+  return unique.map((editor) => ({
+    params: { slug: editor.slug },
+  }));
+}
+
+// Build-time literal (known per generated page). The target is assembled here
+// and baked into the stub — the inline script never reads a runtime value
+// (T-10-03). Root-level target, dropping the /e/ prefix (was /e/${slug} in
+// the [lang]/[concept]/[slug].astro analog).
+const { slug } = Astro.params;
+const target = `/${slug}`;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0c14" />
+    <!-- Old URL must not be indexed; the canonical points search engines at /<slug>. -->
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={target} />
+    <title>Nocturna Avatars</title>
+    <!-- No-JS fallback: a meta-refresh forwards to the vanity URL. -->
+    <noscript>
+      <meta http-equiv="refresh" content={`0; url=${target}`} />
+    </noscript>
+    <!-- JS path: `target` is injected as a build-time JSON string literal via
+         define:vars — the script never reads Astro.params or any runtime value. -->
+    <script define:vars={{ target }}>
+      location.replace(target);
+    </script>
+  </head>
+  <body></body>
+</html>
