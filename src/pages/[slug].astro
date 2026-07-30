@@ -1,11 +1,14 @@
 ---
 /**
- * Canonical standalone editor page — /e/<slug> (D-14, Wave-3 integration).
+ * Canonical standalone editor page — /<slug> (D-14/EDIT-02, root-level vanity route).
  *
  * This is the vanity route every editor profile now lives at. Unlike the legacy
  * `/es/editores/<slug>` · `/en/editors/<slug>` route it is SINGLE-LANGUAGE (D-13):
  * getStaticPaths emits exactly ONE page per PUBLISHED editor keyed on `slug` — no
  * langCodes cartesian — and the page renders in the editor's own `editor.lang`.
+ * Moved from `/e/<slug>` to the site root (plan 10-06); the old `/e/<slug>` path is
+ * now a build-time redirect stub to `/<slug>` (D-05: the slug IS the vanity URL,
+ * no separate field).
  *
  * It assembles every Wave-2 artifact into the shippable guns.lol/carrd page:
  *   EditorLayout (06, chrome-free shell: token whitelist, splash gate, watermark)
@@ -20,25 +23,25 @@
  * editors.json is written by the admin app / bot (untrusted at build time), so the
  * read is defensive end-to-end: a copy-before-filter drops any malformed /
  * unpublished / slug-less entry rather than throwing and freezing every deploy
- * (T-10.1-07-04). An empty editors.json simply emits no /e pages — build stays green.
+ * (T-10.1-07-04). An empty editors.json simply emits no vanity pages — build stays green.
  *
  * XSS (T-10.1-07-01): every editor string flows through Astro auto-escaping / the
  * set:html-free shell + block components (D-02). `bgMedia` binds ONLY as an escaped
  * <video>/<img> src attribute (scheme validated bot-side, plan 09, T-10.1-07-03); a
  * load failure degrades to the solid --theme-bg base.
  */
-import EditorLayout from '../../layouts/EditorLayout.astro';
-import EditorHeaderCard from '../../components/editor-shell/EditorHeaderCard.astro';
-import PresenceDot from '../../components/editor-shell/PresenceDot.astro';
-import LinkButton from '../../components/editor-shell/LinkButton.astro';
-import ViewCounter from '../../components/editor-shell/ViewCounter.astro';
-import SpotifyVinyl from '../../components/editor-shell/SpotifyVinyl.astro';
-import BlockRenderer from '../../components/editor-blocks/BlockRenderer.astro';
-import LightboxOverlay from '../../components/LightboxOverlay.astro';
-import type { Editor, EditorLink } from '../../lib/editorTypes';
-import editorsData from '../../data/editors.json';
-import { safeHref } from '../../lib/url';
-import '../../styles/gallery.css';
+import EditorLayout from '../layouts/EditorLayout.astro';
+import EditorHeaderCard from '../components/editor-shell/EditorHeaderCard.astro';
+import PresenceDot from '../components/editor-shell/PresenceDot.astro';
+import LinkButton from '../components/editor-shell/LinkButton.astro';
+import ViewCounter from '../components/editor-shell/ViewCounter.astro';
+import SpotifyVinyl from '../components/editor-shell/SpotifyVinyl.astro';
+import BlockRenderer from '../components/editor-blocks/BlockRenderer.astro';
+import LightboxOverlay from '../components/LightboxOverlay.astro';
+import type { Editor, EditorLink } from '../lib/editorTypes';
+import editorsData from '../data/editors.json';
+import { safeHref } from '../lib/url';
+import '../styles/gallery.css';
 
 export function getStaticPaths() {
   // Copy-before-filter so the imported module array is never mutated, then keep
@@ -210,7 +213,7 @@ const isImageBg = !isVideoBg && /\.(gif|webp|png|jpe?g|avif)(?:[?#].*)?$/i.test(
       zero new JS. On this chrome-free page it runs via its hard-nav fallback. */}
   <LightboxOverlay lang={lang} />
   <script>
-    import '../../scripts/gallery.ts';
+    import '../scripts/gallery.ts';
   </script>
 </EditorLayout>
 
