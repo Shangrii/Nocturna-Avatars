@@ -271,11 +271,11 @@
       "accent": "#000000",
       "text": "#ffffff",
       "textMuted": "#fff0f0",
-      "font": "UnifrakturMaguntia",
+      "font": "Fraunces",
       "btnStyle": "outline",
       "btnShape": "sharp",
       "btnColor": null,
-      "fontScale": 1.15,
+      "fontScale": 1.05,
       "effects": [
         "glow",
         "particles"
@@ -285,7 +285,7 @@
       "audioTitle": null,
       "spotify": "https://open.spotify.com/intl-es/track/1a42liOTNa6YZkIaZqj7Il?si=387f040d1b494309",
       "spotifyStart": 0,
-      "musicVolume": 70,
+      "musicVolume": 50,
       "preset": "Gothic"
     },
     "views": null
