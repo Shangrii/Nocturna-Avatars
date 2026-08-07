@@ -187,6 +187,52 @@
     "views": null
   },
   {
+    "slug": "bufon",
+    "discordId": "579126890179330048",
+    "mediaId": "74268beaf8782a02",
+    "published": true,
+    "name": "Bufon",
+    "avatar": "/editors/74268beaf8782a02/23cec7142efa415593c53ee33116b3e0.webp",
+    "lang": "es",
+    "tagline": "El telón se alza. El bufón sonríe. Ahora dime… ¿estás listo para protagonizar este caos conmigo?",
+    "badges": [
+      "Blender",
+      "Unity",
+      "3D"
+    ],
+    "socials": [],
+    "links": [],
+    "blocks": [],
+    "theme": {
+      "bg": "#0a0708",
+      "bgMedia": "/editors/74268beaf8782a02/30587f42457d4745a2942c283a08ecf4.webp",
+      "overlay": 40,
+      "blur": 0,
+      "tint": "rgba(235,201,27,0.21)",
+      "surface": "rgba(139,0,0,0)",
+      "accent": "#000000",
+      "text": "#ffffff",
+      "textMuted": "#fff0f0",
+      "font": "Fraunces",
+      "btnStyle": "outline",
+      "btnShape": "sharp",
+      "btnColor": null,
+      "fontScale": 1.05,
+      "effects": [
+        "glow",
+        "particles"
+      ],
+      "audio": null,
+      "audioCover": null,
+      "audioTitle": null,
+      "spotify": "https://open.spotify.com/intl-es/track/1a42liOTNa6YZkIaZqj7Il?si=387f040d1b494309",
+      "spotifyStart": 0,
+      "musicVolume": 50,
+      "preset": "Gothic"
+    },
+    "views": null
+  },
+  {
     "slug": "imp",
     "discordId": "247919526174392320",
     "mediaId": "impyh",
@@ -241,52 +287,6 @@
       "spotifyStart": 0,
       "musicVolume": 11,
       "preset": "Noir"
-    },
-    "views": null
-  },
-  {
-    "slug": "bufon",
-    "discordId": "579126890179330048",
-    "mediaId": "74268beaf8782a02",
-    "published": true,
-    "name": "Bufon",
-    "avatar": "/editors/74268beaf8782a02/23cec7142efa415593c53ee33116b3e0.webp",
-    "lang": "es",
-    "tagline": "El telón se alza. El bufón sonríe. Ahora dime… ¿estás listo para protagonizar este caos conmigo?",
-    "badges": [
-      "Blender",
-      "Unity",
-      "3D"
-    ],
-    "socials": [],
-    "links": [],
-    "blocks": [],
-    "theme": {
-      "bg": "#0a0708",
-      "bgMedia": "/editors/74268beaf8782a02/30587f42457d4745a2942c283a08ecf4.webp",
-      "overlay": 40,
-      "blur": 0,
-      "tint": "rgba(235,201,27,0.21)",
-      "surface": "rgba(139,0,0,0)",
-      "accent": "#000000",
-      "text": "#ffffff",
-      "textMuted": "#fff0f0",
-      "font": "Fraunces",
-      "btnStyle": "outline",
-      "btnShape": "sharp",
-      "btnColor": null,
-      "fontScale": 1.05,
-      "effects": [
-        "glow",
-        "particles"
-      ],
-      "audio": null,
-      "audioCover": null,
-      "audioTitle": null,
-      "spotify": "https://open.spotify.com/intl-es/track/1a42liOTNa6YZkIaZqj7Il?si=387f040d1b494309",
-      "spotifyStart": 0,
-      "musicVolume": 50,
-      "preset": "Gothic"
     },
     "views": null
   }
