@@ -1,0 +1,1 @@
+function e(){return typeof matchMedia>`u`?!0:matchMedia(`(prefers-reduced-motion: reduce)`).matches}var t=matchMedia(`(pointer: fine) and (hover: hover)`).matches;function n(){try{return!!document.createElement(`canvas`).getContext(`webgl2`,{failIfMajorPerformanceCaveat:!0})}catch{return!1}}export{e as n,n as r,t};
