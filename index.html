@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0a0c14"><meta name="robots" content="noindex"><title>Nocturna Avatars</title><noscript><meta http-equiv="refresh" content="0; url=/en/"></noscript><script>
+      (function () {
+        var ES = '/es/';
+        var EN = '/en/';
+        var target = EN;
+        try {
+          var stored = localStorage.getItem('nocturna-lang');
+          if (stored === 'es') {
+            target = ES;
+          } else if (stored === 'en') {
+            target = EN;
+          } else {
+            // English-first: only an explicitly Spanish browser goes to /es/.
+            var nav = (navigator.language || 'en').toLowerCase();
+            target = nav.indexOf('es') === 0 ? ES : EN;
+          }
+        } catch (e) {
+          target = EN;
+        }
+        location.replace(target);
+      })();
+    </script></head><body></body></html>
